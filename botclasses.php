@@ -434,16 +434,13 @@ class wikipedia {
         if ($text == null) {
             $text = $this->getpage($page);
         }
-        if ($user != null) {
-            if (preg_match('/\{\{(nobots|bots\|allow=none|bots\|deny=all|bots\|optout=all|bots\|deny=.*?'.preg_quote($user,'/').'.*?)\}\}/iS',$text)) {
-                return false;
-            }
-        } else {
-            if (preg_match('/\{\{(nobots|bots\|allow=none|bots\|deny=all|bots\|optout=all)\}\}/iS',$text)) {
-                return false;
-            }
-        }
-        return true;
+		if (preg_match('/\{\{(nobots|bots\|allow=none|bots\|deny=all|bots\|optout=all|bots\|deny=.*?'.preg_quote($user,'/').'.*?)\}\}/iS',$text))
+			return false;
+		if (preg_match('/\{\{(bots\|allow=all|bots\|allow=.*?'.preg_quote($user,'/').'.*?)\}\}/iS', $text))
+			return true;
+		if (preg_match('/\{\{(bots\|allow=.*?)\}\}/iS', $text))
+			return false;
+		return true;
     }
 
     /**

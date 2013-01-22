@@ -7,6 +7,8 @@ $config['owner'] = 'Addshore';                              // bot owner
 $config['sandbox'] = 'User:'.$config['user'].'/Sandbox';    // sandbox location
 require '/home/addshore/.password.addbot';                  // $config['password'] = 'password';
 
+$config['checkfreq'] = 24;                        // how long in hours before a page can be checked again
+
 // database settings
 $config['dbhost'] = '';
 $config['dbport'] = '';
