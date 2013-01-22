@@ -26,7 +26,8 @@ $result = $db->select('pending','*');
 $list = Database::mysql2array($result);
 foreach ($list as $item)
 {
-	//$item['page'] is the name of the article in this case
+	// $item['page'] is the name of the article in this case
+	$page = new Page($item['page']);// create our page instance
 }
 
 ?>
