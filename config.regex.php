@@ -97,6 +97,7 @@ $tag['emptysection']['templates'] = array(
 );
 $tag['emptysection']['regex'] = "(".implode('|',$tag['emptysection']).")";
 
+//TODO: Add badformat and stub t
 $tag['badformat'] = "";
 $tag['stub'] = "";
 ?>

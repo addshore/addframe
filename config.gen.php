@@ -10,14 +10,14 @@ require '/home/addshore/.password.addbot';                  // $config['password
 $config['checkfreq'] = 24;                        // how long in hours before a page can be checked again
 
 // database settings
-$config['dbhost'] = '';
-$config['dbport'] = '';
-$config['dbuser'] = '';
+$config['dbhost'] = 'bots-sql3';
+$config['dbport'] = '3306';
+$config['dbuser'] = 'addshore';
 require '/home/addshore/.password.db';            //$config['dbpass'] = 'password';
-$config['dbname'] = '';
+$config['dbname'] = 'addbot';
 
 // table settings
-$config['tblist'] = 'ab_tocheck';                 // table containing articles to be checked
-$config['checked'] = 'ab_checked';                // table containing articles checked along with time
+$config['tblist'] = 'pending';                 // table containing articles to be checked
+$config['checked'] = 'checked';                // table containing articles checked along with time
 
 ?>

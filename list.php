@@ -1,5 +1,7 @@
 <?
 
+//TODO: Enable to be passed just 1 page name to be added to the list
+
 // options for running the file
 $shortopts  = "";
 $shortopts .= "r::"; // recursive, use if we DONT want recursion when getting cats
@@ -11,6 +13,8 @@ $longopts  = array(
 
 // get the options the file was run with
 $option = getopt($shortopts, $longopts);
+
+echo "loading...\n";
 
 // load the classes
 require 'botclasses.php';
@@ -24,6 +28,7 @@ $wiki = new wikipedia;
 $wiki->url = 'http://'.$config['url'].'/w/api.php';
 global $wiki;
 
+echo "Get articles from $option['source'] using $option['method']";
 // get via category members
 if(preg_match("/^cat(egory(( |_|-)?members)?)?/i",$option['method'])){
 	if(!isset($option['r'])){$recursive = true}else{$recursive = false}; // default recursion to true
@@ -51,6 +56,7 @@ elseif(preg_match("/^(web|html)/i",$option['method'])){
 // check if the list has been generated and we need to process the stuff below
 if(isset($list))
 {
+	echo "List has been generated, processing...\n";
 
 	//After the list has been generated
 	$list = array_unique($list); // make sure all of the elements is unique
@@ -100,6 +106,7 @@ if(isset($list))
 		}
 	}
 
+	echo "Connecting to DB...\n";
 	// connect to the database
 	$db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 	foreach($final as $item) // for each item
@@ -109,6 +116,8 @@ if(isset($list))
 	}
 
 }
+
+echo "Done\n";
 
 // Write to a logfile saying what has happend in regards to the list
 

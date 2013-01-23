@@ -20,6 +20,7 @@ class Page {
 	//addMultipleissues()
 
 	// From User:Chris_G
+	//TODO: http://pastebin.com/0bNNPy0p
 	// https://en.wikipedia.org/wiki/Wikipedia:Village_pump_%28technical%29/Archive_99#Template_parsing
 	// Look, don't even bother and read this, just accept that it parses
 	// $text, and returns an array of templates.

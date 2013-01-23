@@ -8,7 +8,7 @@
  *  (c) 2011      Gutza - http://en.wikipedia.org/wiki/User:Gutza
  *  (c) 2012      Sean - http://en.wikipedia.org/wiki/User:SColombo
  *  (c) 2012      Brain - http://en.wikipedia.org/wiki/User:Brian_McNeil
- *  (c) 2012      Addshore - http://en.wikipedia.org/wiki/User:Addshore
+ *  (c) 2012-2013 Addshore - http://en.wikipedia.org/wiki/User:Addshore
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,15 +32,8 @@
  *      Gutza   - [[User:Gutza]]        - Submitted a patch for http->setHTTPcreds(), and http->quiet
  *      Sean    - [[User:SColombo]]     - Wrote the lyricwiki class (now moved to lyricswiki.php)
  *      Brain   - [[User:Brian_McNeil]] - Wrote wikipedia->getfileuploader() and wikipedia->getfilelocation
- * 		Addshore- [[User:Addshore]]     - Functions for Addbot (lastedit,firstedit)
+ * 		Addshore- [[User:Addshore]]     - Functions for Addbot (lastedit,lasteditonpage,firstedit,update nobots)
  **/
-
-/*
- * Forks/Alternative versions:
- * There's a couple of different versions of this code lying around.
- * I'll try to list them here for reference purpopses:
- *         https://en.wikinews.org/wiki/User:NewsieBot/botclasses.php
- */
 
 /**
  * This class is designed to provide a simplified interface to cURL which maintains cookies.
