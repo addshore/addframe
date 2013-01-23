@@ -48,12 +48,19 @@ foreach ($list as $item)
 	// updated list = http://en.wikipedia.org/wiki/Wikipedia:Namespace
 	switch($page->getNamespace()){
 		case ""://article
+			if ($page->isOrphan == false)//if the page is not an orphan
+			{
+				//remove orphan tag
+				$page->removeTag("orphan");
+			}
 			break;
 		case "User talk":
 			break;
 		case "File":
 			break;
 	}
+	
+	//If page content is now different to the old page then POST
 	
 	sleep(999);//to be removed after testing
 }

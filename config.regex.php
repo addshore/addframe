@@ -1,11 +1,11 @@
 <?
 
 // regex to match the date used in maintanace templates
-$date = "((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])";
+$config['date'] = "((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])";
 
 // regex to match each maintanence template
 // uncat
-$tag['uncat']['templates'] = array(
+$config['tag']['uncat']['templates'] = array(
 	'Uncategorized',
 	'Cat needed',
 	'CatNeeded',
@@ -27,34 +27,40 @@ $tag['uncat']['templates'] = array(
 	'Uncat',
 	'Uncategorised',
 );
-$tag['uncat']['regex'] = "(".implode('|',$tag['uncat']['templates']).")";
+$config['tag']['uncat']['regex'] = "(".implode('|',$config['tag']['uncat']['templates']).")";
 // orphan
-$tag['orphan']['templates'] = array(
+$config['tag']['orphan']['templates'] = array(
 	'Orphan',
 	'Do-attempt',
 	'Lonely',
 	'Orp',
 );
-$tag['orphan']['regex'] = "(".implode('|',$tag['orphan']['templates']).")";
+$config['tag']['orphan']['parameters'] = array(
+	'att',
+	'geo',
+	'few',
+	'incat',
+);
+$config['tag']['orphan']['regex'] = "(".implode('|',$config['tag']['orphan']['templates']).")(\|(".implode('|',$config['tag']['orphan']['parameters']).") ?= ?[0-9a-z _]){0,".count($config['tag']['orphan']['parameters'])."}";
 // deadend
-$tag['deadend']['templates'] = array(
+$config['tag']['deadend']['templates'] = array(
 	'Deadend',
 	'Dep',
 	'Dead end page',
 	'Dead-end',
 	'Needs links',
 );
-$tag['deadend']['regex'] = "(".implode('|',$tag['deadend']['templates']).")";
+$config['tag']['deadend']['regex'] = "(".implode('|',$config['tag']['deadend']['templates']).")";
 // sections
-$tag['sections']['templates'] = array(
+$config['tag']['sections']['templates'] = array(
 	'Sections',
 	'Needsections',
 	'Cleanupsections',
 	'Needs sections',
 );
-$tag['sections']['regex'] = "(".implode('|',$tag['sections']['templates']).")";
+$config['tag']['sections']['regex'] = "(".implode('|',$config['tag']['sections']['templates']).")";
 // unref
-$tag['unref']['templates'] = array(
+$config['tag']['unref']['templates'] = array(
 	'Unreferenced',
 	'Citesources',
 	'Cleanup-cite',
@@ -86,18 +92,18 @@ $tag['unref']['templates'] = array(
 	'Unsourced',
 	'Unverified',
 );
-$tag['unref']['regex'] = "(".implode('|',$tag['unref']['templates']).")";
+$config['tag']['unref']['regex'] = "(".implode('|',$config['tag']['unref']['templates']).")";
 // emptysection
-$tag['emptysection']['templates'] = array(
+$config['tag']['emptysection']['templates'] = array(
 	'Emptysection',
 	'Empty-section',
 	'EmptySection',
 	'Emptysect',
 	'No content',
 );
-$tag['emptysection']['regex'] = "(".implode('|',$tag['emptysection']['templates']).")";
+$config['tag']['emptysection']['regex'] = "(".implode('|',$config['tag']['emptysection']['templates']).")";
 
 //TODO: Add badformat and stub t
-$tag['badformat'] = "";
-$tag['stub'] = "";
+$config['tag']['badformat'] = "";
+$config['tag']['stub'] = "";
 ?>
