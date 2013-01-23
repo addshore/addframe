@@ -1,5 +1,17 @@
 <?php
 
+/*
+* Whole file sourced from http://pastebin.com/0bNNPy0p
+* Created by User:Chris_G
+* 22nd January 2013
+
+----Usage----
+$p = new parser("PageTitle","WikiText");
+$p->parse();
+print_r($p);
+
+*/
+
 class wikObject {
 	public $type, $name, $attributes, $rawCode;
 	

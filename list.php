@@ -120,7 +120,7 @@ if(isset($list))
 	{
 		sleep(1);
 		echo "Adding ".$item." to database\n";
-		$res = $db->insert($config['tblist'],array('page' => $item,) ); // inset to database table
+		$res = $db->insert($config['tblist'],array('article' => $item,) ); // inset to database table
 		if( !$res  ){echo $db->errorStr(); break;} // if no result then break as we have an error ($db->errorStr())
 	}
 
