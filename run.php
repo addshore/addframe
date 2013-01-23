@@ -43,6 +43,19 @@ foreach ($list as $item)
 	echo "Checking ".$item['article']."\n";
 	$page = new Page($item['article'],$wiki);// create our page instance
 	$page->parse();// parse the page
+	
+	//for reference (User|Wikipedia|FileMediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?)"
+	// updated list = http://en.wikipedia.org/wiki/Wikipedia:Namespace
+	switch($page->getNamespace()){
+		case ""://article
+			break;
+		case "User talk":
+			break;
+		case "File":
+			break;
+	}
+	
+	sleep(999);//to be removed after testing
 }
 
 ?>

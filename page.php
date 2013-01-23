@@ -6,7 +6,7 @@ class Page {
 
 	// construct the page (you probably want to call load after this)
 	public function __construct($page,$wiki) {
-		$this->page = $page;
+		$this->page = preg_replace("/_/","",$page);
 		$this->parseNamespace();
 		$this->wiki = $wiki;
 	}	
@@ -31,8 +31,9 @@ class Page {
 	private function parseNamespace()
 	{
 		$result = preg_match("/^((User|Wikipedia|File|Image|Mediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?):?/i",$this->page,$matches);
-		if($result == 0){ $this->namespace = "";}//default to article namespace
+		if($result == 0){ $this->namespace = "";}// default to article namespace
 		else{$this->namespace = $matches[1];}
+		if($this->namespace == "Image"){ $this->namespace = "File";}// default Image namespace to file
 	}
 	
 	//removeTag($tag,$arguments)
