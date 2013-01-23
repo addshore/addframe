@@ -31,7 +31,7 @@ global $wiki;
 echo "Get articles from ".$option['source']." using ".$option['method']."\n";
 // get via category members
 if(preg_match("/^cat(egory(( |_|-)?members)?)?/i",$option['method'])){
-	if(!isset($option['r'])){$recursive = true}else{$recursive = false}; // default recursion to true
+	if(!isset($option['r'])){$recursive = true;}else{$recursive = false;}; // default recursion to true
 	$list = $wiki->categorymembers($option['source'],$recursive);
 }
 // get via a list on a page
