@@ -15,6 +15,7 @@ $longopts  = array(
 $option = getopt($shortopts, $longopts);
 
 echo "loading...\n";
+sleep(1);
 
 // load the classes
 require 'botclasses.php';
@@ -29,6 +30,7 @@ $wiki->url = 'http://'.$config['url'].'/w/api.php';
 global $wiki;
 
 echo "Get articles from ".$option['source']." using ".$option['method']."\n";
+sleep(1);
 // get via category members
 if(preg_match("/^cat(egory(( |_|-)?members)?)?/i",$option['method'])){
 	if(!isset($option['r'])){$recursive = true;}else{$recursive = false;}; // default recursion to true
@@ -52,13 +54,17 @@ elseif(preg_match("/^(web|html)/i",$option['method'])){
 	$text = preg_replace("/(\[\[|\]\])/","",$text); // remove all square brackets (wikilinks)
 	$list = explode("\n",$text); // explode into an array we can use
 }
+else{// our regex didnt match a source
+	echo "No preset source found\n";
+}
 
 // check if the list has been generated and we need to process the stuff below
 if(isset($list))
 {
 	echo "List has been generated, processing...\n";
+	sleep(1);
 
-	//After the list has been generated
+	// after the list has been generated
 	$list = array_unique($list); // make sure all of the elements is unique
 	if(!isset($namespace)){$namespace = 0;} // default namespace is 0 (article)
 	/* Used for reference (en.wikipedia)
@@ -90,6 +96,7 @@ if(isset($list))
 
 	foreach($list as $item) // for every item we have collected for the list
 	{
+		usleep(50000);
 		if($namespace != 0) // if it is not specificly the main namespace
 		{
 			if(preg_match("/^".$namespaceregex.":/i",$item)) // get those that match the namespace we want
@@ -111,14 +118,20 @@ if(isset($list))
 	$db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 	foreach($final as $item) // for each item
 	{
+		sleep(1);
+		echo "Adding ".$item." to database\n";
 		$res = $db->insert($config['tblist'],array('page' => $item,) ); // inset to database table
 		if( !$res  ){echo $db->errorStr(); break;} // if no result then break as we have an error ($db->errorStr())
 	}
 
 }
+else
+{
+	echo "Getting list failed!\n";
+}
 
 echo "Done\n";
 
-// Write to a logfile saying what has happend in regards to the list
+// write to a logfile saying what has happend in regards to the list
 
 ?>

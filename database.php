@@ -77,7 +77,7 @@ class Database {
      * Front-end for mysql_error
      * @return string|bool MySQL error string, null if no error
      */
-	public function errorStr( $sql ) {
+	public function errorStr() {
 		$result = mysql_error( $this->mConn );
 		if( !$result ) return false;
 		return $result;
