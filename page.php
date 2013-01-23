@@ -46,13 +46,27 @@ class Page {
 	{
 		$links = $wiki->whatlinkshere($orphan,"&blnamespace=0");
 		foreach($links as $link){
-			if($isorphan == true){
-				if(preg_match("/((List|Index) of|\(disambig(uation)?\))/i",$link) == FALSE)// names to skip
-				{
-					$linktext = $wiki->getpage($link);
-					if (preg_match("/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|sia|set index( articles)?).*\}\})/i",$linktext) == FALSE)
-					{return false;}
-				}
+			if(preg_match("/((List|Index) of|\(disambig(uation)?\))/i",$link) == FALSE)// names to skip
+			{
+				if (preg_match("/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|sia|set index( articles)?).*\}\})/i",$wiki->getpage($link)) == FALSE)
+				{return false;}
+			}
+		}
+	}
+	
+	// returns false if page is not deadend
+	public function isDeadend()
+	{
+		preg_match_all('/\[\[([a-z\/ _\(\)\|\.0-9]*)\]\]/i',$text, $links, PREG_PATTERN_ORDER);// match links to articles
+		foreach($links[1] as $link){
+			if(preg_match('/\|/',$link) != 0){
+				$split = preg_split('/\|/',$link);// get the link rather than text
+				$link = $split[0];
+			}
+			if (preg_match('/:/',$link) == 0){
+				if(strlen($wiki->getpage($link)) > 0){
+					return false;
+				}				
 			}
 		}
 	}
