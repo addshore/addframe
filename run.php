@@ -1,4 +1,6 @@
 <?
+// Report all errors except E_NOTICE
+error_reporting(E_ALL ^ E_NOTICE);
 
 echo "loading...\n";
 sleep(1);
@@ -14,7 +16,7 @@ require 'config.regex.php';
 
 // initialise the wiki
 $wiki = new wikipedia;
-$wiki->url = 'http://'.$config['url'].'/w/api.php';
+$wiki->url = "http://".$config['url']."/w/api.php";
 global $wiki;
 
 echo "Logging in...\n";
@@ -39,7 +41,7 @@ sleep(1);
 foreach ($list as $item)
 {
 	echo "Checking ".$item['article']."\n";
-	$page = new Page($item['article']);// create our page instance
+	$page = new Page($item['article'],$wiki);// create our page instance
 	$page->parse();// parse the page
 }
 

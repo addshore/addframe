@@ -25,14 +25,14 @@
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  *  Developers (add yourself here if you worked on the code):
- *      Cobi    - [[User:Cobi]]         - Wrote the http class and some of the wikipedia class
- *      Chris   - [[User:Chris_G]]      - Wrote the most of the wikipedia class
- *      Fale    - [[User:Fale]]         - Polish, wrote the extended and some of the wikipedia class
- *      Kaldari - [[User:Kaldari]]      - Submitted a patch for the imagematches function
- *      Gutza   - [[User:Gutza]]        - Submitted a patch for http->setHTTPcreds(), and http->quiet
- *      Sean    - [[User:SColombo]]     - Wrote the lyricwiki class (now moved to lyricswiki.php)
- *      Brain   - [[User:Brian_McNeil]] - Wrote wikipedia->getfileuploader() and wikipedia->getfilelocation
- * 		Addshore- [[User:Addshore]]     - Functions for Addbot (lastedit,lasteditonpage,firstedit,update nobots)
+ *      Cobi     - [[User:Cobi]]         - Wrote the http class and some of the wikipedia class
+ *      Chris    - [[User:Chris_G]]      - Wrote the most of the wikipedia class
+ *      Fale     - [[User:Fale]]         - Polish, wrote the extended and some of the wikipedia class
+ *      Kaldari  - [[User:Kaldari]]      - Submitted a patch for the imagematches function
+ *      Gutza    - [[User:Gutza]]        - Submitted a patch for http->setHTTPcreds(), and http->quiet
+ *      Sean     - [[User:SColombo]]     - Wrote the lyricwiki class (now moved to lyricswiki.php)
+ *      Brain    - [[User:Brian_McNeil]] - Wrote wikipedia->getfileuploader() and wikipedia->getfilelocation
+ * 		Addshore - [[User:Addshore]]     - Functions for Addbot (lastedit,lasteditonpage,firstedit,update nobots)
  **/
 
 /**
@@ -45,7 +45,7 @@ class http {
     public $cookie_jar;
     public $postfollowredirs;
     public $getfollowredirs;
-    public $quiet=false;
+    public $quiet=true;
 
     function data_encode ($data, $keyprefix = "", $keypostfix = "") {
         assert( is_array($data) );

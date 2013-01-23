@@ -1,7 +1,7 @@
 <?
 
 // regex to match the date used in maintanace templates
-$date = "((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])"
+$date = "((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])";
 
 // regex to match each maintanence template
 // uncat
@@ -27,7 +27,7 @@ $tag['uncat']['templates'] = array(
 	'Uncat',
 	'Uncategorised',
 );
-$tag['uncat']['regex'] = "(".implode('|',$tag['uncat']).")";
+$tag['uncat']['regex'] = "(".implode('|',$tag['uncat']['templates']).")";
 // orphan
 $tag['orphan']['templates'] = array(
 	'Orphan',
@@ -35,7 +35,7 @@ $tag['orphan']['templates'] = array(
 	'Lonely',
 	'Orp',
 );
-$tag['orphan']['regex'] = "(".implode('|',$tag['orphan']).")";
+$tag['orphan']['regex'] = "(".implode('|',$tag['orphan']['templates']).")";
 // deadend
 $tag['deadend']['templates'] = array(
 	'Deadend',
@@ -44,7 +44,7 @@ $tag['deadend']['templates'] = array(
 	'Dead-end',
 	'Needs links',
 );
-$tag['deadend']['regex'] = "(".implode('|',$tag['deadend']).")";
+$tag['deadend']['regex'] = "(".implode('|',$tag['deadend']['templates']).")";
 // sections
 $tag['sections']['templates'] = array(
 	'Sections',
@@ -52,7 +52,7 @@ $tag['sections']['templates'] = array(
 	'Cleanupsections',
 	'Needs sections',
 );
-$tag['sections']['regex'] = "(".implode('|',$tag['sections']).")";
+$tag['sections']['regex'] = "(".implode('|',$tag['sections']['templates']).")";
 // unref
 $tag['unref']['templates'] = array(
 	'Unreferenced',
@@ -86,7 +86,7 @@ $tag['unref']['templates'] = array(
 	'Unsourced',
 	'Unverified',
 );
-$tag['unref']['regex'] = "(".implode('|',$tag['unref']).")";
+$tag['unref']['regex'] = "(".implode('|',$tag['unref']['templates']).")";
 // emptysection
 $tag['emptysection']['templates'] = array(
 	'Emptysection',
@@ -95,7 +95,7 @@ $tag['emptysection']['templates'] = array(
 	'Emptysect',
 	'No content',
 );
-$tag['emptysection']['regex'] = "(".implode('|',$tag['emptysection']).")";
+$tag['emptysection']['regex'] = "(".implode('|',$tag['emptysection']['templates']).")";
 
 //TODO: Add badformat and stub t
 $tag['badformat'] = "";
