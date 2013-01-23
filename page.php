@@ -36,6 +36,27 @@ class Page {
 		if($this->namespace == "Image"){ $this->namespace = "File";}// default Image namespace to file
 	}
 	
+	
+//	                  //
+// Main bot functions //
+//                    //
+	
+	// returns false if not orphan
+	public function isOrphan()
+	{
+		$links = $wiki->whatlinkshere($orphan,"&blnamespace=0");
+		foreach($links as $link){
+			if($isorphan == true){
+				if(preg_match("/((List|Index) of|\(disambig(uation)?\))/i",$link) == FALSE)// names to skip
+				{
+					$linktext = $wiki->getpage($link);
+					if (preg_match("/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|sia|set index( articles)?).*\}\})/i",$linktext) == FALSE)
+					{return false;}
+				}
+			}
+		}
+	}
+	
 	//removeTag($tag,$arguments)
 	//addMultipleissues()
 
