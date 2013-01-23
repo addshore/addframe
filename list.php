@@ -92,14 +92,14 @@ if(isset($list))
 	{
 		if($namespace != 0) // if it is not specificly the main namespace
 		{
-			if(preg_match("/^".$ns.":/i",$item)) // get those that match the namespace we want
+			if(preg_match("/^".$namespaceregex.":/i",$item)) // get those that match the namespace we want
 			{
 				array_push($final,$item); // push our article to the final array
 			}
 		}
 		else // we much = 0 (mainspace)
 		{
-			if(preg_match("/^".$ns.":/i",$item) == false) // get those that dont match any other namespace
+			if(preg_match("/^".$namespaceregex.":/i",$item) == false) // get those that dont match any other namespace
 			{
 				array_push($final,$item); // push our article to the final array
 			}
