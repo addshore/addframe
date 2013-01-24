@@ -83,11 +83,15 @@ foreach ($list as $item)
 				//check if we can remove the stub tag
 				//check if page is unreferenced
 				//check if has empty section or tag in full section
-				//date maintanace tags
+				$page->fixDateTags();// fix any tempaltes that need a date
 				
 				if($page->hasSigchange)// check if a big change has happened to the page
 				{
 					// do lots of small formating fixes here
+					$page->dofixCitations();
+					$page->dofixHTML();
+					$page->dofixHyperlinking();
+					$page->dofixTypos();
 				}
 				break;
 			case "User talk":

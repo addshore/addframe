@@ -1,6 +1,7 @@
 <?
 
 require 'parser.php';
+require 'AWBFunctions.php';
 
 class Page {
 
@@ -20,6 +21,7 @@ class Page {
 	private $parsed;
 	private $sigchange = false;//has a significant change happened to the page (enough to edit)?
 	private $summary;//summary if edited
+	public $awb;
 	
 	// getters and setters
 	public function getName() { return $this->page; }
@@ -54,7 +56,7 @@ class Page {
 	// returns false if not orphan
 	public function isOrphan()
 	{
-		$links = $this->wiki->whatlinkshere($orphan,"&blnamespace=0");
+		$links = $this->wiki->whatlinkshere($this->getName(),"&blnamespace=0");
 		foreach($links as $link){
 			if(preg_match("/((List|Index) of|\(disambig(uation)?\))/i",$link) == FALSE)// names to skip
 			{
@@ -134,7 +136,18 @@ class Page {
 		}
 		$this->addSummary("Adding",$template);
 	}
-
+	
+	//hackily stuff on the AWB stuff
+	public function fixCitations(){$this->text = AWBFunctions::fixCitations($this->getText());}
+	public function fixHTML(){$this->text = AWBFunctions::fixHTML($this->getText());}
+	public function fixHyperlinking(){$this->text = AWBFunctions::fixHyperlinking($this->getText());}
+	public function fixTypos(){$this->text = AWBFunctions::fixTypos($this->getText());}
+	public function fixDateTags(){
+		$orig = $this->getText();
+		$this->text = AWBFunctions::fixDateTags($this->getText());
+		if($orig != $this->getText())
+		{$this->addSummary("Dating","Maint tags");}
+	}
 }
 	 
 ?>

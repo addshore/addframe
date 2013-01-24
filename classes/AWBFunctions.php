@@ -159,7 +159,7 @@ class AWBFunctions {
 	
 	public static function fixDateTags( $text ) {
 		
-		$text = preg_replace( '/\{\{\s*(?:template:)?\s*(?:wikify(?:-date)?|wfy|wiki)(\s*\|\s*section)?\s*\}\}/iS', "{{Wikify$1|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
+		//$text = preg_replace( '/\{\{\s*(?:template:)?\s*(?:wikify(?:-date)?|wfy|wiki)(\s*\|\s*section)?\s*\}\}/iS', "{{Wikify$1|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
 		$text = preg_replace( '/\{\{(template:)?(Clean( ?up)?|CU|Tidy)\}\}/iS', "{{Cleanup|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
 		$text = preg_replace( '/\{\{(template:)?(Linkless|Orphan)\}\}/iS', "{{Orphan|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
 		$text = preg_replace( '/\{\{(template:)?(Unreferenced(sect)?|add references|cite[ -]sources?|cleanup-sources?|needs? references|no sources|no references?|not referenced|references|unref|unsourced)\}\}/iS', "{{Unreferenced|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
