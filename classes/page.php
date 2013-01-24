@@ -103,7 +103,7 @@ class Page {
 	public function removeTag($template)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	{
 		$this->text = preg_replace($template->regexTemplate(),"",$this->text);
-		addSummary("Removing",$template->getName);
+		$this->addSummary("Removing",$template->getName);
 	}
 	
 	//remove the given template from the page
@@ -126,7 +126,7 @@ class Page {
 		{
 			$this->text = "{{BadFormat}}\n" .$this->text;
 		}
-		addSummary("Adding",$template);
+		$this->addSummary("Adding",$template);
 	}
 
 }
