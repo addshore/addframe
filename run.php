@@ -53,7 +53,7 @@ foreach ($list as $item)
 	$mysqldate = date( 'Y-m-d H:i:s', time() );// get the date
 	$recentlychecked = false;
 	
-	if(!$config['debug'])//if not debuging
+	if(!$config['debug'])//if not debuging 
 	{
 		// make sure we havent checked the page in the last 24 hours
 		$res = $db->select('checked','*',"article = '".$page->getName()."'");
