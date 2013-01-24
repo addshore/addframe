@@ -13,16 +13,16 @@ class Template {
 	// variables
 	private $name;// template name e.g. Template:Orphan $page would be "Orphan"
 	private $args;// template arguments
-	private $redirects;// stores redirects to here
+	private $redirects;// stores redirects to here 
 
 	public function getName() { return $this->name; } //returns the name of the template
 	
 	//returns the regex for matching whole template and args
-	public function regexTemplate() { return "/\{\{".$this->regexName().$this->regexArgs()."\}\}(\r|\n){0,3}/i"; }
+	public function regexTemplate() { return '/\{\{'.$this->regexName().$this->regexArgs().'\}\}(\r|\n){0,3}/i'; }
 	//returns the regex for template name and redirects
-	private function regexName() { return "(".$this->name."|".implode('|',$this->redirects).")"; }
+	private function regexName() { return '('.$this->name.'|'.implode('|',$this->redirects).')'; }
 	//returns the regex for arguments
-	private function regexArgs() { return "(\|(".implode('|',$this->args).")( ?= ?[0-9a-z _]*?)){0,".count($this->args)."}"; }
+	private function regexArgs() { return '(\|('.implode('|',$this->args).')( ?= ?[0-9a-z _]*?)){0,'.count($this->args).'}'; }
 
 }
 	 
