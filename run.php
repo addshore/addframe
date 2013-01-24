@@ -45,10 +45,12 @@ foreach ($list as $item)
 	// updated list = http://en.wikipedia.org/wiki/Wikipedia:Namespace
 	switch($page->getNamespace()){
 		case ""://article
-			if ($page->isOrphan == false)//if the page is not an orphan
+			if ($page->isOrphan == false){ $page->removeTag($config['tag']['orphan']); }
+			
+			if($page->hasSigchange)// check if a big change has happened to the page
 			{
-				//remove orphan tag
-				$page->removeTag($config['tag']['orphan']);
+				// do lots of small formating fixes here
+				// post the page
 			}
 			break;
 		case "User talk":

@@ -78,11 +78,37 @@ class Page {
 		}
 	}
 	
+	public function isPdf()
+	{ if( preg_match("/\.pdf$/i",$page->getName()) {return true; } }
+	
 	//remove the given template from the page
 	public function removeTag($template)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	{
 		$this->text = preg_replace($template->regexTemplate(),"",$this->text);
 		buildSummary("Removing ".$template->getName." tag";)
+	}
+	
+	//remove the given template from the page
+	public function addTag($template,$section)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
+	{
+		if($section)// if we want to add below a section
+		{
+			if(preg_match ("/== ?".$section." ?==/i",$this->text)) //if the section exists
+			{
+				$matches = preg_match ("/== ?(".$section.") ?==/i",$this->text)
+				$pieces = preg_split("/== ?".$section." ?==/i",$this->text);
+				$this->text = $pieces[0]."==".$matches[1]."==\n{{".$template."}} ".$pieces[1];
+			}
+			else // else it musant exist
+			{
+				$this->text = "==".$section."==\n{{BadFormat}}\n" .$this->text;
+			}
+		}
+		else// else just add it to the top
+		{
+			$this->text = "{{BadFormat}}\n" .$this->text;
+		}
+		buildSummary("Adding ".$template." tag";)
 	}
 
 }
