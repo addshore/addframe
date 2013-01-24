@@ -59,55 +59,54 @@ foreach ($list as $item)
 		$res = $db->select('checked','*',"article = '".$page->getName()."'");
 		if( !$res  ){echo $db->errorStr();} // if no result then say so
 		$ret = Database::mysql2array($res);
-		if(strtotime($ret[0]['checked']) < strtotime('now -24 hours'))
-		{
-			echo "Checked ".$page->getName()." less than 24 hours ago\n";
-			$recentlychecked = true;
+		if(!empty($ret)){
+			if(strtotime($ret[0]['checked']) < strtotime('now -24 hours'))
+			{
+				echo "Checked ".$page->getName()." less than 24 hours ago\n";
+				continue;//skip
+			}
 		}
 	}
 	
-	if($recentlychecked == false)
-	{
-		echo "Checking ".$page->getName()."\n";
-		$page->parse();
-		
-		//for reference (User|Wikipedia|FileMediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?)"
-		// updated list = http://en.wikipedia.org/wiki/Wikipedia:Namespace
-		switch($page->getNamespace()){
-			case ""://article
-				//check if deadend tag is under a section
-				if ($page->isOrphan() === false){ $page->removeTag($config['tag']['orphan']); }
-				if ($page->isUncat() === false){ $page->removeTag($config['tag']['uncat']); }
-				//check if page is deadend
-				//check if page still needs to be split into sections
-				//check if we can remove the stub tag
-				//check if page is unreferenced
-				//check if has empty section or tag in full section
-				$page->fixDateTags();// fix any tempaltes that need a date
-				
-				if($page->hasSigchange)// check if a big change has happened to the page
-				{
-					// do lots of small formating fixes here
-					$page->dofixCitations();
-					$page->dofixHTML();
-					$page->dofixHyperlinking();
-					$page->dofixTypos();
-				}
-				break;
-			case "User talk":
-				break;
-			case "File":
-				if ($page->isPdf() == true){ $page->addTag("BadFormat","(Summary)"); }
-				break;
-		}
-		
-		//Post
-		$wiki->edit(/*$page->getName()*/$config['sandbox'],$page->getText(),$page->getSummary(),true);
-		
-		//add artile to checked table
-		$res = $db->insert($config['tbdone'],array('article' => $page->getName(),'checked' => $mysqldate) ); // inset to database table with time
-		if( !$res  ){echo $db->errorStr();} // if no result then say so
+	echo "Checking ".$page->getName()."\n";
+	$page->parse();
+	
+	//for reference (User|Wikipedia|FileMediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?)"
+	// updated list = http://en.wikipedia.org/wiki/Wikipedia:Namespace
+	switch($page->getNamespace()){
+		case ""://article
+			//check if deadend tag is under a section
+			if ($page->isOrphan() === false){ $page->removeTag($config['tag']['orphan']); }
+			if ($page->isUncat() === false){ $page->removeTag($config['tag']['uncat']); }
+			//check if page is deadend
+			//check if page still needs to be split into sections
+			//check if we can remove the stub tag
+			//check if page is unreferenced
+			//check if has empty section or tag in full section
+			$page->fixDateTags();// fix any tempaltes that need a date
+			
+			if($page->hasSigchange)// check if a big change has happened to the page
+			{
+				// do lots of small formating fixes here
+				$page->dofixCitations();
+				$page->dofixHTML();
+				$page->dofixHyperlinking();
+				$page->dofixTypos();
+			}
+			break;
+		case "User talk":
+			break;
+		case "File":
+			if ($page->isPdf() == true){ $page->addTag("BadFormat","(Summary)"); }
+			break;
 	}
+	
+	//Post
+	$wiki->edit($page->getName()/*$config['sandbox']*/,$page->getText(),$page->getSummary(),true);
+	
+	//add artile to checked table
+	$res = $db->insert($config['tbdone'],array('article' => $page->getName(),'checked' => $mysqldate) ); // inset to database table with time
+	if( !$res  ){echo $db->errorStr();} // if no result then say so
 	
 	sleep(2);// sleep inbetween requests
 }

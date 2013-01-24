@@ -27,7 +27,7 @@ class Page {
 	public function getName() { return $this->page; }
 	public function getText() { if(!isset($this->text)){$this->loadText();} return $this->text;}
 	public function getNamespace() { if(!isset($this->namespace)){$this->parseNamespace();} return $this->namespace;}
-	public function getSummary(){return "[[User:Addbot|Bot:]] ".$this->summary."([[User talk:Addbot|Report Errors]])";}
+	public function getSummary(){return "[[User:Addbot|Bot:]] v2 - ".$this->summary."([[User talk:Addbot|Report Errors]])";}
 	public function hasSigchange() { return $this->sigchange; }
 	
 	// public functions
@@ -111,8 +111,11 @@ class Page {
 	//remove the given template from the page
 	public function removeTag($template)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	{
-		$this->text = preg_replace($template->regexTemplate(),"",$this->getText());
-		$this->addSummary("Removing",$template->getName());
+		if(preg_match($template->regexTemplate(),$this->getText()))//make sure the template is actually there
+		{
+			$this->text = preg_replace($template->regexTemplate(),"",$this->getText());
+			$this->addSummary("Removing",$template->getName());
+		}
 	}
 	
 	//remove the given template from the page
