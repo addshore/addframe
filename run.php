@@ -69,12 +69,21 @@ foreach ($list as $item)
 	if($recentlychecked == false)
 	{
 		echo "Checking ".$page->getName()."\n";
+		$page->parse();
 		
 		//for reference (User|Wikipedia|FileMediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?)"
 		// updated list = http://en.wikipedia.org/wiki/Wikipedia:Namespace
 		switch($page->getNamespace()){
 			case ""://article
-				if ($page->isOrphan == false){ $page->removeTag($config['tag']['orphan']); }
+				//check if deadend tag is under a section
+				if ($page->isOrphan() == false){ $page->removeTag($config['tag']['orphan']); }
+				if ($page->isUncat() == false){ $page->removeTag($config['tag']['uncat']); }
+				//check if page is deadend
+				//check if page still needs to be split into sections
+				//check if we can remove the stub tag
+				//check if page is unreferenced
+				//check if has empty section or tag in full section
+				//date maintanace tags
 				
 				if($page->hasSigchange)// check if a big change has happened to the page
 				{
