@@ -137,27 +137,25 @@ class Page {
 	public function addTag($template,$section=null)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	{
 		//if it doesnt already exist
-		if(preg_match($template->regexTemplate(),$this->getText()) == false)
+		if(preg_match($template->regexTemplate(),$this->getText())){ return false; }
+		if($section)// if we want to add below a section
 		{
-			if($section)// if we want to add below a section
+			if(preg_match ("/== ?".$section." ?==/i",$this->text)) // if the section exists
 			{
-				if(preg_match ("/== ?".$section." ?==/i",$this->text)) // if the section exists
-				{
-					$matches = preg_match ("/== ?".$section." ?==/i",$this->getText());
-					$pieces = preg_split("/== ?".$section." ?==/i",$this->getText());
-					$this->text = $pieces[0]."==".$matches[1]."==\n{{".$template->getName()."}} ".$pieces[1];
-				}
-				else // else the section must exist
-				{
-					$this->text = "==".$section."==\n{{".$template->getName()."}}\n" .$this->getText();
-				}
+				$matches = preg_match ("/== ?".$section." ?==/i",$this->getText());
+				$pieces = preg_split("/== ?".$section." ?==/i",$this->getText());
+				$this->text = $pieces[0]."==".$matches[1]."==\n{{".$template->getName()."}} ".$pieces[1];
 			}
-			else// else just add it to the top of the page
+			else // else the section must exist
 			{
-				$this->text = "{{".$template->getName()."}}\n" .$this->getText();
+				$this->text = "==".$section."==\n{{".$template->getName()."}}\n" .$this->getText();
 			}
-			$this->addSummary("Adding",$template);// add to the summary
 		}
+		else// else just add it to the top of the page
+		{
+			$this->text = "{{".$template->getName()."}}\n" .$this->getText();
+		}
+		$this->addSummary("Adding",$template->getName());// add to the summary
 	}
 	
 	//hackily stuff on the AWB stuff

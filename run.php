@@ -117,7 +117,10 @@ foreach ($list as $item)
 	}
 	
 	//Post
-	$wiki->edit($page->getName()/*$config['sandbox']*/,$page->getText(),$page->getSummary(),true);
+	if($page->hasSigchange() == true)
+	{
+		$wiki->edit(/*$page->getName()*/$config['sandbox'],$page->getText(),$page->getSummary(),true);
+	}
 	
 	//add artile to checked table
 	$res = $db->insert($config['tbdone'],array('article' => $page->getName(),'checked' => $mysqldate) ); // inset to database table with time
