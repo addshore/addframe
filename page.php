@@ -103,7 +103,7 @@ class Page {
 	public function removeTag($template)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	{
 		$this->text = preg_replace($template->regexTemplate(),"",$this->text);
-		addSummary("Removing",$template->getName)
+		addSummary("Removing",$template->getName);
 	}
 	
 	//remove the given template from the page
@@ -113,7 +113,7 @@ class Page {
 		{
 			if(preg_match ("/== ?".$section." ?==/i",$this->text)) // if the section exists
 			{
-				$matches = preg_match ("/== ?".$section." ?==/i",$this->text)
+				$matches = preg_match ("/== ?".$section." ?==/i",$this->text);
 				$pieces = preg_split("/== ?".$section." ?==/i",$this->text);
 				$this->text = $pieces[0]."==".$matches[1]."==\n{{".$template."}} ".$pieces[1];
 			}
@@ -126,7 +126,7 @@ class Page {
 		{
 			$this->text = "{{BadFormat}}\n" .$this->text;
 		}
-		addSummary("Adding",$template)
+		addSummary("Adding",$template);
 	}
 
 }
