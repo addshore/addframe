@@ -39,8 +39,26 @@ class Page {
 		else{$this->namespace = $matches[1];}
 		if($this->namespace == "Image"){ $this->namespace = "File";}// default Image namespace to file
 	}
-	private function buildSummary($change)
+	
+	//adds an eddit to array summary
+	private function addSummary($type,$what)
 	{
+		$this->sigchange = true;//if we have a summary it muse be a sig change
+		array_push($summary[$type],$what);
+	}
+	//forms the summary out of array
+	public function getSummary()
+	{
+		$sb = "[[User:Addbot|Bot:]] ";
+		foreach($this->summary as $type => $list)
+		{
+			$sb = $sb.$type." ";
+			foreach ($list as $id => $what)
+			{
+				$sb = $sb.$what.", ";
+			}
+		}
+		$sb = $sb."([[User talk:Addbot|Report Errors]])";
 	}
 	
 	
@@ -85,7 +103,7 @@ class Page {
 	public function removeTag($template)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	{
 		$this->text = preg_replace($template->regexTemplate(),"",$this->text);
-		buildSummary("Removing ".$template->getName." tag";)
+		addSummary("Removing",$template->getName)
 	}
 	
 	//remove the given template from the page
@@ -93,9 +111,9 @@ class Page {
 	{
 		if($section)// if we want to add below a section
 		{
-			if(preg_match ("/== ?".$section." ?==/i",$this->text)) //if the section exists
+			if(preg_match ("/== ?".$section." ?==/i",$this->text)) // if the section exists
 			{
-				$matches = preg_match ("/== ?(".$section.") ?==/i",$this->text)
+				$matches = preg_match ("/== ?".$section." ?==/i",$this->text)
 				$pieces = preg_split("/== ?".$section." ?==/i",$this->text);
 				$this->text = $pieces[0]."==".$matches[1]."==\n{{".$template."}} ".$pieces[1];
 			}
@@ -108,7 +126,7 @@ class Page {
 		{
 			$this->text = "{{BadFormat}}\n" .$this->text;
 		}
-		buildSummary("Adding ".$template." tag";)
+		addSummary("Adding",$template)
 	}
 
 }

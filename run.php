@@ -50,16 +50,17 @@ foreach ($list as $item)
 			if($page->hasSigchange)// check if a big change has happened to the page
 			{
 				// do lots of small formating fixes here
-				// post the page
 			}
 			break;
 		case "User talk":
 			break;
 		case "File":
+			if ($page->isPdf == true){ $page->addTag("BadFormat","(Summary)"); }
 			break;
 	}
 	
 	//If page content is now different to the old page then POST
+	//$page->getText(); $page->getSummary(); minor = true;
 	
 	sleep(999);//to be removed after testing
 }
