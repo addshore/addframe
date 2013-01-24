@@ -146,6 +146,7 @@ class Page {
 	public function fixHTML(){$this->text = AWBFunctions::fixHTML($this->getText());}
 	public function fixHyperlinking(){$this->text = AWBFunctions::fixHyperlinking($this->getText());}
 	public function fixTypos(){$this->text = AWBFunctions::fixTypos($this->getText());}
+	public function fixTemplates(){$this->text = AWBFunctions::fixTemplates($this->getText());}
 	public function fixDateTags(){
 		$orig = $this->getText();
 		$this->text = AWBFunctions::fixDateTags($this->getText());

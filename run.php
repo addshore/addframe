@@ -88,6 +88,7 @@ foreach ($list as $item)
 			if($page->hasSigchange)// check if a big change has happened to the page
 			{
 				// do lots of small formating fixes here
+				$page->dofixTemplates();
 				$page->dofixCitations();
 				$page->dofixHTML();
 				$page->dofixHyperlinking();
