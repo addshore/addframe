@@ -49,9 +49,8 @@ echo "Checking ".count($list)." articles\n";
 sleep(1);
 foreach ($list as $item)
 {
-	echo "Checking ".$item['article']."\n";
 	$page = new Page($item['article'],$wiki);// create our page instance
-	$page->parse();// parse the page
+	echo "Checking ".$page->getName()."\n";
 	
 	//for reference (User|Wikipedia|FileMediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?)"
 	// updated list = http://en.wikipedia.org/wiki/Wikipedia:Namespace
@@ -67,7 +66,7 @@ foreach ($list as $item)
 		case "User talk":
 			break;
 		case "File":
-			if ($page->isPdf == true){ $page->addTag("BadFormat","(Summary)"); }
+			if ($page->isPdf() == true){ $page->addTag("BadFormat","(Summary)"); }
 			break;
 	}
 	
@@ -75,7 +74,8 @@ foreach ($list as $item)
 	//$page->getText(); $page->getSummary(); minor = true;
 	
 	//add artile to checked table
-	$res = $db->insert($config['tbdone'],array('article' => $page->getName(),'checked' => "NOW()") ); // inset to database table with time
+	$mysqldate = date( 'Y-m-d H:i:s', time() );// get the date
+	$res = $db->insert($config['tbdone'],array('article' => $page->getName(),'checked' => $mysqldate) ); // inset to database table with time
 	if( !$res  ){echo $db->errorStr();} // if no result then say so
 	
 	sleep(999);//to be removed after testing

@@ -21,9 +21,9 @@ class Page {
 	private $summary;
 	
 	// getters and setters
-	public function getName() { return $page; }
+	public function getName() { return $this->page; }
 	public function getText() { if(!isset($this->text)){$this->loadText();} return $this->text;}
-	public function getNamespace() { if(!isset($namespace)){$this->parseNamespace();} return $namespace;}
+	public function getNamespace() { if(!isset($this->namespace)){$this->parseNamespace();} return $this->namespace;}
 	public function hasSigchange() { return $this->sigchange; }
 	
 	// public functions
@@ -60,11 +60,11 @@ class Page {
 	// returns false if not orphan
 	public function isOrphan()
 	{
-		$links = $wiki->whatlinkshere($orphan,"&blnamespace=0");
+		$links = $this->wiki->whatlinkshere($orphan,"&blnamespace=0");
 		foreach($links as $link){
 			if(preg_match("/((List|Index) of|\(disambig(uation)?\))/i",$link) == FALSE)// names to skip
 			{
-				if (preg_match("/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|sia|set index( articles)?).*\}\})/i",$wiki->getpage($link)) == FALSE)
+				if (preg_match("/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|sia|set index( articles)?).*\}\})/i",$this->wiki->getpage($link)) == FALSE)
 				{return false;}
 			}
 		}
@@ -73,16 +73,14 @@ class Page {
 	// returns false if page is not deadend
 	public function isDeadend()
 	{
-		preg_match_all('/\[\[([a-z\/ _\(\)\|\.0-9]*)\]\]/i',$text, $links, PREG_PATTERN_ORDER);// match links to articles
+		preg_match_all('/\[\[([a-z\/ _\(\)\|\.0-9]*)\]\]/i',$this->getText(), $links, PREG_PATTERN_ORDER);// match links to articles
 		foreach($links[1] as $link){
 			if(preg_match('/\|/',$link) != 0){
 				$split = preg_split('/\|/',$link);// get the link rather than text
 				$link = $split[0];
 			}
 			if (preg_match('/:/',$link) == 0){
-				if(strlen($wiki->getpage($link)) > 0){
-					return false;
-				}				
+				return false;			
 			}
 		}
 	}
@@ -93,8 +91,8 @@ class Page {
 	//remove the given template from the page
 	public function removeTag($template)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	{
-		$this->text = preg_replace($template->regexTemplate(),"",$this->text);
-		$this->addSummary("Removing",$template->getName);
+		$this->text = preg_replace($template->regexTemplate(),"",$this->getText());
+		$this->addSummary("Removing",$template->getName());
 	}
 	
 	//remove the given template from the page
@@ -104,18 +102,18 @@ class Page {
 		{
 			if(preg_match ("/== ?".$section." ?==/i",$this->text)) // if the section exists
 			{
-				$matches = preg_match ("/== ?".$section." ?==/i",$this->text);
-				$pieces = preg_split("/== ?".$section." ?==/i",$this->text);
+				$matches = preg_match ("/== ?".$section." ?==/i",$this->getText());
+				$pieces = preg_split("/== ?".$section." ?==/i",$this->getText());
 				$this->text = $pieces[0]."==".$matches[1]."==\n{{".$template."}} ".$pieces[1];
 			}
 			else // else it musant exist
 			{
-				$this->text = "==".$section."==\n{{BadFormat}}\n" .$this->text;
+				$this->text = "==".$section."==\n{{BadFormat}}\n" .$this->getText();
 			}
 		}
 		else// else just add it to the top
 		{
-			$this->text = "{{BadFormat}}\n" .$this->text;
+			$this->text = "{{BadFormat}}\n" .$this->getText;
 		}
 		$this->addSummary("Adding",$template);
 	}
