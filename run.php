@@ -50,35 +50,53 @@ sleep(1);
 foreach ($list as $item)
 {
 	$page = new Page($item['article'],$wiki);// create our page instance
-	echo "Checking ".$page->getName()."\n";
+	$mysqldate = date( 'Y-m-d H:i:s', time() );// get the date
+	$recentlychecked = false;
 	
-	//for reference (User|Wikipedia|FileMediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?)"
-	// updated list = http://en.wikipedia.org/wiki/Wikipedia:Namespace
-	switch($page->getNamespace()){
-		case ""://article
-			if ($page->isOrphan == false){ $page->removeTag($config['tag']['orphan']); }
-			
-			if($page->hasSigchange)// check if a big change has happened to the page
-			{
-				// do lots of small formating fixes here
-			}
-			break;
-		case "User talk":
-			break;
-		case "File":
-			if ($page->isPdf() == true){ $page->addTag("BadFormat","(Summary)"); }
-			break;
+	if(!$config['debug'])//if not debuging
+	{
+		// make sure we havent checked the page in the last 24 hours
+		$res = $db->select('checked','*',"article = '".$page->getName()."'");
+		if( !$res  ){echo $db->errorStr();} // if no result then say so
+		$ret = Database::mysql2array($res);
+		if(strtotime($ret[0]['checked']) < strtotime('now -24 hours'))
+		{
+			echo "Checked ".$page->getName()." less than 24 hours ago\n";
+			$recentlychecked = true;
+		}
 	}
 	
-	//If page content is now different to the old page then POST
-	//$page->getText(); $page->getSummary(); minor = true;
+	if($recentlychecked == false)
+	{
+		echo "Checking ".$page->getName()."\n";
+		
+		//for reference (User|Wikipedia|FileMediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?)"
+		// updated list = http://en.wikipedia.org/wiki/Wikipedia:Namespace
+		switch($page->getNamespace()){
+			case ""://article
+				if ($page->isOrphan == false){ $page->removeTag($config['tag']['orphan']); }
+				
+				if($page->hasSigchange)// check if a big change has happened to the page
+				{
+					// do lots of small formating fixes here
+				}
+				break;
+			case "User talk":
+				break;
+			case "File":
+				if ($page->isPdf() == true){ $page->addTag("BadFormat","(Summary)"); }
+				break;
+		}
+		
+		//If page content is now different to the old page then POST
+		//$page->getText(); $page->getSummary(); minor = true;
+		
+		//add artile to checked table
+		$res = $db->insert($config['tbdone'],array('article' => $page->getName(),'checked' => $mysqldate) ); // inset to database table with time
+		if( !$res  ){echo $db->errorStr();} // if no result then say so
+	}
 	
-	//add artile to checked table
-	$mysqldate = date( 'Y-m-d H:i:s', time() );// get the date
-	$res = $db->insert($config['tbdone'],array('article' => $page->getName(),'checked' => $mysqldate) ); // inset to database table with time
-	if( !$res  ){echo $db->errorStr();} // if no result then say so
-	
-	sleep(999);//to be removed after testing
+	sleep(2);// sleep inbetween requests
 }
 
 ?>
