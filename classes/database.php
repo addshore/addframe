@@ -61,7 +61,7 @@ class Database {
      */
 	public function doQuery( $sql ) {
 		$sql = trim($sql);
-		echo "MySQL: $sql;\n";
+		//echo "MySQL: $sql;\n";
 		$result = mysql_query( $sql, $this->mConn );
 		//var_dump($result);
 		if( mysql_errno( $this->mConn ) == 2006 ) {
@@ -186,7 +186,7 @@ class Database {
      * @return object MySQL object
      */
 	public function insert( $table, $values, $options = array() ) {
-		echo "Running insert.";
+		//echo "Running insert.";
 		if( $this->mReadonly == true ) throw new Exception( "Write query called while under read-only mode" );
 		if ( !count( $values ) ) {
             return true;
@@ -207,7 +207,7 @@ class Database {
         $vals = implode( ',', $vals );
         
         $sql = "INSERT " . implode( ' ', $options ) . " INTO $table ($cols) VALUES ($vals)";
-        echo $sql;
+        //echo $sql;
         return (bool)$this->doQuery( $sql );
 	}
 	
