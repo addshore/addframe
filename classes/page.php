@@ -149,7 +149,7 @@ class Page {
 	}
 	
 	//remove the given template from the page
-	public function addTag($template,$section)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
+	public function addTag($template,$section=null)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	{
 		if($section)// if we want to add below a section
 		{
@@ -166,7 +166,7 @@ class Page {
 		}
 		else// else just add it to the top
 		{
-			$this->text = "{{BadFormat}}\n" .$this->getText;
+			$this->text = "{{".$template."}}\n" .$this->getText();
 		}
 		$this->addSummary("Adding",$template);
 	}
