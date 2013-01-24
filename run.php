@@ -6,9 +6,9 @@ echo "loading...\n";
 sleep(1);
 
 // load the classes and stuff
-require 'botclasses.php';
-require 'database.php';
-require 'page.php';
+require 'classes/botclasses.php';
+require 'classes/database.php';
+require 'classes/page.php';
 require 'config.php';
 
 // initialise the wiki

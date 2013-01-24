@@ -1,5 +1,5 @@
 <?
-require 'database.php';
+require 'classes/database.php';
 require 'config.php';
 
 echo "Connecting to DB...\n";

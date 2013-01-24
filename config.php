@@ -20,7 +20,7 @@ $config['dbname'] = 'addbot';
 $config['tblist'] = 'pending';                 // table containing articles to be checked
 $config['tbdone'] = 'checked';                // table containing articles checked along with time
 
-require 'template.php';
+require 'classes/template.php';
 
 // regex to match the date used in maintanace templates
 $config['date'] = "((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])";
