@@ -79,7 +79,8 @@ foreach ($list as $item)
 			if ($page->isOrphan() === false){ $page->removeTag($config['tag']['orphan']); }
 			if ($page->isUncat() === false){ $page->removeTag($config['tag']['uncat']); }
 			if ($page->isDeadend() === false){ $page->removeTag($config['tag']['deadend']); }
-			//check if page still needs to be split into sections
+			if ($page->needsSections() === false){ $page->removeTag($config['tag']['sections']); }
+			$page->removeTag($config['tag']['wikify']);
 			//check if we can remove the stub tag
 			//check if page is unreferenced
 			//check if has empty section or tag in full section
