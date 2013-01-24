@@ -3,7 +3,7 @@
 class Template {
 
 	// construct the page (you probably want to call load after this)
-	public function __construct($name,$args,$redirects) {
+	public function __construct($name,$redirects,$args) {
 		$this->name = $name;
 		$this->args = $args;
 		$this->redirects = $redirects;
@@ -18,11 +18,11 @@ class Template {
 	public function getName() { return $this->name; } //returns the name of the template
 	
 	//returns the regex for matching whole template and args
-	public function regexTemplate() { return "/\{\{".$this->regexName.$this->regexArgs."\}\}/i"; }
+	public function regexTemplate() { return "/\{\{".$this->regexName().$this->regexArgs()."\}\}(\r|\n){0,3}/i"; }
 	//returns the regex for template name and redirects
 	private function regexName() { return "(".$this->name."|".implode('|',$this->redirects).")"; }
 	//returns the regex for arguments
-	private function regexArgs() { return "(|(".implode('|',$config['tag']['orphan']['parameters']).")( ?= ?[0-9a-z _])){0,".count($config['tag']['orphan']['parameters'])."}"; }
+	private function regexArgs() { return "(\|(".implode('|',$this->args).")( ?= ?[0-9a-z _]*?)){0,".count($this->args)."}"; }
 
 }
 	 

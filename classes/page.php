@@ -46,7 +46,7 @@ class Page {
 	private function addSummary($type,$what)
 	{
 		$this->sigchange = true;//if we have a summary it muse be a sig change
-		$this->summary = $this->summary.$type." ".$what;
+		$this->summary = $this->summary.$type." ".$what." ";
 		echo $type." ".$what."\n";
 	}
 	
