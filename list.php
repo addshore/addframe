@@ -17,12 +17,10 @@ $option = getopt($shortopts, $longopts);
 echo "loading...\n";
 sleep(1);
 
-// load the classes
+// load the classes and stuff
 require 'botclasses.php';
 require 'database.php';
-
-// load the config
-require 'config.gen.php';
+require 'config.php';
 
 // initialise the wiki
 $wiki = new wikipedia;

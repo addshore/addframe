@@ -5,14 +5,11 @@ error_reporting(E_ALL ^ E_NOTICE);
 echo "loading...\n";
 sleep(1);
 
-// load the classes
+// load the classes and stuff
 require 'botclasses.php';
 require 'database.php';
 require 'page.php';
-
-// load the configs
-require 'config.gen.php';
-require 'config.regex.php';
+require 'config.php';
 
 // initialise the wiki
 $wiki = new wikipedia;
@@ -51,7 +48,7 @@ foreach ($list as $item)
 			if ($page->isOrphan == false)//if the page is not an orphan
 			{
 				//remove orphan tag
-				$page->removeTag("orphan");
+				$page->removeTag($config['tag']['orphan']);
 			}
 			break;
 		case "User talk":

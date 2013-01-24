@@ -17,23 +17,30 @@ class Page {
 	private $namespace;// page namespace (No colon)
 	private $wiki;
 	private $parser;// instance of the parser.php class
+	private $sigchange = false;//has a significant change happened to the page (enough to edit)?
+	private $summary;
 	
 	// getters and setters
 	public function getName() { return $page; }
 	public function getText() { if(!isset($this->text)){$this->loadText();} return $this->text;}
 	public function getNamespace() { if(!isset($namespace)){$this->parseNamespace();} return $namespace;}
+	public function hasSigchange() { return $this->sigchange; }
 	
 	// public functions
 	public function parse() { $this->parser = new parser($this->page,$this->getText()); $this->parser->parse();} // create instance of parser class and parse
 	
 	// private functions
 	private function loadText() { $this->text = $this->wiki->getpage($this->page);} // load the text from the wiki
+	private function postPage() { $this->wiki->edit($this->page,$this->text,$this->summary,true);} // load the text from the wiki
 	private function parseNamespace()
 	{
 		$result = preg_match("/^((User|Wikipedia|File|Image|Mediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?):?/i",$this->page,$matches);
 		if($result == 0){ $this->namespace = "";}// default to article namespace
 		else{$this->namespace = $matches[1];}
 		if($this->namespace == "Image"){ $this->namespace = "File";}// default Image namespace to file
+	}
+	private function buildSummary($change)
+	{
 	}
 	
 	
@@ -71,8 +78,12 @@ class Page {
 		}
 	}
 	
-	//removeTag($tag,$arguments)
-	//addMultipleissues()
+	//remove the given template from the page
+	public function removeTag($template)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
+	{
+		$this->text = preg_replace($template->regexTemplate(),"",$this->text);
+		buildSummary("Removing ".$template->getName." tag";)
+	}
 
 }
 	 
