@@ -87,6 +87,7 @@ class Page {
 	public function isOrphan()
 	{
 		$links = $this->wiki->whatlinkshere($this->getName(),"&blnamespace=0");
+		if(count($links) == 0) {return true;}// if no links
 		foreach($links as $link){
 			if(preg_match("/((List|Index) of|\(disambig(uation)?\))/i",$link) == FALSE)// names to skip
 			{
