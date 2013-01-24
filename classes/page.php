@@ -54,6 +54,35 @@ class Page {
 // Main bot functions //
 //                    //
 	
+	// returns false doesnt need sections
+	public function needsSections()
+	{
+		$largestsection = 0;
+		$sectioncount = 0;
+		preg_match_all('/\n==(=)? ?.* ?===?/i',$text, $sections, PREG_PATTERN_ORDER);
+		$split = preg_split('/\n==(=)? ?.* ?===?/i',$text);
+			
+		foreach($split as $id => $section){
+			if($id == 0){
+				$largestsection = strlen($section);
+				$sectioncount++;
+			}
+			else{
+				if (preg_match('/See ?also|(external( links)?|references|notes|bibliography|further( reading)?)/i',$sections[0][$id-1]) == 0){
+					echo "-- IS a valid section per ".$sections[0][$id-1]." \n";
+					if(strlen($section) > $largestsection){
+						$largestsection = strlen($section);
+					}
+				$sectioncount++;
+				}
+			}
+		}
+		if($sectioncount >= 4 && $largestsection <= 5000){//was 2750 for AVG
+			$text = preg_replace("/\{\{((cleanup|needs ?)?Sections)(\| ?(date) ?(= ?(January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])? ?){0,1} *\}\}(\r\n|\n\n){0,3}/i","",$text);
+			$return false;
+		}
+	}
+	
 	// returns false if not orphan
 	public function isOrphan()
 	{
