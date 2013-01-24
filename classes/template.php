@@ -11,11 +11,11 @@ class Template {
 	}	
 	
 	// variables
-	private $page;// template name e.g. Template:Orphan $page would be "Orphan"
+	private $name;// template name e.g. Template:Orphan $page would be "Orphan"
 	private $args;// template arguments
 	private $redirects;// stores redirects to here
 
-	public function getName() { return $this->page; } //returns the name of the template
+	public function getName() { return $this->name; } //returns the name of the template
 	
 	//returns the regex for matching whole template and args
 	public function regexTemplate() { return "/\{\{".$this->regexName.$this->regexArgs."\}\}/i"; }

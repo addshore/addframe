@@ -40,7 +40,7 @@ if(!$config['debug'])//if not debuging
 	echo "Removing ".count($list)." articles from pending\n";
 	sleep(1);
 	foreach ($list as $item){
-		$res = $db->delete($config['tbpending'],array('article' => $item['article']));
+		$res = $db->delete($config['tblist'],array('article' => $item['article']));
 		if( !$res  ){echo $db->errorStr();} // if no result then say so
 	}
 }
@@ -76,8 +76,8 @@ foreach ($list as $item)
 		switch($page->getNamespace()){
 			case ""://article
 				//check if deadend tag is under a section
-				if ($page->isOrphan() == false){ $page->removeTag($config['tag']['orphan']); }
-				if ($page->isUncat() == false){ $page->removeTag($config['tag']['uncat']); }
+				if ($page->isOrphan() === false){ $page->removeTag($config['tag']['orphan']); }
+				if ($page->isUncat() === false){ $page->removeTag($config['tag']['uncat']); }
 				//check if page is deadend
 				//check if page still needs to be split into sections
 				//check if we can remove the stub tag
