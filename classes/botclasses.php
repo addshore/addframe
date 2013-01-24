@@ -276,6 +276,36 @@ class wikipedia {
             }
         }
     }
+	
+	/**
+     * Returns an array with all the ctegories of a page
+     * @param $page The page to check
+     * @param $hidden (bool) Do you want to only show hiddencats or only show normalcats? (can be null)
+     * @return array
+     **/
+    function categories($page,$hidden=null) {
+		if($hidden === true){ $h = "&clshow=hidden";}
+		elseif($hidden === false){$h = "&clshow=!hidden";}
+		else{$h = "";}
+        $continue = '';
+        $pages = array();
+        while (true) {
+            $res = $this->query('?action=query&prop=categories&clprop=hidden&titles='.urlencode($category).$h.'&format=php&cmlimit=1000'.$continue);
+            if (isset($x['error'])) {
+                return false;
+            }
+            foreach ($res['query']['pages'] as $p) {
+				foreach ($p['categories'] as $x) {
+					$pages[] = $x['title'];
+				}
+            }
+            if (empty($res['query-continue']['categories']['clcontinue'])) {
+                return $pages;
+            } else {
+                $continue = '&clcontinue='.urlencode($res['query-continue']['categories']['clcontinue']);
+            }
+        }
+    }
 
     /**
      * Returns a list of pages that link to $page.
