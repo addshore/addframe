@@ -33,13 +33,16 @@ $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $co
 $result = $db->select('pending','*');
 $list = Database::mysql2array($result);
 
-// before we start checking we want to remove our got articles from the DB
-// so that another instance wont try and check them also
-echo "Removing ".count($list)." articles from pending\n";
-sleep(1);
-foreach ($list as $item){
-	$res = $db->delete($config['tbpending'],array('article' => $item['article']));
-	if( !$res  ){echo $db->errorStr();} // if no result then say so
+if(!$config['debug'])//if not debuging
+{
+	// before we start checking we want to remove our got articles from the DB
+	// so that another instance wont try and check them also
+	echo "Removing ".count($list)." articles from pending\n";
+	sleep(1);
+	foreach ($list as $item){
+		$res = $db->delete($config['tbpending'],array('article' => $item['article']));
+		if( !$res  ){echo $db->errorStr();} // if no result then say so
+	}
 }
 
 echo "Checking ".count($list)." articles\n";
