@@ -44,21 +44,12 @@ class Page {
 	private function addSummary($type,$what)
 	{
 		$this->sigchange = true;//if we have a summary it muse be a sig change
-		array_push($summary[$type],$what);
+		$this->summary = $this->summary.$type." ".$what;
 	}
 	//forms the summary out of array
 	public function getSummary()
 	{
-		$sb = "[[User:Addbot|Bot:]] ";
-		foreach($this->summary as $type => $list)
-		{
-			$sb = $sb.$type." ";
-			foreach ($list as $id => $what)
-			{
-				$sb = $sb.$what.", ";
-			}
-		}
-		$sb = $sb."([[User talk:Addbot|Report Errors]])";
+		return "[[User:Addbot|Bot:]] ".$this->summary."([[User talk:Addbot|Report Errors]])";
 	}
 	
 	
