@@ -75,12 +75,14 @@ foreach ($list as $item)
 	// updated list = http://en.wikipedia.org/wiki/Wikipedia:Namespace
 	switch($page->getNamespace()){
 		case ""://article
-			if ($page->isOrphan() === true){ $page->addTag($config['tag']['orphan']->getName()); }
-			if ($page->isUncat() === true){ $page->addTag($config['tag']['uncat']->getName()); }
+			if ($page->isOrphan() === true){ $page->addTag($config['tag']['orphan']); }
+			if ($page->isUncat() === true){ $page->addTag($config['tag']['uncat']); }
+			if ($page->isDeadend() === true){ $page->addTag($config['tag']['deadend']); }
 			
 			if ($page->isOrphan() === false){ $page->removeTag($config['tag']['orphan']); }
 			if ($page->isUncat() === false){ $page->removeTag($config['tag']['uncat']); }
 			if ($page->isDeadend() === false){ $page->removeTag($config['tag']['deadend']); }
+			
 			if ($page->needsSections() === false){ $page->removeTag($config['tag']['sections']); }
 			$page->removeTag($config['tag']['wikify']);
 			

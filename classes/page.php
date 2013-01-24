@@ -110,6 +110,7 @@ class Page {
 				return false;			
 			}
 		}
+		if(count($links) == 0){ return true; }
 	}
 	
 	// returns false if not uncat
@@ -135,24 +136,28 @@ class Page {
 	//remove the given template from the page
 	public function addTag($template,$section=null)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	{
-		if($section)// if we want to add below a section
+		//if it doesnt already exist
+		if(preg_match($template->regexTemplate(),$this->getText()) == false)
 		{
-			if(preg_match ("/== ?".$section." ?==/i",$this->text)) // if the section exists
+			if($section)// if we want to add below a section
 			{
-				$matches = preg_match ("/== ?".$section." ?==/i",$this->getText());
-				$pieces = preg_split("/== ?".$section." ?==/i",$this->getText());
-				$this->text = $pieces[0]."==".$matches[1]."==\n{{".$template."}} ".$pieces[1];
+				if(preg_match ("/== ?".$section." ?==/i",$this->text)) // if the section exists
+				{
+					$matches = preg_match ("/== ?".$section." ?==/i",$this->getText());
+					$pieces = preg_split("/== ?".$section." ?==/i",$this->getText());
+					$this->text = $pieces[0]."==".$matches[1]."==\n{{".$template->getName()."}} ".$pieces[1];
+				}
+				else // else the section must exist
+				{
+					$this->text = "==".$section."==\n{{".$template->getName()."}}\n" .$this->getText();
+				}
 			}
-			else // else it musant exist
+			else// else just add it to the top of the page
 			{
-				$this->text = "==".$section."==\n{{BadFormat}}\n" .$this->getText();
+				$this->text = "{{".$template->getName()."}}\n" .$this->getText();
 			}
+			$this->addSummary("Adding",$template);// add to the summary
 		}
-		else// else just add it to the top
-		{
-			$this->text = "{{".$template."}}\n" .$this->getText();
-		}
-		$this->addSummary("Adding",$template);
 	}
 	
 	//hackily stuff on the AWB stuff

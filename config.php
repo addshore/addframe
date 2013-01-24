@@ -35,5 +35,6 @@ $config['tag']['sections'] = new Template("Sections",array('Needsections','Clean
 $config['tag']['unref'] = new Template("Unreferenced",array('Citesources','Cleanup-cite','NR','Needs references','No ref','No reference','No references','No refs','No sources','Noref','Noreference','Noreferences','Norefs','Nosources','Nr','Ref needed','References','References-needed','Refs needed','Refsneeded','UNref','Uncited-article','Unref','Unrefarticle','Unreferences article','Unreferenced stub','UnreferencedArticle','Unsourced','Unverified'),array('date'));
 $config['tag']['emptysection'] = new Template("Emptysection",array('Empty-section','Emptysect','No content'),array('date'|'small'));
 $config['tag']['wikify'] = new Template("Wikify",array('Wf','Wfy','Wiki','Wikify section','Wikify-section','Wikifying','Wkfy'),array('date'));
+$config['tag']['badformat'] = new Template("Bad format",array('BadFormat','BadPDF'),array());
 
 ?>
