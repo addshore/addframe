@@ -290,7 +290,7 @@ class wikipedia {
         $continue = '';
         $pages = array();
         while (true) {
-            $res = $this->query('?action=query&prop=categories&clprop=hidden&titles='.urlencode($category).$h.'&format=php&cmlimit=1000'.$continue);
+            $res = $this->query('?action=query&prop=categories&clprop=hidden&titles='.urlencode($page).$h.'&format=php&cllimit=1000'.$continue);
             if (isset($x['error'])) {
                 return false;
             }

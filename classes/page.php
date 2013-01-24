@@ -79,7 +79,7 @@ class Page {
 		}
 		if($sectioncount >= 4 && $largestsection <= 5000){//was 2750 for AVG
 			$text = preg_replace("/\{\{((cleanup|needs ?)?Sections)(\| ?(date) ?(= ?(January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])? ?){0,1} *\}\}(\r\n|\n\n){0,3}/i","",$text);
-			$return false;
+			return false;
 		}
 	}
 	
@@ -115,28 +115,12 @@ class Page {
 	// returns false if not uncat
 	public function isUncat()
 	{
-		//TODO: set this in config
-		$ignorelist = array(
-		'Articles lacking sources (Erik9bot)',
-		'Articles created via the Article Wizard',
-		'Unreviewed new articles',
-		'Article Feedback 5',
-		);
-		
-		preg_match_all('/\[\[Category:(.*?)(\|(.*?))?\]\]/Si',$this->getText(), $cats);
-		if( $cats ) {
-			$cats = $cats[1];
-			foreach( $cats as $cat ) {
-				if( in_array( $cat, $ignorelist ) ) {continue;}// if in ignore list ignore category
-				if( $this->wiki->getpage('Category:'.$cat) ) {// if the cat is a blue link
-					return false;// the page isnt uncategorised
-				}
-			}
-		}
+		$cats = $this->wiki->categories($this->getName(),false);// get cats for this page
+		if(count($cats) == 0){return true;}else{return false;}// tag as apropriate
 	}
 	
 	public function isPdf()
-	{ if( preg_match("/\.pdf$/i",$page->getName())) {return true; } }
+	{ if( preg_match("/\.pdf$/i",$this->getName())) {return true; } }
 	
 	//remove the given template from the page
 	public function removeTag($template)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
