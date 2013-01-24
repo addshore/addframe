@@ -76,12 +76,17 @@ foreach ($list as $item)
 	switch($page->getNamespace()){
 		case ""://article
 			//check if deadend tag is under a section
+			if ($page->isOrphan() === true){ $page->addTag($config['tag']['orphan']->getName()); }
 			if ($page->isOrphan() === false){ $page->removeTag($config['tag']['orphan']); }
 			if ($page->isUncat() === false){ $page->removeTag($config['tag']['uncat']); }
 			if ($page->isDeadend() === false){ $page->removeTag($config['tag']['deadend']); }
 			if ($page->needsSections() === false){ $page->removeTag($config['tag']['sections']); }
 			$page->removeTag($config['tag']['wikify']);
-			//check if we can remove the stub tag
+			//TODO: + uncat
+			//TODO: - stubs
+			//TODO: fix double redirects
+			//TODO: add reflist
+			
 			//check if page is unreferenced
 			//check if has empty section or tag in full section
 			$page->fixDateTags();// fix any tempaltes that need a date
@@ -97,6 +102,10 @@ foreach ($list as $item)
 			}
 			break;
 		case "User talk":
+			//TODO:Subst user talk templates
+			break;
+		case "Wikipedia":
+			//TODO:Update AWB talk template subst list
 			break;
 		case "File":
 			if ($page->isPdf() == true){ $page->addTag("BadFormat","(Summary)"); }
