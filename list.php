@@ -52,6 +52,10 @@ elseif(preg_match("/^(web|html)/i",$option['method'])){
 	$text = preg_replace("/(\[\[|\]\])/","",$text); // remove all square brackets (wikilinks)
 	$list = explode("\n",$text); // explode into an array we can use
 }
+// add only the one article given
+elseif(preg_match("/^(single|only)/i",$option['method'])){
+	$list = array($option['source']);
+}
 else{// our regex didnt match a source
 	echo "No preset source found\n";
 }
