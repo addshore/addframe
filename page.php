@@ -97,7 +97,7 @@ class Page {
 	}
 	
 	public function isPdf()
-	{ if( preg_match("/\.pdf$/i",$page->getName()) {return true; } }
+	{ if( preg_match("/\.pdf$/i",$page->getName())) {return true; } }
 	
 	//remove the given template from the page
 	public function removeTag($template)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
