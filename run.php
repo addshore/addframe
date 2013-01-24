@@ -78,7 +78,7 @@ foreach ($list as $item)
 			//check if deadend tag is under a section
 			if ($page->isOrphan() === false){ $page->removeTag($config['tag']['orphan']); }
 			if ($page->isUncat() === false){ $page->removeTag($config['tag']['uncat']); }
-			//check if page is deadend
+			if ($page->isDeadend() === false){ $page->removeTag($config['tag']['deadend']); }
 			//check if page still needs to be split into sections
 			//check if we can remove the stub tag
 			//check if page is unreferenced

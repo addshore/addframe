@@ -149,7 +149,7 @@ class Page {
 	public function fixDateTags(){
 		$orig = $this->getText();
 		$this->text = AWBFunctions::fixDateTags($this->getText());
-		if($orig != $this->getText())
+		if(strlen($orig) > strlen($this->getText())+5)
 		{$this->addSummary("Dating","Maint tags");}
 	}
 }

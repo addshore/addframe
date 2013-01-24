@@ -6,9 +6,9 @@
 $shortopts  = "";
 $shortopts .= "r::"; // recursive, use if we DONT want recursion when getting cats
 $longopts  = array(
+    "trigger::",// trigger if needed for web
     "method:",// method to be used in terms of source
     "source:",// source to be used in method
-    "trigger::",// trigger if needed for web
 );
 
 // get the options the file was run with
@@ -46,7 +46,7 @@ elseif(preg_match("/^(template|trans(clusions?)?)/i",$option['method'])){
 }
 // get via a web list
 elseif(preg_match("/^(web|html)/i",$option['method'])){
-	if(isset($option['trigger'])){ file_get_contents($option['trigger']); } // if set get the trigger file
+	if(isset($option['trigger'])){ echo "Using ".$option['trigger']."\n"; file_get_contents($option['trigger']); } // if set get the trigger file
 	sleep(30); // sleep for 30 seconds to make sure the page is updated
 	$text = file_get_contents($option['source']); // get the content url
 	$text = preg_replace("/(\[\[|\]\])/","",$text); // remove all square brackets (wikilinks)
