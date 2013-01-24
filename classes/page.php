@@ -15,19 +15,21 @@ class Page {
 	private $page;// page name (e.g. "User:Addshore")
 	private $text;// page text
 	private $namespace;// page namespace (No colon)
-	private $wiki;
+	private $wiki;// instance of wiki we are using
 	private $parser;// instance of the parser.php class
+	private $parsed;
 	private $sigchange = false;//has a significant change happened to the page (enough to edit)?
-	private $summary;
+	private $summary;//summary if edited
 	
 	// getters and setters
 	public function getName() { return $this->page; }
 	public function getText() { if(!isset($this->text)){$this->loadText();} return $this->text;}
 	public function getNamespace() { if(!isset($this->namespace)){$this->parseNamespace();} return $this->namespace;}
+	public function getSummary(){return "[[User:Addbot|Bot:]] ".$this->summary."([[User talk:Addbot|Report Errors]])";}
 	public function hasSigchange() { return $this->sigchange; }
 	
 	// public functions
-	public function parse() { $this->parser = new parser($this->page,$this->getText()); $this->parser->parse();} // create instance of parser class and parse
+	public function parse() { $this->parser = new parser($this->page,$this->getText()); $this->parsed = $this->parser->parse(); return $this->parsed;} // create instance of parser class and parse
 	
 	// private functions
 	private function loadText() { $this->text = $this->wiki->getpage($this->page);} // load the text from the wiki
@@ -39,19 +41,11 @@ class Page {
 		else{$this->namespace = $matches[1];}
 		if($this->namespace == "Image"){ $this->namespace = "File";}// default Image namespace to file
 	}
-	
-	//adds an eddit to array summary
 	private function addSummary($type,$what)
 	{
 		$this->sigchange = true;//if we have a summary it muse be a sig change
 		$this->summary = $this->summary.$type." ".$what;
 	}
-	//forms the summary out of array
-	public function getSummary()
-	{
-		return "[[User:Addbot|Bot:]] ".$this->summary."([[User talk:Addbot|Report Errors]])";
-	}
-	
 	
 //	                  //
 // Main bot functions //
@@ -81,6 +75,29 @@ class Page {
 			}
 			if (preg_match('/:/',$link) == 0){
 				return false;			
+			}
+		}
+	}
+	
+	// returns false if not uncat
+	public function isUncat()
+	{
+		//TODO: set this in config
+		$ignorelist = array(
+		'Articles lacking sources (Erik9bot)',
+		'Articles created via the Article Wizard',
+		'Unreviewed new articles',
+		'Article Feedback 5',
+		);
+		
+		preg_match_all('/\[\[Category:(.*?)(\|(.*?))?\]\]/Si',$this->getText(), $cats);
+		if( $cats ) {
+			$cats = $cats[1];
+			foreach( $cats as $cat ) {
+				if( in_array( $cat, $ignorelist ) ) {continue;}// if in ignore list ignore category
+				if( $this->wiki->getpage('Category:'.$cat) ) {// if the cat is a blue link
+					return false;// the page isnt uncategorised
+				}
 			}
 		}
 	}
