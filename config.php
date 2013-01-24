@@ -18,7 +18,7 @@ $config['dbname'] = 'addbot';
 
 // table settings
 $config['tblist'] = 'pending';                 // table containing articles to be checked
-$config['checked'] = 'checked';                // table containing articles checked along with time
+$config['tbdone'] = 'checked';                // table containing articles checked along with time
 
 require 'template.php';
 

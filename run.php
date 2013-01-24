@@ -33,6 +33,15 @@ $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $co
 $result = $db->select('pending','*');
 $list = Database::mysql2array($result);
 
+// before we start checking we want to remove our got articles from the DB
+// so that another instance wont try and check them also
+echo "Removing ".count($list)." articles from pending\n";
+sleep(1);
+foreach ($list as $item){
+	$res = $db->delete($config['tbpending'],array('article' => $item['article']));
+	if( !$res  ){echo $db->errorStr();} // if no result then say so
+}
+
 echo "Checking ".count($list)." articles\n";
 sleep(1);
 foreach ($list as $item)
@@ -61,6 +70,10 @@ foreach ($list as $item)
 	
 	//If page content is now different to the old page then POST
 	//$page->getText(); $page->getSummary(); minor = true;
+	
+	//add artile to checked table
+	$res = $db->insert($config['tbdone'],array('article' => $page->getName(),'checked' => "NOW()") ); // inset to database table with time
+	if( !$res  ){echo $db->errorStr();} // if no result then say so
 	
 	sleep(999);//to be removed after testing
 }
