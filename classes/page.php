@@ -54,6 +54,40 @@ class Page {
 // Main bot functions //
 //                    //
 	
+	public function multipleIssues()
+	{
+		global $config;
+		$removed = 0;
+		$mi = "";
+		$this->parse(); // work with $this->parsed;
+		foreach($this->parsed['wikobject_templates'] as $x)
+		{
+			if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x['name']))
+			{
+				$mi = $mi.$x['arguments'][1];
+				$removed = $removed + $x['attributes']['length'];
+				$this->text = substr($this->getText(),"",$x['attributes']['start']-$removed,$x['attributes']['length']);
+			}
+			else// else if we match a tag
+			{
+				foreach($config['tag'] as $tag)
+				{
+					if(preg_match('/'.$tag->regexName().'/i',$x['name']))
+					{
+						$removed = $removed + $x['attributes']['length'];
+						$mi = $mi.$tag['rawCode'];
+						$this->text = substr($this->getText(),"",$x['attributes']['start']-$removed,$x['attributes']['length']);
+					}
+				}
+			}
+		}
+		$mi = preg_replace("/(\n|\r)/","",$mi);
+		$mi = preg_replace("/\}\}/","}}\n",$mi);
+		$mi = "{{Multiple issues|\n".$mi."}}\n";
+		$this->text = $mi.$this->getText();
+	
+	}
+	
 	// returns false doesnt need sections
 	public function needsSections()
 	{
@@ -156,6 +190,29 @@ class Page {
 			$this->text = "{{".$template->getName()."}}\n" .$this->getText();
 		}
 		$this->addSummary("Adding",$template->getName());// add to the summary
+	}
+	
+	//http://en.wikipedia.org/w/index.php?title=Wikipedia:AutoEd/whitespace.js&action=raw&ctype=text/javascript
+	public function fixWhitespace()
+	{
+		$this->text = preg_replace('/\t/'," ", $this->getText() );
+		
+		$this->text = preg_replace('/^ ? ? \n/m',"\n", $this->getText() );
+		$this->text = preg_replace('/(\n\n)\n+/',"$1", $this->getText() );
+		$this->text = preg_replace('/== ? ?\n\n==/',"==\n==", $this->getText() );
+		$this->text = preg_replace('/\n\n(\* ?\[?http)/',"\n$1", $this->getText() );
+		
+		$this->text = preg_replace('/^ ? ? \n/m',"\n", $this->getText() );
+		$this->text = preg_replace('/\n\n\*/',"\n*", $this->getText() );
+		$this->text = preg_replace('/([=\n]\n)\n+/',"$1", $this->getText() );
+		$this->text = preg_replace('/ \n/',"\n", $this->getText() );
+		
+		$this->text = preg_replace('/^([\*#]+:*) /m',"$1", $this->getText() );
+		$this->text = preg_replace('/^([\*#]+:*)/m',"$1 ", $this->getText() );
+		
+		$this->text = preg_replace('/^(={1,4} )[ ]*([^= ][^=]*[^= ])[ ]*( ={1,4})$/m',"$1$2$3", $this->getText() );
+		$this->text = preg_replace('/^(={1,4})([^= ][^=]*[^= ])[ ]+(={1,4})$/m',"$1$2$3", $this->getText() );
+		$this->text = preg_replace('/^(={1,4})[ ]+([^= ][^=]*[^= ])(={1,4})$/m',"$1$2$3", $this->getText() );
 	}
 	
 	//hackily stuff on the AWB stuff
