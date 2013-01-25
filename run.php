@@ -49,7 +49,7 @@ echo "Checking ".count($list)." articles\n";
 sleep(1);
 foreach ($list as $item)
 {
-	$page = new Page($item['article'],$wiki);// create our page instance
+	$page = new Page(/*$item['article']*/"Amiga 1000",$wiki);// create our page instance
 	$mysqldate = date( 'Y-m-d H:i:s', time() );// get the date
 	$recentlychecked = false;
 	
@@ -69,12 +69,12 @@ foreach ($list as $item)
 	}
 	
 	echo "Checking ".$page->getName()."\n";
-	$page->parse();
 	
 	//for reference (User|Wikipedia|FileMediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?)"
 	// updated list = http://en.wikipedia.org/wiki/Wikipedia:Namespace
 	switch($page->getNamespace()){
 		case ""://article
+		
 			if ($page->isOrphan() === true){ $page->addTag($config['tag']['orphan']); }
 			if ($page->isUncat() === true){ $page->addTag($config['tag']['uncat']); }
 			if ($page->isDeadend() === true){ $page->addTag($config['tag']['deadend']); }
@@ -85,6 +85,8 @@ foreach ($list as $item)
 			
 			if ($page->needsSections() === false){ $page->removeTag($config['tag']['sections']); }
 			$page->removeTag($config['tag']['wikify']);
+			
+			//Fix multiple issues
 			
 			//TODO: - stubs
 			//TODO: fix double redirects
@@ -97,11 +99,13 @@ foreach ($list as $item)
 			if($page->hasSigchange)// check if a big change has happened to the page
 			{
 				// do lots of small formating fixes here
-				$page->dofixTemplates();
-				$page->dofixCitations();
-				$page->dofixHTML();
-				$page->dofixHyperlinking();
-				$page->dofixTypos();
+				$page->fixTemplates();
+				$page->fixCitations();
+				$page->fixHTML();
+				$page->fixHyperlinking();
+				$page->fixTypos();
+				$page->multipleIssues();
+				$page->fixWhitespace();
 			}
 			break;
 		case "User talk":
@@ -118,7 +122,7 @@ foreach ($list as $item)
 	//Post
 	if($page->hasSigchange() == true)
 	{
-		$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+		$wiki->edit(/*$page->getName()*/"User:Addshore/sandbox",$page->getText(),$page->getSummary(),true);
 	}
 	
 	//add artile to checked table
