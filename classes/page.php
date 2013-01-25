@@ -137,7 +137,7 @@ class Page {
 	public function addTag($template,$section=null)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	{
 		//if it doesnt already exist
-		if(preg_match($template->regexTemplate(),$this->getText())){ return false; }
+		if(preg_match($template->regexTemplate(),$this->getText()) || preg_match($template->regexTempIssues(),$this->getText())){ return false; }
 		if($section)// if we want to add below a section
 		{
 			if(preg_match ("/== ?".$section." ?==/i",$this->text)) // if the section exists
