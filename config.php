@@ -6,7 +6,7 @@ $config['url'] = 'en.wikipedia.org';                        // wiki url we will 
 $config['user'] = 'Addbot';                                 // bot username for login
 $config['owner'] = 'Addshore';                              // bot owner
 $config['sandbox'] = 'User:'.$config['user'].'/Sandbox';    // sandbox location
-$config['debug'] = false;									// true for debugging
+$config['debug'] = true;									// true for debugging
 require '/home/addshore/.password.addbot';                  // $config['password'] = 'password';
 
 $config['checkfreq'] = 24;                        // how long in hours before a page can be checked again
@@ -32,8 +32,8 @@ $config['tag']['orphan'] = new Template('Orphan',array('Do-attempt','Lonely','Or
 $config['tag']['deadend'] = new Template('Deadend',array('Dep','Dead end page','Dead-end','Needs links'),array('date'));
 $config['tag']['sections'] = new Template('Sections',array('Needsections','Cleanupsections','Needs sections',),array('date'));
 $config['tag']['unref'] = new Template('Unreferenced',array('Citesources','Cleanup-cite','NR','Needs references','No ref','No reference','No references','No refs','No sources','Noref','Noreference','Noreferences','Norefs','Nosources','Nr','Ref needed','References','References-needed','Refs needed','Refsneeded','UNref','Uncited-article','Unref','Unrefarticle','Unreferences article','Unreferenced stub','UnreferencedArticle','Unsourced','Unverified'),array('date'));
-$config['tag']['emptysection'] = new Template('Emptysection',array('Empty-section','Emptysect','No content'),array('date'|'small'));
-$config['tag']['wikify'] = new Template('Wikify',array('Wf','Wfy','Wiki','Wikify section','Wikify-section','Wikifying','Wkfy'),array('date'));
-$config['tag']['badformat'] = new Template('Bad format',array('BadFormat','BadPDF'),array());
+$config['tag']['emptysection'] = new Template('Emptysection',array('Empty-section','Emptysect','No content'),array('date'|'small'),false);
+$config['tag']['wikify'] = new Template('Wikify',array('Wf','Wfy','Wiki','Wikify section','Wikify-section','Wikifying','Wkfy'),array('date'),false);
+$config['tag']['badformat'] = new Template('Bad format',array('BadFormat','BadPDF'),array(),false);
 
 ?>
