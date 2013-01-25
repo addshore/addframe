@@ -86,7 +86,6 @@ foreach ($list as $item)
 			if ($page->needsSections() === false){ $page->removeTag($config['tag']['sections']); }
 			$page->removeTag($config['tag']['wikify']);
 			
-			//TODO: + uncat
 			//TODO: - stubs
 			//TODO: fix double redirects
 			//TODO: add reflist
@@ -119,14 +118,14 @@ foreach ($list as $item)
 	//Post
 	if($page->hasSigchange() == true)
 	{
-		$wiki->edit(/*$page->getName()*/$config['sandbox'],$page->getText(),$page->getSummary(),true);
+		$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
 	}
 	
 	//add artile to checked table
 	$res = $db->insert($config['tbdone'],array('article' => $page->getName(),'checked' => $mysqldate) ); // inset to database table with time
 	if( !$res  ){echo $db->errorStr();} // if no result then say so
 	
-	sleep(2);// sleep inbetween requests
+	sleep(1);// sleep inbetween requests
 }
 
 ?>
