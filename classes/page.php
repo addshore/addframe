@@ -60,32 +60,36 @@ class Page {
 		$removed = 0;
 		$mi = "";
 		$this->parse(); // work with $this->parsed;
-		foreach($this->parsed['wikobject_templates'] as $x)
+		foreach($this->parsed['wikObject_templates'] as $x)
 		{
-			if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x['name']))
+			if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
 			{
-				$mi = $mi.$x['arguments'][1];
-				$removed = $removed + $x['attributes']['length'];
-				$this->text = substr($this->getText(),"",$x['attributes']['start']-$removed,$x['attributes']['length']);
+				$mi = $mi.$x->arguments[1];
+				$removed = $removed + $x->attributes['length'];
+				$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
 			}
 			else// else if we match a tag
 			{
 				foreach($config['tag'] as $tag)
 				{
-					if(preg_match('/'.$tag->regexName().'/i',$x['name']))
+				echo $x->rawcode."\n";//RM
+					if(preg_match('/'.$tag->regexName().'/i',$x->name))
 					{
-						$removed = $removed + $x['attributes']['length'];
+						$removed = $removed + $x->attributes['length'];
 						$mi = $mi.$tag['rawCode'];
-						$this->text = substr($this->getText(),"",$x['attributes']['start']-$removed,$x['attributes']['length']);
+						$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
 					}
 				}
 			}
 		}
-		$mi = preg_replace("/\n\n/","",$mi);//get rid of double new lines
-		$mi = preg_replace("/\}\}/","}}\n",$mi);//make sure each template is on a new line
-		$mi = preg_replace("/\n\n/","",$mi);//get rid of double new lines
+		//$mi = preg_replace("/\n\n/","",$mi);//get rid of double new lines
+		//$mi = preg_replace("/\}\}/","}}\n",$mi);//make sure each template is on a new line
+		//$mi = preg_replace("/\n\n/","",$mi);//get rid of double new lines
+		echo $mi;
 		$split = preg_split("/\n/",$mi,0,PREG_SPLIT_NO_EMPTY);//split into each tag
 		$mi = "{{Multiple issues|\n";//start mi
+		print_r($split);
+		sleep(999);
 		foreach ($split as $tag)
 		{
 			$mi = $mi.$tag."\n";//add each tag
