@@ -3,7 +3,7 @@
 class Template {
 
 	// construct the page (you probably want to call load after this)
-	public function __construct($name,$redirects,$args,$mi=true) {
+	public function __construct($name,$redirects) {
 		$this->name = $name;
 		$this->redirects = $redirects;
 	}	
