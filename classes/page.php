@@ -253,7 +253,11 @@ class Page {
 		$orig = $this->getText();
 		$this->text = AWBFunctions::fixDateTags($this->getText());
 		if(strlen($orig) > strlen($this->getText())+5)
-		{$this->addSummary("Dating","Maint tags");}
+		{$this->addSummary("Dating","Maint tags");}//if there is a change then add to edit summary
+	}
+	
+		public function fixGeneral()
+	{
 	}
 }
 	 

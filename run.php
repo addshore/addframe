@@ -88,13 +88,17 @@ foreach ($list as $item)
 				$page->fixTemplates();
 				$page->multipleIssues();
 				$page->fixWhitespace();
+				$page->fixGeneral();
 			}
 			break;
 		case "User talk":
 			//TODO:Subst user talk templates
 			break;
 		case "Wikipedia":
-			//TODO:Update AWB talk template subst list
+			if($page->getName() == "Wikipedia:AutoWikiBrowser/User talk templates")//if it is our AWB page
+			{
+				exec("php /home/addshore/addbot/task.awbtemplates.php");//run the external check
+			}
 			break;
 		case "File":
 			if ($page->isPdf() == true){ $page->addTag("Bad format","(Summary)"); }
