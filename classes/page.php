@@ -83,19 +83,16 @@ class Page {
 			{
 				foreach($config['tag'] as $tag)
 				{
-					if(preg_match('/'.$tag->regexName().'/i',$x->name))//if it is one of our tags
+					if(preg_match('/'.$tag->regexName().'/i',$x->name))
 					{
-						if(!preg_match("/\|(sections|sect?)/i",$x->rawCode))//if we have a section param ignore it
-						{
-							$mi = $mi.$x->rawCode;
-							$this->text = substr_replace($this->getText(),"",$x->attributes['start']-$removed-1,$x->attributes['length']);
-							$removed = $removed + $x->attributes['length'];
-						}
+					echo $x->name." matched by ".$tag->regexName()."\n";
+						$mi = $mi.$x->rawCode;
+						$this->text = substr_replace($this->getText(),"",$x->attributes['start']-$removed-1,$x->attributes['length']);
+						$removed = $removed + $x->attributes['length'];
 					}
 				}
 			}
 		}
-		$mi = preg_replace('/\}\}/','}}\n',$mi);//crappy way to make sure we split at every tag
 		$split = preg_split("/\n/",$mi,0,PREG_SPLIT_NO_EMPTY);//split into each tag
 		if(count($split) > 1)
 		{
@@ -114,9 +111,9 @@ class Page {
 		{
 			return false;//we actually dont have any tags 
 		}
-		
+
 		$this->text = $mi."\n".$this->getText();//add to origional text
-	
+
 	}
 	
 	// returns false doesnt need sections
