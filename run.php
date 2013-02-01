@@ -50,23 +50,6 @@ sleep(1);
 foreach ($list as $item)
 {
 	$page = new Page(/*$item['article']*/"Amiga 1000",$wiki);// create our page instance
-	$mysqldate = date( 'Y-m-d H:i:s', time() );// get the date
-	$recentlychecked = false;
-	
-	if(!$config['debug'])//if not debuging 
-	{
-		// make sure we havent checked the page in the last 24 hours
-		$res = $db->select('checked','*',"article = '".$page->getName()."'");
-		if( !$res  ){echo $db->errorStr();} // if no result then say so
-		$ret = Database::mysql2array($res);
-		if(!empty($ret)){
-			if(strtotime($ret[0]['checked']) < strtotime('now -24 hours'))
-			{
-				echo "Checked ".$page->getName()." less than 24 hours ago\n";
-				continue;//skip
-			}
-		}
-	}
 	
 	echo "Checking ".$page->getName()."\n";
 	
@@ -122,12 +105,8 @@ foreach ($list as $item)
 	//Post
 	if($page->hasSigchange() == true)
 	{
-		$wiki->edit(/*$page->getName()*/"User:Addshore/sandbox",$page->getText(),$page->getSummary(),true);
+		$wiki->edit(/*$page->getName()*/"User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
 	}
-	
-	//add artile to checked table
-	$res = $db->insert($config['tbdone'],array('article' => $page->getName(),'checked' => $mysqldate) ); // inset to database table with time
-	if( !$res  ){echo $db->errorStr();} // if no result then say so
 	
 	sleep(1);// sleep inbetween requests
 }
