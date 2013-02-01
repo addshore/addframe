@@ -6,7 +6,7 @@ $config['url'] = 'en.wikipedia.org';                        // wiki url we will 
 $config['user'] = 'Addbot';                                 // bot username for login
 $config['owner'] = 'Addshore';                              // bot owner
 $config['sandbox'] = 'User:'.$config['user'].'/Sandbox';    // sandbox location
-$config['debug'] = true;									// true for debugging
+$config['debug'] = false;									// true for debugging
 require '/home/addshore/.password.addbot';                  // $config['password'] = 'password';
 
 $config['checkfreq'] = 24;                        // how long in hours before a page can be checked again

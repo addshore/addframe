@@ -30,7 +30,7 @@ sleep(1);
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 
 // get the current list of pending articles
-$result = $db->select('pending','*');
+$result = $db->select('pending','*',null,0,10);
 $list = Database::mysql2array($result);
 
 if(!$config['debug'])//if not debuging
@@ -49,7 +49,7 @@ echo "Checking ".count($list)." articles\n";
 sleep(1);
 foreach ($list as $item)
 {
-	$page = new Page(/*$item['article']*/"Dr. Ciriaco Santiago Memorial Award",$wiki);// create our page instance
+	$page = new Page($item['article'],$wiki);// create our page instance
 	
 	echo "Checking ".$page->getName()."\n";
 	
@@ -99,10 +99,10 @@ foreach ($list as $item)
 	//Post
 	if($page->hasSigchange() == true)//TODO: check page exists before posting
 	{
-		$wiki->edit(/*$page->getName()*/"User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
+		$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
 	}
 	
-	sleep(1);// sleep inbetween requests
+	sleep(2);// sleep inbetween requests
 }
 
 ?>
