@@ -92,6 +92,7 @@ class Page {
 				}
 			}
 		}
+		$mi = preg_replace('/\}\}/','}}\n',$mi);//crappy way to make sure we split at every tag
 		$split = preg_split("/\n/",$mi,0,PREG_SPLIT_NO_EMPTY);//split into each tag
 		if(count($split) > 1)
 		{

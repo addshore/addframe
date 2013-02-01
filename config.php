@@ -27,6 +27,8 @@ require 'classes/template.php';
 // regex to match the date used in maintanace templates
 $config['date'] = '((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])';
 
+$config['tag']['abbreviations'] = new Template('Abbreviations',array('Abbrev'),array());
+$config['tag']['advert'] = new Template('Advert',array('Abbrev'|'AD'|'Ad speak'),array());
 $config['tag']['uncat'] = new Template('Uncategorized',array('Cat needed','CatNeeded','Categories needed','Categories requested','Categorise','Categorize','Category needed','Category requested','Categoryneeded','Cats needed','Needs Cat','Needs Cats','No categories','No category','Nocat','Nocategory','Nocats','Uncat','Uncategorised'),array('date'));
 $config['tag']['orphan'] = new Template('Orphan',array('Do-attempt','Lonely','Orp'),array('date','att','geo','few','incat'));
 $config['tag']['deadend'] = new Template('Deadend',array('Dep','Dead end page','Dead-end','Needs links'),array('date'));
