@@ -55,6 +55,7 @@ foreach ($list as $item)
 {
 	$page = new Page($item['article'],$wiki);// create our page instance
 	if (strlen($page->getText()) < 10){continue;}//if page size is less than 10 (page doesnt exist) skip
+	if ($wiki->nobots ($page->getName(),"Addbot",$page->getText())){continue;}//make sure we are allowed to edit the page
 	echo "Checking ".$page->getName()."\n";
 	
 	//for reference (User|Wikipedia|FileMediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?)"
@@ -104,6 +105,7 @@ foreach ($list as $item)
 	if($page->hasSigchange() == true)//TODO: check page exists before posting
 	{
 		$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+		sleep(60);
 	}
 	
 	sleep(2);// sleep inbetween requests

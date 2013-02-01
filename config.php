@@ -12,7 +12,7 @@ require '/home/addshore/.password.addbot';                  // $config['password
 $config['checkfreq'] = 24;                        // how long in hours before a page can be checked again
 
 // database settings
-$config['dbhost'] = 'bots-sql3';
+$config['dbhost'] = 'i-000000b4.pmtpa.wmflabs';
 $config['dbport'] = '3306';
 $config['dbuser'] = 'addshore';
 require '/home/addshore/.password.db';            //$config['dbpass'] = 'password';
