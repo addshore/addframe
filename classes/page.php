@@ -69,7 +69,7 @@ class Page {
 				{
 					foreach($x->arguments[1] as $tagarg)
 					{
-						$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n"
+						$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n";
 					}
 				}
 				else//else we must be a new MI style
