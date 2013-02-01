@@ -83,11 +83,14 @@ class Page {
 			{
 				foreach($config['tag'] as $tag)
 				{
-					if(preg_match('/'.$tag->regexName().'/i',$x->name))
+					if(preg_match('/'.$tag->regexName().'/i',$x->name))//if it is one of our tags
 					{
-						$mi = $mi.$x->rawCode;
-						$this->text = substr_replace($this->getText(),"",$x->attributes['start']-$removed-1,$x->attributes['length']);
-						$removed = $removed + $x->attributes['length'];
+						if(!preg_match("/\|(sections|sect?)/i",$x->rawCode))//if we have a section param ignore it
+						{
+							$mi = $mi.$x->rawCode;
+							$this->text = substr_replace($this->getText(),"",$x->attributes['start']-$removed-1,$x->attributes['length']);
+							$removed = $removed + $x->attributes['length'];
+						}
 					}
 				}
 			}
