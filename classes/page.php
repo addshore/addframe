@@ -81,9 +81,17 @@ class Page {
 				}
 			}
 		}
-		$mi = preg_replace("/(\n|\r)/","",$mi);
-		$mi = preg_replace("/\}\}/","}}\n",$mi);
-		$mi = "{{Multiple issues|\n".$mi."}}\n";
+		$mi = preg_replace("/\n\n/","",$mi);//get rid of double new lines
+		$mi = preg_replace("/\}\}/","}}\n",$mi);//make sure each template is on a new line
+		$mi = preg_replace("/\n\n/","",$mi);//get rid of double new lines
+		$split = preg_split("/\n/",$mi,0,PREG_SPLIT_NO_EMPTY);//split into each tag
+		$mi = "{{Multiple issues|\n";//start mi
+		foreach ($split as $tag)
+		{
+			$mi = $mi.$tag."\n";//add each tag
+		}
+		$mi = $mi."}}\n";//add the end of the tag
+		
 		$this->text = $mi.$this->getText();
 	
 	}
