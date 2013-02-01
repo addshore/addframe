@@ -86,14 +86,25 @@ class Page {
 		//$mi = preg_replace("/\}\}/","}}\n",$mi);//make sure each template is on a new line
 		//$mi = preg_replace("/\n\n/","",$mi);//get rid of double new lines
 		$split = preg_split("/\n/",$mi,0,PREG_SPLIT_NO_EMPTY);//split into each tag
-		$mi = "{{Multiple issues|\n";//start mi
-		foreach ($split as $tag)
+		if(count($split) > 1)
 		{
-			$mi = $mi.$tag."\n";//add each tag
+			$mi = "{{Multiple issues|\n";//start mi
+			foreach ($split as $tag)
+			{
+				$mi = $mi.$tag."\n";//add each tag
+			}
+			$mi = $mi."}}";//add the end of the tag
 		}
-		$mi = $mi."}}\n";//add the end of the tag
+		elseif(count($split) == 1)//if only 1 we dont want to use multiple issues
+		{
+			$mi = $split[0];
+		}
+		else
+		{
+			return false;//we actually dont have any tags 
+		}
 		
-		$this->text = $mi.$this->getText();//add to origional text
+		$this->text = $mi."\n".$this->getText();//add to origional text
 	
 	}
 	

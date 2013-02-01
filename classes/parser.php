@@ -578,7 +578,7 @@ class parser {
 	
 	public function length () {
 		return strlen($this->attributes['text']);
-	}
+	}
 }
 
 ?>
