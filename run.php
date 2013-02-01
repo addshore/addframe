@@ -77,7 +77,7 @@ foreach ($list as $item)
 			//check if has empty section or tag in full section
 			$page->fixDateTags();// fix any tempaltes that need a date
 			
-			if($page->hasSigchange)// check if a big change has happened to the page
+			if($page->hasSigchange() === true)// check if a big change has happened to the page
 			{
 				// do lots of small formating fixes here
 				$page->fixTemplates();

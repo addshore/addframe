@@ -19,7 +19,7 @@ class Page {
 	private $wiki;// instance of wiki we are using
 	private $parser;// instance of the parser.php class
 	private $parsed;
-	private $sigchange = false;//has a significant change happened to the page (enough to edit)?
+	private $sigchange;//has a significant change happened to the page (enough to edit)?
 	private $summary;//summary if edited
 	public $awb;
 	
