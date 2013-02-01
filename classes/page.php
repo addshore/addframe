@@ -8,8 +8,8 @@ class Page {
 	// construct the page (you probably want to call load after this)
 	public function __construct($page,$wiki) {
 		$this->page = preg_replace("/_/"," ",$page);
-		$this->parseNamespace();
 		$this->wiki = $wiki;
+		$this->parseNamespace();
 		$this->loadText();//load the wikitext from page
 	}	
 	
@@ -32,11 +32,11 @@ class Page {
 	public function hasSigchange() { return $this->sigchange; }
 	
 	// public functions
-	public function parse() { $this->parser = new parser($this->page,$this->getText()); $this->parsed = $this->parser->parse(); return $this->parsed;} // create instance of parser class and parse
+	public function parse() { $this->parser = new parser($this->getName(),$this->getText()); $this->parsed = $this->parser->parse(); return $this->parsed;} // create instance of parser class and parse
 	
 	// private functions
-	private function loadText() { $this->text = $this->wiki->getpage($this->page);} // load the text from the wiki
-	private function postPage() { $this->wiki->edit($this->page,$this->text,$this->summary,true);} // load the text from the wiki
+	private function loadText() { $this->text = $this->wiki->getpage($this->getName());} // load the text from the wiki
+	private function postPage() { $this->wiki->edit($this->getName(),$this->getText(),$this->getSummary(),true);} 
 	private function parseNamespace()
 	{
 		$result = preg_match("/^((User|Wikipedia|File|Image|Mediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?):?/i",$this->page,$matches);
@@ -61,9 +61,6 @@ class Page {
 		$removed = 0;
 		$mi = "";
 		$this->parse(); // work with $this->parsed;
-		$this->wiki->edit(/*$page->getName()*/"User:Addbot/Sandbox",$this->getText(),"Test output",true);
-		echo $this->parsed;
-		sleep(999);
 		foreach($this->parsed['wikObject_templates'] as $x)
 		{
 			if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
@@ -78,9 +75,9 @@ class Page {
 				{
 					if(preg_match('/'.$tag->regexName().'/i',$x->name))
 					{
+						$mi = $mi.$x->rawCode;
+						$this->text = substr_replace($this->getText(),"",$x->attributes['start']-$removed-1,$x->attributes['length']);
 						$removed = $removed + $x->attributes['length'];
-						$mi = $mi.$tag['rawCode'];
-						$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
 					}
 				}
 			}
@@ -90,8 +87,6 @@ class Page {
 		//$mi = preg_replace("/\n\n/","",$mi);//get rid of double new lines
 		$split = preg_split("/\n/",$mi,0,PREG_SPLIT_NO_EMPTY);//split into each tag
 		$mi = "{{Multiple issues|\n";//start mi
-		print_r($split);
-		sleep(999);
 		foreach ($split as $tag)
 		{
 			$mi = $mi.$tag."\n";//add each tag
