@@ -159,20 +159,21 @@ class AWBFunctions {
 	
 	public static function fixDateTags( $text ) {
 		
-		//$text = preg_replace( '/\{\{\s*(?:template:)?\s*(?:wikify(?:-date)?|wfy|wiki)(\s*\|\s*section)?\s*\}\}/iS', "{{Wikify$1|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(Clean( ?up)?|CU|Tidy)\}\}/iS', "{{Cleanup|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(Linkless|Orphan)\}\}/iS', "{{Orphan|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(Unreferenced(sect)?|add references|cite[ -]sources?|cleanup-sources?|needs? references|no sources|no references?|not referenced|references|unref|unsourced)\}\}/iS', "{{Unreferenced|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(Uncategori[sz]ed|Uncat|Classify|Category needed|Catneeded|categori[zs]e|nocats?)\}\}/iS', "{{Uncategorized|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(Trivia2?|Too ?much ?trivia|Trivia section|Cleanup-trivia)\}\}/iS', "{{Trivia|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(deadend|DEP)\}\}/iS', "{{Deadend|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(copyedit|g(rammar )?check|copy-edit|cleanup-copyedit|cleanup-english)\}\}/iS', "{{Copyedit|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(sources|refimprove|not verified)\}\}/iS', "{{Refimprove|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(Expand)\}\}/iS', "{{Expand|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
-		//$text = preg_replace( '/\{\{(?:\s*[Tt]emplate:)?(\s*(?:[Cc]n|[Ff]act|[Pp]roveit|[Cc]iteneeded|[Uu]ncited|[Cc]itation needed)\s*(?:\|[^{}]+(?\<!\|\s*date\s*=[^{}]+))?)\}\}/iS', "{{$1|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(COI|Conflict of interest|Selfpromotion)\}\}/iS', "{{COI|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(Intro( |-)?missing|Nointro(duction)?|Lead missing|No ?lead|Missingintro|Opening|No-intro|Leadsection|No lead section)\}\}/iS', "{{Intro missing|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
-		$text = preg_replace( '/\{\{(template:)?([Pp]rimary ?[Ss]ources?|[Rr]eliable ?sources)\}\}/iS', "{{Primary sources|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
+		$date = date("F Y");
+		//$text = preg_replace( '/\{\{\s*(?:template:)?\s*(?:wikify(?:-date)?|wfy|wiki)(\s*\|\s*section)?\s*\}\}/iS', "{{Wikify$1|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(Clean( ?up)?|CU|Tidy)\}\}/iS', "{{Cleanup|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(Linkless|Orphan)\}\}/iS', "{{Orphan|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(Unreferenced(sect)?|add references|cite[ -]sources?|cleanup-sources?|needs? references|no sources|no references?|not referenced|references|unref|unsourced)\}\}/iS', "{{Unreferenced|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(Uncategori[sz]ed|Uncat|Classify|Category needed|Catneeded|categori[zs]e|nocats?)\}\}/iS', "{{Uncategorized|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(Trivia2?|Too ?much ?trivia|Trivia section|Cleanup-trivia)\}\}/iS', "{{Trivia|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(deadend|DEP)\}\}/iS', "{{Deadend|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(copyedit|g(rammar )?check|copy-edit|cleanup-copyedit|cleanup-english)\}\}/iS', "{{Copyedit|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(sources|refimprove|not verified)\}\}/iS', "{{Refimprove|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(Expand)\}\}/iS', "{{Expand|date=$date}}", $text );
+		//$text = preg_replace( '/\{\{(?:\s*[Tt]emplate:)?(\s*(?:[Cc]n|[Ff]act|[Pp]roveit|[Cc]iteneeded|[Uu]ncited|[Cc]itation needed)\s*(?:\|[^{}]+(?\<!\|\s*date\s*=[^{}]+))?)\}\}/iS', "{{$1|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(COI|Conflict of interest|Selfpromotion)\}\}/iS', "{{COI|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(Intro( |-)?missing|Nointro(duction)?|Lead missing|No ?lead|Missingintro|Opening|No-intro|Leadsection|No lead section)\}\}/iS', "{{Intro missing|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?([Pp]rimary ?[Ss]ources?|[Rr]eliable ?sources)\}\}/iS', "{{Primary sources|date=$date}}", $text );
 		
 		return $text;
 	}
