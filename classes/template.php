@@ -7,19 +7,15 @@ class Template {
 		$this->name = $name;
 		$this->args = $args;
 		$this->redirects = $redirects;
-		$this->multipleissues = $mi;
-		//TODO: Dynamically get redirects to this template
 	}	
 	
 	// variables
 	private $name;// template name e.g. Template:Orphan $page would be "Orphan"
 	private $args;// template arguments
 	private $redirects;// stores redirects to here
-	private $multipleissues;// should this tag be put in multiple issues
 	private $dateregex = '((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])';
 
 	public function getName() { return $this->name; } //returns the name of the template
-	public function isMi() { return $this->multipleissues; } //returns true if should be in MI tag
 	
 	//returns the regex for matching whole template and args
 	public function regexTemplate() { return '/\{\{'.$this->regexName().$this->regexArgs().'\}\}(\r|\n){0,3}/i'; }
