@@ -226,10 +226,6 @@ class Page {
 	}
 	
 	//hackily stuff on the AWB stuff
-	public function fixCitations(){$this->text = AWBFunctions::fixCitations($this->getText());}
-	public function fixHTML(){$this->text = AWBFunctions::fixHTML($this->getText());}
-	public function fixHyperlinking(){$this->text = AWBFunctions::fixHyperlinking($this->getText());}
-	public function fixTypos(){$this->text = AWBFunctions::fixTypos($this->getText());}
 	public function fixTemplates(){$this->text = AWBFunctions::fixTemplates($this->getText());}
 	public function fixDateTags(){
 		$orig = $this->getText();

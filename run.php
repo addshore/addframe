@@ -81,9 +81,6 @@ foreach ($list as $item)
 			{
 				// do lots of small formating fixes here
 				$page->fixTemplates();
-				$page->fixCitations();
-				$page->fixHTML();
-				$page->fixHyperlinking();
 				$page->multipleIssues();
 				$page->fixWhitespace();
 			}

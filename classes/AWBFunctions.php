@@ -112,7 +112,7 @@ class AWBFunctions {
 		$text = preg_replace( 
 			array(
 				'/(\|\s*)a[ces]{3,8}date(\s*=\s*)(?=[^{|}]*20\d\d|\}\})/',
-				'/accessdate(\s*=\s*)\[*(200\d)[/_\-](\d{2})[/_\-](\d{2})\]*/',
+//				'/accessdate(\s*=\s*)\[*(200\d)[/_\-](\d{2})[/_\-](\d{2})\]*/',
 				'/(\|\s*)a[cs]*es*mou*nthday(\s*=\s*)/',
 				'/(\|\s*)a[cs]*es*daymou*nth(\s*=\s*)/',
 				'/(\|\s*)accessdate(\s*=\s*[0-3]?[0-9] +(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*)([^][<>}{]*accessyear[\s=]+20\d\d)/',
