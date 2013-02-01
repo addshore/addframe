@@ -65,9 +65,19 @@ class Page {
 		{
 			if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
 			{
-				$mi = $mi.$x->arguments[1];
-				$removed = $removed + $x->attributes['length'];
-				$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
+				if(preg_match('/\{\{(multiple ?issues|article ?issues|mi)\s*\|([^{]+)\}\}/i',$x->rawCode))//if old style mi
+				{
+					foreach($x->arguments[1] as $tagarg)
+					{
+						$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n"
+					}
+				}
+				else//else we must be a new MI style
+				{
+					$mi = $mi.$x->arguments[1];
+					$removed = $removed + $x->attributes['length'];
+					$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
+				}
 			}
 			else// else if we match a tag
 			{
@@ -82,9 +92,6 @@ class Page {
 				}
 			}
 		}
-		//$mi = preg_replace("/\n\n/","",$mi);//get rid of double new lines
-		//$mi = preg_replace("/\}\}/","}}\n",$mi);//make sure each template is on a new line
-		//$mi = preg_replace("/\n\n/","",$mi);//get rid of double new lines
 		$split = preg_split("/\n/",$mi,0,PREG_SPLIT_NO_EMPTY);//split into each tag
 		if(count($split) > 1)
 		{
