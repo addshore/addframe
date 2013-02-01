@@ -27,15 +27,4 @@ require 'classes/template.php';
 // regex to match the date used in maintanace templates
 $config['date'] = '((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])';
 
-$config['tag']['abbreviations'] = new Template('Abbreviations',array('Abbrev'),array());
-$config['tag']['advert'] = new Template('Advert',array('Abbrev'|'AD'|'Ad speak'),array());
-$config['tag']['uncat'] = new Template('Uncategorized',array('Cat needed','CatNeeded','Categories needed','Categories requested','Categorise','Categorize','Category needed','Category requested','Categoryneeded','Cats needed','Needs Cat','Needs Cats','No categories','No category','Nocat','Nocategory','Nocats','Uncat','Uncategorised'),array('date'));
-$config['tag']['orphan'] = new Template('Orphan',array('Do-attempt','Lonely','Orp'),array('date','att','geo','few','incat'));
-$config['tag']['deadend'] = new Template('Deadend',array('Dep','Dead end page','Dead-end','Needs links'),array('date'));
-$config['tag']['sections'] = new Template('Sections',array('Needsections','Cleanupsections','Needs sections',),array('date'));
-$config['tag']['unref'] = new Template('Unreferenced',array('Citesources','Cleanup-cite','NR','Needs references','No ref','No reference','No references','No refs','No sources','Noref','Noreference','Noreferences','Norefs','Nosources','Nr','Ref needed','References','References-needed','Refs needed','Refsneeded','UNref','Uncited-article','Unref','Unrefarticle','Unreferences article','Unreferenced stub','UnreferencedArticle','Unsourced','Unverified'),array('date'));
-$config['tag']['emptysection'] = new Template('Emptysection',array('Empty-section','Emptysect','No content'),array('date'|'small'),false);
-$config['tag']['wikify'] = new Template('Wikify',array('Wf','Wfy','Wiki','Wikify section','Wikify-section','Wikifying','Wkfy'),array('date'),false);
-$config['tag']['badformat'] = new Template('Bad format',array('BadFormat','BadPDF'),array(),false);
-
 ?>
