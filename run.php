@@ -50,7 +50,7 @@ sleep(1);
 foreach ($list as $item)
 {
 	$page = new Page($item['article'],$wiki);// create our page instance
-	
+	if (strlen($page->getText()) < 10){continue;}//if page size is less than 10 (page doesnt exist) skip
 	echo "Checking ".$page->getName()."\n";
 	
 	//for reference (User|Wikipedia|FileMediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?)"
