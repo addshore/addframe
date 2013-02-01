@@ -10,6 +10,7 @@ class Page {
 		$this->page = preg_replace("/_/"," ",$page);
 		$this->parseNamespace();
 		$this->wiki = $wiki;
+		$this->loadText();//load the wikitext from page
 	}	
 	
 	// variables
@@ -25,7 +26,7 @@ class Page {
 	
 	// getters and setters
 	public function getName() { return $this->page; }
-	public function getText() { if(!isset($this->text)){$this->loadText();} return $this->text;}
+	public function getText() { return $this->text;}
 	public function getNamespace() { if(!isset($this->namespace)){$this->parseNamespace();} return $this->namespace;}
 	public function getSummary(){return "[[User:Addbot|Bot:]] v2 - ".$this->summary."([[User talk:Addbot|Report Errors]])";}
 	public function hasSigchange() { return $this->sigchange; }
@@ -60,6 +61,9 @@ class Page {
 		$removed = 0;
 		$mi = "";
 		$this->parse(); // work with $this->parsed;
+		$this->wiki->edit(/*$page->getName()*/"User:Addbot/Sandbox",$this->getText(),"Test output",true);
+		echo $this->parsed;
+		sleep(999);
 		foreach($this->parsed['wikObject_templates'] as $x)
 		{
 			if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
@@ -72,7 +76,6 @@ class Page {
 			{
 				foreach($config['tag'] as $tag)
 				{
-				echo $x->rawcode."\n";//RM
 					if(preg_match('/'.$tag->regexName().'/i',$x->name))
 					{
 						$removed = $removed + $x->attributes['length'];
@@ -85,7 +88,6 @@ class Page {
 		//$mi = preg_replace("/\n\n/","",$mi);//get rid of double new lines
 		//$mi = preg_replace("/\}\}/","}}\n",$mi);//make sure each template is on a new line
 		//$mi = preg_replace("/\n\n/","",$mi);//get rid of double new lines
-		echo $mi;
 		$split = preg_split("/\n/",$mi,0,PREG_SPLIT_NO_EMPTY);//split into each tag
 		$mi = "{{Multiple issues|\n";//start mi
 		print_r($split);
