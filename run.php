@@ -49,7 +49,7 @@ echo "Checking ".count($list)." articles\n";
 sleep(1);
 foreach ($list as $item)
 {
-	$page = new Page(/*$item['article']*/"Amiga 1000",$wiki);// create our page instance
+	$page = new Page(/*$item['article']*/"Dr. Ciriaco Santiago Memorial Award",$wiki);// create our page instance
 	
 	echo "Checking ".$page->getName()."\n";
 	
@@ -101,7 +101,7 @@ foreach ($list as $item)
 	}
 	
 	//Post
-	if($page->hasSigchange() == true)
+	if($page->hasSigchange() == true)//TODO: check page exists before posting
 	{
 		$wiki->edit(/*$page->getName()*/"User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
 	}

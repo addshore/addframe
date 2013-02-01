@@ -7,7 +7,7 @@ class Page {
 
 	// construct the page (you probably want to call load after this)
 	public function __construct($page,$wiki) {
-		$this->page = preg_replace("/_/","",$page);
+		$this->page = preg_replace("/_/"," ",$page);
 		$this->parseNamespace();
 		$this->wiki = $wiki;
 	}	
@@ -92,7 +92,7 @@ class Page {
 		}
 		$mi = $mi."}}\n";//add the end of the tag
 		
-		$this->text = $mi.$this->getText();
+		$this->text = $mi.$this->getText();//add to origional text
 	
 	}
 	
@@ -137,6 +137,7 @@ class Page {
 				{return false;}
 			}
 		}
+		return null;
 	}
 	
 	// returns false if page is not deadend
