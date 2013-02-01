@@ -23,6 +23,10 @@ sleep(1);
 $wiki->login($config['user'],$config['password']);
 unset($config['password']);
 
+//Get further config stuff
+eval(preg_replace("/(\<syntaxhighlight lang='php'\>|\<\/syntaxhighlight\>)/i","",$wiki->getpage("User:Addbot/config")));//run the onwiki config
+if($config['run'] == false){die();}//if we are not meant to run die
+
 echo "Connecting to database...\n";
 sleep(1);
 
@@ -58,16 +62,16 @@ foreach ($list as $item)
 	switch($page->getNamespace()){
 		case ""://article
 		
-			if ($page->isOrphan() === true){ $page->addTag($config['tag']['orphan']); }
-			if ($page->isUncat() === true){ $page->addTag($config['tag']['uncat']); }
-			if ($page->isDeadend() === true){ $page->addTag($config['tag']['deadend']); }
+			if ($page->isOrphan() === true){ $page->addTag($config['tag']['Orphan']); }
+			if ($page->isUncat() === true){ $page->addTag($config['tag']['Uncategorized']); }
+			if ($page->isDeadend() === true){ $page->addTag($config['tag']['Deadend']); }
 			
-			if ($page->isOrphan() === false){ $page->removeTag($config['tag']['orphan']); }
-			if ($page->isUncat() === false){ $page->removeTag($config['tag']['uncat']); }
-			if ($page->isDeadend() === false){ $page->removeTag($config['tag']['deadend']); }
+			if ($page->isOrphan() === false){ $page->removeTag($config['tag']['Orphan']); }
+			if ($page->isUncat() === false){ $page->removeTag($config['tag']['Uncategorized']); }
+			if ($page->isDeadend() === false){ $page->removeTag($config['tag']['Deadend']); }
 			
-			if ($page->needsSections() === false){ $page->removeTag($config['tag']['sections']); }
-			$page->removeTag($config['tag']['wikify']);
+			if ($page->needsSections() === false){ $page->removeTag($config['tag']['Sections']); }
+			$page->removeTag($config['tag']['Wikify']);
 			
 			//TODO: - stubs
 			//TODO: fix double redirects
@@ -92,7 +96,7 @@ foreach ($list as $item)
 			//TODO:Update AWB talk template subst list
 			break;
 		case "File":
-			if ($page->isPdf() == true){ $page->addTag("BadFormat","(Summary)"); }
+			if ($page->isPdf() == true){ $page->addTag("Bad format","(Summary)"); }
 			break;
 	}
 	
