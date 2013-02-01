@@ -84,7 +84,6 @@ foreach ($list as $item)
 				$page->fixCitations();
 				$page->fixHTML();
 				$page->fixHyperlinking();
-				$page->fixTypos();
 				$page->multipleIssues();
 				$page->fixWhitespace();
 			}
