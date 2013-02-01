@@ -49,13 +49,11 @@ if(!$config['debug'])//if not debuging
 	}
 }
 
-$list = Array("Advance General");
-
 echo "Checking ".count($list)." articles\n";
 sleep(1);
 foreach ($list as $item)
 {
-	$page = new Page($item/*['article']*/,$wiki);// create our page instance
+	$page = new Page($item['article'],$wiki);// create our page instance
 	if (strlen($page->getText()) < 10){continue;}//if page size is less than 10 (page doesnt exist) skip
 	echo "Checking ".$page->getName()."\n";
 	
@@ -105,7 +103,7 @@ foreach ($list as $item)
 	//Post
 	if($page->hasSigchange() == true)//TODO: check page exists before posting
 	{
-		$wiki->edit(/*$page->getName()*/"User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
+		$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
 	}
 	
 	sleep(2);// sleep inbetween requests
