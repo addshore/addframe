@@ -69,8 +69,6 @@ foreach ($list as $item)
 			if ($page->needsSections() === false){ $page->removeTag($config['tag']['sections']); }
 			$page->removeTag($config['tag']['wikify']);
 			
-			//Fix multiple issues
-			
 			//TODO: - stubs
 			//TODO: fix double redirects
 			//TODO: add reflist
