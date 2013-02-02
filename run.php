@@ -67,7 +67,7 @@ foreach ($list as $item)
 
 	echo "\nChecking ".$item['article'];
 	$page = new Page($item['article'],$wiki);// create our page instance
-	if (strlen($page->getText()) < 10){echo "\n> Page less than 10 length..";continue;}//if page size is less than 10 (page doesnt exist) skip
+	if (strlen($page->getText()) < 5){echo "\n> Page less than 5 length (may not exist)";continue;}//if page size is less than 10 (page doesnt exist) skip
 	if (!$wiki->nobots ($page->getName(),"Addbot",$page->getText())){echo "\n> page has nobots tag..";continue;}//make sure we are allowed to edit the page
 	
 	//for reference (User|Wikipedia|FileMediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?)"
