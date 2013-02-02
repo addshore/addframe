@@ -199,6 +199,15 @@ class Page {
 		}
 	}
 	
+	//return a restricted estimate of words in an article
+	public function wordcount()
+	{
+		$text = $this->getText();//get a temp copy of the text to work with
+		$text = preg_replace("/(\{\{[^\}]*?\}\}|={1,6}[^=]*?={1,6}|\n\*{1,2} ?|\[\[(Category|[a-z]{2,6}):[^\]]*?\]\]|\[https?[^\]]*?\]|\<ref\>[^(\<\/ref\>)]*?\<\/ref\>)/is","",$text);//remove templates, cats, interwikis and extlinks and refs
+		$text = preg_replace("/\[\[[^\]]*?\]\]/","WORD",$text);//fill all links in with a single word
+		return str_word_count($text);
+	}
+	
 	//remove the given template from the page
 	public function addTag($template,$section=null)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	{
