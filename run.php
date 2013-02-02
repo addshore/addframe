@@ -1,6 +1,5 @@
 <?
-// Report all errors except E_NOTICE
-error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(E_ERROR | E_PARSE);
 
 echo "loading...";
 sleep(1);
@@ -9,6 +8,7 @@ sleep(1);
 require 'classes/botclasses.php';
 require 'classes/database.php';
 require 'classes/page.php';
+require 'classes/template.php';
 require 'config.php';
 
 // initialise the wiki
@@ -25,13 +25,14 @@ unset($config['password']);
 echo "done";
 
 //Get further config stuff
-$config = parse_ini_string(file_get_contents(preg_replace("/(\<syntaxhighlight lang='ini'\>|\<\/syntaxhighlight\>)/i","",$wiki->getpage("User:Addbot/config"))),true);
+$config = parse_ini_string(preg_replace("/(\<syntaxhighlight lang='ini'\>|\<\/syntaxhighlight\>)/i","",$wiki->getpage("User:Addbot/config")),true);
+require 'config.php';//again
 if($config['General']['run'] != true){echo "\nNot set to run"; die();}//if we are not meant to run die
 
 //create the template instances
 foreach ($config['Tags'] as $key=>$tag)
 {
-	$split = explode(",",$tag)
+	$split = explode(",",$tag);
 	$config['tag'][$key] = new Template($split[0],$split);
 }
 
