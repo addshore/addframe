@@ -1,5 +1,4 @@
 <?
-
 require 'parser.php';
 
 class Page {
@@ -21,7 +20,6 @@ class Page {
 	private $parsed;
 	private $sigchange;//has a significant change happened to the page (enough to edit)?
 	private $summary;//summary if edited
-	public $awb;
 	
 	// getters and setters
 	public function getName() { return $this->page; }
@@ -284,24 +282,22 @@ class Page {
 	}
 	
 	public function fixDateTags(){
-	
+		global $config;
 		//get a copy of the text to change
 		$text = $this->getText();
-		
 		//get the current month and year
 		$date = date("F Y");
-		$text = preg_replace( '/\{\{(template:)?(Clean( ?up)?|CU|Tidy)\}\}/iS', "{{Cleanup|date=$date}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(Linkless|Orphan)\}\}/iS', "{{Orphan|date=$date}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(Unreferenced(sect)?|add references|cite[ -]sources?|cleanup-sources?|needs? references|no sources|no references?|not referenced|references|unref|unsourced)\}\}/iS', "{{Unreferenced|date=$date}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(Uncategori[sz]ed|Uncat|Classify|Category needed|Catneeded|categori[zs]e|nocats?)\}\}/iS', "{{Uncategorized|date=$date}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(Trivia2?|Too ?much ?trivia|Trivia section|Cleanup-trivia)\}\}/iS', "{{Trivia|date=$date}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(deadend|DEP)\}\}/iS', "{{Deadend|date=$date}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(copyedit|g(rammar )?check|copy-edit|cleanup-copyedit|cleanup-english)\}\}/iS', "{{Copyedit|date=$date}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(sources|refimprove|not verified)\}\}/iS', "{{Refimprove|date=$date}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(Expand)\}\}/iS', "{{Expand|date=$date}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(COI|Conflict of interest|Selfpromotion)\}\}/iS', "{{COI|date=$date}}", $text );
-		$text = preg_replace( '/\{\{(template:)?(Intro( |-)?missing|Nointro(duction)?|Lead missing|No ?lead|Missingintro|Opening|No-intro|Leadsection|No lead section)\}\}/iS', "{{Intro missing|date=$date}}", $text );
-		$text = preg_replace( '/\{\{(template:)?([Pp]rimary ?[Ss]ources?|[Rr]eliable ?sources)\}\}/iS', "{{Primary sources|date=$date}}", $text );
+		
+		//check each tag we have to see if it needs to be dated
+		foreach ($config['tag'] as $tag)
+		{
+			//if the tag can be found without a date
+			if($page->matches('/\{\{(Template:)?'.$tag->regexName().'\}\}/i'))
+			{
+				//then date it
+				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'\}\}/i',"{{".$tag->getName()."|date=$date}}",$text);
+			}
+		}
 		
 		//If a tag has been dated
 		if(strlen($text) > strlen($this->getText())+5)
