@@ -88,10 +88,10 @@ foreach ($list as $item)
 			
 			//UNREFERENCED TAG
 			if ($isreferenced === true)
-			{$page->removeTag($config['tag']['Unreferenced']);}
+			{$page->removeTag($config['tag']['Unreferenced']); $page->removeTag($config['tag']['BLP unsourced']);}
 			
 			//NEEDS SECTIONS TAG
-			if ($page->needsSections() === false){ $page->removeTag($config['tag']['Sections']); }
+			if ($page->needsSections() === false){ $page->removeTag($config['tag']['Sections']);  }
 			
 			//STUB TAG
 			if ($page->matches('/\{\{[a-z0-9 _-]*?stub\}\}/'))//if we have a stub tag
