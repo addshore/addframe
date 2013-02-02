@@ -53,7 +53,6 @@ class Page {
 		$this->summary = $this->summary.$split[1]." ";
 		
 		$this->sigchange = true;//if we have a summary it muse be a sig change
-		echo $this->summary."\n";
 	}
 	
 	//returns the edit summary
@@ -78,8 +77,7 @@ class Page {
 		//fill all links in with a single word
 		$text = preg_replace("/\[\[[^\]]*?\]\]/","WORD",$text);
 		$text = trim($text);
-		//echo the count
-		echo "Wordcount of ".str_word_count($text)."\n";
+		//return
 		return str_word_count($text);
 	}
 	
@@ -188,7 +186,6 @@ class Page {
 	{ 
 		if( preg_match("/\.pdf$/i",$this->getName()))
 		{
-			echo "Is PDF\n";
 			return true; 
 		} 
 	}
@@ -220,7 +217,7 @@ class Page {
 			$this->text = "{{".$template->getName()."}}\n" .$this->getText();
 		}
 		// add to the summary for the edit
-		$this->addSummary("Adding ",$template->getName());
+		$this->addSummary("Adding ".$template->getName());
 	}
 	
 	//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
@@ -261,7 +258,6 @@ class Page {
 				if(preg_match('/\{\{(multiple ?issues|article ?issues|mi)\s*\|([^{]+)\}\}/i',$x->rawCode))
 				{
 					//then parse accordingly
-					echo "Found old multiple issues template\n";
 					foreach($x->arguments[1] as $tagarg)
 					{
 						$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n";
@@ -270,7 +266,6 @@ class Page {
 				else//else we must be a new MI style
 				{
 					//the parse accordingly
-					echo "Found multiple issues template\n";
 					$mi = $mi.$x->arguments[1];
 					$removed = $removed + $x->attributes['length'];
 					$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
@@ -304,7 +299,6 @@ class Page {
 		if(count($split) > 1)
 		{
 			//add them to a MI tag
-			echo "Adding tags to multiple issues\n";
 			$mi = "{{Multiple issues|\n";//start mi
 			foreach ($split as $tag)
 			{
