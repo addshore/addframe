@@ -63,6 +63,7 @@ class Page {
 		$text = preg_replace("/(\{\{[^\}]*?\}\}|={1,6}[^=]*?={1,6}|\n\*{1,2} ?|\[https?[^\]]*?\]|\[\[(Category|Image|File|[a-z]{2,6}):[^\]]*?\]\]|\<references ?\/\>|<ref>.*?<\/ref>|<!--.*?-->)/is","",$text);//remove templates, cats, interwikis and extlinks and refs
 		$text = preg_replace("/\[\[[^\]]*?\]\]/","WORD",$text);//fill all links in with a single word
 		$text = trim($text);
+		echo "Wordcount of ".str_word_count($text)."\n";
 		return str_word_count($text);
 	}
 	
@@ -147,7 +148,11 @@ class Page {
 	//return true if the page is a pdf
 	public function isPdf()
 	{ 
-		if( preg_match("/\.pdf$/i",$this->getName())) {return true; } 
+		if( preg_match("/\.pdf$/i",$this->getName()))
+		{
+			echo "Is PDF\n";
+			return true; 
+		} 
 	}
 	
 	//add the given template from the page if it doesnt already exist
@@ -206,6 +211,7 @@ class Page {
 			{
 				if(preg_match('/\{\{(multiple ?issues|article ?issues|mi)\s*\|([^{]+)\}\}/i',$x->rawCode))//if old style mi
 				{
+					echo "Found old multiple issues template\n";
 					foreach($x->arguments[1] as $tagarg)
 					{
 						$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n";
@@ -213,6 +219,7 @@ class Page {
 				}
 				else//else we must be a new MI style
 				{
+					echo "Found multiple issues template\n";
 					$mi = $mi.$x->arguments[1];
 					$removed = $removed + $x->attributes['length'];
 					$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
@@ -238,6 +245,7 @@ class Page {
 		$split = preg_split("/\n/",$mi,0,PREG_SPLIT_NO_EMPTY);//split into each tag
 		if(count($split) > 1)
 		{
+			echo "Adding tags to multiple issues\n";
 			$mi = "{{Multiple issues|\n";//start mi
 			foreach ($split as $tag)
 			{
@@ -327,6 +335,10 @@ class Page {
 	
 	public function fixGeneral()
 	{
+		//Fix headers
+		$this->text = preg_replace('/== ?External ?links? ?==/i', "==External links==", $this->text );
+		$this->text = preg_replace('/== ?Further ?readings? ?==/i', "==Further reading==", $this->text );
+	
 	}
 }
 	 

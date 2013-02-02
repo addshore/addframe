@@ -111,7 +111,6 @@ foreach ($list as $item)
 			//TODO: fix double redirects
 			//TODO: add reflist
 			
-			//check if page is unreferenced
 			//check if has empty section or tag in full section
 			$page->fixDateTags();// fix any tempaltes that need a date
 			
@@ -131,6 +130,7 @@ foreach ($list as $item)
 			break;
 			
 		case "Wikipedia":
+			//Wikipedia:AutoWikiBrowser/User talk templates
 			if($page->getName() == "Wikipedia:AutoWikiBrowser/User talk templates")//if it is our AWB page
 			{
 				exec("php /home/addshore/addbot/task.awbtemplates.php");//run the external check
