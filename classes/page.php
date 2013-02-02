@@ -54,69 +54,18 @@ class Page {
 //	                  //
 // Main bot functions //
 //                    //
+
+	//make matching easier
+	public function matches($regex){return preg_match($regex,$this->getText())}
 	
-	public function multipleIssues()
+		//return a restricted estimate of words in an article
+	public function wordcount()
 	{
-		global $config;
-		$removed = 0;
-		$mi = "";
-		$this->parse(); // work with $this->parsed;
-		foreach($this->parsed['wikObject_templates'] as $x)
-		{
-			if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
-			{
-				if(preg_match('/\{\{(multiple ?issues|article ?issues|mi)\s*\|([^{]+)\}\}/i',$x->rawCode))//if old style mi
-				{
-					foreach($x->arguments[1] as $tagarg)
-					{
-						$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n";
-					}
-				}
-				else//else we must be a new MI style
-				{
-					$mi = $mi.$x->arguments[1];
-					$removed = $removed + $x->attributes['length'];
-					$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
-				}
-			}
-			else// else if we match a tag
-			{
-				foreach($config['tag'] as $tag)
-				{
-					if(preg_match("/^".$tag->regexName()."$/i",$x->name) == true)//if it is one of our tags
-					{
-						if(preg_match("/\|(sections|sect?)/i",$x->rawCode) == false)//if we have a section param ignore it
-						{
-							$mi = $mi.$x->rawCode;
-							$this->text = substr_replace($this->getText(),"",$x->attributes['start']-$removed-1,$x->attributes['length']);
-							$removed = $removed + $x->attributes['length'];
-						}
-					}
-				}
-			}
-		}
-		$mi = preg_replace('/\}\}/',"}}\n",$mi);//crappy way to make sure we split at every tag
-		$split = preg_split("/\n/",$mi,0,PREG_SPLIT_NO_EMPTY);//split into each tag
-		if(count($split) > 1)
-		{
-			$mi = "{{Multiple issues|\n";//start mi
-			foreach ($split as $tag)
-			{
-				$mi = $mi.$tag."\n";//add each tag
-			}
-			$mi = $mi."}}";//add the end of the tag
-		}
-		elseif(count($split) == 1)//if only 1 we dont want to use multiple issues
-		{
-			$mi = $split[0];
-		}
-		else
-		{
-			return false;//we actually dont have any tags 
-		}
-
-		$this->text = $mi."\n".$this->getText();//add to origional text
-
+		$text = $this->getText();//get a temp copy of the text to work with
+		$text = preg_replace("/(\{\{[^\}]*?\}\}|={1,6}[^=]*?={1,6}|\n\*{1,2} ?|\[https?[^\]]*?\]|\[\[(Category|Image|File|[a-z]{2,6}):[^\]]*?\]\]|\<references ?\/\>|<ref>.*?<\/ref>|<!--.*?-->)/is","",$text);//remove templates, cats, interwikis and extlinks and refs
+		$text = preg_replace("/\[\[[^\]]*?\]\]/","WORD",$text);//fill all links in with a single word
+		$text = trim($text);
+		return str_word_count($text);
 	}
 	
 	// returns false doesnt need sections
@@ -190,33 +139,7 @@ class Page {
 	public function isPdf()
 	{ if( preg_match("/\.pdf$/i",$this->getName())) {return true; } }
 	
-	public function removeTag($template)
-	{//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
-		$this->removeRegex($template->regexTemplate(),"Removing ".$template->getName());
-	}
-	
-	public function removeRegex($regex,$summary = null)
-	{
-		if(preg_match($regex,$this->getText()))//make sure the regex is actually there
-		{//if it is remove and say so
-			$this->text = preg_replace($regex,"",$this->getText());
-			if($summary != null)
-			{//if summary not null then we can add a summary
-				$this->addSummary($summary);
-			}
-		}
-	}
-	
-	//return a restricted estimate of words in an article
-	public function wordcount()
-	{
-		$text = $this->getText();//get a temp copy of the text to work with
-		$text = preg_replace("/(\{\{[^\}]*?\}\}|={1,6}[^=]*?={1,6}|\n\*{1,2} ?|\[\[(Category|[a-z]{2,6}):[^\]]*?\]\]|\[https?[^\]]*?\]|\<ref\>[^(\<\/ref\>)]*?\<\/ref\>)/is","",$text);//remove templates, cats, interwikis and extlinks and refs
-		$text = preg_replace("/\[\[[^\]]*?\]\]/","WORD",$text);//fill all links in with a single word
-		return str_word_count($text);
-	}
-	
-	//remove the given template from the page
+	//add the given template from the page if it doesnt already exist
 	public function addTag($template,$section=null)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	{
 		//if it doesnt already exist
@@ -239,6 +162,87 @@ class Page {
 			$this->text = "{{".$template->getName()."}}\n" .$this->getText();
 		}
 		$this->addSummary("Adding",$template->getName());// add to the summary
+	}
+	
+	public function removeTag($template)
+	{//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
+		$this->removeRegex($template->regexTemplate(),"Removing ".$template->getName());
+	}
+	
+	public function removeRegex($regex,$summary = null)
+	{
+		if(preg_match($regex,$this->getText()))//make sure the regex is actually there
+		{//if it is remove and say so
+			$this->text = preg_replace($regex,"",$this->getText());
+			if($summary != null)
+			{//if summary not null then we can add a summary
+				$this->addSummary($summary);
+			}
+		}
+	}
+	
+	public function multipleIssues()
+	{
+		global $config;
+		$removed = 0;
+		$mi = "";
+		$this->parse(); // work with $this->parsed;
+		foreach($this->parsed['wikObject_templates'] as $x)
+		{
+			if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
+			{
+				if(preg_match('/\{\{(multiple ?issues|article ?issues|mi)\s*\|([^{]+)\}\}/i',$x->rawCode))//if old style mi
+				{
+					foreach($x->arguments[1] as $tagarg)
+					{
+						$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n";
+					}
+				}
+				else//else we must be a new MI style
+				{
+					$mi = $mi.$x->arguments[1];
+					$removed = $removed + $x->attributes['length'];
+					$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
+				}
+			}
+			else// else if we match a tag
+			{
+				foreach($config['tag'] as $tag)
+				{
+					if(preg_match("/^".$tag->regexName()."$/i",$x->name) == true)//if it is one of our tags
+					{
+						if(preg_match("/\|(sections|sect?)/i",$x->rawCode) == false)//if we have a section param ignore it
+						{
+							$mi = $mi.$x->rawCode;
+							$this->text = substr_replace($this->getText(),"",$x->attributes['start']-$removed-1,$x->attributes['length']);
+							$removed = $removed + $x->attributes['length'];
+						}
+					}
+				}
+			}
+		}
+		$mi = preg_replace('/\}\}/',"}}\n",$mi);//crappy way to make sure we split at every tag
+		$split = preg_split("/\n/",$mi,0,PREG_SPLIT_NO_EMPTY);//split into each tag
+		if(count($split) > 1)
+		{
+			$mi = "{{Multiple issues|\n";//start mi
+			foreach ($split as $tag)
+			{
+				$mi = $mi.$tag."\n";//add each tag
+			}
+			$mi = $mi."}}";//add the end of the tag
+		}
+		elseif(count($split) == 1)//if only 1 we dont want to use multiple issues
+		{
+			$mi = $split[0];
+		}
+		else
+		{
+			return false;//we actually dont have any tags 
+		}
+
+		$this->text = $mi."\n".$this->getText();//add to origional text
+
 	}
 	
 	//http://en.wikipedia.org/w/index.php?title=Wikipedia:AutoEd/whitespace.js&action=raw&ctype=text/javascript
