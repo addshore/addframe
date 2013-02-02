@@ -44,11 +44,11 @@ class Page {
 		else{$this->namespace = $matches[1];}
 		if($this->namespace == "Image"){ $this->namespace = "File";}// default Image namespace to file
 	}
-	private function addSummary($type,$what)
+	private function addSummary($sum)
 	{
 		$this->sigchange = true;//if we have a summary it muse be a sig change
-		$this->summary = $this->summary.$type." ".$what." ";
-		echo $type." ".$what."\n";
+		$this->summary = $this->summary.$sum." ";
+		echo $sum"\n";
 	}
 	
 //	                  //
@@ -186,16 +186,24 @@ class Page {
 		if(count($cats) == 0){return true;}else{return false;}// tag as apropriate
 	}
 	
+	//return true if the page is a pdf
 	public function isPdf()
 	{ if( preg_match("/\.pdf$/i",$this->getName())) {return true; } }
 	
-	//remove the given template from the page
-	public function removeTag($template)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
+	public function removeTag($template)
+	{//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
+		$this->removeRegex($template->regexTemplate(),"Removing ".$template->getName());
+	}
+	
+	public function removeRegex($regex,$summary = null)
 	{
-		if(preg_match($template->regexTemplate(),$this->getText()))//make sure the template is actually there
-		{
-			$this->text = preg_replace($template->regexTemplate(),"",$this->getText());
-			$this->addSummary("Removing",$template->getName());
+		if(preg_match($regex,$this->getText()))//make sure the regex is actually there
+		{//if it is remove and say so
+			$this->text = preg_replace($regex,"",$this->getText());
+			if($summary != null)
+			{//if summary not null then we can add a summary
+				$this->addSummary($summary);
+			}
 		}
 	}
 	
