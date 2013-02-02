@@ -25,7 +25,7 @@ unset($config['password']);
 
 //Get further config stuff
 eval(preg_replace("/(\<syntaxhighlight lang='php'\>|\<\/syntaxhighlight\>)/i","",$wiki->getpage("User:Addbot/config")));//run the onwiki config
-if($config['run'] == false){die();}//if we are not meant to run die
+if($config['run'] != true){echo "Not set to run\n"; die();}//if we are not meant to run die
 
 echo "Connecting to database...\n";
 sleep(1);
@@ -34,18 +34,22 @@ sleep(1);
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 
 // get the current list of pending articles
-$result = $db->select('pending','*',null,0,10);
+$result = $db->select('pending','*',null,array("LIMIT" => 10));
 $list = Database::mysql2array($result);
+echo "Got ".count($list)." articles from pending\n";
 
 if(!$config['debug'])//if not debuging
 {
 	// before we start checking we want to remove our got articles from the DB
 	// so that another instance wont try and check them also
-	echo "Removing ".count($list)." articles from pending\n";
+	echo "Removing";
+	sleep(1);
 	foreach ($list as $item){
 		$res = $db->delete($config['tblist'],array('article' => $item['article']));
 		if( !$res  ){echo $db->errorStr();} // if no result then say so
+		echo ".";
 	}
+	echo "\n";
 }
 
 echo "Checking ".count($list)." articles\n";
