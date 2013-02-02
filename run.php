@@ -120,7 +120,7 @@ foreach ($list as $item)
 				{
 					if ($page->wordcount() > 500)//and the word count is over 500
 					{
-						$page->removeRegex('/\{\{[a-z0-9 _-]*?stub\}\}/',"Removing Stub Tag"); echo "-";//remove the stub tag
+						$page->removeRegex('/\{\{[a-z0-9 _-]*?stub\}\}/',"Removing {{Stub}}"); echo "-";//remove the stub tag
 					}
 				}
 				
@@ -170,7 +170,7 @@ foreach ($list as $item)
 		case "File":
 			echo "\n> Is File";
 			//If a pdf then tag as a pdf
-			if ($page->isPdf() == true){ $page->addTag("badformat","(Summary)"); }
+			if ($page->isPdf() == true){ $page->addTag("badformat","Adding Bad Format"); }
 			break;
 	}
 	

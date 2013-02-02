@@ -217,13 +217,13 @@ class Page {
 			$this->text = "{{".$template->getName()."}}\n" .$this->getText();
 		}
 		// add to the summary for the edit
-		$this->addSummary("Adding {{tl|".$template->getName()."}}");
+		$this->addSummary("Adding {{".$template->getName()."}}");
 	}
 	
 	//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	public function removeTag($template)
 	{
-		$this->removeRegex($template->regexTemplate(),"Removing {{tl|".$template->getName()."}}");
+		$this->removeRegex($template->regexTemplate(),"Removing {{".$template->getName()."}}");
 	}
 	
 	//remove the regex match from the page
