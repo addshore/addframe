@@ -103,7 +103,7 @@ class Page {
 			}
 		}
 		//if the page has 4+ sections and a largest section of 5000- then return false
-		if($sectioncount >= 4 && $largestsection <= 5000){//was 2750 for AVG
+		if($sectioncount >= $config['Sections']['sections'] && $largestsection <= $config['Sections']['largest']){//was 2750 for AVG
 			return false;
 		}
 	}
