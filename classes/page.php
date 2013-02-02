@@ -45,7 +45,7 @@ class Page {
 	private function addSummary($sum)
 	{
 		//only add the first bit if it is not already there (i.e. 'Adding' or 'Removing')
-		$split = explode(" ",$sum,2)
+		$split = explode(" ",$sum,2);
 		if(!preg_match('/'.$split[0].'/i',$this->summary))
 		{
 			$this->summary = $this->summary.$split[0]." ";
@@ -53,7 +53,7 @@ class Page {
 		$this->summary = $this->summary.$split[1]." ";
 		
 		$this->sigchange = true;//if we have a summary it muse be a sig change
-		echo $this->summary"\n";
+		echo $this->summary."\n";
 	}
 	
 	//returns the edit summary
@@ -66,7 +66,7 @@ class Page {
 //                    //
 
 	//make matching easier
-	public function matches($regex){return preg_match($regex,$this->getText())}
+	public function matches($regex){return preg_match($regex,$this->getText());}
 	
 	//return a restricted estimate of words in an article
 	public function wordcount()
