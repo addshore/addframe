@@ -9,8 +9,6 @@ $config['sandbox'] = 'User:'.$config['user'].'/Sandbox';    // sandbox location
 $config['debug'] = false;									// true for debugging
 require '/home/addshore/.password.addbot';                  // $config['password'] = 'password';
 
-$config['checkfreq'] = 24;                        // how long in hours before a page can be checked again
-
 // database settings
 $config['dbhost'] = 'i-000000b4.pmtpa.wmflabs';
 $config['dbport'] = '3306';
