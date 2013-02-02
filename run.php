@@ -147,7 +147,7 @@ foreach ($list as $item)
 		sleep(30);//sleep after an edit
 	}
 	
-	sleep(2);// sleep inbetween requests
+	sleep(3);// sleep inbetween requests
 }
 
 ?>

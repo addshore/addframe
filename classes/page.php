@@ -25,7 +25,6 @@ class Page {
 	public function getName() { return $this->page; }
 	public function getText() { return $this->text;}
 	public function getNamespace() { if(!isset($this->namespace)){$this->parseNamespace();} return $this->namespace;}
-	public function getSummary(){return "[[User:Addbot|Bot:]] v2 - ".$this->summary."([[User talk:Addbot|Report Errors]])";}
 	public function hasSigchange() { return $this->sigchange; }
 	
 	// public functions
@@ -42,11 +41,24 @@ class Page {
 		else{$this->namespace = $matches[1];}
 		if($this->namespace == "Image"){ $this->namespace = "File";}// default Image namespace to file
 	}
+	
 	private function addSummary($sum)
 	{
+		//only add the first bit if it is not already there (i.e. 'Adding' or 'Removing')
+		$split = explode(" ",$sum,2)
+		if(!preg_match('/'.$split[0].'/i',$this->summary))
+		{
+			$this->summary = $this->summary.$split[0]." ";
+		}
+		$this->summary = $this->summary.$split[1]." ";
+		
 		$this->sigchange = true;//if we have a summary it muse be a sig change
-		$this->summary = $this->summary.$sum." ";
-		echo $sum"\n";
+		echo $this->summary"\n";
+	}
+	
+	//returns the edit summary
+	public function getSummary(){
+	return "[[User:Addbot|Bot:]] - ".$this->summary."([[User talk:Addbot|Report Errors]] 2)";
 	}
 	
 //	                  //
@@ -208,7 +220,7 @@ class Page {
 			$this->text = "{{".$template->getName()."}}\n" .$this->getText();
 		}
 		// add to the summary for the edit
-		$this->addSummary("Adding",$template->getName());
+		$this->addSummary("Adding ",$template->getName());
 	}
 	
 	//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
