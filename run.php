@@ -25,8 +25,7 @@ unset($config['password']);
 echo "done";
 
 //Get further config stuff
-//eval(preg_replace("/(\<syntaxhighlight lang='php'\>|\<\/syntaxhighlight\>)/i","",$wiki->getpage("User:Addbot/config")));//run the onwiki config
-$config = parse_ini_string(file_get_contents(preg_replace("/(\<syntaxhighlight lang='php'\>|\<\/syntaxhighlight\>)/i","",$wiki->getpage("User:Addbot/config"))));
+$config = parse_ini_string(file_get_contents(preg_replace("/(\<syntaxhighlight lang='php'\>|\<\/syntaxhighlight\>)/i","",$wiki->getpage("User:Addbot/config"))),true);
 if($config['run'] != true){echo "\nNot set to run"; die();}//if we are not meant to run die
 
 // connect to the database
