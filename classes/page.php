@@ -217,13 +217,13 @@ class Page {
 			$this->text = "{{".$template->getName()."}}\n" .$this->getText();
 		}
 		// add to the summary for the edit
-		$this->addSummary("Adding ".$template->getName());
+		$this->addSummary("Adding {{tl|".$template->getName()."}}");
 	}
 	
 	//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	public function removeTag($template)
 	{
-		$this->removeRegex($template->regexTemplate(),"Removing ".$template->getName());
+		$this->removeRegex($template->regexTemplate(),"Removing {{tl|".$template->getName()."}}");
 	}
 	
 	//remove the regex match from the page
@@ -251,41 +251,46 @@ class Page {
 		//for each template on the page
 		foreach($this->parsed['wikObject_templates'] as $x)
 		{
-			//does it match the MI template
-			if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
+			//make sure the template is not surrounded by comment tags
+			if(!preg_match('/<!--.*?'.preg_quote($x->rawCode).'.*?-->/is',$this->getText()))
 			{
-				//does it match the old style of use
-				if(preg_match('/\{\{(multiple ?issues|article ?issues|mi)\s*\|([^{]+)\}\}/i',$x->rawCode))
+			
+				//does it match the MI template
+				if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
 				{
-					//then parse accordingly
-					foreach($x->arguments[1] as $tagarg)
+					//does it match the old style of use
+					if(preg_match('/\{\{(multiple ?issues|article ?issues|mi)\s*\|([^{]+)\}\}/i',$x->rawCode))
 					{
-						$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n";
+						//then parse accordingly
+						foreach($x->arguments[1] as $tagarg)
+						{
+							$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n";
+						}
+					}
+					else//else we must be a new MI style
+					{
+						//the parse accordingly
+						$mi = $mi.$x->arguments[1];
+						$removed = $removed + $x->attributes['length'];
+						$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
 					}
 				}
-				else//else we must be a new MI style
+				else// else if we match a tag to go in MI
 				{
-					//the parse accordingly
-					$mi = $mi.$x->arguments[1];
-					$removed = $removed + $x->attributes['length'];
-					$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
-				}
-			}
-			else// else if we match a tag to go in MI
-			{
-				//check for all of our defined tags
-				foreach($config['tag'] as $tag)
-				{
-					//if it is one of our tags
-					if(preg_match("/^".$tag->regexName()."$/i",$x->name) == true)
+					//check for all of our defined tags
+					foreach($config['tag'] as $tag)
 					{
-						//if we have a section param ignore the tag
-						if(preg_match("/\|(sections|sect?)/i",$x->rawCode) == false)
+						//if it is one of our tags
+						if(preg_match("/^".$tag->regexName()."$/i",$x->name) == true)
 						{
-							//remove the tag from page and add to our output
-							$mi = $mi.$x->rawCode;
-							$this->text = substr_replace($this->getText(),"",$x->attributes['start']-$removed-1,$x->attributes['length']);
-							$removed = $removed + $x->attributes['length'];
+							//if we have a section param ignore the tag
+							if(preg_match("/\|(sections|sect?)/i",$x->rawCode) == false)
+							{
+								//remove the tag from page and add to our output
+								$mi = $mi.$x->rawCode;
+								$this->text = substr_replace($this->getText(),"",$x->attributes['start']-$removed-1,$x->attributes['length']);
+								$removed = $removed + $x->attributes['length'];
+							}
 						}
 					}
 				}
