@@ -25,8 +25,15 @@ unset($config['password']);
 echo "done";
 
 //Get further config stuff
-$config = parse_ini_string(file_get_contents(preg_replace("/(\<syntaxhighlight lang='php'\>|\<\/syntaxhighlight\>)/i","",$wiki->getpage("User:Addbot/config"))),true);
-if($config['run'] != true){echo "\nNot set to run"; die();}//if we are not meant to run die
+$config = parse_ini_string(file_get_contents(preg_replace("/(\<syntaxhighlight lang='ini'\>|\<\/syntaxhighlight\>)/i","",$wiki->getpage("User:Addbot/config"))),true);
+if($config['General']['run'] != true){echo "\nNot set to run"; die();}//if we are not meant to run die
+
+//create the template instances
+foreach ($config['Tags'] as $key=>$tag)
+{
+	$split = explode(",",$tag)
+	$config['tag'][$key] = new Template($split[0],$split);
+}
 
 // connect to the database
 echo "\nConnecting to database...";
@@ -76,32 +83,32 @@ foreach ($list as $item)
 			//ORPHAN TAG
 			echo ".orph";
 			if ($isOrphan === true)
-			{$page->addTag($config['tag']['Orphan']); echo "+";}
+			{$page->addTag($config['tag']['orphan']); echo "+";}
 			else if($isOrphan === false)
-			{$page->removeTag($config['tag']['Orphan']); echo "-";}
+			{$page->removeTag($config['tag']['orphan']); echo "-";}
 			
 			//UNCAT TAG
 			echo ".uncat";
 			if ($isuncat === true)
-			{$page->addTag($config['tag']['Uncategorized']); echo "+";}
+			{$page->addTag($config['tag']['uncategorized']); echo "+";}
 			else if($isuncat === false)
-			{$page->removeTag($config['tag']['Uncategorized']); echo "-";}
+			{$page->removeTag($config['tag']['uncategorized']); echo "-";}
 			
 			//DEADEND TAG
 			echo ".dead";
 			if ($isdeadend === true)
-			{$page->addTag($config['tag']['Deadend']); echo "+";}
+			{$page->addTag($config['tag']['deadend']); echo "+";}
 			else if($isdeadend === false)
-			{$page->removeTag($config['tag']['Deadend']); echo "-";}
+			{$page->removeTag($config['tag']['deadend']); echo "-";}
 			
 			//UNREFERENCED TAG
 			echo ".unref";
 			if ($isreferenced === true)
-			{$page->removeTag($config['tag']['Unreferenced']); $page->removeTag($config['tag']['BLP unsourced']); echo "-";}
+			{$page->removeTag($config['tag']['unreferenced']); $page->removeTag($config['tag']['blpunsourced']); echo "-";}
 			
 			//NEEDS SECTIONS TAG
 			echo ".sec";
-			if ($page->needsSections() === false){ $page->removeTag($config['tag']['Sections']);  echo "-";}
+			if ($page->needsSections() === false){ $page->removeTag($config['tag']['sections']);  echo "-";}
 			
 			//STUB TAG
 			echo ".stub";
@@ -115,7 +122,7 @@ foreach ($list as $item)
 			
 			//DEPRECIATED
 			echo ".dep";
-			$page->removeTag($config['tag']['Wikify']);
+			$page->removeTag($config['tag']['wikify']);
 			
 			//TODO: fix double redirects
 			//TODO: add reflist
@@ -153,7 +160,7 @@ foreach ($list as $item)
 		case "File":
 			echo "\n> Is File";
 			//If a pdf then tag as a pdf
-			if ($page->isPdf() == true){ $page->addTag("Bad format","(Summary)"); }
+			if ($page->isPdf() == true){ $page->addTag("badformat","(Summary)"); }
 			break;
 	}
 	
