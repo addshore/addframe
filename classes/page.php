@@ -1,7 +1,6 @@
 <?
 
 require 'parser.php';
-require 'AWBFunctions.php';
 
 class Page {
 
@@ -285,10 +284,31 @@ class Page {
 	}
 	
 	public function fixDateTags(){
-		$orig = $this->getText();
-		$this->text = AWBFunctions::fixDateTags($this->getText());
-		if(strlen($orig) > strlen($this->getText())+5)
-		{$this->addSummary("Dating","Maint tags");}//if there is a change then add to edit summary
+	
+		//get a copy of the text to change
+		$text = $this->getText();
+		
+		//get the current month and year
+		$date = date("F Y");
+		$text = preg_replace( '/\{\{(template:)?(Clean( ?up)?|CU|Tidy)\}\}/iS', "{{Cleanup|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(Linkless|Orphan)\}\}/iS', "{{Orphan|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(Unreferenced(sect)?|add references|cite[ -]sources?|cleanup-sources?|needs? references|no sources|no references?|not referenced|references|unref|unsourced)\}\}/iS', "{{Unreferenced|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(Uncategori[sz]ed|Uncat|Classify|Category needed|Catneeded|categori[zs]e|nocats?)\}\}/iS', "{{Uncategorized|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(Trivia2?|Too ?much ?trivia|Trivia section|Cleanup-trivia)\}\}/iS', "{{Trivia|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(deadend|DEP)\}\}/iS', "{{Deadend|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(copyedit|g(rammar )?check|copy-edit|cleanup-copyedit|cleanup-english)\}\}/iS', "{{Copyedit|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(sources|refimprove|not verified)\}\}/iS', "{{Refimprove|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(Expand)\}\}/iS', "{{Expand|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(COI|Conflict of interest|Selfpromotion)\}\}/iS', "{{COI|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?(Intro( |-)?missing|Nointro(duction)?|Lead missing|No ?lead|Missingintro|Opening|No-intro|Leadsection|No lead section)\}\}/iS', "{{Intro missing|date=$date}}", $text );
+		$text = preg_replace( '/\{\{(template:)?([Pp]rimary ?[Ss]ources?|[Rr]eliable ?sources)\}\}/iS', "{{Primary sources|date=$date}}", $text );
+		
+		//If a tag has been dated
+		if(strlen($text) > strlen($this->getText())+5)
+		{
+			$this->text = $text;
+			$this->addSummary("Dating","Maint tags");
+		}
 	}
 	
 	public function fixGeneral()
