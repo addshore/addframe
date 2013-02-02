@@ -96,12 +96,9 @@ foreach ($list as $item)
 			//STUB TAG
 			if ($page->matches('/\{\{[a-z0-9 _-]*?stub\}\}/'))//if we have a stub tag
 			{
-				if(!$page->matches('/('.implode('|',$config['ignore']['stub']).')/i'))//and its not on the ignore list
+				if ($page->wordcount() > 500)//and the word count is over 500
 				{
-					if ($page->wordcount() > 500)//and the word count is over 500
-					{
-						$page->removeRegex('/\{\{[a-z0-9 _-]*?stub\}\}/',"Removing Stub Tag");//remove the stub tag
-					}
+					$page->removeRegex('/\{\{[a-z0-9 _-]*?stub\}\}/',"Removing Stub Tag");//remove the stub tag
 				}
 			}
 			
