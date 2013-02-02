@@ -42,7 +42,6 @@ if(!$config['debug'])//if not debuging
 	// before we start checking we want to remove our got articles from the DB
 	// so that another instance wont try and check them also
 	echo "Removing ".count($list)." articles from pending\n";
-	sleep(1);
 	foreach ($list as $item){
 		$res = $db->delete($config['tblist'],array('article' => $item['article']));
 		if( !$res  ){echo $db->errorStr();} // if no result then say so
@@ -53,28 +52,57 @@ echo "Checking ".count($list)." articles\n";
 sleep(1);
 foreach ($list as $item)
 {
+
 	$page = new Page($item['article'],$wiki);// create our page instance
 	if (strlen($page->getText()) < 10){continue;}//if page size is less than 10 (page doesnt exist) skip
 	if ($wiki->nobots ($page->getName(),"Addbot",$page->getText())){continue;}//make sure we are allowed to edit the page
 	echo "Checking ".$page->getName()."\n";
 	
 	//for reference (User|Wikipedia|FileMediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?)"
-	// updated list = http://en.wikipedia.org/wiki/Wikipedia:Namespace
 	switch($page->getNamespace()){
 		case ""://article
 		
-			if ($page->isOrphan() === true){ $page->addTag($config['tag']['Orphan']); }
-			if ($page->isUncat() === true){ $page->addTag($config['tag']['Uncategorized']); }
-			if ($page->isDeadend() === true){ $page->addTag($config['tag']['Deadend']); }
+			//Pre Processing
+			$isorphan = $page->isOrphan();
+			$isuncat = $page->isUncat();
+			$isdeadend = $page->isDeadend();
+		
+			//ORPHAN TAG
+			if ($isOrphan === true)
+			{$page->addTag($config['tag']['Orphan']);}
+			else if($isOrphan === false)
+			{$page->removeTag($config['tag']['Orphan']);}
 			
-			if ($page->isOrphan() === false){ $page->removeTag($config['tag']['Orphan']); }
-			if ($page->isUncat() === false){ $page->removeTag($config['tag']['Uncategorized']); }
-			if ($page->isDeadend() === false){ $page->removeTag($config['tag']['Deadend']); }
+			//UNCAT TAG
+			if ($isuncat === true)
+			{$page->addTag($config['tag']['Uncategorized']);}
+			else if($isuncat === false)
+			{$page->removeTag($config['tag']['Uncategorized']);}
 			
+			//DEADEND TAG
+			if ($isdeadend === true)
+			{$page->addTag($config['tag']['Deadend']);}
+			else if($isdeadend === false)
+			{$page->removeTag($config['tag']['Deadend']);}
+			
+			//NEEDS SECTIONS TAG
 			if ($page->needsSections() === false){ $page->removeTag($config['tag']['Sections']); }
+			
+			//STUB TAG
+			if ($page->matches('/\{\{[a-z0-9 _-]*?stub\}\}/'))//if we have a stub tag
+			{
+				if(!$page->matches('/('.implode('|',$config['ignore']['stub']).')/i'))//and its not on the ignore list
+				{
+					if ($page->wordcount() > 500)//and the word count is over 500
+					{
+						$page->removeRegex('/\{\{[a-z0-9 _-]*?stub\}\}/',"Removing Stub Tag");//remove the stub tag
+					}
+				}
+			}
+			
+			//DEPRECIATED
 			$page->removeTag($config['tag']['Wikify']);
 			
-			//TODO: - stubs
 			//TODO: fix double redirects
 			//TODO: add reflist
 			
@@ -82,34 +110,39 @@ foreach ($list as $item)
 			//check if has empty section or tag in full section
 			$page->fixDateTags();// fix any tempaltes that need a date
 			
-			if($page->hasSigchange() === true)// check if a big change has happened to the page
+			//If the page has had another significant change
+			if($page->hasSigchange() === true)
 			{
-				// do lots of small formating fixes here
+				//GENERAL CHANGES
 				$page->fixTemplates();
 				$page->multipleIssues();
 				$page->fixWhitespace();
 				$page->fixGeneral();
 			}
 			break;
+			
 		case "User talk":
 			//TODO:Subst user talk templates
 			break;
+			
 		case "Wikipedia":
 			if($page->getName() == "Wikipedia:AutoWikiBrowser/User talk templates")//if it is our AWB page
 			{
 				exec("php /home/addshore/addbot/task.awbtemplates.php");//run the external check
 			}
 			break;
+			
 		case "File":
+			//If a pdf then tag as a pdf
 			if ($page->isPdf() == true){ $page->addTag("Bad format","(Summary)"); }
 			break;
 	}
 	
 	//Post
-	if($page->hasSigchange() == true)//TODO: check page exists before posting
+	if($page->hasSigchange() == true)
 	{
 		$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
-		sleep(60);
+		sleep(30);//sleep after an edit
 	}
 	
 	sleep(2);// sleep inbetween requests
