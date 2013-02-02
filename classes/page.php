@@ -59,44 +59,56 @@ class Page {
 	//return a restricted estimate of words in an article
 	public function wordcount()
 	{
-		$text = $this->getText();//get a temp copy of the text to work with
-		$text = preg_replace("/(\{\{[^\}]*?\}\}|={1,6}[^=]*?={1,6}|\n\*{1,2} ?|\[https?[^\]]*?\]|\[\[(Category|Image|File|[a-z]{2,6}):[^\]]*?\]\]|\<references ?\/\>|<ref>.*?<\/ref>|<!--.*?-->)/is","",$text);//remove templates, cats, interwikis and extlinks and refs
-		$text = preg_replace("/\[\[[^\]]*?\]\]/","WORD",$text);//fill all links in with a single word
+		//get a temp copy of the text to work with
+		$text = $this->getText();
+		//remove templates, cats, interwikis and extlinks and refs
+		$text = preg_replace("/(\{\{[^\}]*?\}\}|={1,6}[^=]*?={1,6}|\n\*{1,2} ?|\[https?[^\]]*?\]|\[\[(Category|Image|File|[a-z]{2,6}):[^\]]*?\]\]|\<references ?\/\>|<ref>.*?<\/ref>|<!--.*?-->)/is","",$text);
+		//fill all links in with a single word
+		$text = preg_replace("/\[\[[^\]]*?\]\]/","WORD",$text);
 		$text = trim($text);
+		//echo the count
 		echo "Wordcount of ".str_word_count($text)."\n";
 		return str_word_count($text);
 	}
 	
-	// returns false doesnt need sections
+	// returns false if the largest section size is smaller than 5000 chars (excluding certain sections)
 	public function needsSections()
 	{
+		//init some vars
 		$largestsection = 0;
 		$sectioncount = 0;
+		//find the sections
 		preg_match_all('/\n==(=)? ?.* ?===?/i',$text, $sections, PREG_PATTERN_ORDER);
 		$split = preg_split('/\n==(=)? ?.* ?===?/i',$text);
 			
+		//for each section found
 		foreach($split as $id => $section){
+			//if we are the lead
 			if($id == 0){
 				$largestsection = strlen($section);
 				$sectioncount++;
 			}
+			//else we must have a name
 			else{
+				//make sure we ignore the sections below
 				if (preg_match('/See ?also|(external( links)?|references|notes|bibliography|further( reading)?)/i',$sections[0][$id-1]) == 0){
-					echo "-- IS a valid section per ".$sections[0][$id-1]." \n";
+					//if the length of this section is longer than our current largest
 					if(strlen($section) > $largestsection){
+						//then set it
 						$largestsection = strlen($section);
 					}
+				//increment the section count
 				$sectioncount++;
 				}
 			}
 		}
+		//if the page has 4+ sections and a largest section of 5000- then return false
 		if($sectioncount >= 4 && $largestsection <= 5000){//was 2750 for AVG
-			$text = preg_replace("/\{\{((cleanup|needs ?)?Sections)(\| ?(date) ?(= ?(January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])? ?){0,1} *\}\}(\r\n|\n\n){0,3}/i","",$text);
 			return false;
 		}
 	}
 	
-	//returns true if we have a ref
+	//returns true if we have a <ref tag
 	public function isReferenced()
 	{
 		//if we match a ref tag
@@ -107,28 +119,39 @@ class Page {
 		return null;
 	}
 	
-	// returns false if not orphan
+	// returns true if there are 0 links to the page from the mainspace
+	// returns false if there is at least 1 link that fits the criteria
 	public function isOrphan()
 	{
+		//get the links to the page
 		$links = $this->wiki->whatlinkshere($this->getName(),"&blnamespace=0");
-		if(count($links) == 0) {return true;}// if no links
+		//if no links return as IS ORPHAN
+		if(count($links) == 0) {return true;}
+		//if there are links then check them
 		foreach($links as $link){
-			if(preg_match("/((List|Index) of|\(disambig(uation)?\))/i",$link) == FALSE)// names to skip
+			//regex names of links to ignore
+			if(preg_match("/((List|Index) of|\(disambig(uation)?\))/i",$link) == FALSE)
 			{
+				//regex of contents of pages to ignore
 				if (preg_match("/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|sia|set index( articles)?).*\}\})/i",$this->wiki->getpage($link)) == FALSE)
+				//if we got this far it isnt an orphaned page
 				{return false;}
 			}
 		}
 		return null;
 	}
 	
-	// returns false if page is not deadend
+	// returns false if one blue link is found on the page
+	// returns true if 0 links are found
 	public function isDeadend()
 	{
-		preg_match_all('/\[\[([a-z\/ _\(\)\|\.0-9]*)\]\]/i',$this->getText(), $links, PREG_PATTERN_ORDER);// match links to articles
+		// match links to articles
+		preg_match_all('/\[\[([a-z\/ _\(\)\|\.0-9]*)\]\]/i',$this->getText(), $links, PREG_PATTERN_ORDER);
 		foreach($links[1] as $link){
+			//if this link has been renammed i.e. [[User:Addbot|Bot]]
 			if(preg_match('/\|/',$link) != 0){
-				$split = preg_split('/\|/',$link);// get the link rather than text
+				// get the link rather than text name
+				$split = preg_split('/\|/',$link);
 				$link = $split[0];
 			}
 			if (preg_match('/:/',$link) == 0){
@@ -138,14 +161,17 @@ class Page {
 		if(count($links) == 0){ return true; }
 	}
 	
-	// returns false if not uncat
+	// returns true is 0 categories are found
+	// returns false if more than one is found
 	public function isUncat()
 	{
-		$cats = $this->wiki->categories($this->getName(),false);// get cats for this page
-		if(count($cats) == 0){return true;}else{return false;}// tag as apropriate
+		// get cats for this page
+		$cats = $this->wiki->categories($this->getName(),false);
+		// tag as apropriate
+		if(count($cats) == 0){return true;}else{return false;}
 	}
 	
-	//return true if the page is a pdf
+	//return true if the page is appended by .pdf
 	public function isPdf()
 	{ 
 		if( preg_match("/\.pdf$/i",$this->getName()))
@@ -159,17 +185,20 @@ class Page {
 	//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	public function addTag($template,$section=null)
 	{
-		//if it doesnt already exist
+		//make sure the tag is not already on the page
 		if(preg_match($template->regexTemplate(),$this->getText()) || preg_match($template->regexTempIssues(),$this->getText())){ return false; }
-		if($section)// if we want to add below a section
+		//check if we want to add the tag below a section
+		if($section)
 		{
-			if(preg_match ("/== ?".$section." ?==/i",$this->text)) // if the section exists
+			//does the section exist?
+			if(preg_match ("/== ?".$section." ?==/i",$this->text))
 			{
+				//then add the tag
 				$matches = preg_match ("/== ?".$section." ?==/i",$this->getText());
 				$pieces = preg_split("/== ?".$section." ?==/i",$this->getText());
 				$this->text = $pieces[0]."==".$matches[1]."==\n{{".$template->getName()."}} ".$pieces[1];
 			}
-			else // else the section must exist
+			else // else we can just make the section
 			{
 				$this->text = "==".$section."==\n{{".$template->getName()."}}\n" .$this->getText();
 			}
@@ -178,7 +207,8 @@ class Page {
 		{
 			$this->text = "{{".$template->getName()."}}\n" .$this->getText();
 		}
-		$this->addSummary("Adding",$template->getName());// add to the summary
+		// add to the summary for the edit
+		$this->addSummary("Adding",$template->getName());
 	}
 	
 	//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
@@ -187,6 +217,8 @@ class Page {
 		$this->removeRegex($template->regexTemplate(),"Removing ".$template->getName());
 	}
 	
+	//remove the regex match from the page
+	//if cummary is set then add to edit summary
 	public function removeRegex($regex,$summary = null)
 	{
 		if(preg_match($regex,$this->getText()))//make sure the regex is actually there
@@ -199,18 +231,24 @@ class Page {
 		}
 	}
 	
+	//parse MI tag, add tags to MI, remove MI if not needed
 	public function multipleIssues()
 	{
 		global $config;
 		$removed = 0;
-		$mi = "";
+		$mi = "";//this will be used to store what we want to add to the page
+		//parse the page
 		$this->parse(); // work with $this->parsed;
+		//for each template on the page
 		foreach($this->parsed['wikObject_templates'] as $x)
 		{
+			//does it match the MI template
 			if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
 			{
-				if(preg_match('/\{\{(multiple ?issues|article ?issues|mi)\s*\|([^{]+)\}\}/i',$x->rawCode))//if old style mi
+				//does it match the old style of use
+				if(preg_match('/\{\{(multiple ?issues|article ?issues|mi)\s*\|([^{]+)\}\}/i',$x->rawCode))
 				{
+					//then parse accordingly
 					echo "Found old multiple issues template\n";
 					foreach($x->arguments[1] as $tagarg)
 					{
@@ -219,20 +257,25 @@ class Page {
 				}
 				else//else we must be a new MI style
 				{
+					//the parse accordingly
 					echo "Found multiple issues template\n";
 					$mi = $mi.$x->arguments[1];
 					$removed = $removed + $x->attributes['length'];
 					$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
 				}
 			}
-			else// else if we match a tag
+			else// else if we match a tag to go in MI
 			{
+				//check for all of our defined tags
 				foreach($config['tag'] as $tag)
 				{
-					if(preg_match("/^".$tag->regexName()."$/i",$x->name) == true)//if it is one of our tags
+					//if it is one of our tags
+					if(preg_match("/^".$tag->regexName()."$/i",$x->name) == true)
 					{
-						if(preg_match("/\|(sections|sect?)/i",$x->rawCode) == false)//if we have a section param ignore it
+						//if we have a section param ignore the tag
+						if(preg_match("/\|(sections|sect?)/i",$x->rawCode) == false)
 						{
+							//remove the tag from page and add to our output
 							$mi = $mi.$x->rawCode;
 							$this->text = substr_replace($this->getText(),"",$x->attributes['start']-$removed-1,$x->attributes['length']);
 							$removed = $removed + $x->attributes['length'];
@@ -241,10 +284,14 @@ class Page {
 				}
 			}
 		}
-		$mi = preg_replace('/\}\}/',"}}\n",$mi);//crappy way to make sure we split at every tag
-		$split = preg_split("/\n/",$mi,0,PREG_SPLIT_NO_EMPTY);//split into each tag
+		//crappy way to make sure we split at every tag
+		$mi = preg_replace('/\}\}/',"}}\n",$mi);
+		//split into each tag (might be joined if from MI)
+		$split = preg_split("/\n/",$mi,0,PREG_SPLIT_NO_EMPTY);
+		//If there is at least 2 tags
 		if(count($split) > 1)
 		{
+			//add them to a MI tag
 			echo "Adding tags to multiple issues\n";
 			$mi = "{{Multiple issues|\n";//start mi
 			foreach ($split as $tag)
@@ -253,16 +300,20 @@ class Page {
 			}
 			$mi = $mi."}}";//add the end of the tag
 		}
-		elseif(count($split) == 1)//if only 1 we dont want to use multiple issues
+		//if only 1 we dont want to use multiple issues
+		elseif(count($split) == 1)
 		{
+			//just add the single tag
 			$mi = $split[0];
 		}
 		else
 		{
-			return false;//we actually dont have any tags 
+			//we actually dont have any tags 
+			return false;
 		}
 
-		$this->text = $mi."\n".$this->getText();//add to origional text
+		//add to origional text
+		$this->text = $mi."\n".$this->getText();
 
 	}
 	
