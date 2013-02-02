@@ -74,73 +74,82 @@ foreach ($list as $item)
 	switch($page->getNamespace()){
 		case ""://article
 			echo "\n> Is Article";
-		
-			//Pre Processing
-			$isorphan = $page->isOrphan();
-			$isuncat = $page->isUncat();
-			$isdeadend = $page->isDeadend();
-			$isreferenced = $page->isReferenced();
-		
-			//ORPHAN TAG
-			echo ".orph";
-			if ($isOrphan === true)
-			{$page->addTag($config['tag']['orphan']); echo "+";}
-			else if($isOrphan === false)
-			{$page->removeTag($config['tag']['orphan']); echo "-";}
-			
-			//UNCAT TAG
-			echo ".uncat";
-			if ($isuncat === true)
-			{$page->addTag($config['tag']['uncategorized']); echo "+";}
-			else if($isuncat === false)
-			{$page->removeTag($config['tag']['uncategorized']); echo "-";}
-			
-			//DEADEND TAG
-			echo ".dead";
-			if ($isdeadend === true)
-			{$page->addTag($config['tag']['deadend']); echo "+";}
-			else if($isdeadend === false)
-			{$page->removeTag($config['tag']['deadend']); echo "-";}
-			
-			//UNREFERENCED TAG
-			echo ".unref";
-			if ($isreferenced === true)
-			{$page->removeTag($config['tag']['unreferenced']); $page->removeTag($config['tag']['blpunsourced']); echo "-";}
-			
-			//NEEDS SECTIONS TAG
-			echo ".sec";
-			if ($page->needsSections() === false){ $page->removeTag($config['tag']['sections']);  echo "-";}
-			
-			//STUB TAG
-			echo ".stub";
-			if ($page->matches('/\{\{[a-z0-9 _-]*?stub\}\}/'))//if we have a stub tag
+			//if not a redirect
+			if(!$page->matches('/# ?REDIRECT ?\[\[.*?\]\]/i'))
 			{
-				if ($page->wordcount() > 500)//and the word count is over 500
+		
+				//Pre Processing
+				$isorphan = $page->isOrphan();
+				$isuncat = $page->isUncat();
+				$isdeadend = $page->isDeadend();
+				$isreferenced = $page->isReferenced();
+			
+				//ORPHAN TAG
+				echo ".orph";
+				if ($isOrphan === true)
+				{$page->addTag($config['tag']['orphan']); echo "+";}
+				else if($isOrphan === false)
+				{$page->removeTag($config['tag']['orphan']); echo "-";}
+				
+				//UNCAT TAG
+				echo ".uncat";
+				if ($isuncat === true)
+				{$page->addTag($config['tag']['uncategorized']); echo "+";}
+				else if($isuncat === false)
+				{$page->removeTag($config['tag']['uncategorized']); echo "-";}
+				
+				//DEADEND TAG
+				echo ".dead";
+				if ($isdeadend === true)
+				{$page->addTag($config['tag']['deadend']); echo "+";}
+				else if($isdeadend === false)
+				{$page->removeTag($config['tag']['deadend']); echo "-";}
+				
+				//UNREFERENCED TAG
+				echo ".unref";
+				if ($isreferenced === true)
+				{$page->removeTag($config['tag']['unreferenced']); $page->removeTag($config['tag']['blpunsourced']); echo "-";}
+				
+				//NEEDS SECTIONS TAG
+				echo ".sec";
+				if ($page->needsSections() === false){ $page->removeTag($config['tag']['sections']);  echo "-";}
+				
+				//STUB TAG
+				echo ".stub";
+				if ($page->matches('/\{\{[a-z0-9 _-]*?stub\}\}/'))//if we have a stub tag
 				{
-					$page->removeRegex('/\{\{[a-z0-9 _-]*?stub\}\}/',"Removing Stub Tag"); echo "-";//remove the stub tag
+					if ($page->wordcount() > 500)//and the word count is over 500
+					{
+						$page->removeRegex('/\{\{[a-z0-9 _-]*?stub\}\}/',"Removing Stub Tag"); echo "-";//remove the stub tag
+					}
+				}
+				
+				//DEPRECIATED
+				echo ".dep";
+				$page->removeTag($config['tag']['wikify']);
+				
+				//TODO: fix double redirects
+				//TODO: add reflist
+				
+				//check if has empty section or tag in full section
+				echo ".date";
+				$page->fixDateTags();// fix any tempaltes that need a date
+				
+				//If the page has had another significant change
+				if($page->hasSigchange() === true)
+				{
+					//GENERAL CHANGES
+					echo ".gen";
+					$page->fixTemplates();
+					$page->multipleIssues();
+					$page->fixWhitespace();
+					$page->fixGeneral();
 				}
 			}
-			
-			//DEPRECIATED
-			echo ".dep";
-			$page->removeTag($config['tag']['wikify']);
-			
-			//TODO: fix double redirects
-			//TODO: add reflist
-			
-			//check if has empty section or tag in full section
-			echo ".date";
-			$page->fixDateTags();// fix any tempaltes that need a date
-			
-			//If the page has had another significant change
-			if($page->hasSigchange() === true)
+			else
 			{
-				//GENERAL CHANGES
-				echo ".gen";
-				$page->fixTemplates();
-				$page->multipleIssues();
-				$page->fixWhitespace();
-				$page->fixGeneral();
+				//else we are a redirect
+				echo " > Redirect";
 			}
 			break;
 			
