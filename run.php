@@ -66,6 +66,7 @@ foreach ($list as $item)
 			$isorphan = $page->isOrphan();
 			$isuncat = $page->isUncat();
 			$isdeadend = $page->isDeadend();
+			$isreferenced = $page->isReferenced();
 		
 			//ORPHAN TAG
 			if ($isOrphan === true)
@@ -84,6 +85,10 @@ foreach ($list as $item)
 			{$page->addTag($config['tag']['Deadend']);}
 			else if($isdeadend === false)
 			{$page->removeTag($config['tag']['Deadend']);}
+			
+			//UNREFERENCED TAG
+			if ($isreferenced === true)
+			{$page->removeTag($config['tag']['Unreferenced']);}
 			
 			//NEEDS SECTIONS TAG
 			if ($page->needsSections() === false){ $page->removeTag($config['tag']['Sections']); }

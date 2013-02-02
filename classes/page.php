@@ -29,7 +29,8 @@ class Page {
 	public function hasSigchange() { return $this->sigchange; }
 	
 	// public functions
-	public function parse() { $this->parser = new parser($this->getName(),$this->getText()); $this->parsed = $this->parser->parse(); return $this->parsed;} // create instance of parser class and parse
+	// create instance of parser class and parse
+	public function parse() { $this->parser = new parser($this->getName(),$this->getText()); $this->parsed = $this->parser->parse(); return $this->parsed;} 
 	
 	// private functions
 	private function loadText() { $this->text = $this->wiki->getpage($this->getName());} // load the text from the wiki
@@ -55,7 +56,7 @@ class Page {
 	//make matching easier
 	public function matches($regex){return preg_match($regex,$this->getText())}
 	
-		//return a restricted estimate of words in an article
+	//return a restricted estimate of words in an article
 	public function wordcount()
 	{
 		$text = $this->getText();//get a temp copy of the text to work with
@@ -92,6 +93,17 @@ class Page {
 			$text = preg_replace("/\{\{((cleanup|needs ?)?Sections)(\| ?(date) ?(= ?(January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])? ?){0,1} *\}\}(\r\n|\n\n){0,3}/i","",$text);
 			return false;
 		}
+	}
+	
+	//returns true if we have a ref
+	public function isReferenced()
+	{
+		//if we match a ref tag
+		if($this->matches('/<\/?ref/i'))
+		{
+			return true;
+		}
+		return null;
 	}
 	
 	// returns false if not orphan
@@ -134,10 +146,13 @@ class Page {
 	
 	//return true if the page is a pdf
 	public function isPdf()
-	{ if( preg_match("/\.pdf$/i",$this->getName())) {return true; } }
+	{ 
+		if( preg_match("/\.pdf$/i",$this->getName())) {return true; } 
+	}
 	
 	//add the given template from the page if it doesnt already exist
-	public function addTag($template,$section=null)//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
+	//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
+	public function addTag($template,$section=null)
 	{
 		//if it doesnt already exist
 		if(preg_match($template->regexTemplate(),$this->getText()) || preg_match($template->regexTempIssues(),$this->getText())){ return false; }
@@ -161,8 +176,9 @@ class Page {
 		$this->addSummary("Adding",$template->getName());// add to the summary
 	}
 	
+	//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
 	public function removeTag($template)
-	{//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
+	{
 		$this->removeRegex($template->regexTemplate(),"Removing ".$template->getName());
 	}
 	
@@ -265,7 +281,8 @@ class Page {
 		$this->text = preg_replace('/^(={1,4})[ ]+([^= ][^=]*[^= ])(={1,4})$/m',"$1$2$3", $this->getText() );
 	}
 	
-	public function fixTemplates(){
+	public function fixTemplates()
+	{
 		$this->text = preg_replace( '/\{\{(?:Template:)?(Dab|Disamb|Disambiguation)\}\}/iS', "{{Disambig}}", $this->text );
 		$this->text = preg_replace( '/\{\{(?:Template:)?(Bio-dab|Hndisambig)/iS', "{{Hndis", $this->text );
 		$this->text = preg_replace( '/\{\{(?:Template:)?(Prettytable|Prettytable100)\}\}/iS', "{{subst:Prettytable}}", $this->text );
@@ -281,7 +298,8 @@ class Page {
 		$this->text = preg_replace( '/{{\s*(?:[Cc]n|[Ff]act|[Pp]roveit|[Cc]iteneeded|[Uu]ncited)(?=\s*[\|}])/S', "{{Citation needed", $this->text );
 	}
 	
-	public function fixDateTags(){
+	public function fixDateTags()
+	{
 		global $config;
 		//get a copy of the text to change
 		$text = $this->getText();
@@ -292,7 +310,7 @@ class Page {
 		foreach ($config['tag'] as $tag)
 		{
 			//if the tag can be found without a date
-			if($page->matches('/\{\{(Template:)?'.$tag->regexName().'\}\}/i'))
+			if($this->matches('/\{\{(Template:)?'.$tag->regexName().'\}\}/i'))
 			{
 				//then date it
 				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'\}\}/i',"{{".$tag->getName()."|date=$date}}",$text);
