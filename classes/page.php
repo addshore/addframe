@@ -115,8 +115,9 @@ class Page {
 		//if the page has 4+ sections and a largest section of 5000- then return false
 		if($sectioncount >= $config['Sections']['sections'] && $largestsection <= $config['Sections']['largest']){//was 2750 for AVG
 			return false;
-		}
-		if($sectioncount <= $config['Sections']['sections'] && $largestsection >= $config['Sections']['largest']){//was 2750 for AVG
+		}elseif($sectioncount <= 2 && $largestsection >= 10000){//was 2750 for AVG
+			return true;
+		}elseif ($sectioncount = 1 && $this->wordcount() >= 1000){
 			return true;
 		}
 	}
