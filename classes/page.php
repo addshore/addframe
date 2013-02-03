@@ -245,6 +245,7 @@ class Page {
 	{
 		global $config;
 		$removed = 0;
+		$hat = "";//for storing nay hat notes in
 		$mi = "";//this will be used to store what we want to add to the page
 		//parse the page
 		$this->parse(); // work with $this->parsed;
@@ -274,6 +275,14 @@ class Page {
 						$removed = $removed + $x->attributes['length'];
 						$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
 					}
+				}
+				//else do we match any hatnotes
+				elseif(preg_match('/(Template:)?(Hatnote|Reflink|Main(( |_)list)?|Details3?|See( |_)also2?|Further2?|About|Other( |_)uses-section|for|((Two|Three) )?Other( |_)uses|Other uses of|Redirect[0-1]?[0-9]|Redirect(-|_| )(synomym|text|distinguish2?)|Consider( |_)disambiguation|Other( |_)(uses|people|places|hurricanes|ships|)[1-5]?|(Redirect-)Distinguish|Selfref|Category( |_)(see also|explanation|pair)|Cat( |_)main|cat(preceding|succeeding)|contrast|This( |_)user( |_)talk)/i',$x->name))
+				{
+					//remember our hatnotes 
+					$hat = $hat.$x->rawCode."\n";
+					//remove the hatnote matched (we will re add later)
+					$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
 				}
 				else// else if we match a tag to go in MI
 				{
@@ -323,8 +332,8 @@ class Page {
 			return false;
 		}
 
-		//add to origional text
-		$this->text = $mi."\n".$this->getText();
+		//add to origional text with any hatnotes
+		$this->text = $hat.$mi."\n".$this->getText();
 
 	}
 	
@@ -384,7 +393,7 @@ class Page {
 			{
 				//then date it
 				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'\}\}/i',"{{".$tag->getName()."|date=$date}}",$text);
-			}
+			};
 		}
 		
 		//If a tag has been dated
