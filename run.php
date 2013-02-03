@@ -142,6 +142,22 @@ foreach ($list as $item)
 					echo "-";
 				}
 				
+				//{{Unreferenced}} and {{BLP unsourced}} depending on Category:Living people
+				if ($page->matches('/('.$config['mitag']['unreferenced']->regexName().'|'.$config['mitag']['blpunsourced']->regexName().')/i'))
+				{
+					if(inCategory("Category:Living people"))
+					{
+						$page->removeTag($config['mitag']['unreferenced']);
+						$page->addTag($config['mitag']['blpunsourced']);
+					}
+					else
+					{
+						$page->removeTag($config['mitag']['blpunsourced']);
+						$page->addTag($config['mitag']['unreferenced']);
+					}
+
+				}
+				
 				//NEEDS SECTIONS TAG
 				echo ".sec";
 				if ($page->needsSections() === false){

@@ -129,6 +129,20 @@ class Page {
 		return null;
 	}
 	
+	//returns true if page is in a given category
+	public function inCategory($category)
+	{
+		$cats = $this->wiki->categories($this->getName())
+		foreach ($cats as $cat)
+		{
+			if ($cat == $category)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	// returns true if there are 0 links to the page from the mainspace
 	// returns false if there is at least 1 link that fits the criteria
 	public function isOrphan()
