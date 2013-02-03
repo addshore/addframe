@@ -105,4 +105,18 @@ $config['mitag']['verylong'] = new Template('very long',Array('Long','Toobig','L
 $config['mitag']['weasel'] = new Template('Weasel',Array('Weasel words','Weasel-words','Weasel section','Weaselwords'),true);
 $config['mitag']['badformat'] = new Template('Bad format',Array('BadPDF','Badpdf','Badformat','BadFormat'),true);
 
+//Sandboxes
+$config['sandbox']['Wikipedia:Sandbox']['name'] = 'Wikipedia:Sandbox';
+$config['sandbox']['Wikipedia']['id'] = 531626860;
+$config['sandbox']['Wikipedia talk:Sandbox']['name'] = 'Wikipedia talk:Sandbox';
+$config['sandbox']['Wikipedia']['id'] = 531474752;
+$config['sandbox']['Template:Template sandbox']['name'] = 'Template:Template sandbox';
+$config['sandbox']['Wikipedia']['id'] = 531539988;
+$config['sandbox']['Wikipedia:Tutorial']['name'] = '/Wikipedia:Tutorial \((Editing|Formatting|Wikipedia links|Citing sources|Keep in mind)\)/';
+$config['sandbox']['Wikipedia']['id'] = 531634619;
+$config['sandbox']['Template:X']['name'] = '/Template:X[1-9]/';
+$config['sandbox']['Wikipedia']['id'] = 529773572
+$config['sandbox']['Template talk:X']['name'] = '/Template talk:X[1-9]/';
+$config['sandbox']['Wikipedia']['id'] = 525055639;
+
 ?>
