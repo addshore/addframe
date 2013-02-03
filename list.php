@@ -98,7 +98,7 @@ if(isset($list))
 
 	foreach($list as $item) // for every item we have collected for the list
 	{
-		usleep(50000);
+		usleep(10000);
 		if($namespace != 0) // if it is not specificly the main namespace
 		{
 			if(preg_match("/^".$namespaceregex.":/i",$item)) // get those that match the namespace we want
@@ -120,7 +120,7 @@ if(isset($list))
 	$db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 	foreach($final as $item) // for each item
 	{
-		sleep(1);
+		usleep(10000);
 		echo "Adding ".$item." to database\n";
 		$res = $db->insert($config['tblist'],array('article' => $item,) ); // inset to database table
 		if( !$res  ){echo $db->errorStr(); break;} // if no result then break as we have an error ($db->errorStr())

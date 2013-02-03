@@ -29,13 +29,6 @@ $config = parse_ini_string(preg_replace("/(\<syntaxhighlight lang='ini'\>|\<\/sy
 require 'config.php';//again
 if($config['General']['run'] != true){echo "\nNot set to run"; die();}//if we are not meant to run die
 
-//create the template instances
-foreach ($config['Tags'] as $key=>$tag)
-{
-	$split = explode(",",$tag);
-	$config['tag'][$key] = new Template($split[0],$split,true);
-}
-
 // connect to the database
 echo "\nConnecting to database...";
 sleep(1); echo "...";
@@ -49,7 +42,6 @@ echo "\nCurrently ".$count." articles pending review";
 $result = $db->select('pending','*',null,array("LIMIT" => round($count/100+30)));
 $list = Database::mysql2array($result);
 echo "\nGot ".count($list)." articles from pending";
-sleep(99);
 if(!$config['debug'])//if not debuging
 {
 	// before we start checking we want to remove our got articles from the DB
@@ -99,7 +91,7 @@ foreach ($list as $item)
 				if ($isuncat === true)
 				{$page->addTag($config['tag']['uncategorized']); echo "+";}
 				else if($isuncat === false)
-				{$page->removeTag($config['tag']['uncategorized']); echo "-";}
+				{$page->removeTag($config['tag']['uncategorized']); $page->removeTag($config['tag']['uncategorized']); echo "-";}
 				
 				//DEADEND TAG
 				echo ".dead";
