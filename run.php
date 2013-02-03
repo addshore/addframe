@@ -43,6 +43,9 @@ $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $co
 echo "done";
 
 // get the current list of pending articles
+$count = Database::mysql2array($db->select('pending','COUNT(*)'));
+echo "\nCurrently ".$count[0]['COUNT(*)']." articles pending review";
+sleep(99);
 $result = $db->select('pending','*',null,array("LIMIT" => 10));
 $list = Database::mysql2array($result);
 echo "\nGot ".count($list)." articles from pending";
