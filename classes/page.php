@@ -122,7 +122,7 @@ class Page {
 	public function isReferenced()
 	{
 		//if we match a ref tag
-		if($this->matches('/<\/?ref/i'))
+		if($this->matches('/<\/?ref[^\/]*?>/is'))
 		{
 			return true;
 		}
