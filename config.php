@@ -102,7 +102,7 @@ $config['mitag']['uncategorized'] = new Template('Uncategorized',Array('CatNeede
 $config['mitag']['unreliablesources'] = new Template('unreliable sources',Array('Unreliable','Reliablesources','Reliable sources','Unreliablesources','Reliable-sources'),true);
 $config['mitag']['update'] = new Template('update',Array('Not up to date','Notuptodate','UpdateWatch','Update sect'),true);
 $config['mitag']['verylong'] = new Template('very long',Array('Long','Toobig','Longish','VeryLong','Shorten','Too long','Toolong','Too-long','Tldr','TLDR','Verylong','Looong','Loong'),true);
-$config['mitag']['Weasel'] = new Template('Weasel',Array('Weasel words','Weasel-words','Weasel section','Weaselwords'),true);
+$config['mitag']['weasel'] = new Template('Weasel',Array('Weasel words','Weasel-words','Weasel section','Weaselwords'),true);
 $config['mitag']['badformat'] = new Template('Bad format',Array('BadPDF','Badpdf','Badformat','BadFormat'),true);
 
 ?>
