@@ -205,16 +205,16 @@ class Page {
 				//then add the tag
 				$matches = preg_match ("/== ?".$section." ?==/i",$this->getText());
 				$pieces = preg_split("/== ?".$section." ?==/i",$this->getText());
-				$this->text = $pieces[0]."==".$matches[1]."==\n{{".$template->getName()."}} ".$pieces[1];
+				$this->text = $pieces[0]."==".$matches[1]."==\n".$template->getPost()." ".$pieces[1];
 			}
 			else // else we can just make the section
 			{
-				$this->text = "==".$section."==\n{{".$template->getName()."}}\n" .$this->getText();
+				$this->text = "==".$section."==\n".$template->getPost()."\n" .$this->getText();
 			}
 		}
 		else// else just add it to the top of the page
 		{
-			$this->text = "{{".$template->getName()."}}\n" .$this->getText();
+			$this->text = $template->getPost()."\n" .$this->getText();
 		}
 		// add to the summary for the edit
 		$this->addSummary("Adding {{".$template->getName()."}}");
@@ -400,7 +400,7 @@ class Page {
 		if(strlen($text) > strlen($this->getText())+5)
 		{
 			$this->text = $text;
-			$this->addSummary("Dating","Maint tags");
+			$this->addSummary("Dating Tags");
 		}
 	}
 	

@@ -33,7 +33,7 @@ if($config['General']['run'] != true){echo "\nNot set to run"; die();}//if we ar
 foreach ($config['Tags'] as $key=>$tag)
 {
 	$split = explode(",",$tag);
-	$config['tag'][$key] = new Template($split[0],$split);
+	$config['tag'][$key] = new Template($split[0],$split,true);
 }
 
 // connect to the database

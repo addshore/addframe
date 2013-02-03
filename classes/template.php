@@ -3,9 +3,10 @@
 class Template {
 
 	// construct the page (you probably want to call load after this)
-	public function __construct($name,$redirects) {
+	public function __construct($name,$redirects,$dated=false) {
 		$this->name = $name;
 		$this->redirects = $redirects;
+		$this->dated = $dated;
 	}	
 	
 	// variables
@@ -14,6 +15,15 @@ class Template {
 	private $dateregex = '((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])';
 
 	public function getName() { return $this->name; } //returns the name of the template
+	//get an instance of the template to post
+	public function getPost() {
+	if($this->dated)
+	{
+		$date = date("F Y");
+		return "{{".$tag->getName()."|date=$date}}";
+	}else{
+		return "{{".$this->getName()."}}";
+	}
 	
 	//returns the regex for matching whole template and args
 	public function regexTemplate() { return '/\{\{'.$this->regexName().$this->regexArgs().'\}\}(\r|\n){0,3}/i'; }
