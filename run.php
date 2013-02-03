@@ -44,12 +44,12 @@ echo "done";
 
 // get the current list of pending articles
 $count = Database::mysql2array($db->select('pending','COUNT(*)'));
-echo "\nCurrently ".$count[0]['COUNT(*)']." articles pending review";
-sleep(99);
-$result = $db->select('pending','*',null,array("LIMIT" => 10));
+$count = $count[0]['COUNT(*)'];
+echo "\nCurrently ".$count." articles pending review";
+$result = $db->select('pending','*',null,array("LIMIT" => round($count/100+30)));
 $list = Database::mysql2array($result);
 echo "\nGot ".count($list)." articles from pending";
-
+sleep(99);
 if(!$config['debug'])//if not debuging
 {
 	// before we start checking we want to remove our got articles from the DB
