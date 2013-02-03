@@ -414,6 +414,7 @@ class Page {
 		$this->text = preg_replace('/&ndash/i', "–", $this->text );
 		//Templates
 		$this->text = preg_replace('/\{\{Unreferenced\|section\}\}/i', "{{Unreferenced section}}", $this->text );
+		$this->text = preg_replace('/<references \/>/i',"{{reflist}}", $this->text );
 	
 	}
 }

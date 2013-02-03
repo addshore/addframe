@@ -142,8 +142,8 @@ foreach ($list as $item)
 					echo ".gen";
 					$page->fixTemplates();
 					$page->multipleIssues();
-					$page->fixWhitespace();
 					$page->fixGeneral();
+					$page->fixWhitespace();
 				}
 			}
 			else
