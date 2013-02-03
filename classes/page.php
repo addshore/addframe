@@ -116,6 +116,9 @@ class Page {
 		if($sectioncount >= $config['Sections']['sections'] && $largestsection <= $config['Sections']['largest']){//was 2750 for AVG
 			return false;
 		}
+		if($sectioncount <= $config['Sections']['sections'] && $largestsection >= $config['Sections']['largest']){//was 2750 for AVG
+			return true;
+		}
 	}
 	
 	//returns true if we have a <ref tag
@@ -428,8 +431,8 @@ class Page {
 		$this->text = preg_replace('/== ?External ?links? ?==/i', "==External links==", $this->text );
 		$this->text = preg_replace('/== ?Further ?readings? ?==/i', "==Further reading==", $this->text );
 		//Unicode
-		$this->text = preg_replace('/&mdash/i', "—", $this->text );
-		$this->text = preg_replace('/&ndash/i', "–", $this->text );
+		$this->text = preg_replace('/&mdash/i', "ï¿½", $this->text );
+		$this->text = preg_replace('/&ndash/i', "ï¿½", $this->text );
 		//Templates
 		$this->text = preg_replace('/\{\{'$config['mitag']['unreferenced'].regexName().'\|section\}\}/i', "{{Unreferenced section}}", $this->text );
 		$this->text = preg_replace('/<references \/>/i',"{{reflist}}", $this->text );
