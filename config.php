@@ -9,8 +9,6 @@ $config['sandbox'] = 'User:'.$config['user'].'/Sandbox';    // sandbox location
 $config['debug'] = false;									// true for debugging
 require '/home/addshore/.password.addbot';                  // $config['password'] = 'password';
 
-$config['checkfreq'] = 24;                        // how long in hours before a page can be checked again
-
 // database settings
 $config['dbhost'] = 'i-000000b4.pmtpa.wmflabs';
 $config['dbport'] = '3306';
@@ -21,8 +19,5 @@ $config['dbname'] = 'addbot';
 // table settings
 $config['tblist'] = 'pending';                 // table containing articles to be checked
 $config['tbdone'] = 'checked';                // table containing articles checked along with time
-
-// regex to match the date used in maintanace templates
-$config['date'] = '((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])';
 
 ?>
