@@ -79,6 +79,16 @@ foreach ($list as $item)
 				$isdeadend = $page->isDeadend();
 				$isreferenced = $page->isReferenced();
 			
+				//STUB TAG
+				echo ".stub";
+				if ($page->matches('/\{\{[a-z0-9 _-]*?stub\}\}/'))//if we have a stub tag
+				{
+					if ($page->wordcount() > 500)//and the word count is over 500
+					{
+						$page->removeRegex('/\{\{[a-z0-9 _-]*?stub\}\}/',"Removing {{Stub}}"); echo "-";//remove the stub tag
+					}
+				}
+			
 				//ORPHAN TAG
 				echo ".orph";
 				if ($isOrphan === true)
@@ -88,9 +98,19 @@ foreach ($list as $item)
 				
 				//UNCAT TAG
 				echo ".uncat";
-				if ($isuncat === true)
-				{$page->addTag($config['mitag']['uncategorized']); echo "+";}
-				else if($isuncat === false)
+				if ($isuncat === true)//if uncat
+				{
+					if($page->matches('/\{\{[a-z0-9 _-]*?stub\}\}/'))//and stub
+					{
+						$page->addTag($config['mitag']['uncategorizedstub']); echo "+";
+					}
+					else//not stub
+					{
+						$page->addTag($config['mitag']['uncategorized']); echo "+";
+					}
+					
+				}
+				else if($isuncat === false)//not uncat
 				{$page->removeTag($config['mitag']['uncategorized']); $page->removeTag($config['tag']['uncategorizedstub']); echo "-";}
 				
 				//DEADEND TAG
@@ -108,16 +128,6 @@ foreach ($list as $item)
 				//NEEDS SECTIONS TAG
 				echo ".sec";
 				if ($page->needsSections() === false){ $page->removeTag($config['mitag']['sections']);  echo "-";}
-				
-				//STUB TAG
-				echo ".stub";
-				if ($page->matches('/\{\{[a-z0-9 _-]*?stub\}\}/'))//if we have a stub tag
-				{
-					if ($page->wordcount() > 500)//and the word count is over 500
-					{
-						$page->removeRegex('/\{\{[a-z0-9 _-]*?stub\}\}/',"Removing {{Stub}}"); echo "-";//remove the stub tag
-					}
-				}
 				
 				//DEPRECIATED
 				echo ".dep";
