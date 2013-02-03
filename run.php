@@ -91,7 +91,7 @@ foreach ($list as $item)
 				if ($isuncat === true)
 				{$page->addTag($config['mitag']['uncategorized']); echo "+";}
 				else if($isuncat === false)
-				{$page->removeTag($config['mitag']['uncategorized']); $page->removeTag($config['mitag']['uncategorized']); echo "-";}
+				{$page->removeTag($config['mitag']['uncategorized']); $page->removeTag($config['tag']['uncategorizedstub']); echo "-";}
 				
 				//DEADEND TAG
 				echo ".dead";
