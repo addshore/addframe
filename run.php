@@ -82,32 +82,32 @@ foreach ($list as $item)
 				//ORPHAN TAG
 				echo ".orph";
 				if ($isOrphan === true)
-				{$page->addTag($config['tag']['orphan']); echo "+";}
+				{$page->addTag($config['mitag']['orphan']); echo "+";}
 				else if($isOrphan === false)
-				{$page->removeTag($config['tag']['orphan']); echo "-";}
+				{$page->removeTag($config['mitag']['orphan']); echo "-";}
 				
 				//UNCAT TAG
 				echo ".uncat";
 				if ($isuncat === true)
-				{$page->addTag($config['tag']['uncategorized']); echo "+";}
+				{$page->addTag($config['mitag']['uncategorized']); echo "+";}
 				else if($isuncat === false)
-				{$page->removeTag($config['tag']['uncategorized']); $page->removeTag($config['tag']['uncategorized']); echo "-";}
+				{$page->removeTag($config['mitag']['uncategorized']); $page->removeTag($config['mitag']['uncategorized']); echo "-";}
 				
 				//DEADEND TAG
 				echo ".dead";
 				if ($isdeadend === true)
-				{$page->addTag($config['tag']['deadend']); echo "+";}
+				{$page->addTag($config['mitag']['deadend']); echo "+";}
 				else if($isdeadend === false)
-				{$page->removeTag($config['tag']['deadend']); echo "-";}
+				{$page->removeTag($config['mitag']['deadend']); echo "-";}
 				
 				//UNREFERENCED TAG
 				echo ".unref";
 				if ($isreferenced === true)
-				{$page->removeTag($config['tag']['unreferenced']); $page->removeTag($config['tag']['blpunsourced']); echo "-";}
+				{$page->removeTag($config['mitag']['unreferenced']); $page->removeTag($config['mitag']['blpunsourced']); echo "-";}
 				
 				//NEEDS SECTIONS TAG
 				echo ".sec";
-				if ($page->needsSections() === false){ $page->removeTag($config['tag']['sections']);  echo "-";}
+				if ($page->needsSections() === false){ $page->removeTag($config['mitag']['sections']);  echo "-";}
 				
 				//STUB TAG
 				echo ".stub";
