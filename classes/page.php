@@ -400,6 +400,7 @@ class Page {
 		if(strlen($text) > strlen($this->getText())+5)
 		{
 			$this->text = $text;
+			echo "+";
 			$this->addSummary("Dating Tags");
 		}
 	}

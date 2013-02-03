@@ -21,7 +21,7 @@ class Template {
 	if($this->dated)
 	{
 		$date = date("F Y");
-		return "{{".$tag->getName()."|date=$date}}";
+		return "{{".$this->getName()."|date=$date}}";
 	}
 	//or not
 	return "{{".$this->getName()."}}";
