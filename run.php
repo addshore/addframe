@@ -163,6 +163,13 @@ foreach ($list as $item)
 				if ($page->needsSections() === false){
 					$page->removeTag($config['mitag']['sections']);  echo "-";
 				}
+				else
+				{
+					if ($page->wordcount() > 1000)//Check if there are more than 1000 words
+					{
+						$page->addTag($config['mitag']['sections']);  echo "+";
+					}
+				}
 				
 				//DEPRECIATED
 				echo ".dep";
