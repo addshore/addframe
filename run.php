@@ -102,10 +102,12 @@ foreach ($list as $item)
 				{
 					if($page->matches('/\{\{[a-z0-9 _-]*?stub\}\}/'))//and stub
 					{
+						$page->removeTag($config['mitag']['uncategorized']);
 						$page->addTag($config['mitag']['uncategorizedstub']); echo "+";
 					}
 					else//not stub
 					{
+						$page->removeTag($config['tag']['uncategorizedstub']);
 						$page->addTag($config['mitag']['uncategorized']); echo "+";
 					}
 					
