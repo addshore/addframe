@@ -409,6 +409,7 @@ class Page {
 	
 	public function fixGeneral()
 	{
+		global $config;
 		//Fix headers
 		$this->text = preg_replace('/== ?External ?links? ?==/i', "==External links==", $this->text );
 		$this->text = preg_replace('/== ?Further ?readings? ?==/i', "==Further reading==", $this->text );
@@ -416,7 +417,7 @@ class Page {
 		$this->text = preg_replace('/&mdash/i', "—", $this->text );
 		$this->text = preg_replace('/&ndash/i', "–", $this->text );
 		//Templates
-		$this->text = preg_replace('/\{\{Unreferenced\|section\}\}/i', "{{Unreferenced section}}", $this->text );
+		$this->text = preg_replace('/\{\{'$config['mitag']['unreferenced'].regexName().'\|section\}\}/i', "{{Unreferenced section}}", $this->text );
 		$this->text = preg_replace('/<references \/>/i',"{{reflist}}", $this->text );
 	
 	}
