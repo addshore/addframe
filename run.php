@@ -163,6 +163,9 @@ foreach ($list as $item)
 				if ($page->needsSections() === false){
 					$page->removeTag($config['mitag']['sections']);  echo "-";
 				}
+				elseif ($page->needsSections() === true){
+					$page->addTag($config['mitag']['sections']);  echo "+";
+				}
 				
 				//DEPRECIATED
 				echo ".dep";
