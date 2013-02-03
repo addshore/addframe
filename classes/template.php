@@ -17,12 +17,14 @@ class Template {
 	public function getName() { return $this->name; } //returns the name of the template
 	//get an instance of the template to post
 	public function getPost() {
+	//do we want to return with a date
 	if($this->dated)
 	{
 		$date = date("F Y");
 		return "{{".$tag->getName()."|date=$date}}";
-	}else{
-		return "{{".$this->getName()."}}";
+	}
+	//or not
+	return "{{".$this->getName()."}}";
 	}
 	
 	//returns the regex for matching whole template and args
