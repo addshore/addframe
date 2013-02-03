@@ -1,6 +1,9 @@
 <?
 error_reporting(E_ERROR | E_PARSE);
 
+//run.php -p="value"
+$options = getopt("p::");
+
 echo "loading...";
 sleep(1);
 
@@ -29,41 +32,56 @@ $config = parse_ini_string(preg_replace("/(\<syntaxhighlight lang='ini'\>|\<\/sy
 require 'config.php';//again
 if($config['General']['run'] != true){echo "\nNot set to run"; die();}//if we are not meant to run die
 
-// connect to the database
-echo "\nConnecting to database...";
-sleep(1); echo "...";
-$db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
-echo "done";
-
-// get the current list of pending articles
-$count = Database::mysql2array($db->select('pending','COUNT(*)'));
-$count = $count[0]['COUNT(*)'];
-echo "\nCurrently ".$count." articles pending review";
-$result = $db->select('pending','*',null,array("LIMIT" => round($count/100+30)));
-$list = Database::mysql2array($result);
-echo "\nGot ".count($list)." articles from pending";
-if(!$config['debug'])//if not debuging
+//if we were passed an article
+if(isset($options['p']))
 {
-	// before we start checking we want to remove our got articles from the DB
-	// so that another instance wont try and check them also
-	echo "\nRemoving";
-	sleep(1);
-	foreach ($list as $item){
-		$res = $db->delete($config['tblist'],array('article' => $item['article']));
-		if( !$res  ){echo $db->errorStr();} // if no result then say so
-		echo ".";
+	//add that to the list
+	$list = Array("$options['p']")
+	echo "\nGot article from options";
+}
+//else we can go and get the articles from DB
+else
+{
+	// connect to the database
+	echo "\nConnecting to database...";
+	sleep(1); echo "...";
+	$db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
+	echo "done";
+
+	// get the current list of pending articles
+	$count = Database::mysql2array($db->select('pending','COUNT(*)'));
+	$count = $count[0]['COUNT(*)'];
+	echo "\nCurrently ".$count." articles pending review";
+	$result = $db->select('pending','*',null,array("LIMIT" => round($count/100+30)));
+	$list = Database::mysql2array($result);
+	echo "\nGot ".count($list)." articles from pending";
+	if(!$config['debug'])//if not debuging
+	{
+		// before we start checking we want to remove our got articles from the DB
+		// so that another instance wont try and check them also
+		echo "\nRemoving";
+		sleep(1);
+		foreach ($list as $item){
+			$res = $db->delete($config['tblist'],array('article' => $item['article']));
+			if( !$res  ){echo $db->errorStr();} // if no result then say so
+			echo ".";
+		}
 	}
 }
 
+//Check the articles
 echo "\nChecking ".count($list)." articles";
 sleep(1); echo "..";
 foreach ($list as $item)
 {
-
+	//Check the article
 	echo "\nChecking ".$item['article'];
-	$page = new Page($item['article'],$wiki);// create our page instance
-	if (strlen($page->getText()) < 5){echo "\n> Page less than 5 length (may not exist)";continue;}//if page size is less than 10 (page doesnt exist) skip
-	if (!$wiki->nobots ($page->getName(),"Addbot",$page->getText())){echo "\n> page has nobots tag..";continue;}//make sure we are allowed to edit the page
+	// create our page instance
+	$page = new Page($item['article'],$wiki);
+	//if page size is less than 10 (page doesnt exist) skip
+	if (strlen($page->getText()) < 5){echo "\n> Page less than 5 length (may not exist)";continue;}
+	//make sure we are allowed to edit the page
+	if (!$wiki->nobots ($page->getName(),"Addbot",$page->getText())){echo "\n> page has nobots tag..";continue;}
 	
 	//for reference (User|Wikipedia|FileMediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?)"
 	switch($page->getNamespace()){
