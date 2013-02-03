@@ -227,7 +227,7 @@ class Page {
 	}
 	
 	//remove the regex match from the page
-	//if summary is set then add to edit summary
+	//if cummary is set then add to edit summary
 	public function removeRegex($regex,$summary = null)
 	{
 		if(preg_match($regex,$this->getText()))//make sure the regex is actually there
@@ -410,8 +410,10 @@ class Page {
 		$this->text = preg_replace('/== ?External ?links? ?==/i', "==External links==", $this->text );
 		$this->text = preg_replace('/== ?Further ?readings? ?==/i', "==Further reading==", $this->text );
 		//Unicode
-		$this->text = preg_replace('/&mdash/i', "ï¿½", $this->text );
-		$this->text = preg_replace('/&ndash/i', "ï¿½", $this->text );
+		$this->text = preg_replace('/&mdash/i', "—", $this->text );
+		$this->text = preg_replace('/&ndash/i', "–", $this->text );
+		//Templates
+		$this->text = preg_replace('/\{\{Unreferenced\|section\}\}/i', "{{Unreferenced section}}", $this->text );
 	
 	}
 }

@@ -515,7 +515,7 @@ class parser {
 					$this->objects['wikObject_links'][] = new wikObject_link($wikObject_link['page'],$wikObject_link['start'],$wikObject_link['code'],@$wikObject_link['namespace'],$wikObject_link['title']);
 				}
 				$offset = $wikObject_link['start']+$wikObject_link['length'];
-			}
+			}
 			
 		}
 	}
