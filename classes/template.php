@@ -60,7 +60,12 @@ class Template {
 		{
 			return false;
 		}
-		$string = '('.implode('|',$this->notif).')';
+		$string = "";//blank string
+		foreach($this->notif as $nottemplate)
+		{
+			$string = $string.$nottemplate->regexName()."|";
+		}
+		$string = '('.$string.')';
 		return preg_replace("/(\|\||\|\))/",")",$string);//remove any extra room in regex
 	}
 
