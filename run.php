@@ -1,8 +1,8 @@
 <?
 error_reporting(E_ERROR | E_PARSE);
 
-//run.php -p="value"
-$options = getopt("p::");
+//run.php --page="value"
+$options = getopt("",Array("page::"));
 
 echo "loading...";
 sleep(1);
@@ -33,10 +33,10 @@ require 'config.php';//again
 if($config['General']['run'] != true){echo "\nNot set to run"; die();}//if we are not meant to run die
 
 //if we were passed an article
-if(isset($options['p']))
+if(isset($options['page']))
 {
 	//add that to the list
-	$list = Array($options['p']);
+	$list = Array(Array("article" => $options['page']));
 	echo "\nGot article from options";
 }
 //else we can go and get the articles from DB
@@ -237,10 +237,11 @@ foreach ($list as $item)
 			foreach($config['sandbox'] as $sandbox)
 			{
 				//if we hit one of our sandboxes
-				if($page->getName() == $sandbox['name'])
+				if($sandbox['name'] == $page->getName())
 				{
+					echo "..sandbox";
 					//get the header
-					$shouldbe = $page->wiki->getpage($sandbox['name'],$sandbox['id']);
+					$shouldbe = $wiki->getpage($sandbox['name'],$sandbox['id']);
 					//If the required header is not at the top of the page
 					if(preg_match('/^'.preg_quote($shouldbe).'/'))
 					{
@@ -248,6 +249,8 @@ foreach ($list as $item)
 						$page->text = $shouldbe."\n".$page->getText();
 						$page->addSummary("Restoring sandbox header");
 					}
+					//we have found the one so no need to check the others
+					continue;
 				}
 			}
 			
