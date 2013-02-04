@@ -24,8 +24,6 @@ $config['tbdone'] = 'checked';                // table containing articles check
 $config['tag']['wikify'] = new Template('Wikify',Array('Wfy','Wiki','Wkfy','Wikify section','Wf','Wikify-section','Wikifying'),true);
 $config['tag']['emptysection'] = new Template('Emptysection',Array(''),true);
 
-$config['mitag']['uncategorizedstub'] = new Template('Uncategorized stub',Array('Uncat stub','Uncat-stub','Uncategorised stub','Uncategorisedstub','Uncategorizedstub','Uncatstub'),true);
-
 $config['mitag']['abbreviations'] = new Template('Abbreviations',Array('Abbrev'),true);
 $config['mitag']['advert'] = new Template('advert',Array('Ad','Advertisement','Adcopy','No ads','Cleanup-advert','Cleanup-ad','Advertising','Cleanup-advertising','Advertisment','Spam-check','Cleanup spam','AD','Adspeak','Ad speak'),true);
 $config['mitag']['autobiography'] = new Template('autobiography',Array('AUTO','Autobio'),true);
@@ -99,7 +97,8 @@ $config['mitag']['travelguide'] = new Template('travel guide',Array('Travelguide
 $config['mitag']['trivia'] = new Template('trivia',Array('Too much trivia','Cleanup-trivia','Toomuchtrivia','Trivia section','Miscellanea'),true);
 $config['mitag']['unbalanced'] = new Template('unbalanced',Array('Balance','Topheavy','Limited'),true);
 $config['mitag']['unreferenced'] = new Template('Unreferenced',Array('Unsourced','Unverified','Unref','References','Uncited-article','Citesources','NR','No references','Unrefarticle','Unreferenced article','Noref','Norefs','Noreferences','Cleanup-cite','References needed','Nr','No refs','UnreferencedArticle','No ref','Unreferenced stub','Needs references','Noreference','No reference','Refsneeded','Refs needed','Ref needed','Nosources','No sources','UNref'),true);
-$config['mitag']['uncategorized'] = new Template('Uncategorized',Array('CatNeeded','Catneeded','Uncategorised','Uncat','Categorize','Categories needed','Categoryneeded','Category needed','Category requested','Categories requested','Nocats','Categorise','Nocat','Needs cat','Needs cats','Cat needed','Cats needed','Nocategory','No category','No categories'),true,Array($config['mitag']['uncategorizedstub']));
+$config['mitag']['uncategorizedstub'] = new Template('Uncategorized stub',Array('Uncat stub','Uncat-stub','Uncategorised stub','Uncategorisedstub','Uncategorizedstub','Uncatstub'),true);
+$config['mitag']['uncategorized'] = new Template('Uncategorized',Array('CatNeeded','Catneeded','Uncategorised','Uncat','Categorize','Categories needed','Categoryneeded','Category needed','Category requested','Categories requested','Nocats','Categorise','Nocat','Needs cat','Needs cats','Cat needed','Cats needed','Nocategory','No category','No categories'),true,Array($config['tag']['uncategorizedstub']));
 $config['mitag']['unreliablesources'] = new Template('unreliable sources',Array('Unreliable','Reliablesources','Reliable sources','Unreliablesources','Reliable-sources'),true);
 $config['mitag']['update'] = new Template('update',Array('Not up to date','Notuptodate','UpdateWatch','Update sect'),true);
 $config['mitag']['verylong'] = new Template('very long',Array('Long','Toobig','Longish','VeryLong','Shorten','Too long','Toolong','Too-long','Tldr','TLDR','Verylong','Looong','Loong'),true);
