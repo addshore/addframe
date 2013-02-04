@@ -542,6 +542,11 @@ class Page {
 		$this->text = preg_replace('/<references \/>/i',"{{reflist}}", $this->text );
 	
 	}
+	
+	public function preChecks()
+	{
+	$this->text = str_ireplace("<!-- Automatically added by User:SoxBot. If this is an error, please contact User:Soxred93 -->","",$this->text);
+	}
 }
 	 
 ?>

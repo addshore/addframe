@@ -564,7 +564,7 @@ class parser {
 					continue;
 				}
 				if ($args==0) {
-					$wikObject_template['name'] .= $cont.$char;
+					$wikObject_template['name'] .= $cont.$char;
 				} else {
 					$wikObject_template['args'][$args] .= $cont.$char;
 				}
