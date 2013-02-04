@@ -160,24 +160,27 @@ foreach ($list as $item)
 					echo "-";
 				}
 				
-				/*
-				TODO: BUG: #34
 				//{{Unreferenced}} and {{BLP unsourced}} depending on Category:Living people
-				if ($page->matches('/'.$config['mitag']['unreferenced']->regexName().'/i') || $page->matches('/'.$config['mitag']['blpunsourced']->regexName().'/i'))
+				if ($page->matches('/'.$config['mitag']['unreferenced']->regexName().'/i' || $page->matches('/'.$config['mitag']['blpunsourced']->regexName().'/i'))
 				{
 					if($page->inCategory("Category:Living people"))
 					{
-						$page->removeTag($config['mitag']['unreferenced']);
-						$page->addTag($config['mitag']['blpunsourced']);
+						if($page->matches('/'.$config['mitag']['unreferenced']->regexName().'/i'))
+						{
+							$page->removeTag($config['mitag']['unreferenced']);
+							$page->addTag($config['mitag']['blpunsourced']);
+						}
 					}
-					else
+					else//else not int he cat
 					{
-						$page->removeTag($config['mitag']['blpunsourced']);
-						$page->addTag($config['mitag']['unreferenced']);
+						if($page->matches('/'.$config['mitag']['blpunsourced']->regexName().'/i'))
+						{
+							$page->removeTag($config['mitag']['blpunsourced']);
+							$page->addTag($config['mitag']['unreferenced']);
+						}
 					}
 
 				}
-				*/
 				
 				//NEEDS SECTIONS TAG
 				echo ".sec";
