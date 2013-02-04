@@ -282,13 +282,13 @@ class Page {
 		global $config;
 		$sandbox = $config['sandbox'][$this->getName()];
 		//get the shouldbe header
-		$shouldbe = $wiki->getpage($sandbox['name'],$sandbox['id']);
+		$shouldbe = $this->wiki->getpage($sandbox['name'],$sandbox['id']);
 		//If the required header is not at the top of the page
-		if(!preg_match('/^'.preg_quote($shouldbe).'/s',$page->getText()))
+		if(!preg_match('/^'.preg_quote($shouldbe).'/s',$this->getText()))
 		{
 			//Post it to the top removing any other match of it
-			$page->setText($shouldbe."\n".preg_replace('/'.preg_quote($shouldbe).'/is',"",$page->getText()));
-			$page->addSummary("Restoring sandbox header");
+			$this->setText($shouldbe."\n".preg_replace('/'.preg_quote($shouldbe).'/is',"",$this->getText()));
+			$this->addSummary("Restoring sandbox header");
 			return true;
 		}
 	}

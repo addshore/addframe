@@ -6,6 +6,8 @@
 $server_host = "irc.freenode.com"; 
 $server_port = 6667; 
 $server_chan = "##addshore";
+$user = "Addbot1";
+$nickname = "Addbot1";
 
 /* -------------------------------- Freenode Irc -------------------------------- */
 
@@ -38,6 +40,19 @@ $freenode['SOCKET'] = @fsockopen($server_host, $server_port, $errno, $errstr, 2)
                                                 case 'help':
                                                         freenodeCommand($cmd.' :Please ask Addshore');
                                                         break;
+												case 'check':
+														//if it matches something like a page
+														if(preg_match("/!check (([a-z _]*?:)?.*?)$/i",$freenode['READ_BUFFER'],$n))
+														{
+															//escape and run
+															print_r($n);
+															$check = escapeshellcmd(escapeshellarg($n[1]));
+															freenodeCommand($cmd.' :Checking '.$check);
+															$torun = "php /data/project/addbot/run.php --page=$check";
+															echo $torun;
+															exec($torun);
+														}
+                                                        break;
                                         }
                                 }
                         }
@@ -47,13 +62,14 @@ $freenode['SOCKET'] = @fsockopen($server_host, $server_port, $errno, $errstr, 2)
 
 function MessageMe ($message) {
         global $server_chan;
-        freenodeCommand("PRIVMSG $server_chan :$message");}
+        freenodeCommand("PRIVMSG $server_chan :$message");
 }
 
 function freenodeCommand ($cmd) { 
-        global $freenode; //Extends our $server array to this function 
+        global $freenode; //Extends our $server array to this function  
         @fwrite($freenode['SOCKET'], $cmd."\r"); //sends the command to the server 
         echo "IRC<: $cmd\n"; //displays it on the screen 
 }
 
 ?>
+
