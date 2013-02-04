@@ -177,11 +177,9 @@ class Page {
 				//regex of contents of pages to ignore
 				if (!preg_match('/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|given( |_)name|sia|set index( articles)?)(\|([0-9a-zA-Z _]*?)( ?= ?[0-9a-zA-Z _]*?)){0,6}\}\})/i',$this->wiki->getpage($link)))
 				{
-							echo "2";
 					//Make sure the page is not in cat "All set index articles"
 					if(!$this->inCategory("Category:All set index articles"))
 					{
-								echo "3";
 						//if we got this far it isnt an orphaned page
 						return false;
 					}
@@ -337,10 +335,12 @@ class Page {
 					if(preg_match('/\{\{(multiple ?issues|article ?issues|mi)\s*\|([^{]+)\}\}/i',$x->rawCode))
 					{
 						//then parse accordingly
-						foreach($x->arguments[1] as $tagarg)
+						foreach($x->arguments as $tagarg)
 						{
 							$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n";
 						}
+						$removed = $removed + $x->attributes['length'];
+						$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
 					}
 					else//else we must be a new MI style
 					{
