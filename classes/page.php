@@ -82,6 +82,15 @@ class Page {
 		return str_word_count($text);
 	}
 	
+	//returns if the page is a redirect or not
+	public function isRedirect()
+	{
+		if($this->matches('/(# ?REDIRECT ?\[\[.*?\]\]|\{\{Soft ?(redir(ect)?|link)\|)/i'))
+		{
+			return true;
+		}
+	}
+	
 	// returns false if the largest section size is smaller than 5000 chars (excluding certain sections)
 	public function needsSections()
 	{

@@ -92,7 +92,7 @@ foreach ($list as $item)
 		case ""://article
 			echo "\n> Is Article";
 			//if not a redirect
-			if(!$page->matches('/# ?REDIRECT ?\[\[.*?\]\]/i'))
+			if(!$page->isRedirect())
 			{
 		
 				//Pre Processing
