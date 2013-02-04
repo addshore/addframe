@@ -20,6 +20,7 @@ sleep(1);
 // load the classes and stuff
 require 'classes/botclasses.php';
 require 'classes/database.php';
+require 'classes/template.php';
 require 'config.php';
 
 // initialise the wiki
@@ -120,10 +121,10 @@ if(isset($list))
 	$db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 	foreach($final as $item) // for each item
 	{
-		usleep(10000);
-		echo "Adding ".$item." to database\n";
+		sleep(1);
 		$res = $db->insert($config['tblist'],array('article' => $item,) ); // inset to database table
-		if( !$res  ){echo $db->errorStr(); break;} // if no result then break as we have an error ($db->errorStr())
+		if( !$res  ){echo $db->errorStr()."\n";} // if no result then break as we have an error ($db->errorStr())
+		else{echo "Added ".$item." to database\n";}
 	}
 
 }
