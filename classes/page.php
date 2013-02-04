@@ -154,8 +154,20 @@ class Page {
 	{
 		//get the links to the page
 		$links = $this->wiki->whatlinkshere($this->getName(),"&blnamespace=0");
-		//if no links return as IS ORPHAN
-		if(count($links) == 0) {return true;}
+		//if there are no links (i.e. is orphan)
+		if(count($links) == 0) {
+			//check the tag is allowed on such a page
+			if(preg_match("/((List|Index) of|\(disambig(uation)?\))/i",$this->getName()) == FALSE)
+			{
+				if (preg_match("/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|given( |_)name|sia|set index( articles)?).*\}\})/i",$this->getText()) == FALSE)
+				{
+					if(!$this->inCategory("Category:All set index articles"))
+					{
+						return true;
+					}
+				}
+			}
+		}
 		//if there are links then check them
 		foreach($links as $link){
 			//regex names of links to ignore
@@ -163,8 +175,14 @@ class Page {
 			{
 				//regex of contents of pages to ignore
 				if (preg_match("/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|given( |_)name|sia|set index( articles)?).*\}\})/i",$this->wiki->getpage($link)) == FALSE)
-				//if we got this far it isnt an orphaned page
-				{return false;}
+				{
+					//Make sure the page is not in cat "All set index articles"
+					if(!$this->inCategory("Category:All set index articles"))
+					{
+						//if we got this far it isnt an orphaned page
+						return false;
+					}
+				}
 			}
 		}
 		return null;
