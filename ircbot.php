@@ -38,7 +38,7 @@ $freenode['SOCKET'] = @fsockopen($server_host, $server_port, $errno, $errstr, 2)
 
                                         switch (substr(strtolower($d[3]),2)) {
                                                 case 'help':
-                                                        freenodeCommand($cmd.' :Please ask Addshore');
+                                                        freenodeCommand($cmd.' :!check Namespace:Article');
                                                         break;
 												case 'check':
 														//if it matches something like a page
