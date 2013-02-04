@@ -74,7 +74,7 @@ class Page {
 		//get a temp copy of the text to work with
 		$text = $this->getText();
 		//remove templates, cats, interwikis and extlinks and refs
-		$text = preg_replace("/(\{\{[^\}]*?\}\}|={1,6}[^=]*?={1,6}|\n\*{1,2} ?|\[https?[^\]]*?\]|\[\[(Category|Image|File|[a-z]{2,6}):[^\]]*?\]\]|\<references ?\/\>|<ref>.*?<\/ref>|<!--.*?-->)/is","",$text);
+		$text = preg_replace("/(\{\{[^\}]*?\}\}|={1,6}[^=]*?={1,6}|\n\*{1,2} ?|\[https?[^\]]*?\]|\[\[(Category|Image|File|[a-z]{2,6}):[^\]]*?\]\]|\<references ?\/\>|<ref>.*?<\/ref>|<!--.*?-->|\{\|.*?\|-.*?\|.*?\|})/is","",$text);
 		//fill all links in with a single word
 		$text = preg_replace("/\[\[[^\]]*?\]\]/","WORD",$text);
 		$text = trim($text);
