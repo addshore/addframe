@@ -107,7 +107,7 @@ foreach ($list as $item)
 				{
 					if ($page->wordcount() > 500)//and the word count is over 500
 					{
-						$page->removeRegex('/\{\{[a-z0-9 _-]*?stub\}\}/',"Removing {{Stub}}"); echo "-";//remove the stub tag
+						$page->removeRegex('/\{\{[a-z0-9 _-]*?stub\}\}/i',"Removing {{Stub}}"); echo "-";//remove the stub tag
 					}
 				}
 			
@@ -280,7 +280,7 @@ foreach ($list as $item)
 	if($page->hasSigchange() == true)
 	{
 		echo "\n> POST: ".$page->getSummary();
-		$wiki->edit(/*$page->getName()*/"User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
+		$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
 		sleep(30);//sleep after an edit
 	}
 	
