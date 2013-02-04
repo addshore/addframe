@@ -116,9 +116,9 @@ class Page {
 		//if the page has 4+ sections and a largest section of 5000- then return false
 		if($sectioncount >= $config['Sections']['remsections'] && $largestsection <= $config['Sections']['remlargest']){//was 2750 for AVG
 			return false;
-		}elseif($sectioncount <= $config['Sections']['addlargest'] && $largestsection >= $config['Sections']['addsections']){//was 2750 for AVG
+		}elseif($sectioncount <= $config['Sections']['addlargest']/*10000*/ && $largestsection >= $config['Sections']['addsections']/*2*/){//was 2750 for AVG
 			return true;
-		}elseif ($sectioncount = 1 && $this->wordcount() >= $config['Sections']['addleadonly']){
+		}elseif ($sectioncount = 1 && $this->wordcount() >= $config['Sections']['addleadonly']/*1000*/){
 			return true;
 		}
 	}
