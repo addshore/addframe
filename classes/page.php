@@ -162,7 +162,7 @@ class Page {
 			if(preg_match("/((List|Index) of|\(disambig(uation)?\))/i",$link) == FALSE)
 			{
 				//regex of contents of pages to ignore
-				if (preg_match("/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|sia|set index( articles)?).*\}\})/i",$this->wiki->getpage($link)) == FALSE)
+				if (preg_match("/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|given( |_)name|sia|set index( articles)?).*\}\})/i",$this->wiki->getpage($link)) == FALSE)
 				//if we got this far it isnt an orphaned page
 				{return false;}
 			}
@@ -210,7 +210,7 @@ class Page {
 	}
 	
 	//add the given template from the page if it doesnt already exist
-	//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
+	//passed $config['mitag']['TEMPLATECODE'] (i.e. orphan)
 	public function addTag($template,$section=null)
 	{
 		//make sure the tag is not already on the page
@@ -241,7 +241,7 @@ class Page {
 		$this->addSummary("Adding {{".$template->getName()."}}");
 	}
 	
-	//passed $config['tag']['TEMPLATECODE'] (i.e. orphan)
+	//passed $config['mitag']['TEMPLATECODE'] (i.e. orphan)
 	public function removeTag($template)
 	{
 		$this->removeRegex($template->regexTemplate(),"Removing {{".$template->getName()."}}");
@@ -439,7 +439,7 @@ class Page {
 		$date = date("F Y");
 		
 		//check each tag we have to see if it needs to be dated
-		foreach ($config['tag'] as $tag)
+		foreach ($config['mitag'] as $tag)
 		{
 			//if the tag can be found without a date
 			if($this->matches('/\{\{(Template:)?'.$tag->regexName().'\}\}/i'))
