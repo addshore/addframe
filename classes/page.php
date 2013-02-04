@@ -342,7 +342,6 @@ class Page {
 						}
 						$removed = $removed + $x->attributes['length'];
 						$this->text = str_replace($x->rawCode,'',$this->getText());
-						echo $this->getText();
 					}
 					else//else we must be a new MI style
 					{
