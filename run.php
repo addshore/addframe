@@ -129,15 +129,14 @@ foreach ($list as $item)
 					}
 					else//not stub
 					{
-						$page->removeTag($config['tag']['uncategorizedstub']);
+						$page->removeTag($config['mitag']['uncategorizedstub']);
 						$page->addTag($config['mitag']['uncategorized']); echo "+";
 					}
-					
 				}
 				else if($isuncat === false)//not uncat
 				{
 					$page->removeTag($config['mitag']['uncategorized']);
-					$page->removeTag($config['tag']['uncategorizedstub']); echo "-";
+					$page->removeTag($config['mitag']['uncategorizedstub']); echo "-";
 				}
 				
 				//DEADEND TAG

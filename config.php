@@ -23,8 +23,8 @@ $config['tbdone'] = 'checked';                // table containing articles check
 // tags
 $config['tag']['wikify'] = new Template('Wikify',Array('Wfy','Wiki','Wkfy','Wikify section','Wf','Wikify-section','Wikifying'),true);
 $config['tag']['emptysection'] = new Template('Emptysection',Array(''),true);
-$config['tag']['uncategorizedstub'] = new Template('Uncategorized stub',Array('Uncat stub','Uncat-stub','Uncategorised stub','Uncategorisedstub','Uncategorizedstub','Uncatstub'),true);
 
+$config['mitag']['uncategorizedstub'] = new Template('Uncategorized stub',Array('Uncat stub','Uncat-stub','Uncategorised stub','Uncategorisedstub','Uncategorizedstub','Uncatstub'),true);
 $config['mitag']['abbreviations'] = new Template('Abbreviations',Array('Abbrev'),true);
 $config['mitag']['advert'] = new Template('advert',Array('Ad','Advertisement','Adcopy','No ads','Cleanup-advert','Cleanup-ad','Advertising','Cleanup-advertising','Advertisment','Spam-check','Cleanup spam','AD','Adspeak','Ad speak'),true);
 $config['mitag']['autobiography'] = new Template('autobiography',Array('AUTO','Autobio'),true);
