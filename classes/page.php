@@ -206,7 +206,7 @@ class Page {
 				return false;			
 			}
 		}
-		if(count($links) == 0){ return true; }
+		if(count($links[1]) == 0){ return true; }
 	}
 	
 	// returns true is 0 categories are found
@@ -226,7 +226,7 @@ class Page {
 			foreach($cats as $cat)
 			{
 				echo $cat;
-				if(!preg_match('/Category:(|.*? )stubs$/i',$cat))
+				if(!preg_match('/^Category:(Proposed deletion as of .*?|(|.*? )stubs$)/i',$cat))
 				{
 					//if it is not a stub cat return FALSE (NOT UNCAT)
 					return false;
