@@ -109,11 +109,11 @@ foreach ($list as $item)
 			
 				//ORPHAN TAG
 				echo ".orph";
-				if ($isOrphan === true)
+				if ($isorphan === true)
 				{
 					$page->addTag($config['mitag']['orphan']); echo "+";
 				}
-				else if($isOrphan === false)
+				else if($isorphan === false)
 				{
 					$page->removeTag($config['mitag']['orphan']); echo "-";
 				}
