@@ -127,7 +127,7 @@ foreach ($list as $item)
 				echo ".uncat";
 				if ($isuncat === true)//if uncat
 				{
-					if($page->matches('/\{\{[a-z0-9 _-]*?stub\}\}/'))//and stub
+					if($page->matches('/\{\{[a-z0-9 _-]*?stub\}\}/i'))//and stub
 					{
 						$page->removeTag($config['mitag']['uncategorized']);
 						$page->addTag($config['mitag']['uncategorizedstub']); echo "+";
@@ -281,7 +281,7 @@ foreach ($list as $item)
 	if($page->hasSigchange() == true)
 	{
 		echo "\n> POST: ".$page->getSummary();
-		$wiki->edit(/*$page->getName()*/"User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
+		$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
 		sleep(30);//sleep after an edit
 	}
 	
