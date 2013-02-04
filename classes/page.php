@@ -363,7 +363,8 @@ class Page {
 				//does it match the MI template
 				if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
 				{
-					//does it match the old style of use
+					print_r($x->arguments);
+					//does it match the old style of use (no new style at all)
 					if(preg_match('/\{\{(multiple ?issues|article ?issues|mi)\s*\|([^{]+)\}\}/i',$x->rawCode))
 					{
 						//then parse accordingly
@@ -374,20 +375,21 @@ class Page {
 						$removed = $removed + $x->attributes['length'];
 						$this->text = str_replace($x->rawCode,'',$this->getText());
 					}
-					else//else we must be a new MI style (or a misture of both)
+					else//else we must be a new MI style (or a mixture of both)
 					{
-						print_r($x);
 						//the parse accordingly
 						foreach($x->arguments as $tagarg)
 						{
-							if(preg_match('/([^{]+)/',$tagarg))//if the arg is old style
+							if(!preg_match('/\{/',$tagarg))//if the arg is old style
 							{
 								//add it correctly
 								$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n";
 							}
 							else
 							{
-								//else just add it
+								//just add it 
+								//After a lot of research and testing it turns out the MI tag is allowed 1 parameter with templates in
+								//Although this can be in the same MI tag as non template old style paramemters
 								$mi = $mi.$tagarg;
 							}
 						}
@@ -395,6 +397,7 @@ class Page {
 						$removed = $removed + $x->attributes['length'];
 						$this->text = str_replace($x->rawCode,'',$this->getText());
 					}
+					$mi = preg_replace("/\n/","",$mi);//get rid of new lines
 				}
 				//else do we match any hatnotes
 				elseif(preg_match('/\{\{(Template:)?(Hatnote|Reflink|Main(( |_)list)?|Details3?|See( |_)also2?|Further2?|About|Other( |_)uses-section|for|((Two|Three) )?Other( |_)uses|Other uses of|Redirect[0-1]?[0-9]|Redirect(-|_| )(synomym|text|distinguish2?)|Consider( |_)disambiguation|Other( |_)(uses|people|places|hurricanes|ships|)[1-5]?|(Redirect-)Distinguish|Selfref|Category( |_)(see also|explanation|pair)|Cat( |_)main|cat(preceding|succeeding)|contrast|This( |_)user( |_)talk)(\||\}\})/i',$x->name))
