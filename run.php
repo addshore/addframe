@@ -96,6 +96,7 @@ foreach ($list as $item)
 			{
 		
 				//Pre Processing
+				$page->text = str_ireplace("<!-- Automatically added by User:SoxBot. If this is an error, please contact User:Soxred93 -->}}","}}",$page->getText);
 				$page->multipleIssues();
 				$isorphan = $page->isOrphan();
 				$isuncat = $page->isUncat();
