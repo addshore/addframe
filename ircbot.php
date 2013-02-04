@@ -45,7 +45,7 @@ $freenode['SOCKET'] = @fsockopen($server_host, $server_port, $errno, $errstr, 2)
 														if(preg_match("/!check (([a-z _]*?:)?.*?)$/i",$freenode['READ_BUFFER'],$n))
 														{
 															//escape and run
-															$check = escapeshellcmd(escapeshellarg($n[1]));
+															$check = escapeshellarg($n[1]);
 															freenodeCommand($cmd.' :Checking '.$check);
 															$torun = "php /data/project/addbot/run.php --page=$check";
 															echo $torun;
