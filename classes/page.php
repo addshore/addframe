@@ -136,7 +136,7 @@ class Page {
 	//returns true if page is in a given category
 	public function inCategory($category)
 	{
-		$cats = $this->wiki->categories($this->getName())
+		$cats = $this->wiki->categories($this->getName());
 		foreach ($cats as $cat)
 		{
 			if ($cat == $category)
