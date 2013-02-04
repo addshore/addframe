@@ -134,7 +134,6 @@ foreach ($list as $item)
 					else//not stub
 					{
 						$page->removeTag($config['mitag']['uncategorizedstub']);
-						echo"2";
 						$page->addTag($config['mitag']['uncategorized']); echo "+";
 					}
 				}
