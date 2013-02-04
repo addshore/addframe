@@ -189,7 +189,6 @@ foreach ($list as $item)
 				echo ".dep";
 				$page->removeTag($config['tag']['wikify']);
 				
-				//TODO: fix double redirects
 				//TODO: add reflist
 				
 				//check if has empty section or tag in full section
@@ -210,7 +209,20 @@ foreach ($list as $item)
 			else
 			{
 				//else we are a redirect
-				echo " > Redirect";
+				echo "..redirect";
+				preg_match('/# ?REDIRECT ?\[\[(.*?)\]\]/i',$page->getText(),$matches1);
+				$target1 = $matches1[0];
+				//check if we can find a redirect at our first target
+				$text2 = $wiki->getpage($target1);
+				preg_match('/# ?REDIRECT ?\[\[(.*?)\]\]/i',$text2,$matches2);
+				$target2 = $matches1[0];
+				//do we have a second target?
+				if($target2 != "")
+				{
+					//we must be a double redirect
+					echo "..double";
+				}
+				
 			}
 			break;
 			
