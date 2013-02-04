@@ -24,6 +24,7 @@ class Page {
 	// getters and setters
 	public function getName() { return $this->page; }
 	public function getText() { return $this->text;}
+	public function setText($text) { $this->text = $text;}
 	public function getNamespace() { if(!isset($this->namespace)){$this->parseNamespace();} return $this->namespace;}
 	public function hasSigchange() { return $this->sigchange; }
 	

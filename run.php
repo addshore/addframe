@@ -243,10 +243,10 @@ foreach ($list as $item)
 					//get the header
 					$shouldbe = $wiki->getpage($sandbox['name'],$sandbox['id']);
 					//If the required header is not at the top of the page
-					if(preg_match('/^'.preg_quote($shouldbe).'/'))
+					if(!preg_match('/^'.preg_quote($shouldbe).'/s',$page->getText()))
 					{
-						//Post it to the top
-						$page->text = $shouldbe."\n".$page->getText();
+						//Post it to the top removing any other match of it
+						$page->setText($shouldbe."\n".preg_replace('/'.preg_quote($shouldbe).'/is',"",$page->getText()));
 						$page->addSummary("Restoring sandbox header");
 					}
 					//we have found the one so no need to check the others
@@ -275,7 +275,7 @@ foreach ($list as $item)
 	if($page->hasSigchange() == true)
 	{
 		echo "\n> POST: ".$page->getSummary();
-		$wiki->edit(/*$page->getName()*/"User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
+		$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
 		sleep(30);//sleep after an edit
 	}
 	
