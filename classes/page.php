@@ -215,8 +215,26 @@ class Page {
 	{
 		// get cats for this page
 		$cats = $this->wiki->categories($this->getName(),false);
-		// tag as apropriate
-		if(count($cats) == 0){return true;}else{return false;}
+		
+		if(count($cats) == 0)
+		{
+			//if not cats at all then TRUE (IS UNCAT)
+			return true;
+		}
+		else
+		{
+			foreach($cats as $cat)
+			{
+				echo $cat;
+				if(!preg_match('/Category:(|.*? )stubs$/i',$cat))
+				{
+					//if it is not a stub cat return FALSE (NOT UNCAT)
+					return false;
+				}
+			}
+			//If we haven't hit anything else then we must be uncat
+			return true;
+		}
 	}
 	
 	//return true if the page is appended by .pdf
