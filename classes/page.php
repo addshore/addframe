@@ -272,7 +272,7 @@ class Page {
 	{
 		if(preg_match($regex,$this->getText()))//make sure the regex is actually there
 		{//if it is remove and say so
-			$this->text = preg_replace($regex,"",$this->getText());
+			$this->text = preg_replace_all($regex,"",$this->getText());
 			if($summary != null)
 			{//if summary not null then we can add a summary
 				$this->addSummary($summary);
