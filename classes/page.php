@@ -152,10 +152,11 @@ class Page {
 	// returns false if there is at least 1 link that fits the criteria
 	public function isOrphan()
 	{
+		global $config;
 		//get the links to the page
 		$links = $this->wiki->whatlinkshere($this->getName(),"&blnamespace=0");
 		//if there are no links (i.e. is orphan)
-		if(count($links) == 0) {
+		if(count($links) == $config['Orphans']['maxlinks']/*0*/) {
 			//check the tag is allowed on such a page
 			if(preg_match("/((List|Index) of|\(disambig(uation)?\))/i",$this->getName()) == FALSE)
 			{
