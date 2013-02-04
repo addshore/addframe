@@ -160,7 +160,7 @@ class Page {
 			//check the tag is allowed on such a page
 			if(preg_match("/((List|Index) of|\(disambig(uation)?\))/i",$this->getName()) == FALSE)
 			{
-				if (preg_match("/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|given( |_)name|sia|set index( articles)?).*\}\})/i",$this->getText()) == FALSE)
+				if (preg_match('/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|given( |_)name|sia|set index( articles)?)(\|([0-9a-zA-Z _]*?)( ?= ?[0-9a-zA-Z _]*?)){0,6}\}\})/i',$this->getText()) == FALSE)
 				{
 					if(!$this->inCategory("Category:All set index articles"))
 					{
@@ -172,14 +172,16 @@ class Page {
 		//if there are links then check them
 		foreach($links as $link){
 			//regex names of links to ignore
-			if(preg_match("/((List|Index) of|\(disambig(uation)?\))/i",$link) == FALSE)
+			if(!preg_match("/((List|Index) of|\(disambig(uation)?\))/i",$link))
 			{
 				//regex of contents of pages to ignore
-				if (preg_match("/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|given( |_)name|sia|set index( articles)?).*\}\})/i",$this->wiki->getpage($link)) == FALSE)
+				if (!preg_match('/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|given( |_)name|sia|set index( articles)?)(\|([0-9a-zA-Z _]*?)( ?= ?[0-9a-zA-Z _]*?)){0,6}\}\})/i',$this->wiki->getpage($link)))
 				{
+							echo "2";
 					//Make sure the page is not in cat "All set index articles"
 					if(!$this->inCategory("Category:All set index articles"))
 					{
+								echo "3";
 						//if we got this far it isnt an orphaned page
 						return false;
 					}
