@@ -167,7 +167,7 @@ foreach ($list as $item)
 				//{{Unreferenced}} and {{BLP unsourced}} depending on Category:Living people
 				if ($page->matches('/'.$config['mitag']['unreferenced']->regexName().'/i' || $page->matches('/'.$config['mitag']['blpunsourced']->regexName().'/i')))
 				{
-					if($page->inCategory("Category:Living people"))
+					if($page->isBLP())
 					{
 						if($page->matches('/'.$config['mitag']['unreferenced']->regexName().'/i'))
 						{

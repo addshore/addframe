@@ -134,6 +134,20 @@ class Page {
 		return null;
 	}
 	
+	//checks if a page is in a BLP category
+	public function isBLP()
+	{
+		$cats = $this->wiki->categories($this->getName());
+		foreach ($cats as $cat)
+		{
+			//Regex to match BLP categories
+			if (preg_match('/^Category:(((Possibly )?Living|Dead|Missing) people$|[0-2][0-9][0-9][0-9] (births|deaths)$|People from .*?|(place|year|date)of (birth|death) (missing|unknown))/i',$cat))
+			{
+				return true;
+			}
+		}
+	}
+	
 	//returns true if page is in a given category
 	public function inCategory($category)
 	{
