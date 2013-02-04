@@ -42,7 +42,7 @@ class Page {
 		if($this->namespace == "Image"){ $this->namespace = "File";}// default Image namespace to file
 	}
 	
-	private function addSummary($sum)
+	public function addSummary($sum)
 	{
 		//only add the first bit if it is not already there (i.e. 'Adding' or 'Removing')
 		$split = explode(" ",$sum,2);

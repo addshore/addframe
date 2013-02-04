@@ -221,9 +221,28 @@ foreach ($list as $item)
 			
 		case "Wikipedia":
 			echo "\n> Is Wikipedia";
+			//Check sandboxes
+			foreach($config['sandbox'] as $sandbox)
+			{
+				//if we hit one of our sandboxes
+				if($page->getName() == $sandbox['name'])
+				{
+					//get the header
+					$shouldbe = $page->wiki->getpage($sandbox['name'],$sandbox['id']);
+					//If the required header is not at the top of the page
+					if(preg_match('/^'.preg_quote($shouldbe).'/'))
+					{
+						//Post it to the top
+						$page->text = $shouldbe."\n".$page->getText();
+						$page->addSummary("Restoring sandbox header");
+					}
+				}
+			}
+			
 			//Wikipedia:AutoWikiBrowser/User talk templates
 			if($page->getName() == "Wikipedia:AutoWikiBrowser/User talk templates")//if it is our AWB page
 			{
+				echo "..awb";
 				exec("php /home/addshore/addbot/task.awbtemplates.php");//run the external check
 			}
 			break;
@@ -231,7 +250,9 @@ foreach ($list as $item)
 		case "File":
 			echo "\n> Is File";
 			//If a pdf then tag as a pdf
-			if ($page->isPdf() == true){ $page->addTag("badformat","Adding Bad Format"); }
+			if ($page->isPdf() == true){
+				$page->addTag("badformat","Adding Bad Format");
+			}
 			break;
 	}
 	
