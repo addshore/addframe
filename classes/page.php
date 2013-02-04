@@ -352,7 +352,6 @@ class Page {
 					//does it match the old style of use
 					if(preg_match('/\{\{(multiple ?issues|article ?issues|mi)\s*\|([^{]+)\}\}/i',$x->rawCode))
 					{
-						print_r($x);
 						//then parse accordingly
 						foreach($x->arguments as $tagarg)
 						{
@@ -361,10 +360,24 @@ class Page {
 						$removed = $removed + $x->attributes['length'];
 						$this->text = str_replace($x->rawCode,'',$this->getText());
 					}
-					else//else we must be a new MI style
+					else//else we must be a new MI style (or a misture of both)
 					{
+						print_r($x);
 						//the parse accordingly
-						$mi = $mi.$x->arguments[1];
+						foreach($x->arguments as $tagarg)
+						{
+							if(preg_match('/([^{]+)/',$tagarg))//if the arg is old style
+							{
+								//add it correctly
+								$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n";
+							}
+							else
+							{
+								//else just add it
+								$mi = $mi.$tagarg;
+							}
+						}
+						
 						$removed = $removed + $x->attributes['length'];
 						$this->text = str_replace($x->rawCode,'',$this->getText());
 					}

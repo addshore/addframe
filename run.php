@@ -281,8 +281,8 @@ foreach ($list as $item)
 	if($page->hasSigchange() == true)
 	{
 		echo "\n> POST: ".$page->getSummary();
-		//$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
-		$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
+		$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+		//$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
 		sleep(30);//sleep after an edit
 	}
 	
