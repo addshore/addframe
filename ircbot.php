@@ -45,12 +45,16 @@ $freenode['SOCKET'] = @fsockopen($server_host, $server_port, $errno, $errstr, 2)
 														if(preg_match("/!check (([a-z _]*?:)?.*?)$/i",$freenode['READ_BUFFER'],$n))
 														{
 															//escape and run
-															print_r($n);
 															$check = escapeshellcmd(escapeshellarg($n[1]));
 															freenodeCommand($cmd.' :Checking '.$check);
 															$torun = "php /data/project/addbot/run.php --page=$check";
 															echo $torun;
-															exec($torun);
+															//fork onto another process so the bot will keep running on irc
+															$pid = pcntl_fork();
+															if(!$pid){
+																exec($torun);
+																die();
+															}
 														}
                                                         break;
                                         }
