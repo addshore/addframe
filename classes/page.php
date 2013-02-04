@@ -261,6 +261,38 @@ class Page {
 		}
 	}
 	
+	//checks if a page is a sandbox
+	public function isSandbox()
+	{
+		global $config;
+		//check for each sandbox defined
+		foreach($config['sandbox'] as $sandbox)
+		{
+			//if we hit one of our sandboxes
+			if($sandbox['name'] == $this->getName())
+			{
+				return true;
+			}
+		}
+	}
+	
+	//restores the header of a sandbox
+	public function restoreHeader()
+	{
+		global $config;
+		$sandbox = $config['sandbox'][$this->getName()];
+		//get the shouldbe header
+		$shouldbe = $wiki->getpage($sandbox['name'],$sandbox['id']);
+		//If the required header is not at the top of the page
+		if(!preg_match('/^'.preg_quote($shouldbe).'/s',$page->getText()))
+		{
+			//Post it to the top removing any other match of it
+			$page->setText($shouldbe."\n".preg_replace('/'.preg_quote($shouldbe).'/is',"",$page->getText()));
+			$page->addSummary("Restoring sandbox header");
+			return true;
+		}
+	}
+	
 	//parse MI tag, add tags to MI, remove MI if not needed
 	public function multipleIssues()
 	{

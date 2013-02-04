@@ -233,33 +233,29 @@ foreach ($list as $item)
 			
 		case "Wikipedia":
 			echo "\n> Is Wikipedia";
-			//Check sandboxes
-			foreach($config['sandbox'] as $sandbox)
-			{
-				//if we hit one of our sandboxes
-				if($sandbox['name'] == $page->getName())
-				{
-					echo "..sandbox";
-					//get the header
-					$shouldbe = $wiki->getpage($sandbox['name'],$sandbox['id']);
-					//If the required header is not at the top of the page
-					if(!preg_match('/^'.preg_quote($shouldbe).'/s',$page->getText()))
-					{
-						//Post it to the top removing any other match of it
-						$page->setText($shouldbe."\n".preg_replace('/'.preg_quote($shouldbe).'/is',"",$page->getText()));
-						$page->addSummary("Restoring sandbox header");
-					}
-					//we have found the one so no need to check the others
-					continue;
-				}
-			}
 			
 			//Wikipedia:AutoWikiBrowser/User talk templates
 			if($page->getName() == "Wikipedia:AutoWikiBrowser/User talk templates")//if it is our AWB page
 			{
 				echo "..awb";
 				exec("php /home/addshore/addbot/task.awbtemplates.php");//run the external check
+				break;
 			}
+			
+			
+			if($page->isSandbox()){$page->restoreHeader();break;}//check sandboxes
+			break;
+			
+		case "Wikipedia talk":
+			if($page->isSandbox()){$page->restoreHeader();break;}//check sandboxes
+			break;
+			
+		case "Template":
+			if($page->isSandbox()){$page->restoreHeader();break;}//check sandboxes
+			break;
+			
+		case "Template talk":
+			if($page->isSandbox()){$page->restoreHeader();break;}//check sandboxes
 			break;
 			
 		case "File":
