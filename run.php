@@ -92,7 +92,7 @@ foreach ($list as $item)
 		case ""://article
 			echo "\n> Is Article";
 			//if not a redirect
-			if(!$page->isRedirect())
+			if(!$page->isRedirect()	)
 			{
 		
 				//Pre Processing
@@ -221,17 +221,32 @@ foreach ($list as $item)
 			{
 				//else we are a redirect
 				echo "..redirect";
-				preg_match('/# ?REDIRECT ?\[\[(.*?)\]\]/i',$page->getText(),$matches1);
-				$target1 = $matches1[0];
-				//check if we can find a redirect at our first target
-				$text2 = $wiki->getpage($target1);
-				preg_match('/# ?REDIRECT ?\[\[(.*?)\]\]/i',$text2,$matches2);
-				$target2 = $matches1[0];
-				//do we have a second target?
-				if($target2 != "")
+				if (preg_match('/# ?REDIRECT ?\[\[(.*?)\]\]/i',$page->getText(),$matches1) == 1)//first redir matchs
 				{
-					//we must be a double redirect
-					echo "..double";
+					$target1 = $matches1[1];
+					echo ">$target1";
+					//check if we can find a redirect at our first target
+					$text2 = $wiki->getpage($target1);
+					if(preg_match('/# ?REDIRECT ?\[\[(.*?)\]\]/i',$text2,$matches2) ==1)//second redir matched
+					{
+						$target2 = $matches2[1];
+						echo ">$target2";
+						//do we have a second target?
+						if($target2 != "")
+						{
+							//we must be a double redirect
+							echo "..double";
+							if($target2 != $target1 && $target2 != $page->getName())
+							{
+								$page->setText(preg_replace('/# ?REDIRECT ?\[\[(.*?)\]\]/i',"#REDIRECT [[$target2]]",$page->getText()));
+								$page->addSummary("Fixing double redirect [[".$page->getName()."]] >> [[$target1]] >> [[$target2]]");
+							}
+							else
+							{
+								//Else this is a broken redirect that links to itself in some form of loop
+							}
+						}
+					}
 				}
 				
 			}
@@ -282,8 +297,8 @@ foreach ($list as $item)
 	if($page->hasSigchange() == true)
 	{
 		echo "\n> POST: ".$page->getSummary();
-		$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
-		//$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
+		//$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+		$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
 		sleep(30);//sleep after an edit
 	}
 	
