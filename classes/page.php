@@ -340,7 +340,7 @@ class Page {
 				else// else if we match a tag to go in MI
 				{
 					//check for all of our defined tags
-					foreach($config['tag'] as $tag)
+					foreach($config['mitag'] as $tag)
 					{
 						//if it is one of our tags
 						if(preg_match("/^".$tag->regexName()."$/i",$x->name) == true)
