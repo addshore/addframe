@@ -334,20 +334,22 @@ class Page {
 					//does it match the old style of use
 					if(preg_match('/\{\{(multiple ?issues|article ?issues|mi)\s*\|([^{]+)\}\}/i',$x->rawCode))
 					{
+						print_r($x);
 						//then parse accordingly
 						foreach($x->arguments as $tagarg)
 						{
 							$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n";
 						}
 						$removed = $removed + $x->attributes['length'];
-						$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
+						$this->text = str_replace($x->rawCode,'',$this->getText());
+						echo $this->getText();
 					}
 					else//else we must be a new MI style
 					{
 						//the parse accordingly
 						$mi = $mi.$x->arguments[1];
 						$removed = $removed + $x->attributes['length'];
-						$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
+						$this->text = str_replace($x->rawCode,'',$this->getText());
 					}
 				}
 				//else do we match any hatnotes
