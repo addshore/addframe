@@ -165,11 +165,11 @@ foreach ($list as $item)
 				}
 				
 				//{{Unreferenced}} and {{BLP unsourced}} depending on Category:Living people
-				if ($page->matches('/'.$config['mitag']['unreferenced']->regexName().'/i' || $page->matches('/'.$config['mitag']['blpunsourced']->regexName().'/i')))
+				if ($page->matches($config['mitag']['unreferenced']->regexTemplate()) || $page->matches($config['mitag']['blpunsourced']->regexTemplate()))
 				{
 					if($page->isBLP())
 					{
-						if($page->matches('/'.$config['mitag']['unreferenced']->regexName().'/i'))
+						if($page->matches($config['mitag']['unreferenced']->regexTemplate()))
 						{
 							$page->removeTag($config['mitag']['unreferenced']);
 							$page->addTag($config['mitag']['blpunsourced']);
@@ -177,7 +177,7 @@ foreach ($list as $item)
 					}
 					else//else not int he cat
 					{
-						if($page->matches('/'.$config['mitag']['blpunsourced']->regexName().'/i'))
+						if($page->matches($config['mitag']['blpunsourced']->regexTemplate()))
 						{
 							$page->removeTag($config['mitag']['blpunsourced']);
 							$page->addTag($config['mitag']['unreferenced']);
