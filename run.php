@@ -1,6 +1,4 @@
 <?
-error_reporting(E_ERROR | E_PARSE);
-
 //run.php --page="value"
 $options = getopt("",Array("page::"));
 
@@ -13,6 +11,12 @@ require 'classes/database.php';
 require 'classes/page.php';
 require 'classes/template.php';
 require 'config.php';
+
+//Set error reporting level
+if(!$config['debug'])
+{
+	error_reporting(E_ERROR | E_PARSE);
+}
 
 // initialise the wiki
 $wiki = new wikipedia;
@@ -130,6 +134,7 @@ foreach ($list as $item)
 					else//not stub
 					{
 						$page->removeTag($config['mitag']['uncategorizedstub']);
+						echo"2";
 						$page->addTag($config['mitag']['uncategorized']); echo "+";
 					}
 				}
