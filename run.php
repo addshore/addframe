@@ -160,8 +160,10 @@ foreach ($list as $item)
 					echo "-";
 				}
 				
+				/*
+				TODO: BUG: #34
 				//{{Unreferenced}} and {{BLP unsourced}} depending on Category:Living people
-				if ($page->matches('/('.$config['mitag']['unreferenced']->regexName().'|'.$config['mitag']['blpunsourced']->regexName().')/i'))
+				if ($page->matches('/'.$config['mitag']['unreferenced']->regexName().'/i') || $page->matches('/'.$config['mitag']['blpunsourced']->regexName().'/i'))
 				{
 					if($page->inCategory("Category:Living people"))
 					{
@@ -175,6 +177,7 @@ foreach ($list as $item)
 					}
 
 				}
+				*/
 				
 				//NEEDS SECTIONS TAG
 				echo ".sec";
@@ -271,7 +274,7 @@ foreach ($list as $item)
 	if($page->hasSigchange() == true)
 	{
 		echo "\n> POST: ".$page->getSummary();
-		$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+		$wiki->edit(/*$page->getName()*/"User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
 		sleep(30);//sleep after an edit
 	}
 	
