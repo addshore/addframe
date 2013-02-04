@@ -52,7 +52,7 @@ $freenode['SOCKET'] = @fsockopen($server_host, $server_port, $errno, $errstr, 2)
 															//fork onto another process so the bot will keep running on irc
 															$pid = pcntl_fork();
 															if(!$pid){
-																exec($torun);
+																echo exec($torun);
 																die();
 															}
 														}
