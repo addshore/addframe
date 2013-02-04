@@ -36,7 +36,7 @@ if($config['General']['run'] != true){echo "\nNot set to run"; die();}//if we ar
 if(isset($options['p']))
 {
 	//add that to the list
-	$list = Array("$options['p']")
+	$list = Array($options['p']);
 	echo "\nGot article from options";
 }
 //else we can go and get the articles from DB

@@ -5,7 +5,7 @@ global $config;
 $config['url'] = 'en.wikipedia.org';                        // wiki url we will be working on
 $config['user'] = 'Addbot';                                 // bot username for login
 $config['owner'] = 'Addshore';                              // bot owner
-$config['sandbox'] = 'User:'.$config['user'].'/Sandbox';    // sandbox location
+$config['mysandbox'] = 'User:'.$config['user'].'/Sandbox';    // sandbox location
 $config['debug'] = false;									// true for debugging
 require '/home/addshore/.password.addbot';                  // $config['password'] = 'password';
 
