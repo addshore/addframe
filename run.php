@@ -184,32 +184,36 @@ foreach ($list as $item)
 				
 				//UNREFERENCED TAG
 				echo ".unref";
-				//if there is at least 1
-				if ($isreferenced > 0)
+				//Only perform all of these checks if there is already one of the tags on the page
+				if($page->matches($config['mitag']['unreferenced']->regexTemplate()) || $page->matches($config['mitag']['blpunsourced']->regexTemplate()))
 				{
-					$page->removeTag($config['mitag']['unreferenced']);
-					$page->removeTag($config['mitag']['blpunsourced']);
-					echo "-";
-				}
-				//else are there so few we can add {{Refimprove}}?
-				elseif($isreferenced < 3)
-				{
-					//now check if it is a BLP to see if we want {{Refimprove}} or {{BLP sources}}
-					//Swap if they are currently incorrect
-					if($page->isBLP())
+					//if there is at least 1
+					if ($isreferenced > 0)
 					{
-						if($page->matches('/'.$config['mitag']['refimprove']->regexTemplate().'/i'))
-						{
-							$page->removeTag($config['mitag']['refimprove']);
-							$page->addTag($config['mitag']['blpsources']);
-						}
+						$page->removeTag($config['mitag']['unreferenced']);
+						$page->removeTag($config['mitag']['blpunsourced']);
+						echo "-";
 					}
-					else
+					//are there so few we can add {{Refimprove}}?
+					if($isreferenced < 3)
 					{
-						if($page->matches('/'.$config['mitag']['blpsources']->regexTemplate().'/i'))
+						//now check if it is a BLP to see if we want {{Refimprove}} or {{BLP sources}}
+						//Swap if they are currently incorrect
+						if($page->isBLP())
 						{
-							$page->removeTag($config['mitag']['blpsources']);
-							$page->addTag($config['mitag']['refimprove']);
+							if($page->matches('/'.$config['mitag']['refimprove']->regexTemplate().'/i'))
+							{
+								$page->removeTag($config['mitag']['refimprove']);
+								$page->addTag($config['mitag']['blpsources']);
+							}
+						}
+						else
+						{
+							if($page->matches('/'.$config['mitag']['blpsources']->regexTemplate().'/i'))
+							{
+								$page->removeTag($config['mitag']['blpsources']);
+								$page->addTag($config['mitag']['refimprove']);
+							}
 						}
 					}
 				}
