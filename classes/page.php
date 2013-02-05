@@ -102,7 +102,7 @@ class Page {
 	// returns false if the largest section size is smaller than 5000 chars (excluding certain sections)
 	public function needsSections()
 	{
-		global config;
+		global $config;
 		//init some vars
 		$largestsection = 0;
 		$sectioncount = 0;
