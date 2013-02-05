@@ -326,6 +326,24 @@ foreach ($list as $item)
 				$page->addTag("badformat","Adding Bad Format");
 			}
 			break;
+			
+		case "Category":
+			echo "\n> Is Category";
+			//Pre processing
+			$cats = $wiki->categories($page->getName());
+			
+			//Manage {{Underpopulated category}}
+			echo ".pop";
+			if(count($cats) > 50)
+			{
+				$page->removeTag($config['tag']['underpopulatedcategory']); echo "-";
+				
+			}
+			elseif(count($cats) < 10)
+			{
+				$page->addTag($config['tag']['underpopulatedcategory']); echo "+";
+			}
+			break;
 	}
 	
 	//If we have a sig change then we want to post

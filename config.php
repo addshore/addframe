@@ -23,6 +23,7 @@ $config['tbdone'] = 'checked';                // table containing articles check
 // tags
 $config['tag']['wikify'] = new Template('Wikify',Array('Wfy','Wiki','Wkfy','Wikify section','Wf','Wikify-section','Wikifying'),true);
 $config['tag']['emptysection'] = new Template('Emptysection',Array(''),true);
+$config['tag']['underpopulatedcategory'] = new Template('Underpopulated category',Array('Orphancat','Popcat','Populate','Unpopulated category'));
 
 $config['mitag']['abbreviations'] = new Template('Abbreviations',Array('Abbrev'),true);
 $config['mitag']['advert'] = new Template('advert',Array('Ad','Advertisement','Adcopy','No ads','Cleanup-advert','Cleanup-ad','Advertising','Cleanup-advertising','Advertisment','Spam-check','Cleanup spam','AD','Adspeak','Ad speak'),true);
