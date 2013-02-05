@@ -81,6 +81,25 @@ class Page {
 	{
 		//get a temp copy of the text to work with
 		$text = $this->getText();
+		//remove everything in sections that we dont want
+		preg_match_all('/(={2,7})([^=]+)\1/',$text,$sections);
+		foreach($sections[0] as $key => $header)
+		{
+			//if we match a section we dont want then remove it
+			if(preg_match('/(External links?|References?|Notes?|See also|Bibliography)/i',$sections[2][$key]))
+			{
+				if(isset($sections[0][$key+1]))
+				{
+					$text = preg_replace('/'.preg_quote($header).'.*?'.$sections[0][$key+1].'/is',"",$text);
+				}
+				else
+				{
+					$parts = explode($header,$text);
+					$text = $parts[0];
+				}
+			}
+			
+		}
 		//remove templates, cats, interwikis and extlinks and refs
 		$text = preg_replace("/(\{\{[^\}]*?\}\}|={1,6}[^=]*?={1,6}|\n\*{1,2} ?|\[https?[^\]]*?\]|\[\[(Category|Image|File|[a-z]{2,6}):[^\]]*?\]\]|\<references ?\/\>|<ref>.*?<\/ref>|<!--.*?-->|\{\|.*?\|-.*?\|.*?\|})/is","",$text);
 		//fill all links in with a single word

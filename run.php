@@ -132,7 +132,9 @@ foreach ($list as $item)
 				echo ".stub";
 				if ($page->matches('/\{\{[a-z0-9 _-]*?stub\}\}/'))//if we have a stub tag
 				{
-					if ($page->wordcount() > 500)//and the word count is over 500
+					$count = $page->wordcount();
+					echo $count;
+					if ($count > 500)//and the word count is over 500
 					{
 						$page->removeRegex('/\{\{[a-z0-9 _-]*?stub\}\}/i',"Removing {{Stub}}"); echo "-";//remove the stub tag
 					}
@@ -425,8 +427,8 @@ foreach ($list as $item)
 			else
 			{
 				echo "\n> POST: ".$page->getSummary();
-				$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
-				//$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
+				//$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+				$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
 				sleep(30);//sleep after an edit
 			}
 		}

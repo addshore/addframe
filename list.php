@@ -99,7 +99,7 @@ if(isset($list))
 
 	foreach($list as $item) // for every item we have collected for the list
 	{
-		usleep(10000);
+		usleep(100);/*00*/
 		if($namespace != 0) // if it is not specificly the main namespace
 		{
 			if(preg_match("/^".$namespaceregex.":/i",$item)) // get those that match the namespace we want
