@@ -123,9 +123,9 @@ foreach ($list as $item)
 				$isreferenced = $page->isReferenced();
 			
 				//EMPTYSECTIONS
-				if ($page->matches('/(={2,6})\W+(={2,6})/'))
+				if ($page->matches('/(={2,7})([^=]+)\1(\s+)\1([^=]+)\1/'))
 				{
-					$page->setText(preg_replace('/(={2,6})\W+(={2,6})/',"$1\n".$config['tag']['emptysection']->getPost()."\n\n$2",$page->getText()));
+					$page->setText(preg_replace('/(={2,7})([^=]+)\1(\s+)\1([^=]+)\1/',"$1$2$1\n".$config['tag']['emptysection']->getPost()."\n\n$1$4$1",$page->getText()));
 					$page->addSummary("Adding {{".$config['tag']['emptysection']->getName()."}}");
 				}
 			
