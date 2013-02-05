@@ -51,7 +51,7 @@ class Template {
 	
 	//returns the regex part for arguments of a template
 	private function regexArgs() {
-		return '(\|([0-9a-zA-Z _]*?)( ?= ?[0-9a-zA-Z _]*?)){0,6}';
+		return '(\|([0-9a-zA-Z _]*? ?= ?)?([0-9a-zA-Z _]*?)){0,6}';
 	}
 	
 	//returns regex part matching when not to add the tag

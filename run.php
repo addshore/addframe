@@ -13,7 +13,7 @@ require 'classes/template.php';
 require 'config.php';
 
 //Set error reporting level
-if(!$config['debug'])
+if($config['debug'])
 {
 	error_reporting(E_ERROR | E_PARSE);
 }
@@ -371,7 +371,7 @@ foreach ($list as $item)
 			
 			//Manage {{Underpopulated category}}
 			echo ".pop";
-			if(count($cats) > 50)
+			if(count($cats) > 75)
 			{
 				$page->removeTag($config['tag']['underpopulatedcategory']); echo "-";
 				
