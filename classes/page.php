@@ -161,7 +161,7 @@ class Page {
 		foreach ($cats as $cat)
 		{
 			//Regex to match cats that are definatly NOT BLP
-			if(preg_match('/^Category:(Dead people$|[0-2][0-9][0-9][0-9] deaths$|(place|year|date)of death (missing|unknown))/i',$cat))
+			if(preg_match('/^Category:(Dead people$|[0-9]{0,4}(s BC)? deaths$||(place|year|date)of death (missing|unknown))/i',$cat))
 			{
 					return false;
 			}
@@ -169,7 +169,7 @@ class Page {
 		foreach ($cats as $cat)
 		{
 			//If we are still running see if there is a BLP cat
-			if (preg_match('/^Category:(((Possibly )?Living|Missing) people$|[0-2][0-9][0-9][0-9] births$|People from .*?|(place|year|date)of birth (missing|unknown))/i',$cat))
+			if (preg_match('/^Category:(((Possibly )?Living|Missing) people$|[0-9]{0,4} births$|People from .*?|(place|year|date)of birth (missing|unknown))/i',$cat))
 			{
 				return true;
 			}
