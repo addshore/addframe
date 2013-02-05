@@ -930,6 +930,23 @@ class wikipedia {
         $x = $this->query('?action=query&list=usercontribs&uclimit=1&format=php&acuser='.urlencode($user));
         return $x['query-continue'][0]['ucstart'];
     }
+	
+	/**
+     * Gets the date of the last edit the user has made
+     * @param $page The name of the page to be checks
+     * @return Array of each protection status ([0]/[1]/[2])([type],[level],[expiry])
+	 * @author Addshore
+     **/
+	function protectionstatus ($page){
+	//http://en.wikipedia.org/w/api.php?action=query&titles=Cyprus&prop=info&inprop=protection
+	    $x = $this->query('?action=query&format=php&prop=info&inprop=protection&titles='.urlencode($page));
+		foreach ($x['query']['pages'] as $page)
+		{
+			return $page['protection'];
+		}
+	
+	}
+	
 }
 
 /**
