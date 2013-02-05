@@ -37,7 +37,7 @@ class Page {
 	private function postPage() { $this->wiki->edit($this->getName(),$this->getText(),$this->getSummary(),true);} 
 	private function parseNamespace()
 	{
-		$result = preg_match("/^((User|Wikipedia|File|Image|Mediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?):?/i",$this->page,$matches);
+		$result = preg_match("/^((Talk|User|Wikipedia|File|Image|Mediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?):?/i",$this->page,$matches);
 		if($result == 0){ $this->namespace = "";}// default to article namespace
 		else{$this->namespace = $matches[1];}
 		if($this->namespace == "Image"){ $this->namespace = "File";}// default Image namespace to file
