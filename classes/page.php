@@ -271,7 +271,7 @@ class Page {
 			foreach($cats as $cat)
 			{
 				echo $cat;
-				if(!preg_match('/^Category:(Proposed deletion as of .*?|(|.*? )stubs$)/i',$cat))
+				if(!preg_match('/^Category:(.*?Proposed (for )?deletion.*?|(|.*? )stubs$)/i',$cat))
 				{
 					//if it is not a stub cat return FALSE (NOT UNCAT)
 					return false;
