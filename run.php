@@ -50,9 +50,9 @@ function log (string $type, string $what)
 	//if we are set to log this type
 	if(isset($config['Log'][$type]))
 	{
-		$text = $wiki->getpage('User:Addbot/'.$type);// get previous page
+		$text = $wiki->getpage('User:Addbot/log/'.$type);// get previous page
 		$text = "* ".$what."\n".$text;// add our stuff
-		$wiki->edit('User:Addbot/'.$type,$text,$what,true);// save the page	
+		$wiki->edit('User:Addbot/log/'.$type,$text,$what,true);// save the page	
 	}
 }
 
