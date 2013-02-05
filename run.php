@@ -42,6 +42,20 @@ $awbutt = str_ireplace(']]','',str_ireplace('# [[','',str_ireplace(']]# [[','|',
 $config['AWB']['usertalk'] = explode('|',$awbutt);
 unset($awbutt);
 
+//Create log function
+//This can be used to post output to User:Addbot/log/<PARAM>
+//Data will be added to the top of the page in a bulleted list
+function log (string $type, string $what)
+{
+	//if we are set to log this type
+	if(isset($config['Log'][$type]))
+	{
+		$text = $wiki->getpage('User:Addbot/'.$type);// get previous page
+		$text = $what."\n".$text;// add our stuff
+		$wiki->edit('User:Addbot/'.$type,$text,$what,true);// save the page	
+	}
+}
+
 //if we were passed an article
 if(isset($options['page']))
 {
