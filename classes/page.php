@@ -569,7 +569,9 @@ class Page {
 		$this->text = preg_replace('/&ndash/i', "�", $this->text );
 		//Templates
 		$this->text = preg_replace('/\{\{'.$config['mitag']['unreferenced']->regexName().'\|section\}\}/i', "{{Unreferenced section}}", $this->text );
-		$this->text = preg_replace('/<references \/>/i',"{{reflist}}", $this->text );
+		
+		if(!$this->matchs('/\{\{reflist\}\}/i'))
+		{$this->text = preg_replace('/<references \/>/i',"{{reflist}}", $this->text );}
 	
 	}
 	
