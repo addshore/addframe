@@ -176,9 +176,14 @@ foreach ($list as $item)
 				}
 				else
 				{
-					$page->removeTag($config['mitag']['deadend']); echo "-";
-					if($isdeadend < 3){
-						$page->addTag($config['mitag']['underlinked']); echo "+";
+					//only try and remove if it is already there
+					//(and only try and add underlinked if it was already there)
+					if($page->matches('/'.$config['mitag']['deadend']->regexTemplate().'/i')
+					{
+						$page->removeTag($config['mitag']['deadend']); echo "-";
+						if($isdeadend < 3){
+							$page->addTag($config['mitag']['underlinked']); echo "+";
+						}
 					}
 				}
 				
