@@ -372,7 +372,7 @@ foreach ($list as $item)
 			//Manage {{Underpopulated category}}
 			echo ".pop";
 			//If underpopulatedcategory is not in nowiki tags
-			if(!$page->matches('/<nowiki>.*?'.$config['tag']['underpopulatedcategory']->regexTemplate().'.*?</nowiki>/i'))
+			if(!$page->matches('/<nowiki>.*?'.$config['tag']['underpopulatedcategory']->regexTemplate().'.*?</nowiki>/i') || preg_match('/^Category\:Underpopulated .*? categories/i',$page->getName()))
 			{
 				if(count($cats) > 75)
 				{
