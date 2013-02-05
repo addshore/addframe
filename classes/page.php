@@ -330,7 +330,7 @@ class Page {
 	}
 	
 	//remove the regex match from the page
-	//if cummary is set then add to edit summary
+	//if summary is set then add to edit summary
 	public function removeRegex($regex,$summary = null)
 	{
 		if(preg_match($regex,$this->getText()))//make sure the regex is actually there
