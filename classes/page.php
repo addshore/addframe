@@ -231,10 +231,11 @@ class Page {
 		return null;
 	}
 	
-	// returns false if one blue link is found on the page
+	// If blue links are found it returns the number of blue links
 	// returns true if 0 links are found
 	public function isDeadend()
 	{
+		$count = 0;
 		// match links to articles
 		preg_match_all('/\[\[([^]:]*)\]\]/i',$this->getText(), $links, PREG_PATTERN_ORDER);
 		foreach($links[1] as $link){
@@ -245,10 +246,11 @@ class Page {
 				$link = $split[0];
 			}
 			if (preg_match('/:/',$link) == 0){
-				return false;			
+				$count++;
 			}
 		}
-		if(count($links[1]) == 0){ return true; }
+		if($count == 0){return true;}
+		else{return $count;}
 	}
 	
 	// returns true is 0 categories are found

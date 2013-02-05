@@ -178,9 +178,12 @@ foreach ($list as $item)
 				{
 					$page->addTag($config['mitag']['deadend']); echo "+";
 				}
-				else if($isdeadend === false)
+				else
 				{
 					$page->removeTag($config['mitag']['deadend']); echo "-";
+					if($isdeadend < 3){
+						$page->addTag($config['mitag']['underlinked']); echo "+";
+					}
 				}
 				
 				//UNREFERENCED TAG
