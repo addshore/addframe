@@ -161,7 +161,7 @@ class Page {
 		foreach ($cats as $cat)
 		{
 			//Regex to match cats that are definatly NOT BLP
-			if(preg_match('/^Category:((Dead people$|[0-2][0-9][0-9][0-9] deaths$|(place|year|date)of death (missing|unknown))/i',$cat))
+			if(preg_match('/^Category:(Dead people$|[0-2][0-9][0-9][0-9] deaths$|(place|year|date)of death (missing|unknown))/i',$cat))
 			{
 					return false;
 			}
@@ -169,7 +169,7 @@ class Page {
 		foreach ($cats as $cat)
 		{
 			//If we are still running see if there is a BLP cat
-			if (preg_match('/^Category:(((Possibly )?Living|Missing) people$|[0-2][0-9][0-9][0-9] (births|deaths)$|People from .*?|(place|year|date)of (birth|death) (missing|unknown))/i',$cat))
+			if (preg_match('/^Category:(((Possibly )?Living|Missing) people$|[0-2][0-9][0-9][0-9] births$|People from .*?|(place|year|date)of birth (missing|unknown))/i',$cat))
 			{
 				return true;
 			}
@@ -391,7 +391,6 @@ class Page {
 				//does it match the MI template
 				if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
 				{
-					print_r($x->arguments);
 					//does it match the old style of use (no new style at all)
 					if(preg_match('/\{\{(multiple ?issues|article ?issues|mi)\s*\|([^{]+)\}\}/i',$x->rawCode))
 					{
