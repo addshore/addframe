@@ -120,8 +120,10 @@ foreach ($list as $item)
 				$isreferenced = $page->isReferenced();
 			
 				//EMPTYSECTIONS
-				if ($page->matches('/(={2,7})([^=]+)\1(\s+)\1([^=]+)\1/'))
+				$max = 10;
+				while ($page->matches('/(={2,7})([^=]+)\1(\s+)\1([^=]+)\1/') && $max > 0)
 				{
+					$max--;
 					$page->setText(preg_replace('/(={2,7})([^=]+)\1(\s+)\1([^=]+)\1/',"$1$2$1\n".$config['tag']['emptysection']->getPost()."\n\n$1$4$1",$page->getText()));
 					$page->addSummary("Adding {{".$config['tag']['emptysection']->getName()."}}");
 				}
@@ -178,7 +180,7 @@ foreach ($list as $item)
 				{
 					//only try and remove if it is already there
 					//(and only try and add underlinked if it was already there)
-					if($page->matches('/'.$config['mitag']['deadend']->regexTemplate().'/i')
+					if($page->matches('/'.$config['mitag']['deadend']->regexTemplate().'/i'))
 					{
 						$page->removeTag($config['mitag']['deadend']); echo "-";
 						if($isdeadend < 3){
@@ -251,7 +253,7 @@ foreach ($list as $item)
 					$page->removeTag($config['mitag']['sections']);  echo "-";
 				}
 				elseif ($page->needsSections() === true){
-					$page->addTag($config['mitag']['sections']);  echo "+";
+					//$page->addTag($config['mitag']['sections']);  echo "+";
 				}
 				
 				//DEPRECIATED
