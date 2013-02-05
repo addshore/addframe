@@ -66,7 +66,7 @@ class Page {
 	
 	//returns the edit summary
 	public function getSummary(){
-	return "[[User:Addbot|Bot:]] ".$this->summary."([[User talk:Addbot|Report Errors]] 2)";
+	return "[[User:Addbot|Bot:]] ".$this->summary."([[User talk:Addbot|Report Errors]])";
 	}
 	
 //	                  //
