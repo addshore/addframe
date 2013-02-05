@@ -201,7 +201,7 @@ foreach ($list as $item)
 					//Swap if they are currently incorrect
 					if($page->isBLP())
 					{
-						if($page->matches($config['mitag']['refimprove']->regexTemplate()))
+						if($page->matches('/'.$config['mitag']['refimprove']->regexTemplate().'/i'))
 						{
 							$page->removeTag($config['mitag']['refimprove']);
 							$page->addTag($config['mitag']['blpsources']);
@@ -209,7 +209,7 @@ foreach ($list as $item)
 					}
 					else
 					{
-						if($page->matches($config['mitag']['blpsources']->regexTemplate()))
+						if($page->matches('/'.$config['mitag']['blpsources']->regexTemplate().'/i'))
 						{
 							$page->removeTag($config['mitag']['blpsources']);
 							$page->addTag($config['mitag']['refimprove']);
@@ -218,11 +218,11 @@ foreach ($list as $item)
 				}
 				
 				//{{Unreferenced}} and {{BLP unsourced}} depending on Category:Living people
-				if ($page->matches($config['mitag']['unreferenced']->regexTemplate()) || $page->matches($config['mitag']['blpunsourced']->regexTemplate()))
+				if ($page->matches('/'.$config['mitag']['unreferenced']->regexTemplate().'/i') || $page->matches('/'.$config['mitag']['blpunsourced']->regexTemplate().'/i'))
 				{
 					if($page->isBLP())
 					{
-						if($page->matches($config['mitag']['unreferenced']->regexTemplate()))
+						if($page->matches('/'.$config['mitag']['unreferenced']->regexTemplate().'/i'))
 						{
 							$page->removeTag($config['mitag']['unreferenced']);
 							$page->addTag($config['mitag']['blpunsourced']);
@@ -230,7 +230,7 @@ foreach ($list as $item)
 					}
 					else//else not int he cat
 					{
-						if($page->matches($config['mitag']['blpunsourced']->regexTemplate()))
+						if($page->matches('/'.$config['mitag']['blpunsourced']->regexTemplate().'/i'))
 						{
 							$page->removeTag($config['mitag']['blpunsourced']);
 							$page->addTag($config['mitag']['unreferenced']);
@@ -371,14 +371,18 @@ foreach ($list as $item)
 			
 			//Manage {{Underpopulated category}}
 			echo ".pop";
-			if(count($cats) > 75)
+			//If underpopulatedcategory is not in nowiki tags
+			if(!$page->matches('/<nowiki>.*?'.$config['tag']['underpopulatedcategory'])->regexTemplate().'.*?</nowiki>/i'))
 			{
-				$page->removeTag($config['tag']['underpopulatedcategory']); echo "-";
-				
-			}
-			elseif(count($cats) < 10)
-			{
-				$page->addTag($config['tag']['underpopulatedcategory']); echo "+";
+				if(count($cats) > 75)
+				{
+					$page->removeTag($config['tag']['underpopulatedcategory']); echo "-";
+					
+				}
+				elseif(count($cats) < 10)
+				{
+					$page->addTag($config['tag']['underpopulatedcategory']); echo "+";
+				}
 			}
 			break;
 	}
