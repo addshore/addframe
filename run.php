@@ -123,6 +123,13 @@ foreach ($list as $item)
 				$isdeadend = $page->isDeadend();
 				$isreferenced = $page->isReferenced();
 			
+				//EMPTYSECTIONS
+				if ($page->matches('/(={2,6})\W+(={2,6})/'))
+				{
+					$page->setText(preg_replace('/(={2,6})\W+(={2,6})/',"$1\n".$config['tag']['emptysection']->getPost()."\n\n$2",$page->getText()));
+					$page->addSummary("Adding {{".$config['tag']['emptysection']->getName()."}}");
+				}
+			
 				//STUB TAG
 				echo ".stub";
 				if ($page->matches('/\{\{[a-z0-9 _-]*?stub\}\}/'))//if we have a stub tag
