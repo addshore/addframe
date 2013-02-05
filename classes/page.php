@@ -135,15 +135,18 @@ class Page {
 	//returns true if we have a <ref tag
 	public function isReferenced()
 	{
-		//if we match a ref tag
-		if($this->matches('/<\/?ref[^\/]*?>/is'))
+		$temp = $this->getText();
+		//remove all ref tags in comments
+		$temp = preg_replace('/<!--[^(-->)]*?(<\/?ref[^\/]*?>.*?<\/ref>).*?-->/is',"",$temp);
+		//if we match a ref tag after the ones in comments have been ignored
+		if(preg_match_all('/<\/?ref[^\/]*?>/is',$temp))
 		{
 			return true;
 		}
 		return null;
 	}
 	
-	//checks if a page is in a BLP category
+	//checks if a page is in a BLP category 
 	public function isBLP()
 	{
 		$cats = $this->wiki->categories($this->getName());
