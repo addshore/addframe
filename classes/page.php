@@ -140,16 +140,16 @@ class Page {
 		}
 	}
 	
-	//returns true if we have a <ref tag
+	//returns the number of references that we have
 	public function isReferenced()
 	{
 		$temp = $this->getText();
 		//remove all ref tags in comments
 		$temp = preg_replace('/<!--[^(-->)]*?(<\/?ref[^\/]*?>.*?<\/ref>).*?-->/is',"",$temp);
 		//if we match a ref tag after the ones in comments have been ignored
-		if(preg_match_all('/<\/?ref[^\/]*?>/is',$temp))
+		if(preg_match_all('/<\/?ref[^\/]*?>/is',$temp,$matches))
 		{
-			return true;
+			return count($matches);
 		}
 		return null;
 	}

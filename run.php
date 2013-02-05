@@ -178,11 +178,34 @@ foreach ($list as $item)
 				
 				//UNREFERENCED TAG
 				echo ".unref";
-				if ($isreferenced === true)
+				//if there is at least 1
+				if ($isreferenced > 0)
 				{
 					$page->removeTag($config['mitag']['unreferenced']);
 					$page->removeTag($config['mitag']['blpunsourced']);
 					echo "-";
+				}
+				//else are there so few we can add {{Refimprove}}?
+				elseif($isreferenced < 3)
+				{
+					//now check if it is a BLP to see if we want {{Refimprove}} or {{BLP sources}}
+					//Swap if they are currently incorrect
+					if($page->isBLP())
+					{
+						if($page->matches($config['mitag']['refimprove']->regexTemplate()))
+						{
+							$page->removeTag($config['mitag']['refimprove']);
+							$page->addTag($config['mitag']['blpsources']);
+						}
+					}
+					else
+					{
+						if($page->matches($config['mitag']['blpsources']->regexTemplate()))
+						{
+							$page->removeTag($config['mitag']['blpsources']);
+							$page->addTag($config['mitag']['refimprove']);
+						}
+					}
 				}
 				
 				//{{Unreferenced}} and {{BLP unsourced}} depending on Category:Living people
