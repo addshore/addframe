@@ -40,6 +40,7 @@ $awbutt = $wiki->getpage('Wikipedia:AutoWikiBrowser/User_talk_templates');
 $awbutt = explode('expand the template(s) on the user talk page.',);
 $awbutt = str_ireplace(']]','',str_ireplace('# [[','',str_ireplace(']]# [[','|',preg_replace ("/\n/",'',$awbutt[1]))));
 $config['AWB']['usertalk'] = explode('|',$awbutt);
+unset($awbutt);
 
 //if we were passed an article
 if(isset($options['page']))
@@ -259,7 +260,21 @@ foreach ($list as $item)
 			
 		case "User talk":
 			echo "\n> Is User talk";
-			//TODO:Subst user talk templates
+			foreach($config['AWB']['usertalk'] as $template)
+			{
+				//get size before so we can see if we have changed
+				$sizebefore = strlen($page->getText());
+				//Convert our template to regex
+				$regex = str_replace(" ","( |_)",$template);
+				$regex = str_ireplace("Template:","(Template:)?",$regex);
+				//Do the replace
+				$page->setPage(preg_replace('/\{\{'.$template.'/i',"{{subst:$template",$page->getText()));
+				//if the page has changed
+				if($sizebefore != strlen($page->getText()))
+				{
+					$page->addSummary("Substing {{[[".$template."]]}}");
+				}
+			}
 			break;
 			
 		case "Wikipedia":
