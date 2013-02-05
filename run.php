@@ -37,7 +37,7 @@ require 'config.php';//again
 if($config['General']['run'] != true){echo "\nNot set to run"; die();}//if we are not meant to run die
 //Get AWB user talk subst list
 $awbutt = $wiki->getpage('Wikipedia:AutoWikiBrowser/User_talk_templates');
-$awbutt = explode('expand the template(s) on the user talk page.',);
+$awbutt = explode('expand the template(s) on the user talk page.',$awbutt);
 $awbutt = str_ireplace(']]','',str_ireplace('# [[','',str_ireplace(']]# [[','|',preg_replace ("/\n/",'',$awbutt[1]))));
 $config['AWB']['usertalk'] = explode('|',$awbutt);
 unset($awbutt);
@@ -45,7 +45,7 @@ unset($awbutt);
 //Create log function
 //This can be used to post output to User:Addbot/log/<PARAM>
 //Data will be added to the top of the page in a bulleted list
-function log (string $type, string $what)
+function logevent (string $type, string $what)
 {
 	//if we are set to log this type
 	if(isset($config['Log'][$type]))
@@ -264,7 +264,7 @@ foreach ($list as $item)
 							else
 							{
 								//Else this is a broken redirect that links to itself in some form of loop
-								log("redirect","Can't fix redirect [[".$page->getName()."]] >> [[$target1]] >> [[$target2]]");
+								logevent("redirect","Can't fix redirect [[".$page->getName()."]] >> [[$target1]] >> [[$target2]]");
 							}
 						}
 					}
