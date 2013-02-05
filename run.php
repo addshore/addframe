@@ -330,7 +330,7 @@ foreach ($list as $item)
 		case "Category":
 			echo "\n> Is Category";
 			//Pre processing
-			$cats = $wiki->categories($page->getName());
+			$cats = $wiki->categorymembers($page->getName());
 			
 			//Manage {{Underpopulated category}}
 			echo ".pop";
