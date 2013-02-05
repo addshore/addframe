@@ -297,7 +297,7 @@ class Page {
 		//make sure the tag is not already on the page
 		if(preg_match('/'.$template->regexTemplate().'/i',$this->getText()) || preg_match('/'.$template->regexTempIssues().'/i',$this->getText())){ return false; }
 		//make sure the template's notif is not on the page
-		if(preg_match("/".$template->regexNotif()."/i")){return false;}
+		if($template->regexNotif() != false) {if(preg_match("/".$template->regexNotif()."/i",$this->getText())){return false;}}
 		//check if we want to add the tag below a section
 		if($section)
 		{

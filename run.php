@@ -185,7 +185,7 @@ foreach ($list as $item)
 				//UNREFERENCED TAG
 				echo ".unref";
 				//Only perform all of these checks if there is already one of the tags on the page
-				if($page->matches($config['mitag']['unreferenced']->regexTemplate()) || $page->matches($config['mitag']['blpunsourced']->regexTemplate()))
+				if($page->matches('/'.$config['mitag']['unreferenced']->regexTemplate().'/i') || $page->matches('/'.$config['mitag']['blpunsourced']->regexTemplate().'/i'))
 				{
 					//if there is at least 1
 					if ($isreferenced > 0)
@@ -418,8 +418,8 @@ foreach ($list as $item)
 			else
 			{
 				echo "\n> POST: ".$page->getSummary();
-				//$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
-				$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
+				$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+				//$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
 				sleep(30);//sleep after an edit
 			}
 		}
