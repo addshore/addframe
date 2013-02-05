@@ -12,11 +12,8 @@ require 'classes/page.php';
 require 'classes/template.php';
 require 'config.php';
 
-//Set error reporting level
-if($config['debug'])
-{
-	error_reporting(E_ERROR | E_PARSE);
-}
+//error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 // initialise the wiki
 $wiki = new wikipedia;

@@ -35,12 +35,12 @@ class Template {
 	//Regexs
 	//returns the regex for matching whole template and args
 	public function regexTemplate() {
-		return '/\{\{'.$this->regexName().$this->regexArgs().'\}\}(\r|\n){0,3}/i';
+		return '\{\{'.$this->regexName().$this->regexArgs().'\}\}(\r|\n){0,3}';
 	}
 	
 	//matches in the old style of MI tag
 	public function regexTempIssues() {
-		return '/\| ?'.$this->regexName().' ?= ?'.$this->dateregex.'(\r|\n){0,1}/i';
+		return '\| ?'.$this->regexName().' ?= ?'.$this->dateregex.'(\r|\n){0,1}';
 	}
 	
 	//returns the regex part for template name and redirects

@@ -295,7 +295,7 @@ class Page {
 	public function addTag($template,$section=null)
 	{
 		//make sure the tag is not already on the page
-		if(preg_match($template->regexTemplate(),$this->getText()) || preg_match($template->regexTempIssues(),$this->getText())){ return false; }
+		if(preg_match('/'.$template->regexTemplate().'/i',$this->getText()) || preg_match('/'.$template->regexTempIssues().'/i',$this->getText())){ return false; }
 		//make sure the template's notif is not on the page
 		if(preg_match("/".$template->regexNotif()."/i")){return false;}
 		//check if we want to add the tag below a section
@@ -325,7 +325,7 @@ class Page {
 	//passed $config['mitag']['TEMPLATECODE'] (i.e. orphan)
 	public function removeTag($template)
 	{
-		$this->removeRegex($template->regexTemplate(),"Removing {{".$template->getName()."}}");
+		$this->removeRegex('/'.$template->regexTemplate().'/i',"Removing {{".$template->getName()."}}");
 	}
 	
 	//remove the regex match from the page
@@ -387,7 +387,7 @@ class Page {
 		foreach($this->parsed['wikObject_templates'] as $x)
 		{
 			//make sure the template is not surrounded by comment tags
-			if(!preg_match('/<!--.*?'.preg_quote($x->rawCode).'.*?-->/is',$this->getText()))
+			if(!preg_match('/<!--.*?'.preg_quote($x->rawCode,'/').'.*?-->/is',$this->getText()))
 			{
 			
 				//does it match the MI template
