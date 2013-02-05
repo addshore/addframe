@@ -51,7 +51,7 @@ function log (string $type, string $what)
 	if(isset($config['Log'][$type]))
 	{
 		$text = $wiki->getpage('User:Addbot/'.$type);// get previous page
-		$text = $what."\n".$text;// add our stuff
+		$text = "* ".$what."\n".$text;// add our stuff
 		$wiki->edit('User:Addbot/'.$type,$text,$what,true);// save the page	
 	}
 }
@@ -264,6 +264,7 @@ foreach ($list as $item)
 							else
 							{
 								//Else this is a broken redirect that links to itself in some form of loop
+								log("redirect","Can't fix redirect [[".$page->getName()."]] >> [[$target1]] >> [[$target2]]");
 							}
 						}
 					}
