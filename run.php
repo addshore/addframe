@@ -45,8 +45,9 @@ unset($awbutt);
 //Create log function
 //This can be used to post output to User:Addbot/log/<PARAM>
 //Data will be added to the top of the page in a bulleted list
-function logevent (string $type, string $what)
+function logevent ($type,$what)
 {
+	global $config,$wiki;
 	//if we are set to log this type
 	if(isset($config['Log'][$type]))
 	{
@@ -297,7 +298,7 @@ foreach ($list as $item)
 							else
 							{
 								//Else this is a broken redirect that links to itself in some form of loop
-								logevent("redirect","Can't fix redirect [[".$page->getName()."]] >> [[$target1]] >> [[$target2]]");
+								logevent("redirects","Can't fix redirect [[".$page->getName()."]] >> [[$target1]] >> [[$target2]]");
 							}
 						}
 					}
