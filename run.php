@@ -328,13 +328,30 @@ foreach ($list as $item)
 			break;
 	}
 	
-	//Post
+	//If we have a sig change then we want to post
 	if($page->hasSigchange() == true)
 	{
-		echo "\n> POST: ".$page->getSummary();
-		//$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
-		$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
-		sleep(30);//sleep after an edit
+		//First lets make sure the page is not protected (we can edit)
+		$protection = $wiki->protectionstatus($page->getName());
+		$canedit = true;
+		foreach($protection as $inst)
+		{
+			//check if sysop edit protection is on the page
+			if($inst['type'] == "edit" && $inst['level'] == "sysop")
+			{
+				echo "..protected";
+				$canedit = false;
+				logevent("protected","Edit ".$page->getName()." with ".$page->getSummary());
+			}
+		}
+		
+		if($canedit)
+		{
+			echo "\n> POST: ".$page->getSummary();
+			//$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+			$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
+			sleep(30);//sleep after an edit
+		}
 	}
 	
 	sleep(3);// sleep inbetween requests
