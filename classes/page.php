@@ -45,13 +45,21 @@ class Page {
 	
 	public function addSummary($sum)
 	{
-		//only add the first bit if it is not already there (i.e. 'Adding' or 'Removing')
+		//split the summary
 		$split = explode(" ",$sum,2);
+		//if we CANNOT find the first bit (Adding, Removing) already in the summary
 		if(!preg_match('/'.$split[0].'/i',$this->summary))
 		{
-			$this->summary = $this->summary.$split[0]." ";
+			//just add the summary
+			$this->summary = $sum." ";
 		}
-		$this->summary = $this->summary.$split[1]." ";
+		//else we first bit is already there so we want to insert our second bit
+		else
+		{
+			//replace the first bit in the summary with the first bit and the second bit (a sort of insert)
+			$this->summary = preg_replace('/'.$split[0].'/i',$sum,$this->summary);
+		}
+		
 		
 		$this->sigchange = true;//if we have a summary it muse be a sig change
 	}
