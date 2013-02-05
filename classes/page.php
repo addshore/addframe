@@ -217,7 +217,7 @@ class Page {
 	public function isDeadend()
 	{
 		// match links to articles
-		preg_match_all('/\[\[([a-z\/ _\(\)\|\.0-9]*)\]\]/i',$this->getText(), $links, PREG_PATTERN_ORDER);
+		preg_match_all('/\[\[([^]:]*)\]\]/i',$this->getText(), $links, PREG_PATTERN_ORDER);
 		foreach($links[1] as $link){
 			//if this link has been renammed i.e. [[User:Addbot|Bot]]
 			if(preg_match('/\|/',$link) != 0){
