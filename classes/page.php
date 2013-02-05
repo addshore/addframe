@@ -47,11 +47,11 @@ class Page {
 	{
 		//split the summary
 		$split = explode(" ",$sum,2);
-		//if we CANNOT find the first bit (Adding, Removing) already in the summary
+		//if we CANNOT find the first bit (Adding, Removing, Dating) already in the summary
 		if(!preg_match('/'.$split[0].'/i',$this->summary))
 		{
 			//just add the summary
-			$this->summary = $sum." ";
+			$this->summary = $this->summary.$sum." ";
 		}
 		//else we first bit is already there so we want to insert our second bit
 		else
