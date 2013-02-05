@@ -105,8 +105,6 @@ foreach ($list as $item)
 	$page = new Page($item['article'],$wiki);
 	//if page size is less than 10 (page doesnt exist) skip
 	if (strlen($page->getText()) < 5){echo "\n> Page less than 5 length (may not exist)";continue;}
-	//make sure we are allowed to edit the page
-	if (!$wiki->nobots ($page->getName(),"Addbot",$page->getText())){echo "\n> page has nobots tag..";continue;}
 	
 	//for reference (User|Wikipedia|FileMediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?)"
 	switch($page->getNamespace()){
@@ -317,7 +315,7 @@ foreach ($list as $item)
 				$regex = str_replace(" ","( |_)",$template);
 				$regex = str_ireplace("Template:","(Template:)?",$regex);
 				//Do the replace
-				$page->setPage(preg_replace('/\{\{'.$template.'/i',"{{subst:$template",$page->getText()));
+				$page->setText(preg_replace('/\{\{'.$template.'/i',"{{subst:$template",$page->getText()));
 				//if the page has changed
 				if($sizebefore != strlen($page->getText()))
 				{
@@ -385,24 +383,35 @@ foreach ($list as $item)
 	{
 		//First lets make sure the page is not protected (we can edit)
 		$protection = $wiki->protectionstatus($page->getName());
-		$canedit = true;
+		$notprotected = true;
 		foreach($protection as $inst)
 		{
 			//check if sysop edit protection is on the page
 			if($inst['type'] == "edit" && $inst['level'] == "sysop")
 			{
 				echo "..protected";
-				$canedit = false;
-				logevent("protected","Edit ".$page->getName()." with ".$page->getSummary());
+				$notprotected = false;
+				logevent("protected","'''Protected''' [[".$page->getName()."]] > ".$page->getSummary());
 			}
 		}
 		
-		if($canedit)
+		//if its not protected
+		if($notprotected)
 		{
-			echo "\n> POST: ".$page->getSummary();
-			//$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
-			$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
-			sleep(30);//sleep after an edit
+			//does it have no bots?
+			if (!$wiki->nobots ($page->getName(),"Addbot",$page->getText()))
+			{
+				echo "..nobots";
+				logevent("nobots","'''NoBots''' [[".$page->getName()."]] > ".$page->getSummary());
+				continue;
+			}
+			else
+			{
+				echo "\n> POST: ".$page->getSummary();
+				//$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+				$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
+				sleep(30);//sleep after an edit
+			}
 		}
 	}
 	
