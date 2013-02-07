@@ -5,6 +5,7 @@ class Regex {
 	public function __construct() {
 	}	
 	
+	/*
 	//Returns regex matching arguments of a template
 	//$exclude = regex of arguments to exclude from the regex
 	public function templateargs($exclude = null) {
@@ -17,34 +18,58 @@ class Regex {
 			return '(\|(?!'.$exclude.')([0-9a-zA-Z _]*? ?= ?)?([0-9a-zA-Z _]*?)){0,6}';
 		}
 	}
+	*/
+	
+	//returns regex matching dates that can be used in templates
+	public function dateregex(){
+	return '((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])';
+	}
 	
 	//Returns regex matching a single argument of a template '|date = July 2012'
-	//$arg = 
-	//$value = 
-	public function templatearg($arg = null, $value = null) {
-		if($arg != null && $value != null)
+	//$par = parameter name (if not set can match anything)
+	//$value = value for parameter (if not set can match anything)
+	public function templatearg($par = null, $val = null, ) {
+		if($par != null && $val != null)
 		{
-			return '(\|('.$arg.' ?= ?)?('$value'))';
+			return '(\|('.$par.' ?= ?)?('$val'))';
 		}
-		elseif($value == null)
+		elseif($val == null)
 		{
-			return '(\|('.$arg.' ?= ?= ?)?([0-9a-zA-Z _]*?))';
+			return '(\|('.$par.' ?= ?= ?)?([0-9a-zA-Z _]*?))';
 		}
-		elseif($arg == null)
+		elseif($par == null)
 		{
-			return '(\|([0-9a-zA-Z _]*? ?= ?)?('$value'))';
+			return '(\|([0-9a-zA-Z _]*? ?= ?)?('$val'))';
 		}
 		
 	}
 	
+	//Returns regex matching a single argument of a template '|date = July 2012'
+	//$count = the number of arguments to match
+	//$par = Array of parameter name (if a value is not set can match anything)
+	//$value = Array of value for parameter (if a value is not set can match anything)
+	public function templateargs($count,$par = null, $val = null) {
+		$r = "(";
+		//Loop through how many arguments we want
+		for ($i = 1; $i <= $count; $i++)
+		{
+			$arg = $this->templatearg($par[$i],$val[$i])
+			$r .= $arg."|";
+		}
+		$r = rtrim($r, "|")
+		$r .= ")";
+	}
+	
 	//Returns a regex for if the given regex were in nowiki tags
-	//$regex
-	public function innowiki($regex) {
+	//$regex = regex to look for inside of nowiki tags
+	//$text = text to look in (if not set just return the regex that is needed for check against)
+	public function innowiki($regex,$text = null) {
 	}
 	
 	//Returns a regex for if the given regex were in html comment tags
-	//$regex
-	public function incomment($regex) {
+	//$regex = regex to look for inside of html comment tags
+	//$text = text to look in (if not set just return the regex that is needed for check against)
+	public function incomment($regex,$text = null) {
 	}
 	
 	//Converts an array into a regex matching every element of the array
