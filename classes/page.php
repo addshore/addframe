@@ -667,11 +667,13 @@ class Page {
 		foreach ($config['mitag'] as $tag)
 		{
 			//if the tag can be found without a date
-			if($this->matches('/\{\{(Template:)?'.$tag->regexName().'\}\}/i'))
+			if($this->matches('/\{\{(Template:)?'.$tag->regexName().'/i'))
 			{
+				//name to the main template
+				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'/i',"{{".$tag->getName(),$text);
 				//then date it
 				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'\}\}/i',"{{".$tag->getName()."|date=$date}}",$text);
-			};
+			}
 		}
 		
 		//If a tag has been dated
