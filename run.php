@@ -8,6 +8,7 @@ sleep(1);
 // load the classes and stuff
 require 'classes/botclasses.php';
 require 'classes/database.php';
+require 'classes/regex.php';
 require 'classes/page.php';
 require 'classes/template.php';
 require 'config.php';
