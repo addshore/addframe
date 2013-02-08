@@ -208,7 +208,7 @@ class Page {
 				return true;
 			}
 		}
-		//Otherwise we cant gues
+		//Otherwise we cant guess
 		return null;
 	}
 	
@@ -281,8 +281,8 @@ class Page {
 				$split = preg_split('/\|/',$link);
 				$link = $split[0];
 			}
-			//If we cont link to another namespace
-			if (preg_match('/:/',$link) == 0){
+			//if it doesnt linked to another namespace
+			if (preg_match('/((Talk|User|Wikipedia|File|Image|Mediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?):/i',$link) == 0){
 				$count++;
 			}
 		}
