@@ -34,12 +34,12 @@ class Template {
 		return "{{".$this->getName()."}}";
 	}
 	
-	//returns the regex for matching whole template and args
+	//Returns the regex for matching the whole template and up to 6 arguments (not including 'sections'
 	public function regexTemplate() {
 		return '\{\{'.$this->regexName().$this->rege->templateargs(6,null,null,"sect(ions?)?").'\}\}(\r|\n){0,3}';
 	}
 	
-	//matches in the old style of MI tag
+	//Matches the template as an argument (used in the old MI style
 	public function regexTempIssues() {
 		return $this->rege->templatearg($this->regexName(),$this->rege->date()).'(\r|\n){0,1}';
 	}

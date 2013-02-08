@@ -266,7 +266,6 @@ class Page {
 		$count = 0;
 		// match links to articles
 		preg_match_all('/'.$this->rege->wikilink().'/i',$this->getcheckText(), $links, PREG_PATTERN_ORDER);
-		print_r($links);sleep(999);
 		foreach($links[1] as $link){
 			//if this link has been renammed i.e. [[User:Addbot|Bot]]
 			if(preg_match('/\|/',$link) != 0){
