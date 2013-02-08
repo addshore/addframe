@@ -547,7 +547,8 @@ class Page {
 	{
 		global $config;
 		//parse the page
-		$mi = Array();
+		$mi['name'] = Array();
+		$mi['date'] = Array();
 		$this->parse(); // work with $this->parsed;
 		//for each template on the page
 		foreach($this->parsed['wikObject_templates'] as $x)
@@ -562,11 +563,39 @@ class Page {
 					//the parse accordingly
 					foreach($x->arguments as $tagarg)
 					{
-						//PARSE AND PUT INTO ARRAY $mi
-						echo "\n\n".$tagarg."\n\n";
-						sleep(999);
+						$each = explode("\n",$tagarg);
+						foreach ($each as $tag)
+						{
+							if(preg_match('/\{\{([^\|]+)\|.*?date ?= ?((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])/i',$tag,$matches))
+							{
+								if(!in_array($matches[1],$mi['name']))
+								{
+									//add it
+									$mi['name'][$c] = $matches[1];
+									$mi['date'][$c] = $matches[2];
+									$c++;
+								}
+								else
+								{
+									//find which date is oldest and keep it
+									if(strtotime($matches[2]) < strtotime($mi['date'][$c]))
+									{
+										//change the date
+										$mi['date'][$c] = $matches[2];
+									}
+								}
+							}
+						}
 					}
+				//find our new MI tag
+				$torep = "{{Multiple issues|\n"
+				foreach($mi['name'] as $key => $name)
+				{
+					$torep.= "{{".$mi['name'][$key]."|date=".$mi['date'][$key]."}}\n"
 				}
+				$torep .= "}}";
+				//replace the old with the new
+				$this->setText(str_replace($x->rawCode,$torep,$this->getText()));
 			}
 		}
 
