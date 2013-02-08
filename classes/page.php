@@ -542,6 +542,36 @@ class Page {
 
 	}
 	
+	//parse MI tag, add tags to MI, remove MI if not needed
+	public function multipleIssuesDupes()
+	{
+		global $config;
+		//parse the page
+		$mi = Array();
+		$this->parse(); // work with $this->parsed;
+		//for each template on the page
+		foreach($this->parsed['wikObject_templates'] as $x)
+		{
+			//make sure the template is not surrounded by comment tags
+			if(!preg_match('/<!--.*?'.preg_quote($x->rawCode,'/').'.*?-->/is',$this->getText()))
+			{
+				//does it match the MI template
+				if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
+				{					
+					$c = 0;
+					//the parse accordingly
+					foreach($x->arguments as $tagarg)
+					{
+						//PARSE AND PUT INTO ARRAY $mi
+						echo "\n\n".$tagarg."\n\n";
+						sleep(999);
+					}
+				}
+			}
+		}
+
+	}
+	
 	//http://en.wikipedia.org/w/index.php?title=Wikipedia:AutoEd/whitespace.js&action=raw&ctype=text/javascript
 	public function fixWhitespace()
 	{

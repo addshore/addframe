@@ -114,6 +114,7 @@ foreach ($list as $item)
 				//Pre Processing
 				$page->preChecks();
 				$page->multipleIssues();
+				$page->multipleIssuesDupes();
 				$isorphan = $page->isOrphan();
 				$isuncat = $page->isUncat();
 				$isdeadend = $page->isDeadend();
