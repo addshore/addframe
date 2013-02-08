@@ -121,11 +121,18 @@ foreach ($list as $item)
 			
 				//EMPTYSECTIONS
 				$max = 10;
-				while ($page->matches('/(={2,7})([^=]+)\1(\s+)\1([^=]+)\1/') && $max > 0)
+				//Check for empty sections that are now the references section
+				while ($page->matches('/(={2,7})((?!References)[^=]+)\1(\s+)\1([^=]+)\1/i') && $max > 0)
 				{
 					$max--;
 					$page->setText(preg_replace('/(={2,7})([^=]+)\1(\s+)\1([^=]+)\1/',"$1$2$1\n".$config['tag']['emptysection']->getPost()."\n\n$1$4$1",$page->getText()));
 					$page->addSummary("Adding {{".$config['tag']['emptysection']->getName()."}}");
+				}
+				//if we have an empty references section
+				if($page->matches('/(={2,7})((?!References)[^=]+)\1(\s+)\1([^=]+)\1/i'))
+				{
+					$page->setText(preg_replace('/(={2,7})((?!References)[^=]+)\1(\s+)\1([^=]+)\1/i',"$1$2$1\n"."{{reflist}}"."\n\n$1$4$1",$page->getText()));
+					$page->addSummary("Adding {{reflist}}");
 				}
 			
 				//STUB TAG
