@@ -16,26 +16,13 @@ class Regex {
 	//$val = value for parameter (if not set can match anything)
 	//$exc = regex to exclude from the parameter name if param name is not set
 	function templatearg($par = null, $val = null,$exc = null) {
-		if($par != null && $val != null)
-		{
-			return '(\|('.$par.' ?= ?)?('.$val.'))';
-		}
-		elseif($val == null)
-		{
-			return '(\|('.$par.' ?= ?= ?)?([0-9a-zA-Z _]*?))';
-		}
-		elseif($par == null)
-		{
-			//if nothing is set to be excluded
-			if($exc == null)
-			{
-				return '(\|([0-9a-zA-Z _]*? ?= ?)?('.$val.'))';
-			}
-			else
-			{
-				return '(\|(?!'.$exc.')([0-9a-zA-Z _]*? ?= ?)?('.$val.'))';
-			}
-		}
+		if(!isset($par)){$par = "[0-9a-zA-Z _]*?";}
+		else{}
+		if(!isset($val)){$val = "[0-9a-zA-Z _]*?";}
+		else{}
+		if(!isset($exc)){$exc = "";}
+		else{$exc = "(?!".$exc.")"}
+		return '(\|'.$exc.'('.$par.' ?= ?)?('.$val.'))';
 		
 	}
 	
