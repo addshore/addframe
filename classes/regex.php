@@ -54,8 +54,10 @@ class Regex {
 		}
 		$r = rtrim($r, "|");
 		$r .= ")";
+		return $r;
 	}
 	
+	/*
 	//Returns a regex for if the given regex were in nowiki tags
 	//$regex = regex to look for inside of other regex
 	//$start = regex matching the start of thing to look for e.g. '(<!--)'
@@ -64,17 +66,17 @@ class Regex {
 	function inside($regex,$start = "(<!--|<nowiki>)",$end = "(-->|<\/nowiki>)") {
 		return '((?!'.$start.')(.*?)'.$regex.'(?!'.$end.')(.*?))';
 	}
+	*/
 	
 	//Converts an array into a regex matching every element of the array
 	//$array = array to convert
 	function arraytoregex($array) {
-		$r = "(";
 		foreach($array as $part)
 		{
 			$r .= $this->stringtoregex($part).'|';
 		}
-		$r = rtrim($r, "|");
-		$r .= ")";
+		$r = trim($r, "|");
+		$r = "(".$r.")";
 		return $r;
 		
 	}
