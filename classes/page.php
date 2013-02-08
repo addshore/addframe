@@ -15,6 +15,7 @@ class Page {
 	// variables
 	private $page;// page name (e.g. "User:Addshore")
 	private $text;// page text
+	private $checktext; //this is a temporary copy of the text that can be checked against with comments and nowiki content removed.
 	private $namespace;// page namespace (No colon)
 	private $wiki;// instance of wiki we are using
 	private $parser;// instance of the parser.php class
@@ -26,6 +27,7 @@ class Page {
 	// getters and setters
 	public function getName() { return $this->page; }
 	public function getText() { return $this->text;}
+	public function getcheckText() { return $this->checktext;}
 	public function setText($text) { $this->text = $text;}
 	public function getNamespace() { if(!isset($this->namespace)){$this->parseNamespace();} return $this->namespace;}
 	public function hasSigchange() { return $this->sigchange; }
@@ -35,7 +37,11 @@ class Page {
 	public function parse() { $this->parser = new parser($this->getName(),$this->getText()); $this->parsed = $this->parser->parse(); return $this->parsed;} 
 	
 	// private functions
-	private function loadText() { $this->text = $this->wiki->getpage($this->getName());} // load the text from the wiki
+	private function loadText() { 
+		$text = $this->wiki->getpage($this->getName());
+		$this->text = $text;//our actual text
+		$this->checktext = preg_replace("/<nowiki>.*?<\/nowiki>|<!--.*?-->)/is","",$text); //text with nonwiki but wiki elements removed
+	} // load the text from the wiki
 	private function postPage() { $this->wiki->edit($this->getName(),$this->getText(),$this->getSummary(),true);} 
 	private function parseNamespace()
 	{
@@ -259,7 +265,8 @@ class Page {
 	{
 		$count = 0;
 		// match links to articles
-		preg_match_all('/'.$this->rege->inside($this->rege->wikilink()).'/i',$this->getText(), $links, PREG_PATTERN_ORDER);
+		preg_match_all('/'.$this->rege->wikilink().'/i',$this->getcheckText(), $links, PREG_PATTERN_ORDER);
+		print_r($links);sleep(999);
 		foreach($links[1] as $link){
 			//if this link has been renammed i.e. [[User:Addbot|Bot]]
 			if(preg_match('/\|/',$link) != 0){
