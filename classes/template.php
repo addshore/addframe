@@ -34,33 +34,21 @@ class Template {
 		return "{{".$this->getName()."}}";
 	}
 	
-	//Regexs
 	//returns the regex for matching whole template and args
 	public function regexTemplate() {
 		return '\{\{'.$this->regexName().$this->rege->templateargs(6,null,null,"sect(ions?)?").'\}\}(\r|\n){0,3}';
-		//return '\{\{'.$this->regexName().$this->regexArgs().'\}\}(\r|\n){0,3}'; //changed to use regex.php
 	}
 	
 	//matches in the old style of MI tag
 	public function regexTempIssues() {
 		return $this->rege->templatearg($this->regexName(),$this->rege->date()).'(\r|\n){0,1}';
-		//return '\| ?'.$this->regexName().' ?= ?'.$this->dateregex.'(\r|\n){0,1}'; //changed to use regex.php
 	}
 	
 	//returns the regex part for template name and redirects
 	public function regexName() {
 		return $this->rege->arraytoregex($this->redirects);
-		//changed to use regex.php
-		//$string = '('.$this->name."|".implode('|',$this->redirects).')';
-		//return preg_replace("/(\|\||\|\))/",")",$string);//remove any extra room in regex
 	}
 	
-	/* //changed to use regex.php
-	//returns the regex part for arguments of a template
-	private function regexArgs() {
-		//return '(\|([0-9a-zA-Z _]*? ?= ?)?([0-9a-zA-Z _]*?)){0,6}';
-		return '(\|(?!sect(ions?)?)([0-9a-zA-Z _]*? ?= ?)?([0-9a-zA-Z _]*?)){0,6}';//ignore templates with sections params
-	}*/
 	
 	//returns regex part matching when not to add the tag
 	public function regexNotif() {
