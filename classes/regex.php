@@ -17,7 +17,7 @@ class Regex {
 	public function templatearg($par = null, $val = null,$exc = null) {
 		if($par != null && $val != null)
 		{
-			return '(\|('.$par.' ?= ?)?('$val'))';
+			return '(\|('.$par.' ?= ?)?('.$val.'))';
 		}
 		elseif($val == null)
 		{
@@ -28,11 +28,11 @@ class Regex {
 			//if nothing is set to be excluded
 			if($exc == null)
 			{
-				return '(\|([0-9a-zA-Z _]*? ?= ?)?('$val'))';
+				return '(\|([0-9a-zA-Z _]*? ?= ?)?('.$val.'))';
 			}
 			else
 			{
-				return '(\|(?!'.$exc.')([0-9a-zA-Z _]*? ?= ?)?('$val'))';
+				return '(\|(?!'.$exc.')([0-9a-zA-Z _]*? ?= ?)?('.$val.'))';
 			}
 		}
 		
@@ -48,10 +48,10 @@ class Regex {
 		//Loop through how many arguments we want
 		for ($i = 1; $i <= $count; $i++)
 		{
-			$arg = $this->templatearg($par[$i],$val[$i],$exc)
+			$arg = $this->templatearg($par[$i],$val[$i],$exc);
 			$r .= $arg."|";
 		}
-		$r = rtrim($r, "|")
+		$r = rtrim($r, "|");
 		$r .= ")";
 	}
 	
@@ -72,8 +72,8 @@ class Regex {
 		{
 			$r .= $this->stringtoregex($part).'|';
 		}
-		$r = rtrim($r, "|")
-		$r .= ")"
+		$r = rtrim($r, "|");
+		$r .= ")";
 		return $r;
 		
 	}
