@@ -199,29 +199,33 @@ foreach ($list as $item)
 					//if there is at least 1
 					if ($isreferenced > 0)
 					{
-						$page->removeTag($config['mitag']['unreferenced']);
-						$page->removeTag($config['mitag']['blpunsourced']);
 						echo "-";
-					}
-					//are there so few we can add {{Refimprove}}?
-					if($isreferenced < 3)
-					{
-						//now check if it is a BLP to see if we want {{Refimprove}} or {{BLP sources}}
-						//Swap if they are currently incorrect
-						if($page->isBLP())
+						//are there so many refs that we can just remove it?
+						if($isreferenced > 3)
 						{
-							if($page->matches('/'.$config['mitag']['refimprove']->regexTemplate().'/i'))
-							{
-								$page->removeTag($config['mitag']['refimprove']);
-								$page->addTag($config['mitag']['blpsources']);
-							}
+							$page->removeTag($config['mitag']['unreferenced']);
+							$page->removeTag($config['mitag']['blpunsourced']);
 						}
+						//or do we need to change it to {{ref improve}}?
 						else
 						{
-							if($page->matches('/'.$config['mitag']['blpsources']->regexTemplate().'/i'))
+							//now check if it is a BLP to see if we want {{Refimprove}} or {{BLP sources}}
+							//Swap if they are currently incorrect
+							if($page->isBLP())
 							{
-								$page->removeTag($config['mitag']['blpsources']);
-								$page->addTag($config['mitag']['refimprove']);
+								if($page->matches('/'.$config['mitag']['refimprove']->regexTemplate().'/i'))
+								{
+									$page->removeTag($config['mitag']['refimprove']);
+									$page->addTag($config['mitag']['blpsources']);
+								}
+							}
+							else
+							{
+								if($page->matches('/'.$config['mitag']['blpsources']->regexTemplate().'/i'))
+								{
+									$page->removeTag($config['mitag']['blpsources']);
+									$page->addTag($config['mitag']['refimprove']);
+								}
 							}
 						}
 					}
