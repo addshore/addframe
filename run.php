@@ -113,6 +113,8 @@ foreach ($list as $item)
 		
 				//Pre Processing
 				$page->preChecks();
+				echo ".date";
+				$page->fixDateTags();// fix any tempaltes that need a date
 				$page->multipleIssues();
 				$page->multipleIssuesDupes();
 				$isorphan = $page->isOrphan();
@@ -123,11 +125,12 @@ foreach ($list as $item)
 				//EMPTYSECTIONS
 				$max = 10;
 				//Check for empty sections that are now the references section
+				echo ".emp";
 				while ($page->matches('/(={2,7})((?!References)[^=]+)\1(\s+)\1([^=]+)\1/i') && $max > 0)
 				{
 					$max--;
 					$page->setText(preg_replace('/(={2,7})([^=]+)\1(\s+)\1([^=]+)\1/',"$1$2$1\n".$config['tag']['emptysection']->getPost()."\n\n$1$4$1",$page->getText()));
-					$page->addSummary("Adding {{".$config['tag']['emptysection']->getName()."}}");
+					$page->addSummary("Adding {{".$config['tag']['emptysection']->getName()."}}"); echo"+";
 				}
 				//if we have an empty references section
 				if($page->matches('/(={2,7})((?!References)[^=]+)\1(\s+)\1([^=]+)\1/i'))
@@ -277,12 +280,6 @@ foreach ($list as $item)
 				//DEPRECIATED
 				echo ".dep";
 				$page->removeTag($config['tag']['wikify']);
-				
-				//TODO: add reflist
-				
-				//check if has empty section or tag in full section
-				echo ".date";
-				$page->fixDateTags();// fix any tempaltes that need a date
 				
 				//If the page has had another significant change
 				if($page->hasSigchange() === true)
