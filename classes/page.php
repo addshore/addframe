@@ -616,7 +616,7 @@ class Page {
 		$this->text = preg_replace('/\{\{'.$config['mitag']['unreferenced']->regexName().'\|section\}\}/i', "{{Unreferenced section}}", $this->text );
 		
 		if(!$this->matches('/\{\{reflist/i'))
-		{$this->text = preg_replace('/<references \/>/i',"{{reflist}}", $this->text );}
+		{$this->text = preg_replace('/<references ?\/>/i',"{{reflist}}", $this->text );}
 	
 	}
 	
