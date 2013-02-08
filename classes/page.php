@@ -9,7 +9,6 @@ class Page {
 		$this->wiki = $wiki;
 		$this->parseNamespace();
 		$this->loadText();//load the wikitext from page
-		$this->rege = new regex;
 	}	
 	
 	// variables
@@ -22,7 +21,6 @@ class Page {
 	private $parsed;
 	private $sigchange;//has a significant change happened to the page (enough to edit)?
 	private $summary;//summary if edited
-	private $rege;
 	
 	// getters and setters
 	public function getName() { return $this->page; }
@@ -273,7 +271,7 @@ class Page {
 	{
 		$count = 0;
 		// match links to articles
-		preg_match_all('/'.$this->rege->wikilink().'/i',$this->getcheckText(), $links, PREG_PATTERN_ORDER);
+		preg_match_all('/'.'\[\[([^]:]*)\]\]'.'/i',$this->getcheckText(), $links, PREG_PATTERN_ORDER);
 		foreach($links[1] as $link){
 			//if this link has been renammed i.e. [[User:Addbot|Bot]]
 			if(preg_match('/\|/',$link) != 0){

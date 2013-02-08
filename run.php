@@ -8,7 +8,6 @@ sleep(1);
 // load the classes and stuff
 require 'classes/botclasses.php';
 require 'classes/database.php';
-require 'classes/regex.php';
 require 'classes/page.php';
 require 'classes/template.php';
 require 'config.php';
@@ -429,8 +428,8 @@ foreach ($list as $item)
 			else
 			{
 				echo "\n> POST: ".$page->getSummary();
-				//$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
-				$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
+				$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+				//$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
 				sleep(30);//sleep after an edit
 			}
 		}
