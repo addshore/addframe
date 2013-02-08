@@ -370,7 +370,7 @@ class Page {
 	{
 		if(preg_match($regex,$this->getText()))//make sure the regex is actually there
 		{//if it is remove and say so
-			$this->text = preg_replace($regex,"",preg_replace($regex,"",$this->getText()));
+			$this->setText(preg_replace($regex,"",preg_replace($regex,"",$this->getText())));
 			if($summary != null)
 			{//if summary not null then we can add a summary
 				$this->addSummary($summary);
@@ -428,9 +428,16 @@ class Page {
 			
 				//does it match the MI template
 				if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
-				{
+				{					
+					//IS the MI tag empty?
+					if(preg_match('/\{\{(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)\|?\s*?\}\}/is',$x->rawCode))
+					{
+						//remove and stop
+						$this->text = preg_replace('/\{\{(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)\|?\s*?\}\}/is',"",$this->getText());
+						return null;
+					}
 					//does it match the old style of use (no new style at all)
-					if(preg_match('/\{\{(multiple ?issues|article ?issues|mi)\s*\|([^{]+)\}\}/i',$x->rawCode))
+					elseif(preg_match('/\{\{(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)\s*\|([^{]+)\}\}/i',$x->rawCode))
 					{
 						//then parse accordingly
 						foreach($x->arguments as $tagarg)
@@ -546,6 +553,9 @@ class Page {
 		$this->text = preg_replace('/^(={1,4} )[ ]*([^= ][^=]*[^= ])[ ]*( ={1,4})$/m',"$1$2$3", $this->getText() );
 		$this->text = preg_replace('/^(={1,4})([^= ][^=]*[^= ])[ ]+(={1,4})$/m',"$1$2$3", $this->getText() );
 		$this->text = preg_replace('/^(={1,4})[ ]+([^= ][^=]*[^= ])(={1,4})$/m',"$1$2$3", $this->getText() );
+		
+		//remove leading white space
+		$this->text = preg_replace('/^(\n|\r){0,5}/',"", $this->getText() );
 	}
 	
 	public function fixTemplates()
