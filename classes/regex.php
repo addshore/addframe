@@ -21,7 +21,7 @@ class Regex {
 		if(!isset($val)){$val = "[0-9a-zA-Z _]*?";}
 		else{}
 		if(!isset($exc)){$exc = "";}
-		else{$exc = "(?!".$exc.")"}
+		else{$exc = "(?!".$exc.")";}
 		return '(\|'.$exc.'('.$par.' ?= ?)?('.$val.'))';
 		
 	}

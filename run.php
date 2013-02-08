@@ -272,6 +272,7 @@ foreach ($list as $item)
 				//If the page has had another significant change
 				if($page->hasSigchange() === true)
 				{
+					
 					//GENERAL CHANGES
 					echo ".gen";
 					$page->fixTemplates();
