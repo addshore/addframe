@@ -6,6 +6,10 @@ class Regex {
 	function date(){
 		return '((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])';
 	}
+	//returns regex matching any wikilink
+	function wikilink(){
+		return '\[\[([^]:]*)\]\]';
+	}
 	
 	//Returns regex matching a single argument of a template '|date = July 2012'
 	//$par = parameter name (if not set can match anything)
