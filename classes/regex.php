@@ -1,20 +1,17 @@
 <?
 
 class Regex {
-
-	public function __construct() {
-	}	
 	
 	//returns regex matching dates that can be used in templates
-	public function dateregex(){
-	return '((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])';
+	function dateregex(){
+		return '((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])';
 	}
 	
 	//Returns regex matching a single argument of a template '|date = July 2012'
 	//$par = parameter name (if not set can match anything)
 	//$val = value for parameter (if not set can match anything)
 	//$exc = regex to exclude from the parameter name if param name is not set
-	public function templatearg($par = null, $val = null,$exc = null) {
+	function templatearg($par = null, $val = null,$exc = null) {
 		if($par != null && $val != null)
 		{
 			return '(\|('.$par.' ?= ?)?('.$val.'))';
@@ -43,7 +40,7 @@ class Regex {
 	//$par = Array of parameter name (if a value is not set can match anything)
 	//$value = Array of value for parameter (if a value is not set can match anything)
 	//$exc = regex to exclude from all parameter names if param name is not set
-	public function templateargs($count,$par = null, $val = null, $exc = null) {
+	function templateargs($count,$par = null, $val = null, $exc = null) {
 		$r = "(";
 		//Loop through how many arguments we want
 		for ($i = 1; $i <= $count; $i++)
@@ -60,13 +57,13 @@ class Regex {
 	//$start = regex matching the start of thing to look for e.g. '(<!--)'
 	//$end = regex matching end of thing to look for e.g. '(-->)'
 	//Defaults to nowiki and html comments
-	public function inside($regex,$start = "(<!--|<nowiki>)",$end = "(-->|<\/nowiki>)") {
+	function inside($regex,$start = "(<!--|<nowiki>)",$end = "(-->|<\/nowiki>)") {
 		return '((?!'.$start.')(.*?)'.$regex.'(?!'.$end.')(.*?))';
 	}
 	
 	//Converts an array into a regex matching every element of the array
 	//$array = array to convert
-	public function arraytoregex($array) {
+	function arraytoregex($array) {
 		$r = "(";
 		foreach($array as $part)
 		{
@@ -80,7 +77,7 @@ class Regex {
 	
 	//Converts an array into a regex matching every element of the array
 	//$array = array to convert
-	public function stringtoregex($string) {
+	function stringtoregex($string) {
 		return preg_quote($string,'/');
 	}
 	
