@@ -5,19 +5,6 @@ class Regex {
 	public function __construct() {
 	}	
 	
-	//Returns regex matching arguments of a template
-	//$exclude = regex of arguments to exclude from the regex
-	public function templateargs($exclude = null) {
-		if($exclude == null)
-		{
-			return $this->templatearg().'{0,6}';
-		}
-		else
-		{
-			return '(\|(?!'.$exclude.')([0-9a-zA-Z _]*? ?= ?)?([0-9a-zA-Z _]*?)){0,6}';
-		}
-	}
-	
 	//returns regex matching dates that can be used in templates
 	public function dateregex(){
 	return '((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])';
@@ -69,15 +56,12 @@ class Regex {
 	}
 	
 	//Returns a regex for if the given regex were in nowiki tags
-	//$regex = regex to look for inside of nowiki tags
-	//$text = text to look in (if not set just return the regex that is needed for check against)
-	public function innowiki($regex,$text = null) {
-	}
-	
-	//Returns a regex for if the given regex were in html comment tags
-	//$regex = regex to look for inside of html comment tags
-	//$text = text to look in (if not set just return the regex that is needed for check against)
-	public function incomment($regex,$text = null) {
+	//$regex = regex to look for inside of other regex
+	//$start = regex matching the start of thing to look for e.g. '(<!--)'
+	//$end = regex matching end of thing to look for e.g. '(-->)'
+	//Defaults to nowiki and html comments
+	public function inside($regex,$start = "(<!--|<nowiki>)",$end = "(-->|<\/nowiki>)") {
+		return '((?!'.$start.')(.*?)'.$regex.'(?!'.$end.')(.*?))';
 	}
 	
 	//Converts an array into a regex matching every element of the array
