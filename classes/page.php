@@ -514,7 +514,8 @@ class Page {
 				//Check the exact same thing is not already there
 				if(!strstr($mi,$tag))
 				{
-					$mi = $mi.$tag."\n";//add each tag
+					//TODO: now we want to make sure the same thing is not there just with a different date (also account for redirects)
+						$mi = $mi.$tag."\n";//add each tag
 				}
 			}
 			$mi = $mi."}}";//add the end of the tag
@@ -626,7 +627,7 @@ class Page {
 	
 	public function preChecks()
 	{
-	$this->text = str_ireplace("<!-- Automatically added by User:SoxBot. If this is an error, please contact User:Soxred93 -->","",$this->text);
+		$this->text = str_ireplace("<!-- Automatically added by User:SoxBot. If this is an error, please contact User:Soxred93 -->","",$this->text);
 	}
 }
 	 
