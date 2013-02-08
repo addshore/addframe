@@ -208,6 +208,8 @@ class Page {
 				return true;
 			}
 		}
+		//Otherwise we cant gues
+		return null;
 	}
 	
 	//returns true if page is in a given category

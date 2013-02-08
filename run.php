@@ -230,20 +230,24 @@ foreach ($list as $item)
 				//{{Unreferenced}} and {{BLP unsourced}} depending on Category:Living people
 				if ($page->matches('/'.$config['mitag']['unreferenced']->regexTemplate().'/i') || $page->matches('/'.$config['mitag']['blpunsourced']->regexTemplate().'/i'))
 				{
-					if($page->isBLP())
+					$blp = $page->isBLP();
+					if($blp != null)
 					{
-						if($page->matches('/'.$config['mitag']['unreferenced']->regexTemplate().'/i'))
+						if($blp)
 						{
-							$page->removeTag($config['mitag']['unreferenced']);
-							$page->addTag($config['mitag']['blpunsourced']);
+							if($page->matches('/'.$config['mitag']['unreferenced']->regexTemplate().'/i'))
+							{
+								$page->removeTag($config['mitag']['unreferenced']);
+								$page->addTag($config['mitag']['blpunsourced']);
+							}
 						}
-					}
-					else//else not int he cat
-					{
-						if($page->matches('/'.$config['mitag']['blpunsourced']->regexTemplate().'/i'))
+						else//else not int he cat
 						{
-							$page->removeTag($config['mitag']['blpunsourced']);
-							$page->addTag($config['mitag']['unreferenced']);
+							if($page->matches('/'.$config['mitag']['blpunsourced']->regexTemplate().'/i'))
+							{
+								$page->removeTag($config['mitag']['blpunsourced']);
+								$page->addTag($config['mitag']['unreferenced']);
+							}
 						}
 					}
 
