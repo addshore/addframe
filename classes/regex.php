@@ -57,17 +57,6 @@ class Regex {
 		return $r;
 	}
 	
-	/*
-	//Returns a regex for if the given regex were in nowiki tags
-	//$regex = regex to look for inside of other regex
-	//$start = regex matching the start of thing to look for e.g. '(<!--)'
-	//$end = regex matching end of thing to look for e.g. '(-->)'
-	//Defaults to nowiki and html comments
-	function inside($regex,$start = "(<!--|<nowiki>)",$end = "(-->|<\/nowiki>)") {
-		return '((?!'.$start.')(.*?)'.$regex.'(?!'.$end.')(.*?))';
-	}
-	*/
-	
 	//Converts an array into a regex matching every element of the array
 	//$array = array to convert
 	function arraytoregex($array) {
