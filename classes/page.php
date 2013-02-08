@@ -273,6 +273,7 @@ class Page {
 				$split = preg_split('/\|/',$link);
 				$link = $split[0];
 			}
+			//If we cont link to another namespace
 			if (preg_match('/:/',$link) == 0){
 				$count++;
 			}
