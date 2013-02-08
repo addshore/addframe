@@ -21,9 +21,6 @@ $wiki = new wikipedia;
 $wiki->url = "http://".$config['url']."/w/api.php";
 global $wiki;
 
-$rege = new regex;
-global $rege;
-
 echo "\nLogging in...";
 sleep(1);echo "..";
 
