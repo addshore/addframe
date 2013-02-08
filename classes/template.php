@@ -43,7 +43,7 @@ class Template {
 	
 	//matches in the old style of MI tag
 	public function regexTempIssues() {
-		return $this->rege->templatearg($this->regexName(),$this->rege->dateregex()).'(\r|\n){0,1}';
+		return $this->rege->templatearg($this->regexName(),$this->rege->date()).'(\r|\n){0,1}';
 		//return '\| ?'.$this->regexName().' ?= ?'.$this->dateregex.'(\r|\n){0,1}'; //changed to use regex.php
 	}
 	

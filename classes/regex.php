@@ -3,7 +3,7 @@
 class Regex {
 	
 	//returns regex matching dates that can be used in templates
-	function dateregex(){
+	function date(){
 		return '((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])';
 	}
 	
