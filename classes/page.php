@@ -509,7 +509,11 @@ class Page {
 			$mi = "{{Multiple issues|\n";//start mi
 			foreach ($split as $tag)
 			{
-				$mi = $mi.$tag."\n";//add each tag
+				//Check the exact same thing is not already there
+				if(!strstr($mi,$tag))
+				{
+					$mi = $mi.$tag."\n";//add each tag
+				}
 			}
 			$mi = $mi."}}";//add the end of the tag
 		}
