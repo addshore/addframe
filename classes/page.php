@@ -273,7 +273,7 @@ class Page {
 	{
 		$count = 0;
 		// match links to articles
-		preg_match_all('/'.'\[\[([^]:]*)\]\]'.'/i',$this->getcheckText(), $links, PREG_PATTERN_ORDER);
+		preg_match_all('/\[\[([^]]+)\]\]/i',$this->getcheckText(), $links, PREG_PATTERN_ORDER);
 		foreach($links[1] as $link){
 			//if this link has been renammed i.e. [[User:Addbot|Bot]]
 			if(preg_match('/\|/',$link) != 0){
@@ -282,7 +282,7 @@ class Page {
 				$link = $split[0];
 			}
 			//if it doesnt linked to another namespace
-			if (preg_match('/((Talk|User|Wikipedia|File|Image|Mediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?):/i',$link) == 0){
+			if (!preg_match('/((Talk|User|Wikipedia|File|Image|Mediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?):/i',$link)){
 				$count++;
 			}
 		}
