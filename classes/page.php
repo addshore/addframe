@@ -40,7 +40,7 @@ class Page {
 	private function loadText() { 
 		$text = $this->wiki->getpage($this->getName());
 		$this->text = $text;//our actual text
-		$this->checktext = preg_replace("/<nowiki>.*?<\/nowiki>|<!--.*?-->)/is","",$text); //text with nonwiki but wiki elements removed
+		$this->checktext = preg_replace("/(<nowiki>.*?<\/nowiki>|<!--.*?-->)/is","",$text); //text with nonwiki but wiki elements removed
 	} // load the text from the wiki
 	private function postPage() { $this->wiki->edit($this->getName(),$this->getText(),$this->getSummary(),true);} 
 	private function parseNamespace()
@@ -597,7 +597,7 @@ class Page {
 		//Templates
 		$this->text = preg_replace('/\{\{'.$config['mitag']['unreferenced']->regexName().'\|section\}\}/i', "{{Unreferenced section}}", $this->text );
 		
-		if(!$this->matches('/\{\{reflist\}\}/i'))
+		if(!$this->matches('/\{\{reflist/i'))
 		{$this->text = preg_replace('/<references \/>/i',"{{reflist}}", $this->text );}
 	
 	}
