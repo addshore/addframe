@@ -284,7 +284,7 @@ class Page {
 			//if it doesnt linked to another namespace
 			if (!preg_match('/((Talk|User|Wikipedia|File|Image|Mediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?):/i',$link)){
 				//and it does look like something we would expect
-				if(preg_match('/(^:|^w:|^[^:]+$)/i'),$link)
+				if(preg_match('/(^:|^w:|^[^:]+$)/i',$link))
 				{
 					//count it
 					$count++;
