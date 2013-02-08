@@ -587,15 +587,20 @@ class Page {
 							}
 						}
 					}
-				//find our new MI tag
-				$torep = "{{Multiple issues|\n"
-				foreach($mi['name'] as $key => $name)
-				{
-					$torep.= "{{".$mi['name'][$key]."|date=".$mi['date'][$key]."}}\n"
+					//find our new MI tag
+					$torep = "{{Multiple issues|\n";
+					foreach($mi['name'] as $key => $name)
+					{
+						$torep.= "{{".$mi['name'][$key]."|date=".$mi['date'][$key]."}}\n";
+					}
+					$torep .= "}}";
+					//replace the old with the new
+					if($x->rawCode != $torep)
+					{
+						$this->setText(str_replace($x->rawCode,$torep,$this->getText()));
+						$this->addSummary("Fixing {{Multiple issues}}");
+					}
 				}
-				$torep .= "}}";
-				//replace the old with the new
-				$this->setText(str_replace($x->rawCode,$torep,$this->getText()));
 			}
 		}
 
