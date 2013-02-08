@@ -74,7 +74,7 @@ class Template {
 	private function arraytoregex($array) {
 		foreach($array as $part)
 		{
-			$r .= preg_quote($part,'/').' ?|';
+			$r .= preg_quote($part,'/').' *?|';
 		}
 		$r = trim($r, "|");
 		$r = "(".$r.")";
