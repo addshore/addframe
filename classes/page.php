@@ -422,6 +422,7 @@ class Page {
 		$removed = 0;
 		$hat = "";//for storing nay hat notes in
 		$mi = "";//this will be used to store what we want to add to the page
+		$hadMI = null;//did we have MI tag before this check?
 		//parse the page
 		$this->parse(); // work with $this->parsed;
 		//for each template on the page
@@ -433,7 +434,8 @@ class Page {
 			
 				//does it match the MI template
 				if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
-				{					
+				{
+					$hadMI = true;
 					//IS the MI tag empty?
 					if(preg_match('/\{\{(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)\|?\s*?\}\}/is',$x->rawCode))
 					{
@@ -524,6 +526,10 @@ class Page {
 				}
 			}
 			$mi = $mi."}}";//add the end of the tag
+			if($hadMI)
+			{
+				$this->addSummary("Adding {{Multiple issues}}");
+			}
 		}
 		//if only 1 we dont want to use multiple issues
 		elseif(count($split) == 1)
@@ -598,7 +604,7 @@ class Page {
 					if($x->rawCode != $torep)
 					{
 						$this->setText(str_replace($x->rawCode,$torep,$this->getText()));
-						$this->addSummary("Fixing {{Multiple issues}}");
+						$this->addSummary("Removing Duplicate tags");
 					}
 				}
 			}
