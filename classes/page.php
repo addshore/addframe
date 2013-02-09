@@ -555,6 +555,7 @@ class Page {
 		//parse the page
 		$mi['name'] = Array();
 		$mi['date'] = Array();
+		$mi['params'] = Array();
 		$this->parse(); // work with $this->parsed;
 		//for each template on the page
 		foreach($this->parsed['wikObject_templates'] as $x)
@@ -572,13 +573,14 @@ class Page {
 						$each = explode("\n",$tagarg);
 						foreach ($each as $tag)
 						{
-							if(preg_match('/\{\{([^\|]+)\|.*?date ?= ?((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])/i',$tag,$matches))
+							if(preg_match('/\{\{([^\|]+)(.*?)\|date ?= ?((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])(.*?)\}\}/i',$tag,$matches))
 							{
 								if(!in_array($matches[1],$mi['name']))
 								{
 									//add it
 									$mi['name'][$c] = $matches[1];
-									$mi['date'][$c] = $matches[2];
+									$mi['date'][$c] = $matches[3];
+									$mi['params'][$c] = $matches[2].$matches[5];
 									$c++;
 								}
 								else
@@ -588,6 +590,12 @@ class Page {
 									{
 										//change the date
 										$mi['date'][$c] = $matches[2];
+										//and if no parameters were given before
+										if($mi['params'][$c] == "")
+										{
+											//give ours
+											$mi['params'][$c] = $matches[2].$matches[5];
+										}
 									}
 								}
 							}
@@ -597,14 +605,14 @@ class Page {
 					$torep = "{{Multiple issues|\n";
 					foreach($mi['name'] as $key => $name)
 					{
-						$torep.= "{{".$mi['name'][$key]."|date=".$mi['date'][$key]."}}\n";
+						$torep.= "{{".$mi['name'][$key].$mi['params'][$key]."|date=".$mi['date'][$key]."}}\n";
 					}
 					$torep .= "}}";
 					//replace the old with the new
-					if($x->rawCode != $torep)
+					if(strlen($x->rawCode)-10 > strlen($torep))
 					{
 						$this->setText(str_replace($x->rawCode,$torep,$this->getText()));
-						$this->addSummary("Removing Duplicate tags");
+						$this->addSummary("Removing Duplicates");
 					}
 				}
 			}
