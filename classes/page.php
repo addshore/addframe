@@ -438,7 +438,7 @@ class Page {
 				if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
 				{
 					//Update hadMI if not already set
-					if($this->hadMI == null){$this->hadMI = true;}
+					if($this->hadMI === null){$this->hadMI = true;}
 					//IS the MI tag empty?
 					if(preg_match('/\{\{(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)\|?\s*?\}\}/is',$x->rawCode))
 					{
@@ -493,7 +493,7 @@ class Page {
 				elseif(preg_match('/^(Template:)?(Hatnote|Reflink|Main(( |_)list)?|Details3?|See( |_)also2?|Further2?|About|Other( |_)uses-section|For|((Two|Three) )?Other( |_)uses|Other uses of|Redirect[0-1]?[0-9]|Redirect(-|_| )(synomym|text|distinguish2?)|Consider( |_)disambiguation|Other( |_)(uses|people|places|hurricanes|ships|)[1-5]?|(Redirect-)Distinguish|Selfref|Category( |_)(see also|explanation|pair)|Cat( |_)main|cat(preceding|succeeding)|contrast|This( |_)user( |_)talk)/i',$x->name))
 				{
 					//make sure the hat note is not under a section
-					if(!preg_match('/\n==.*?{{'.$x->rawCode.'/is',$this->getText()))
+					if(!preg_match('/\n==.*?{{'.$x->name.'/is',$this->getText()))
 					{
 						//remember our hatnotes
 						$hat = $hat.$x->rawCode."\n";
@@ -525,7 +525,7 @@ class Page {
 		}
 		
 		//Update hadMI if not already set
-		if($this->hadMI == null){$this->hadMI = false;}
+		if($this->hadMI === null){$this->hadMI = false;}
 		
 		//crappy way to make sure we split at every tag
 		$mi = preg_replace('/\}\}/',"}}\n",$mi);
