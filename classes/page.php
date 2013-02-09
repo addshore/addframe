@@ -446,17 +446,6 @@ class Page {
 						$this->text = preg_replace('/\{\{(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)\|?\s*?\}\}/is',"",$this->getText());
 						return null;
 					}
-					//does it match the old style of use (no new style at all)
-					elseif(preg_match('/\{\{(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)\s*\|([^{]+)\}\}/i',$x->rawCode))
-					{
-						//then parse accordingly
-						foreach($x->arguments as $tagarg)
-						{
-							$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n";
-						}
-						$removed = $removed + $x->attributes['length'];
-						$this->text = str_replace($x->rawCode,'',$this->getText());
-					}
 					else//else we must be a new MI style (or a mixture of both)
 					{
 						//the parse accordingly
