@@ -9,7 +9,7 @@ class Page {
 		$this->wiki = $wiki;
 		$this->parseNamespace();
 		$this->loadText();//load the wikitext from page
-		$this->hadMI = false; //set default until checked
+		$this->hadMI; //set default until checked
 	}	
 	
 	// variables
@@ -437,7 +437,8 @@ class Page {
 				//does it match the MI template
 				if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
 				{
-					$this->hadMI = true;
+					//Update hadMI if not already set
+					if($this->hadMI == null){$this->hadMI = true;}
 					//IS the MI tag empty?
 					if(preg_match('/\{\{(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)\|?\s*?\}\}/is',$x->rawCode))
 					{
@@ -481,7 +482,7 @@ class Page {
 					$mi = preg_replace("/\n/","",$mi);//get rid of new lines
 				}
 				//else do we match any hatnotes
-				elseif(preg_match('/\{\{(Template:)?(Hatnote|Reflink|Main(( |_)list)?|Details3?|See( |_)also2?|Further2?|About|Other( |_)uses-section|for|((Two|Three) )?Other( |_)uses|Other uses of|Redirect[0-1]?[0-9]|Redirect(-|_| )(synomym|text|distinguish2?)|Consider( |_)disambiguation|Other( |_)(uses|people|places|hurricanes|ships|)[1-5]?|(Redirect-)Distinguish|Selfref|Category( |_)(see also|explanation|pair)|Cat( |_)main|cat(preceding|succeeding)|contrast|This( |_)user( |_)talk)(\||\}\})/i',$x->name))
+				elseif(preg_match('/(Template:)?(Hatnote|Reflink|Main(( |_)list)?|Details3?|See( |_)also2?|Further2?|About|Other( |_)uses-section|for|((Two|Three) )?Other( |_)uses|Other uses of|Redirect[0-1]?[0-9]|Redirect(-|_| )(synomym|text|distinguish2?)|Consider( |_)disambiguation|Other( |_)(uses|people|places|hurricanes|ships|)[1-5]?|(Redirect-)Distinguish|Selfref|Category( |_)(see also|explanation|pair)|Cat( |_)main|cat(preceding|succeeding)|contrast|This( |_)user( |_)talk)/i',$x->name))
 				{
 					//remember our hatnotes 
 					$hat = $hat.$x->rawCode."\n";
@@ -509,6 +510,10 @@ class Page {
 				}
 			}
 		}
+		
+		//Update hadMI if not already set
+		if($this->hadMI == null){$this->hadMI = false;}
+		
 		//crappy way to make sure we split at every tag
 		$mi = preg_replace('/\}\}/',"}}\n",$mi);
 		//split into each tag (might be joined if from MI)
@@ -620,7 +625,7 @@ class Page {
 					if(strlen($x->rawCode)-10 > strlen($torep))
 					{
 						$this->setText(str_replace($x->rawCode,$torep,$this->getText()));
-						$this->addSummary("Removing Duplicates");
+						$this->addSummary("Removing Duplicate tags");
 					}
 				}
 			}
