@@ -487,7 +487,7 @@ class Page {
 					//remember our hatnotes 
 					$hat = $hat.$x->rawCode."\n";
 					//remove the hatnote matched (we will re add later)
-					$this->text = substr($this->getText(),"",$x->attributes['start']-$removed,$x->attributes['length']);
+					$this->text = str_replace($x->rawCode,'',$this->getText());
 				}
 				else// else if we match a tag to go in MI
 				{
