@@ -451,16 +451,35 @@ class Page {
 						//the parse accordingly
 						foreach($x->arguments as $tagarg)
 						{
-							if(!preg_match('/\{/',$tagarg))//if the arg is old style
+							if(!preg_match('/\{/',$tagarg))//if the arg is old style, add it correctly
 							{
-								//add it correctly
-								$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n";
+								//if the tagarg doesnt have a date i.e. 'expert = canada' we need to get the date in the 'date = <DATE>' parameter
+								if(!preg_match('/(.*?) ?= ?((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])/i',$tagarg))
+								{
+									//add it with a <DATE> placeholder
+									$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|',$tagarg))."|date=<DATE>}}\n";
+								}
+								else//else it does have a date
+								{
+									//if it is not just a date
+									if(!preg_match('/^date ?= ?/i',$tagarg))
+									{
+										//add it normally
+										$mi = $mi."{{".trim(preg_replace('/ ?= ?/','|date=',$tagarg))."}}\n";
+									}
+									//else it must be a date
+									else
+									{
+										//dont add the date but replace <DATE> in the string with the date
+										$mi = str_replace("<DATE>",trim(preg_replace('/date ?= ?/','',$tagarg)),$mi);
+									}
+								}
 							}
 							else
 							{
 								//just add it 
 								//After a lot of research and testing it turns out the MI tag is allowed 1 parameter with templates in
-								//Although this can be in the same MI tag as non template old style paramemters
+								//Although this can be in the same MI tag as non template 'old style' paramemters
 								$mi = $mi.$tagarg;
 							}
 						}
