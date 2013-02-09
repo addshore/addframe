@@ -435,7 +435,7 @@ class Page {
 			{
 			
 				//does it match the MI template
-				if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
+				if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)$/i',$x->name))
 				{
 					//Update hadMI if not already set
 					if($this->hadMI === null){$this->hadMI = true;}
