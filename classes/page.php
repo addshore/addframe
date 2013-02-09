@@ -526,7 +526,7 @@ class Page {
 				}
 			}
 			$mi = $mi."}}";//add the end of the tag
-			if($hadMI)
+			if(!$hadMI)
 			{
 				$this->addSummary("Adding {{Multiple issues}}");
 			}
