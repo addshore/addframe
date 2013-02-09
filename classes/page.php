@@ -203,7 +203,7 @@ class Page {
 		foreach ($cats as $cat)
 		{
 			//If we are still running see if there is a BLP cat
-			if (preg_match('/^Category:(((Possibly )?Living|Missing) people$|[0-9]{0,4} births$|People from .*?|(place|year|date)of birth (missing|unknown))/i',$cat))
+			if (preg_match('/^Category:(Living people$|[0-9]{0,4} births$)/i',$cat))
 			{
 				return true;
 			}
