@@ -9,6 +9,7 @@ class Page {
 		$this->wiki = $wiki;
 		$this->parseNamespace();
 		$this->loadText();//load the wikitext from page
+		$this->hadMI = false; //set default until checked
 	}	
 	
 	// variables
@@ -21,6 +22,7 @@ class Page {
 	private $parsed;
 	private $sigchange;//has a significant change happened to the page (enough to edit)?
 	private $summary;//summary if edited
+	private $hadMI; //did the page have an MI tag when we loaded it
 	
 	// getters and setters
 	public function getName() { return $this->page; }
@@ -435,7 +437,7 @@ class Page {
 				//does it match the MI template
 				if(preg_match('/^(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)/i',$x->name))
 				{
-					$hadMI = true;
+					$this->hadMI = true;
 					//IS the MI tag empty?
 					if(preg_match('/\{\{(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)\|?\s*?\}\}/is',$x->rawCode))
 					{
@@ -526,7 +528,7 @@ class Page {
 				}
 			}
 			$mi = $mi."}}";//add the end of the tag
-			if(!$hadMI)
+			if($this->hadMI === false)
 			{
 				$this->addSummary("Adding {{Multiple issues}}");
 			}
@@ -536,6 +538,11 @@ class Page {
 		{
 			//just add the single tag
 			$mi = $split[0];
+			if($this->hadMI === true)
+			{
+				$this->addSummary("Removing {{Multiple issues}}");
+			}
+			
 		}
 		else
 		{
@@ -585,16 +592,17 @@ class Page {
 								}
 								else
 								{
+									$search = array_search($matches[1],$mi['name']);
 									//find which date is oldest and keep it
-									if(strtotime($matches[2]) < strtotime($mi['date'][$c]))
+									if(strtotime($matches[3]) < strtotime($mi['date'][$search]))
 									{
 										//change the date
-										$mi['date'][$c] = $matches[2];
+										$mi['date'][$search] = $matches[3];
 										//and if no parameters were given before
-										if($mi['params'][$c] == "")
+										if($mi['params'][$search] == "")
 										{
 											//give ours
-											$mi['params'][$c] = $matches[2].$matches[5];
+											$mi['params'][$search] = $matches[2].$matches[5];
 										}
 									}
 								}
