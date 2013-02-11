@@ -10,6 +10,7 @@ class Page {
 		$this->parseNamespace();
 		$this->loadText();//load the wikitext from page
 		$this->hadMI; //set default until checked
+		$this->runMI = 0; //the number of time MI has been run
 	}	
 	
 	// variables
@@ -23,6 +24,7 @@ class Page {
 	private $sigchange;//has a significant change happened to the page (enough to edit)?
 	private $summary;//summary if edited
 	private $hadMI; //did the page have an MI tag when we loaded it
+	private $runMI; //the number of times MI has been run
 	
 	// getters and setters
 	public function getName() { return $this->page; }
@@ -421,6 +423,7 @@ class Page {
 	public function multipleIssues()
 	{
 		global $config;
+		$this->runMI++;
 		$removed = 0;
 		$hat = "";//for storing nay hat notes in
 		$mi = "";//this will be used to store what we want to add to the page
@@ -439,6 +442,7 @@ class Page {
 				{
 					//Update hadMI if not already set
 					if($this->hadMI === null){$this->hadMI = true;}
+					
 					//IS the MI tag empty?
 					if(preg_match('/\{\{(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)\|?\s*?\}\}/is',$x->rawCode))
 					{
@@ -546,7 +550,7 @@ class Page {
 				}
 			}
 			$mi = $mi."}}";//add the end of the tag
-			if($this->hadMI === false)
+			if($this->hadMI === false && $this->runMI == 2)
 			{
 				$this->addSummary("Adding {{Multiple issues}}");
 			}
@@ -556,7 +560,7 @@ class Page {
 		{
 			//just add the single tag
 			$mi = $split[0];
-			if($this->hadMI === true)
+			if($this->hadMI === true && $this->runMI == 2)
 			{
 				$this->addSummary("Removing {{Multiple issues}}");
 			}
