@@ -554,7 +554,7 @@ class Page {
 				}
 			}
 			$mi = $mi."}}";//add the end of the tag
-			if($this->hadMI === false && $this->runMI == 2 && )
+			if($this->hadMI === false && $this->runMI == 2)
 			{
 				//if we have already had a sig change or we have more than 2 tags
 				if($this->sigchange == true || count($split) > 2)
