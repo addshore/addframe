@@ -14,17 +14,18 @@ $longopts  = array(
 
 // get the options the file was run with
 $option = getopt($shortopts, $longopts);
+$namespace = -1;
 
-if(!isset($option['source']) || !isset($option['method']))
+if(!isset($option['source']) || !isset($option['method'])){
 	echo "Invalid Input";
 	die();
-{
+}
 
 //try and parse the namespace
 if(isset($option['namespace']))
 {
 	try {
-		$namespace == intval($option['namespace']);
+		$namespace = intval($option['namespace']);
 	} catch (Exception $e) {
 		echo 'Caught exception in namespace: ',  $e->getMessage(), "\n";
 	}
@@ -57,7 +58,7 @@ if(preg_match("/^cat(egory(( |_|-)?members)?)?/i",$option['method'])){
 	$list = $wiki->categorymembers($option['source'],$recursive);
 }
 // get via a list on a page
-elseif(preg_match("/^(page)/i",$option['method'])){
+elseif(preg_match("/^(page|list)/i",$option['method'])){
 	$text = $wiki->getpage($option['source']); // get the page content
 	$text = preg_replace("/(\* ?\[\[|\]\])/","",$text); // remove all square brackets (wikilinks)
 	$list = explode("\n",$text); // explode into an array we can use
@@ -66,7 +67,7 @@ elseif(preg_match("/^(page)/i",$option['method'])){
 }
 // get via transclusions of the source
 elseif(preg_match("/^(template|trans(clusions?)?)/i",$option['method'])){
-	$list = $wiki->getTransclusions($option['source'],10); // sleep for 10 between requests
+	$list = $wiki->getTransclusions($option['source'],null); // sleep for 10 between requests
 }
 // get via a web list
 elseif(preg_match("/^(web|html)/i",$option['method'])){
@@ -93,7 +94,6 @@ if(isset($list))
 	// after the list has been generated
 	$final = array_unique($list); // make sure all of the elements is unique
 	
-	if(!isset($namespace)){$namespace = -1;} // default namespace is -1 (all)
 	/* Used for reference (en.wikipedia)
 	0	Main		Talk			1
 	2	User		User talk		3
