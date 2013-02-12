@@ -614,7 +614,7 @@ class Page {
 							if(preg_match('/\{\{([^\|]+)(.*?)\|date ?= ?((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])(.*?)\}\}/i',$tag,$matches))
 							{
 								//if its not already in the arry or it matches a template to ignore
-								if(!in_array($matches[1],$mi['name']) || preg_match('/((cleanup-)?expert(_| |-|)(attention|subject|article|portal|verify|))/i',$matches[1])
+								if(!in_array($matches[1],$mi['name']) || preg_match('/((cleanup-)?expert(_| |-|)(attention|subject|article|portal|verify|))/i',$matches[1]))
 								{
 									//add it
 									$mi['name'][$c] = $matches[1];
