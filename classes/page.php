@@ -709,6 +709,7 @@ class Page {
 		$text = $this->getText();
 		//get the current month and year
 		$date = date("F Y");
+		$month = date("F");
 		
 		//check each tag we have to see if it needs to be dated
 		foreach ($config['mitag'] as $tag)
@@ -716,7 +717,11 @@ class Page {
 			//if the tag can be found without a date
 			if($this->matches('/\{\{(Template:)?'.$tag->regexName().'/i'))
 			{
-				//then date it
+				//fix the date if we only have a year
+				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'|date ?= ?(20[0-9][0-9])\}\}/i',"{{".$tag->getName()."|date=$month $3}}",$text);
+				//fix the date if we only have a month
+				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'|date ?= ?(January|February|March|April|May|June|July|August|September|October|November|December)\}\}/i',"{{".$tag->getName()."|date=$date}}",$text);
+				//date tags with no args at all
 				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'\}\}/i',"{{".$tag->getName()."|date=$date}}",$text);
 			}
 		}
