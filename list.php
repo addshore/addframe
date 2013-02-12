@@ -7,12 +7,23 @@ $shortopts  = "";
 $shortopts .= "r::"; // recursive, use if we DONT want recursion when getting cats
 $longopts  = array(
     "trigger::",// trigger if needed for web
+	"namespace::",// whichnamespace to use
     "method:",// method to be used in terms of source
     "source:",// source to be used in method
 );
 
 // get the options the file was run with
 $option = getopt($shortopts, $longopts);
+
+//try and parse the namespace
+if(isset($option['namespace']))
+{
+	try {
+		$namespace == intval($option['namespace']);
+	} catch (Exception $e) {
+		echo 'Caught exception in namespace: ',  $e->getMessage(), "\n";
+	}
+}
 
 echo "loading...\n";
 sleep(1);
@@ -28,6 +39,11 @@ $wiki = new wikipedia;
 $wiki->url = 'http://'.$config['url'].'/w/api.php';
 global $wiki;
 
+// perform the login
+$wiki->login($config['user'],$config['password']);
+unset($config['password']);
+echo "done";
+
 echo "Get articles from ".$option['source']." using ".$option['method']."\n";
 sleep(1);
 // get via category members
@@ -38,8 +54,10 @@ if(preg_match("/^cat(egory(( |_|-)?members)?)?/i",$option['method'])){
 // get via a list on a page
 elseif(preg_match("/^(page)/i",$option['method'])){
 	$text = $wiki->getpage($option['source']); // get the page content
-	$text = preg_replace("/(\[\[|\]\])/","",$text); // remove all square brackets (wikilinks)
+	$text = preg_replace("/(\* ?\[\[|\]\])/","",$text); // remove all square brackets (wikilinks)
 	$list = explode("\n",$text); // explode into an array we can use
+	if($option['source'] == "User:Addbot/check"){
+		$wiki->edit("User:Addbot/check","","[[User:Addbot|Bot:]] has added the list to the database",true);} // blank the list if it is our check page
 }
 // get via transclusions of the source
 elseif(preg_match("/^(template|trans(clusions?)?)/i",$option['method'])){
@@ -68,8 +86,9 @@ if(isset($list))
 	sleep(1);
 
 	// after the list has been generated
-	$list = array_unique($list); // make sure all of the elements is unique
-	if(!isset($namespace)){$namespace = 0;} // default namespace is 0 (article)
+	$final = array_unique($list); // make sure all of the elements is unique
+	
+	if(!isset($namespace)){$namespace = -1;} // default namespace is -1 (all)s
 	/* Used for reference (en.wikipedia)
 	0	Main		Talk			1
 	2	User		User talk		3
@@ -93,6 +112,14 @@ if(isset($list))
 		case 1:$namespaceregex = "Talk";break;
 		case 2:$namespaceregex = "User";break;
 		case 3:$namespaceregex = "User( |_)talk";break;
+		case 4:$namespaceregex = "Wikipedia";break;
+		case 5:$namespaceregex = "Wikipedia( |_)talk";break;
+		case 6:$namespaceregex = "(File|Image)";break;
+		case 7:$namespaceregex = "(File|Image)( |_)talk";break;
+		case 10:$namespaceregex = "Template";break;
+		case 11:$namespaceregex = "Template( |_)talk";break;
+		case 14:$namespaceregex = "Category";break;
+		case 15:$namespaceregex = "Category( |_)talk";break;
 	}
 
 	$final = array(); //define a blank array for our final list
@@ -100,28 +127,36 @@ if(isset($list))
 	foreach($list as $item) // for every item we have collected for the list
 	{
 		usleep(100);/*00*/
-		if($namespace != 0) // if it is not specificly the main namespace
+		if($namespace != -1) //-1 is we dont care
 		{
-			if(preg_match("/^".$namespaceregex.":/i",$item)) // get those that match the namespace we want
+			if($namespace != 0) // if it is not specificly the main namespace
 			{
-				array_push($final,$item); // push our article to the final array
+				if(preg_match("/^".$namespaceregex.":/i",$item)) // get those that match the namespace we want
+				{
+					array_push($final,$item); // push our article to the final array
+				}
+			}
+			else // we much = 0 (mainspace)
+			{
+				if(preg_match("/^".$namespaceregex.":/i",$item) == false) // get those that dont match any other namespace
+				{
+					array_push($final,$item); // push our article to the final array
+				}
 			}
 		}
-		else // we much = 0 (mainspace)
+		else
 		{
-			if(preg_match("/^".$namespaceregex.":/i",$item) == false) // get those that dont match any other namespace
-			{
-				array_push($final,$item); // push our article to the final array
-			}
+			array_push($final,$item);
 		}
 	}
+	
 
 	echo "Connecting to DB...\n";
 	// connect to the database
 	$db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 	foreach($final as $item) // for each item
 	{
-		//sleep(1);
+		usleep(100);
 		$res = $db->insert($config['tblist'],array('article' => $item,) ); // inset to database table
 		if( !$res  ){echo $db->errorStr()."\n";} // if no result then break as we have an error ($db->errorStr())
 		else{echo "Added ".$item." to database\n";}
