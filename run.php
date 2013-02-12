@@ -333,24 +333,27 @@ foreach ($list as $item)
 			
 		case "User talk":
 			echo "\n> Is User talk";
-			foreach($config['AWB']['usertalk'] as $template)
+			if(!preg_match('/\//',$page->getName()))//if it is not a subpage
 			{
-				//get size before so we can see if we have changed
-				$sizebefore = strlen($page->getText());
-				//Convert our template to regex
-				$regex = preg_quote($template,'/');
-				$regex = str_replace(" ","( |_)",$regex);
-				$regex = preg_replace("/^Template\\\:/i","(Template\:)?",$regex);
-				//Do the replace
-				if(preg_match('/\{\{'.$regex.'((\|([0-9a-zA-Z _]*?)( ?= ?[0-9a-zA-Z _]*?)){0,6})?\}\}/i',$page->getText(),$matches))
+				foreach($config['AWB']['usertalk'] as $template)
 				{
-					$new = str_replace("{{","{{Subst:",$matches[0]);
-					$page->setText(str_replace($matches[0],$new,$page->getText()));
-				}
-				//if the page has changed
-				if($sizebefore != strlen($page->getText()))
-				{
-					$page->addSummary("Substing {{[[".$template."]]}}");
+					//get size before so we can see if we have changed
+					$sizebefore = strlen($page->getText());
+					//Convert our template to regex
+					$regex = preg_quote($template,'/');
+					$regex = str_replace(" ","( |_)",$regex);
+					$regex = preg_replace("/^Template\\\:/i","(Template\:)?",$regex);
+					//Do the replace
+					if(preg_match('/\{\{'.$regex.'((\|([0-9a-zA-Z _]*?)( ?= ?[0-9a-zA-Z _]*?)){0,6})?\}\}/i',$page->getText(),$matches))
+					{
+						$new = str_replace("{{","{{Subst:",$matches[0]);
+						$page->setText(str_replace($matches[0],$new,$page->getText()));
+					}
+					//if the page has changed
+					if($sizebefore != strlen($page->getText()))
+					{
+						$page->addSummary("Substing {{[[".$template."]]}}");
+					}
 				}
 			}
 			break;
