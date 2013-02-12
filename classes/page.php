@@ -448,6 +448,10 @@ class Page {
 					{
 						//remove and stop
 						$this->text = preg_replace('/\{\{(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)\|?\s*?\}\}/is',"",$this->getText());
+						if($this->hadMI === true && $this->runMI == 2)
+						{
+							$this->addSummary("Removing {{Multiple issues}}");
+						}
 						return null;
 					}
 					else//else we must be a new MI style (or a mixture of both)
@@ -550,9 +554,14 @@ class Page {
 				}
 			}
 			$mi = $mi."}}";//add the end of the tag
-			if($this->hadMI === false && $this->runMI == 2)
+			if($this->hadMI === false && $this->runMI == 2 && )
 			{
-				$this->addSummary("Adding {{Multiple issues}}");
+				//if we have already had a sig change or we have more than 2 tags
+				if($this->sigchange == true || count($split) > 2)
+				{
+					//we can edit
+					$this->addSummary("Adding {{Multiple issues}}");
+				}
 			}
 		}
 		//if only 1 we dont want to use multiple issues
