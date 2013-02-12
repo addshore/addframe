@@ -15,6 +15,11 @@ $longopts  = array(
 // get the options the file was run with
 $option = getopt($shortopts, $longopts);
 
+if(!isset($option['source']) || !isset($option['method']))
+	echo "Invalid Input";
+	die();
+{
+
 //try and parse the namespace
 if(isset($option['namespace']))
 {
