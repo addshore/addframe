@@ -613,7 +613,8 @@ class Page {
 						{
 							if(preg_match('/\{\{([^\|]+)(.*?)\|date ?= ?((January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])(.*?)\}\}/i',$tag,$matches))
 							{
-								if(!in_array($matches[1],$mi['name']))
+								//if its not already in the arry or it matches a template to ignore
+								if(!in_array($matches[1],$mi['name']) || preg_match('/((cleanup-)?expert(_| |-|)(attention|subject|article|portal|verify|))/i',$matches[1])
 								{
 									//add it
 									$mi['name'][$c] = $matches[1];
@@ -637,6 +638,15 @@ class Page {
 										}
 									}
 								}
+							}
+							//else it doesnt match a nice date format so just ignore it for now
+							else
+							{
+								//add it
+								$mi['name'][$c] = $matches[1];
+								$mi['date'][$c] = $matches[3];
+								$mi['params'][$c] = $matches[2].$matches[5];
+								$c++;
 							}
 						}
 					}
@@ -720,7 +730,7 @@ class Page {
 				//fix the date if we only have a year
 				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'|date ?= ?(20[0-9][0-9])\}\}/i',"{{".$tag->getName()."|date=$month $3}}",$text);
 				//fix the date if we only have a month
-				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'|date ?= ?(January|February|March|April|May|June|July|August|September|October|November|December)\}\}/i',"{{".$tag->getName()."|date=$date}}",$text);
+				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'|date ?= ?(Jan(uary)?|Feb(ruary?|Mar(ch)?|Apr(il)?|May|June?|July?|Aug(ust)?|Sept?(ember)|Oct(ober)?|Nov(ember)?|Dec(ember)?)\}\}/i',"{{".$tag->getName()."|date=$date}}",$text);
 				//date tags with no args at all
 				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'\}\}/i',"{{".$tag->getName()."|date=$date}}",$text);
 			}
