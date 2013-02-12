@@ -88,7 +88,7 @@ if(isset($list))
 	// after the list has been generated
 	$final = array_unique($list); // make sure all of the elements is unique
 	
-	if(!isset($namespace)){$namespace = -1;} // default namespace is -1 (all)s
+	if(!isset($namespace)){$namespace = -1;} // default namespace is -1 (all)
 	/* Used for reference (en.wikipedia)
 	0	Main		Talk			1
 	2	User		User talk		3
@@ -138,7 +138,7 @@ if(isset($list))
 			}
 			else // we much = 0 (mainspace)
 			{
-				if(preg_match("/^".$namespaceregex.":/i",$item) == false) // get those that dont match any other namespace
+				if(!preg_match("/^".$namespaceregex.":/i",$item)) // get those that dont match any other namespace
 				{
 					array_push($final,$item); // push our article to the final array
 				}
