@@ -423,7 +423,7 @@ class Page {
 	public function multipleIssues()
 	{
 		global $config;
-		$this->runMI++;
+		$this->runMI = $this->runMI + 1;
 		$removed = 0;
 		$hat = "";//for storing nay hat notes in
 		$mi = "";//this will be used to store what we want to add to the page

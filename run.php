@@ -281,6 +281,9 @@ foreach ($list as $item)
 				echo ".dep";
 				$page->removeTag($config['tag']['wikify']);
 				
+				//MULTIPLE ISSUES
+				$page->multipleIssues();
+				
 				//If the page has had another significant change
 				if($page->hasSigchange() === true)
 				{
@@ -288,7 +291,6 @@ foreach ($list as $item)
 					//GENERAL CHANGES
 					echo ".gen";
 					$page->fixTemplates();
-					$page->multipleIssues();
 					$page->fixGeneral();
 					$page->fixWhitespace();
 				}
