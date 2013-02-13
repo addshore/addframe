@@ -115,6 +115,7 @@ foreach ($list as $item)
 				$page->preChecks();
 				echo ".date";
 				$page->fixDateTags();// fix any tempaltes that need a date
+				$page->fixSectionTags();// add section parameter to any MI template below a section (excludes some)
 				$page->multipleIssues();
 				$page->multipleIssuesDupes();
 				$isorphan = $page->isOrphan();
