@@ -26,7 +26,7 @@ class Page {
 	private $summary;//summary if edited
 	private $hadMI; //did the page have an MI tag when we loaded it
 	private $runMI; //the number of times MI has been run
-	private $skip;
+	public $skip; //have we found something that means we should skip?
 	
 	// getters and setters
 	public function getName() { return $this->page; }
@@ -749,6 +749,24 @@ class Page {
 			$this->text = $text;
 			echo "+";
 			$this->addSummary("Dating Tags");
+		}
+	}
+	
+	public function fixSectionTags()
+	{
+		//check each tag we have to see if it needs to be dated
+		foreach ($config['mitag'] as $tag)
+		{
+			//if it matches something that can be under a section and not matter
+			if(!preg_match('/(unreferenced|emptysection|refimprove|unsourced|footnotes|uncategorized)/i',$tag->getName()))
+			{
+				//if the tag can be found below a section
+				if($this->matches('/(==.*?)\{\{(Template:)?'.$tag->regexName().'(?!sect(ions?)?)[^}]*?\}\}/is'))//todo
+				{
+					//add the section parameter to the template if it isnt there already
+					$this->setText(preg_replace('/(==.*?)\{\{(Template:)?'.$tag->regexName().'((?!sect(ions?)?)[^}]*?)\}\}/is',"$1{{".$tag->getName()."$4|section}}",$text));
+				}
+			}
 		}
 	}
 	
