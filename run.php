@@ -117,7 +117,7 @@ foreach ($list as $item)
 				$page->fixDateTags();// fix any tempaltes that need a date
 				$page->fixSectionTags();// add section parameter to any MI template below a section (excludes some)
 				$page->multipleIssues();
-				//$page->multipleIssuesDupes();
+				$page->multipleIssuesDupes();
 				$isorphan = $page->isOrphan();
 				$isuncat = $page->isUncat();
 				$isdeadend = $page->isDeadend();

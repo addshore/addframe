@@ -735,8 +735,8 @@ class Page {
 			if($this->matches('/\{\{(Template:)?'.$tag->regexName().'/i'))
 			{
 				//date tags with no args at all
-				//$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'\}\}/i',"{{".$tag->getName()."|date=$date}}",$text);=
-				$this->setText(preg_replace('/\{\{(Template:)?'.$tag->regexName().'([^}]*?)\}\}/is',"{{".$tag->getName()."|date=$date$3}}",$text));
+				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'\}\}/i',"{{".$tag->getName()."|date=$date}}",$text);
+				//$this->setText(preg_replace('/\{\{(Template:)?'.$tag->regexName().'([^}]*?)\}\}/is',"{{".$tag->getName()."|date=$date$3}}",$text));
 			}
 		}
 		
@@ -751,6 +751,7 @@ class Page {
 	
 	public function fixSectionTags()
 	{
+		global $config;
 		//check each tag we have to see if it needs to be dated
 		foreach ($config['mitag'] as $tag)
 		{
@@ -761,7 +762,7 @@ class Page {
 				if($this->matches('/(==.*?)\{\{(Template:)?'.$tag->regexName().'(?!sect(ions?)?)[^}]*?\}\}/is'))//todo
 				{
 					//add the section parameter to the template if it isnt there already
-					$this->setText(preg_replace('/(==.*?)\{\{(Template:)?'.$tag->regexName().'((?!sect(ions?)?)[^}]*?)\}\}/is',"$1{{".$tag->getName()."$4|section}}",$text));
+					$this->setText(preg_replace('/(==.*?)\{\{(Template:)?'.$tag->regexName().'((?!sect(ions?)?)[^}]*?)\}\}/is',"$1{{".$tag->getName()."$4|section}}",$this->getText()));
 				}
 			}
 		}
