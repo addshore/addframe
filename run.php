@@ -445,10 +445,20 @@ foreach ($list as $item)
 			}
 			else
 			{
-				echo "\n> POST: ".$page->getSummary();
-				$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
-				//$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
-				sleep(30);//sleep after an edit
+				//if we dont wanrt to skip
+				if($page->skip == true)
+				{
+					echo "\n> SKIP";
+					continue;
+				}
+				else
+				{
+					//Then we can post
+					echo "\n> POST: ".$page->getSummary();
+					$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+					//$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
+					sleep(30);//sleep after an edit
+				}
 			}
 		}
 	}

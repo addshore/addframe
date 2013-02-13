@@ -11,6 +11,7 @@ class Page {
 		$this->loadText();//load the wikitext from page
 		$this->hadMI; //set default until checked
 		$this->runMI = 0; //the number of time MI has been run
+		$this->skip = false;
 	}	
 	
 	// variables
@@ -25,6 +26,7 @@ class Page {
 	private $summary;//summary if edited
 	private $hadMI; //did the page have an MI tag when we loaded it
 	private $runMI; //the number of times MI has been run
+	private $skip;
 	
 	// getters and setters
 	public function getName() { return $this->page; }
@@ -503,6 +505,11 @@ class Page {
 					//make sure the hat note is not under a section
 					if(!preg_match('/\n==.*?{{'.$x->name.'/is',$this->getText()))
 					{
+						if(strlen($x->rawCode) < 4)
+						{
+							//skip page
+							$this->skip = true;
+						}
 						//remember our hatnotes
 						$hat = $hat.$x->rawCode."\n";
 						//remove the hatnote matched (we will re add later)
@@ -728,9 +735,9 @@ class Page {
 			if($this->matches('/\{\{(Template:)?'.$tag->regexName().'/i'))
 			{
 				//fix the date if we only have a year
-				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'|date ?= ?(20[0-9][0-9])\}\}/i',"{{".$tag->getName()."|date=$month $3}}",$text);
+				//$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'|date ?= ?(20[0-9][0-9])\}\}/i',"{{".$tag->getName()."|date=$month $3}}",$text);
 				//fix the date if we only have a month
-				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'|date ?= ?(Jan(uary)?|Feb(ruary?|Mar(ch)?|Apr(il)?|May|June?|July?|Aug(ust)?|Sept?(ember)|Oct(ober)?|Nov(ember)?|Dec(ember)?)\}\}/i',"{{".$tag->getName()."|date=$date}}",$text);
+				//$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'|date ?= ?(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|June?|July?|Aug(ust)?|Sept?(ember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\}\}/i',"{{".$tag->getName()."|date=$date}}",$text);
 				//date tags with no args at all
 				$text = preg_replace('/\{\{(Template:)?'.$tag->regexName().'\}\}/i',"{{".$tag->getName()."|date=$date}}",$text);
 			}
