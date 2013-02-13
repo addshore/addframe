@@ -117,7 +117,7 @@ foreach ($list as $item)
 				$page->fixDateTags();// fix any tempaltes that need a date
 				$page->fixSectionTags();// add section parameter to any MI template below a section (excludes some)
 				$page->multipleIssues();
-				$page->multipleIssuesDupes();
+				//$page->multipleIssuesDupes();
 				$isorphan = $page->isOrphan();
 				$isuncat = $page->isUncat();
 				$isdeadend = $page->isDeadend();
@@ -456,8 +456,8 @@ foreach ($list as $item)
 				{
 					//Then we can post
 					echo "\n> POST: ".$page->getSummary();
-					$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
-					//$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
+					//$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+					$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
 					sleep(30);//sleep after an edit
 				}
 			}
