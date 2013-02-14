@@ -240,29 +240,33 @@ class Page {
 		$r = $this->wiki->wikidatasitelinks($this->getName());
 		$counter = 0;
 	
-		//foreach entitiy found
-		foreach($r as $ent)
+		//if there is only 1 entity (i.e. the wikidata stuff isnt broken somewhere)
+		if(count($r) == 1)
 		{
-			//for each sitelink in the entity
-			foreach ($ent['sitelinks'] as $l)
+			//foreach entitiy found
+			foreach($r as $ent)
 			{
-				$link = "\n[[".str_replace("wiki","",$l['site']).":".$l['title']."]]";
-				if(preg_match('/'.preg_quote($link).'/',$this->getText()))
+				//for each sitelink in the entity
+				foreach ($ent['sitelinks'] as $l)
 				{
-					//remove the link
-					$this->setText(str_replace($link,"",$this->getText()));
-					//incrememnt the counter
-					$counter++;
+					$link = "\n[[".str_replace("wiki","",$l['site']).":".$l['title']."]]";
+					if(preg_match('/'.preg_quote($link).'/',$this->getText()))
+					{
+						//remove the link
+						$this->setText(str_replace($link,"",$this->getText()));
+						//incrememnt the counter
+						$counter++;
+					}
 				}
 			}
-		}
-		if($counter > 49)
-		{
-			$this->addSummary("Removing $counter wikidata interwikis",true);
-		}
-		elseif($counter > 0)
-		{
-			$this->addSummary("Removing $counter wikidata interwikis",false);
+			if($counter > 49)
+			{
+				$this->addSummary("Removing $counter wikidata interwikis",true);
+			}
+			elseif($counter > 0)
+			{
+				$this->addSummary("Removing $counter wikidata interwikis",false);
+			}
 		}
 	}
 	
