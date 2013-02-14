@@ -74,7 +74,9 @@ else
 	$count = Database::mysql2array($db->select('pending','COUNT(*)'));
 	$count = $count[0]['COUNT(*)'];
 	echo "\nCurrently ".$count." articles pending review";
-	$result = $db->select('pending','*',null,array("LIMIT" => round($count/100+30)));
+	$limit = round($count/100+30);
+	if($limit > 200) { $limit = 200; }
+	$result = $db->select('pending','*',null,array("LIMIT" => $limit));
 	$list = Database::mysql2array($result);
 	echo "\nGot ".count($list)." articles from pending";
 	if(!$config['debug'])//if not debuging
@@ -114,10 +116,10 @@ foreach ($list as $item)
 				//Pre Processing
 				$page->preChecks();
 				echo ".date";
-				$page->fixDateTags();// fix any tempaltes that need a date
-				$page->fixSectionTags();// add section parameter to any MI template below a section (excludes some)
+				//$page->fixDateTags();// fix any tempaltes that need a date
+				//$page->fixSectionTags();// add section parameter to any MI template below a section (excludes some)
 				$page->multipleIssues();
-				$page->multipleIssuesDupes();
+				//$page->multipleIssuesDupes();
 				$isorphan = $page->isOrphan();
 				$isuncat = $page->isUncat();
 				$isdeadend = $page->isDeadend();
@@ -456,8 +458,8 @@ foreach ($list as $item)
 				{
 					//Then we can post
 					echo "\n> POST: ".$page->getSummary();
-					//$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
-					$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
+					$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+					//$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
 					sleep(30);//sleep after an edit
 				}
 			}
