@@ -161,7 +161,7 @@ if(isset($list))
 	$db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 	foreach($final as $item) // for each item
 	{
-		usleep(100);
+		usleep(1000);
 		$res = $db->insert($config['tblist'],array('article' => $item,) ); // inset to database table
 		if( !$res  ){echo $db->errorStr()."\n";} // if no result then break as we have an error ($db->errorStr())
 		else{echo "Added ".$item." to database\n";}
