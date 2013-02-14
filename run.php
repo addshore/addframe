@@ -287,10 +287,12 @@ foreach ($list as $item)
 				//MULTIPLE ISSUES
 				$page->multipleIssues();
 				
+				//Check about removing interwikilinks (will only sig change if over 50)
+				//$page->interwikilinks();
+				
 				//If the page has had another significant change
 				if($page->hasSigchange() === true)
 				{
-					
 					//GENERAL CHANGES
 					echo ".gen";
 					$page->fixTemplates();
