@@ -55,7 +55,7 @@ class Page {
 		if($this->namespace == "Image"){ $this->namespace = "File";}// default Image namespace to file
 	}
 	
-	public function addSummary($sum)
+	public function addSummary($sum,$sig)
 	{
 		//split the summary
 		$split = explode(" ",$sum,2);
@@ -71,9 +71,11 @@ class Page {
 			//replace the first bit in the summary with the first bit and the second bit (a sort of insert)
 			$this->summary = preg_replace('/'.$split[0].'/i',$sum,$this->summary);
 		}
-		
-		
-		$this->sigchange = true;//if we have a summary it muse be a sig change
+		//if we want this to be a sig change say so
+		if($sig)
+		{
+			$this->sigchange = true;//if we have a summary it muse be a sig change
+		}
 	}
 	
 	//returns the edit summary
@@ -232,6 +234,38 @@ class Page {
 		return false;
 	}
 	
+	public function interwikilinks()
+	{
+		//get the other links
+		$r = $this->wiki->wikidatasitelinks($this->getName());
+		$counter = 0;
+	
+		//foreach entitiy found
+		foreach($r as $ent)
+		{
+			//for each sitelink in the entity
+			foreach ($ent['sitelinks'] as $l)
+			{
+				$link = "\n[[".str_replace("wiki","",$l['site']).":".$l['title']."]]";
+				if(preg_match('/'.preg_quote($link).'/',$this->getText()))
+				{
+					//remove the link
+					$this->setText(str_replace($link,"",$this->getText()));
+					//incrememnt the counter
+					$counter++;
+				}
+			}
+		}
+		if($counter > 49)
+		{
+			$this->addSummary("Removing $counter wikidata interwikis",true);
+		}
+		elseif($counter > 0)
+		{
+			$this->addSummary("Removing $counter wikidata interwikis",false);
+		}
+	}
+	
 	// returns true if there are 0 links to the page from the mainspace
 	// returns false if there is at least 1 link that fits the criteria
 	public function isOrphan()
@@ -366,7 +400,7 @@ class Page {
 			$this->text = $template->getPost()."\n" .$this->getText();
 		}
 		// add to the summary for the edit
-		$this->addSummary("Adding {{".$template->getName()."}}");
+		$this->addSummary("Adding {{".$template->getName()."}}",true);
 	}
 	
 	//passed $config['mitag']['TEMPLATECODE'] (i.e. orphan)
@@ -384,7 +418,7 @@ class Page {
 			$this->setText(preg_replace($regex,"",preg_replace($regex,"",$this->getText())));
 			if($summary != null)
 			{//if summary not null then we can add a summary
-				$this->addSummary($summary);
+				$this->addSummary($summary,true);
 			}
 		}
 	}
@@ -416,7 +450,7 @@ class Page {
 		{
 			//Post it to the top removing any other match of it
 			$this->setText($shouldbe."\n".preg_replace('/'.preg_quote($shouldbe).'/is',"",$this->getText()));
-			$this->addSummary("Restoring sandbox header");
+			$this->addSummary("Restoring sandbox header",true);
 			return true;
 		}
 	}
@@ -452,7 +486,7 @@ class Page {
 						$this->text = preg_replace('/\{\{(Multiple issues|Article issues|Issues|MI|Many Issues|Multiple|Multipleissues)\|?\s*?\}\}/is',"",$this->getText());
 						if($this->hadMI === true && $this->runMI == 2)
 						{
-							$this->addSummary("Removing {{Multiple issues}}");
+							$this->addSummary("Removing {{Multiple issues}}",true);
 						}
 						return null;
 					}
@@ -567,7 +601,7 @@ class Page {
 				if($this->sigchange == true || count($split) > 2)
 				{
 					//we can edit
-					$this->addSummary("Adding {{Multiple issues}}");
+					$this->addSummary("Adding {{Multiple issues}}",true);
 				}
 			}
 		}
@@ -578,7 +612,7 @@ class Page {
 			$mi = $split[0];
 			if($this->hadMI === true && $this->runMI == 2)
 			{
-				$this->addSummary("Removing {{Multiple issues}}");
+				$this->addSummary("Removing {{Multiple issues}}",true);
 			}
 			
 		}
@@ -668,7 +702,7 @@ class Page {
 					if(strlen($x->rawCode)-10 > strlen($torep))
 					{
 						$this->setText(str_replace($x->rawCode,$torep,$this->getText()));
-						$this->addSummary("Removing Duplicate tags");
+						$this->addSummary("Removing Duplicate tags",true);
 					}
 				}
 			}
@@ -745,7 +779,7 @@ class Page {
 		{
 			$this->text = $text;
 			echo "+";
-			$this->addSummary("Dating Tags");
+			$this->addSummary("Dating Tags",true);
 		}
 	}
 	
