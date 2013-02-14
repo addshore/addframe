@@ -48,9 +48,9 @@ function logevent ($type,$what)
 	//if we are set to log this type
 	if(isset($config['Log'][$type]))
 	{
-		$text = $wiki->getpage('User:'.$config['user'].'/log/'.$type);// get previous page
+		$text = $wiki->getpage('User:'.$config['user'].'/log/'.$config['Log'][$type]);// get previous page
 		$text = "* ".$what."\n".$text;// add our stuff
-		$wiki->edit('User:'.$config['user'].'/log/'.$type,$text,$what,true);// save the page	
+		$wiki->edit('User:'.$config['user'].'/log/'.$config['Log'][$type],$text,$what,true);// save the page	
 	}
 }
 
