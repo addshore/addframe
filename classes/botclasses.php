@@ -947,6 +947,21 @@ class wikipedia {
 	
 	}
 	
+	/**
+     * Gets the date of the last edit the user has made
+     * @param $page The name of the page to be checked
+     * @return Array of entities the page can be found in on wikidata
+	 * @author Addshore
+     **/
+	function wikidatasitelinks ($page){
+		$x = $this->http->get("http://wikidata.org/w/api.php?action=wbgetentities&sites=enwiki&props=sitelinks&format=php&titles=".urlencode($page));
+		$x = unserialize($x);
+		if($x['success'] == 1)
+		{
+			return $x['entities'];
+		}
+	}
+	
 }
 
 /**
