@@ -200,7 +200,7 @@ class Page {
 			//check if we were born over 115 years ago (return false if we are) per [[Wikipedia:Blp#Recently_dead_or_probably_dead]]
 			if(preg_match("/Category:([0-9]{0,4}) births/i",$cat,$matches))
 			{
-				if($matches[1] < date("Y")-115)
+				if($matches[1] < date("Y")-$config['BLP']['presumedead'])
 				{
 					return false;
 				}
