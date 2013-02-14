@@ -1,0 +1,102 @@
+MAILTO=""
+
+//2 mins
+* * * * * php /data/project/addbot/run.php
+
+//Every 10 mins
+*/10 * * * * php /data/project/addbot/list.php --method="list" --source="User:Addbot/check"
+
+//Daily
+* 0 * * * php /data/project/addbot/run.php --page="Wikipedia:AutoWikiBrowser/User_talk_templates"
+* 0 * * * php /data/project/addbot/list.php --method="web" --source="http://toolserver.org/~dpl/data/uncategorized_articles_list.txt" --trigger="http://toolserver.org/~dpl/data/trigger_uncat_file.php"
+* 1 * * * php /data/project/addbot/list.php --method="cat" --source="Category:All_articles_proposed_for_deletion"
+* 12 * * * php /data/project/addbot/list.php --method="template" --source="Template:Welcome" --namespace="3"
+* 22 * * * php /data/project/addbot/list.php --method="template" --source="Template:ANI-Notice" --namespace="3"
+* 22 * * * php /data/project/addbot/list.php --method="template" --source="Template:RPA" --namespace="3"
+* 22 * * * php /data/project/addbot/list.php --method="template" --source="Template:Test" --namespace="3"
+
+//Spread out around the a week
+* 0 * * 0 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_November_2006"
+#* 2 * * 0 
+#* 4 * * 0 
+#* 6 * * 0 
+* 8 * * 0 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_November_2007"
+* 10 * * 0 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_December_2007"
+* 12 * * 0 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_January_2008"
+* 14 * * 0 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_February_2008"
+* 16 * * 0 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_March_2008"
+* 18 * * 0 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_April_2008"
+* 20 * * 0 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_May_2008"
+* 22 * * 0 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_June_2008"
+* 0 * * 1 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_July_2008"
+* 2 * * 1 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_August_2008"
+* 4 * * 1 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_September_2008"
+* 6 * * 1 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_October_2008"
+* 8 * * 1 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_November_2008"
+* 10 * * 1 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_December_2008"
+* 12 * * 1 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_January_2009"
+* 14 * * 1 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_February_2009"
+* 16 * * 1 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_March_2009"
+* 18 * * 1 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_April_2009"
+* 20 * * 1 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_May_2009"
+* 22 * * 1 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_June_2009"
+* 0 * * 2 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_July_2009"
+* 2 * * 2 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_August_2009"
+* 4 * * 2 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_September_2009"
+* 6 * * 2 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_October_2009"
+* 8 * * 2 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_November_2009"
+* 10 * * 2 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_December_2009"
+* 12 * * 2 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_January_2010"
+* 14 * * 2 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_February_2010"
+* 16 * * 2 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_March_2010"
+* 18 * * 2 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_April_2010"
+* 20 * * 2 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_May_2010"
+* 22 * * 2 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_June_2010"
+* 0 * * 3 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_July_2010"
+* 2 * * 3 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_August_2010"
+* 4 * * 3 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_September_2010"
+* 6 * * 3 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_October_2010"
+* 8 * * 3 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_November_2010"
+* 10 * * 3 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_December_2010"
+* 12 * * 3 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_January_2011"
+* 14 * * 3 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_February_2011"
+* 16 * * 3 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_March_2011"
+* 18 * * 3 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_April_2011"
+* 20 * * 3 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_May_2011"
+* 22 * * 3 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_June_2011"
+* 0 * * 4 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_July_2011"
+* 2 * * 4 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_August_2011"
+* 4 * * 4 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_September_2011"
+* 6 * * 4 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_October_2011"
+* 8 * * 4 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_November_2011"
+* 10 * * 4 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_December_2011"
+* 12 * * 4 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_January_2012"
+* 14 * * 4 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_February_2012"
+* 16 * * 4 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_March_2012"
+* 18 * * 4 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_April_2012"
+* 20 * * 4 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_May_2012"
+* 22 * * 4 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_June_2012"
+* 0 * * 5 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_July_2012"
+* 2 * * 5 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_August_2012"
+* 4 * * 5 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_September_2012"
+* 6 * * 5 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_October_2012"
+* 8 * * 5 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_November_2012"
+* 10 * * 5 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_December_2012"
+* 12 * * 5 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_January_2013"
+* 14 * * 5 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_February_2013"
+* 16 * * 5 php /data/project/addbot/list.php --method="cat" --source="Category:Orphaned_articles_from_March_2013"
+* 18 * * 5 php /data/project/addbot/list.php --method="cat" --source="Category:Articles_needing_sections"
+#* 20 * * 5 
+#* 22 * * 5 
+#* 0 * * 6
+#* 2 * * 6 
+#* 4 * * 6 
+#* 6 * * 6
+#* 8 * * 6 
+#* 10 * * 6 
+#* 12 * * 6
+#* 14 * * 6 
+#* 16 * * 6 
+#* 18 * * 6
+#* 20 * * 6 
+#* 22 * * 6 
