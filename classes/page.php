@@ -236,36 +236,45 @@ class Page {
 	
 	public function interwikilinks()
 	{
-		//get the other links
-		$r = $this->wiki->wikidatasitelinks($this->getName());
-		$counter = 0;
-	
-		//if there is only 1 entity (i.e. the wikidata stuff isnt broken somewhere)
-		if(count($r) == 1)
+		//Make sure wikidta is used
+		if(!preg_match('/\{\{noexternallanglinks\}\}/',$this->getText()))
 		{
-			//foreach entitiy found
-			foreach($r as $ent)
+			//get the other links
+			$r = $this->wiki->wikidatasitelinks($this->getName());
+			$counter = 0;
+		
+			//if there is only 1 entity (i.e. the wikidata stuff isnt broken somewhere)
+			if(count($r) == 1)
 			{
-				//for each sitelink in the entity
-				foreach ($ent['sitelinks'] as $l)
+				//foreach entitiy found
+				foreach($r as $ent)
 				{
-					$link = "\n[[".str_replace("wiki","",$l['site']).":".$l['title']."]]";
-					if(preg_match('/'.preg_quote($link).'/',$this->getText()))
+					//for each sitelink in the entity
+					foreach ($ent['sitelinks'] as $l)
 					{
-						//remove the link
-						$this->setText(str_replace($link,"",$this->getText()));
-						//incrememnt the counter
-						$counter++;
+						$lang = str_replace("wiki","",$l['site']);
+						$link = "\n[[".$lang.":".$l['title']."]]";
+						if(preg_match('/'.preg_quote($link).'/',$this->getText()))
+						{
+							//if the link is not an FA or GA
+							if(!preg_match('/\{\{(Link (FA|GA)|(FA|GA) Link)\|'.$lang.'\}\}/i',$this->getText))
+							{
+								//remove the link
+								$this->setText(str_replace($link,"",$this->getText()));
+								//incrememnt the counter
+								$counter++;
+							}
+						}
 					}
 				}
-			}
-			if($counter > 49)
-			{
-				$this->addSummary("Removing $counter wikidata interwikis",true);
-			}
-			elseif($counter > 0)
-			{
-				$this->addSummary("Removing $counter wikidata interwikis",false);
+				if($counter > 1)
+				{
+					$this->addSummary("Removing $counter wikidata interwikis",true);
+				}
+				elseif($counter > 0)
+				{
+					$this->addSummary("Removing $counter wikidata interwikis",false);
+				}
 			}
 		}
 	}
