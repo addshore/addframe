@@ -1,7 +1,12 @@
 MAILTO=""
 
-#/2 mins
+#Every Min
 * * * * * php /data/project/addbot/run.php
+
+#Every 5 Mins
+#The below kills any run.php that has been running for over an hour wusing over 100,000kb of ram
+*/5 * * * * ps -o sz,etime,pid,comm,args -U addshore | grep run.php | grep -v grep | perl -ane '($m,$s) = split /:/,$F[1]; $kb=$F[0]; $pid = $F[2]; if(($m>60)||($kb>100000)) {print "$m :: $s $kb $pid\n"; kill 9, $pid;}'
+*/5 * * * * ps -o sz,etime,pid,comm,args -U addshore | grep list.php | grep -v grep | perl -ane '($m,$s) = split /:/,$F[1]; $kb=$F[0]; $pid = $F[2]; if(($m>240)||($kb>100000)) {print "$m :: $s $kb $pid\n"; kill 9, $pid;}'
 
 #Every 10 mins
 */10 * * * * php /data/project/addbot/list.php --method="list" --source="User:Addbot/check"
@@ -88,7 +93,7 @@ MAILTO=""
 0 18 * * 5 php /data/project/addbot/list.php --method="cat" --source="Category:Articles_needing_sections"
 0 20 * * 5 php /data/project/addbot/list.php --method="cat" --source="Category:Dead-end_pages"
 0 22 * * 5 php /data/project/addbot/list.php --method="cat" --source="Category:Unreferenced_BLPs"
-#0 0 * * 6
+0 0 * * 6 php /data/project/addbot/list.php --method="cat" --source="Category:Underpopulated_categories"
 #0 2 * * 6 
 #0 4 * * 6 
 #0 6 * * 6
