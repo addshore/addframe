@@ -242,6 +242,7 @@ class Page {
 			//get the other links
 			$r = $this->wiki->wikidatasitelinks($this->getName());
 			$counter = 0;
+			$id = "";
 		
 			//if there is only 1 entity (i.e. the wikidata stuff isnt broken somewhere)
 			if(count($r) == 1)
@@ -249,18 +250,19 @@ class Page {
 				//foreach entitiy found
 				foreach($r as $ent)
 				{
+					$id = $ent['id'];
 					//Check if we have site links
 					if(isset($ent['sitelinks']))
 					{
 						//for each sitelink in the entity
 						foreach ($ent['sitelinks'] as $l)
 						{
-							$lang = str_replace("wiki","",$l['site']);
+							$lang = str_replace("_","-",str_replace("wiki","",$l['site']));
+							echo $lang."\n";
 							$link = "\n[[".$lang.":".$l['title']."]]";
 							if(preg_match('/'.preg_quote($link).'/',$this->getText()))
 							{
 								//if the link is not an FA or GA
-								echo $lang."-";
 								if(!preg_match('/\{\{(Link (FA|GA)|(FA|GA) Link)\|'.$lang.'\}\}/i',$this->getText()))
 								{
 									//remove the link
@@ -274,11 +276,11 @@ class Page {
 				}
 				if($counter > 1)
 				{
-					$this->addSummary("Removing $counter [[Wikipedia:Wikidata|Wikidata]] interwikis",true);
+					$this->addSummary("Removing $counter links on [[Wikipedia:Wikidata|Wikidata]] [[d:$id]]",true);
 				}
 				elseif($counter > 0)
 				{
-					$this->addSummary("Removing $counter [[Wikipedia:Wikidata|Wikidata]] interwikis",false);
+					$this->addSummary("Removing $counter links on [[Wikipedia:Wikidata|Wikidata]] [[d:$id]]",false);
 				}
 			}
 		}
