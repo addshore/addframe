@@ -74,7 +74,7 @@ else
 	$count = Database::mysql2array($db->select('pending','COUNT(*)'));
 	$count = $count[0]['COUNT(*)'];
 	echo "\nCurrently ".$count." articles pending review";
-	$limit = round($count/100+30);
+	$limit = round($count/100+10);
 	if($limit > 200) { $limit = 200; }
 	$result = $db->select('pending','*',null,array("LIMIT" => $limit));
 	$list = Database::mysql2array($result);
@@ -288,7 +288,7 @@ foreach ($list as $item)
 				$page->multipleIssues();
 				
 				//Check about removing interwikilinks (will only sig change if over 50)
-				//$page->interwikilinks();
+				$page->interwikilinks();
 				
 				//If the page has had another significant change
 				if($page->hasSigchange() === true)
@@ -370,7 +370,7 @@ foreach ($list as $item)
 			if($page->getName() == "Wikipedia:AutoWikiBrowser/User talk templates")//if it is our AWB page
 			{
 				echo "..awb";
-				exec("php /home/addshore/addbot/task.awbtemplates.php");//run the external check
+				//exec("php /home/addshore/addbot/task.awbtemplates.php");//run the external check
 				break;
 			}
 			
@@ -415,7 +415,8 @@ foreach ($list as $item)
 				}
 				elseif(count($cats) < 10)
 				{
-					$page->addTag($config['tag']['underpopulatedcategory']); echo "+";
+					//This was adding the tag to maint cats
+					//$page->addTag($config['tag']['underpopulatedcategory']); echo "+";
 				}
 			}
 			break;
@@ -460,9 +461,9 @@ foreach ($list as $item)
 				{
 					//Then we can post
 					echo "\n> POST: ".$page->getSummary();
-					$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+					//$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
 					//$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
-					sleep(30);//sleep after an edit
+					sleep(15);//sleep after an edit
 				}
 			}
 		}
