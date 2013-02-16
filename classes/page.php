@@ -249,31 +249,35 @@ class Page {
 				//foreach entitiy found
 				foreach($r as $ent)
 				{
-					//for each sitelink in the entity
-					foreach ($ent['sitelinks'] as $l)
+					//Check if we have site links
+					if(isset($ent['sitelinks']))
 					{
-						$lang = str_replace("wiki","",$l['site']);
-						$link = "\n[[".$lang.":".$l['title']."]]";
-						if(preg_match('/'.preg_quote($link).'/',$this->getText()))
+						//for each sitelink in the entity
+						foreach ($ent['sitelinks'] as $l)
 						{
-							//if the link is not an FA or GA
-							if(!preg_match('/\{\{(Link (FA|GA)|(FA|GA) Link)\|'.$lang.'\}\}/i',$this->getText))
+							$lang = str_replace("wiki","",$l['site']);
+							$link = "\n[[".$lang.":".$l['title']."]]";
+							if(preg_match('/'.preg_quote($link).'/',$this->getText()))
 							{
-								//remove the link
-								$this->setText(str_replace($link,"",$this->getText()));
-								//incrememnt the counter
-								$counter++;
+								//if the link is not an FA or GA
+								if(!preg_match('/\{\{(Link (FA|GA)|(FA|GA) Link)\|'.$lang.'\}\}/i',$this->getText))
+								{
+									//remove the link
+									$this->setText(str_replace($link,"",$this->getText()));
+									//incrememnt the counter
+									$counter++;
+								}
 							}
 						}
 					}
 				}
 				if($counter > 1)
 				{
-					$this->addSummary("Removing $counter wikidata interwikis",true);
+					$this->addSummary("Removing $counter [[Wikipedia:Wikidata|Wikidata]] interwikis",true);
 				}
 				elseif($counter > 0)
 				{
-					$this->addSummary("Removing $counter wikidata interwikis",false);
+					$this->addSummary("Removing $counter [[Wikipedia:Wikidata|Wikidata]] interwikis",false);
 				}
 			}
 		}
