@@ -60,7 +60,7 @@ if(preg_match("/^cat(egory(( |_|-)?members)?)?/i",$option['method'])){
 // get via a list on a page
 elseif(preg_match("/^(page|list)/i",$option['method'])){
 	$text = $wiki->getpage($option['source']); // get the page content
-	$text = preg_replace("/(\* ?\[\[|\]\])/","",$text); // remove all square brackets (wikilinks)
+	$text = preg_replace("/(\* ?|\[\[|\]\])/","",$text); // remove all square brackets (wikilinks)
 	$list = explode("\n",$text); // explode into an array we can use
 	if($option['source'] == "User:Addbot/check"){
 		$wiki->edit("User:Addbot/check","","[[User:Addbot|Bot:]] has added the list to the database",true);} // blank the list if it is our check page
