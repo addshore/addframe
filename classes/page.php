@@ -633,11 +633,6 @@ class Page {
 			}
 			
 		}
-		else
-		{
-			//we actually dont have any tags 
-			return false;
-		}
 
 		//add to origional text with any hatnotes
 		$this->text = $hat.$mi."\n".$this->getText();
