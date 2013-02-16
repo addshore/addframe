@@ -260,7 +260,8 @@ class Page {
 							if(preg_match('/'.preg_quote($link).'/',$this->getText()))
 							{
 								//if the link is not an FA or GA
-								if(!preg_match('/\{\{(Link (FA|GA)|(FA|GA) Link)\|'.$lang.'\}\}/i',$this->getText))
+								echo $lang."-";
+								if(!preg_match('/\{\{(Link (FA|GA)|(FA|GA) Link)\|'.$lang.'\}\}/i',$this->getText()))
 								{
 									//remove the link
 									$this->setText(str_replace($link,"",$this->getText()));
