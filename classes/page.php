@@ -857,8 +857,9 @@ private function logevent ($type,$what)
 	{
 		global $config;
 		//Fix headers
-		$this->text = preg_replace('/== ?External ?links? ?==/i', "==External links==", $this->text );
-		$this->text = preg_replace('/== ?Further ?readings? ?==/i', "==Further reading==", $this->text );
+		//TODO FIX THESE
+		//$this->text = preg_replace('/== ?External ?links? ?==/i', "==External links==", $this->text );
+		//$this->text = preg_replace('/== ?Further ?readings? ?==/i', "==Further reading==", $this->text );
 		//Templates
 		$this->text = preg_replace('/\{\{'.$config['mitag']['unreferenced']->regexName().'\|section\}\}/i', "{{Unreferenced section}}", $this->text );
 		
