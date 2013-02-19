@@ -289,11 +289,11 @@ class Page {
 				}
 				if($counter > 1)
 				{
-					$this->addSummary("Removing $counter links on [[Wikipedia:Wikidata|Wikidata]] [[d:$id]]",true);
+					$this->addSummary("Updating $counter wikilinks per [[Wikipedia:Wikidata|Wikidata]] [[d:$id]]",true);
 				}
 				elseif($counter > 0)
 				{
-					$this->addSummary("Removing $counter links on [[Wikipedia:Wikidata|Wikidata]] [[d:$id]]",true);
+					$this->addSummary("Updating $counter wikilinks per [[Wikipedia:Wikidata|Wikidata]] [[d:$id]]",true);
 				}
 			
 				//Now we want to log any links left over
