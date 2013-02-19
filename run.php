@@ -142,6 +142,7 @@ foreach ($list as $item)
 					$page->addSummary("Adding {{reflist}}");
 				}
 			
+			/*
 				//STUB TAG
 				echo ".stub";
 				if ($page->matches('/\{\{[a-z0-9 _-]*?stub\}\}/'))//if we have a stub tag
@@ -153,6 +154,7 @@ foreach ($list as $item)
 						$page->removeRegex('/\{\{[a-z0-9 _-]*?stub\}\}/i',"Removing {{Stub}}"); echo "-";//remove the stub tag
 					}
 				}
+			*/
 			
 				//ORPHAN TAG
 				echo ".orph";
