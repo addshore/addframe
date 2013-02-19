@@ -123,6 +123,23 @@ class Page {
 		return str_word_count($text);
 	}
 	
+		//return a restricted estimate of words in an article
+	public function wordcountlead()
+	{
+		//get a temp copy of the text to work with
+		$text = $this->getText();
+		$split = preg_split('/(={2,7})([^=]+)\1/',$text);
+		$text = $split[0];
+
+		//remove templates, cats, interwikis and extlinks and refs
+		$text = preg_replace("/(\{\{[^\}]*?\}\}|={1,6}[^=]*?={1,6}|\n\*{1,2} ?|\[https?[^\]]*?\]|\[\[(Category|Image|File|[a-z]{2,6}):[^\]]*?\]\]|\<references ?\/\>|<ref>.*?<\/ref>|<!--.*?-->|\{\|.*?\|-.*?\|.*?\|})/is","",$text);
+		//fill all links in with a single word
+		$text = preg_replace("/\[\[([^]:]*)\]\]/","WORD",$text);
+		$text = trim($text);
+		//return
+		return str_word_count($text);
+	}
+	
 	//returns if the page is a redirect or not
 	public function isRedirect()
 	{

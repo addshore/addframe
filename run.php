@@ -142,7 +142,6 @@ foreach ($list as $item)
 					$page->addSummary("Adding {{reflist}}");
 				}
 			
-			/*
 				//STUB TAG
 				echo ".stub";
 				if ($page->matches('/\{\{[a-z0-9 _-]*?stub\}\}/'))//if we have a stub tag
@@ -151,10 +150,13 @@ foreach ($list as $item)
 					echo $count;
 					if ($count > 500)//and the word count is over 500
 					{
-						$page->removeRegex('/\{\{[a-z0-9 _-]*?stub\}\}/i',"Removing {{Stub}}"); echo "-";//remove the stub tag
+						$lead = $page->wordcountlead();
+						if($leag > 250)
+						{
+							$page->removeRegex('/\{\{[a-z0-9 _-]*?stub\}\}/i',"Removing {{Stub}}"); echo "-";//remove the stub tag
+						}
 					}
 				}
-			*/
 			
 				//ORPHAN TAG
 				echo ".orph";
