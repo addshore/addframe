@@ -47,7 +47,7 @@ $freenode['SOCKET'] = @fsockopen($server_host, $server_port, $errno, $errstr, 2)
 															//escape and run
 															$check = escapeshellarg($n[1]);
 															freenodeCommand($cmd.' :Checking '.$check);
-															$torun = "php /data/project/addbot/run.php --page=$check";
+															$torun = "php /data/project/addbot/enwiki/run.php --page=$check";
 															echo $torun;
 															//fork onto another process so the bot will keep running on irc
 															$pid = pcntl_fork();
