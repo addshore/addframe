@@ -258,18 +258,14 @@ class Page {
 						foreach ($ent['sitelinks'] as $l)
 						{
 							$lang = str_replace("_","-",str_replace("wiki","",$l['site']));
-							echo $lang."\n";
+							//echo $lang.":".$l['title']."\n";
 							$link = "\n[[".$lang.":".$l['title']."]]";
 							if(preg_match('/'.preg_quote($link).'/',$this->getText()))
 							{
-								//if the link is not an FA or GA
-								if(!preg_match('/\{\{(Link (FA|GA)|(FA|GA) Link)\|'.$lang.'\}\}/i',$this->getText()))
-								{
-									//remove the link
-									$this->setText(str_replace($link,"",$this->getText()));
-									//incrememnt the counter
-									$counter++;
-								}
+								//remove the link
+								$this->setText(str_replace($link,"",$this->getText()));
+								//incrememnt the counter
+								$counter++;
 							}
 						}
 					}
@@ -280,11 +276,51 @@ class Page {
 				}
 				elseif($counter > 0)
 				{
-					$this->addSummary("Removing $counter links on [[Wikipedia:Wikidata|Wikidata]] [[d:$id]]",false);
+					$this->addSummary("Removing $counter links on [[Wikipedia:Wikidata|Wikidata]] [[d:$id]]",true);
+				}
+			
+				//Now we want to log any links left over
+				preg_match_all('/\[\[(nostalgia|ten|test|aa|ab|ace|af|ak|als|am|an|ang|ar|arc|arz|as|ast|av|ay|az|ba|bar|bat-smg|bcl|be|be-x-old|bg|bh|bi|bjn|bm|bn|bo|bpy|br|bs|bug|bxr|ca|cbk-zam|cdo|ce|ceb|ch|cho|chr|chy|ckb|co|cr|crh|cs|csb|cu|cv|cy|da|de|diq|dsb|dv|dz|ee|el|eml|en|eo|es|et|eu|ext|fa|ff|fi|fiu-vro|fj|fo|fr|frp|frr|fur|fy|ga|gag|gan|gd|gl|glk|gn|got|gu|gv|ha|hak|haw|he|hi|hif|ho|hr|hsb|ht|hu|hy|hz|ia|id|ie|ig|ii|ik|ilo|io|is|it|iu|ja|jbo|jv|ka|kaa|kab|kbd|kg|ki|kj|kk|kl|km|kn|ko|koi|kr|krc|ks|ksh|ku|kv|kw|ky|la|lad|lb|lbe|lez|lg|li|lij|lmo|ln|lo|lt|ltg|lv|map-bms|mdf|mg|mh|mhr|mi|min|mk|ml|mn|mo|mr|mrj|ms|mt|mus|mwl|my|myv|mzn|na|nah|nap|nds|nds-nl|ne|new|ng|nl|nn|no|nov|nrm|nso|nv|ny|oc|om|or|os|pa|pag|pam|pap|pcd|pdc|pfl|pi|pih|pl|pms|pnb|pnt|ps|pt|qu|rm|rmy|rn|ro|roa-rup|roa-tara|ru|rue|rw|sa|sah|sc|scn|sco|sd|se|sg|sh|si|simple|sk|sl|sm|sn|so|sq|sr|srn|ss|st|stq|su|sv|sw|szl|ta|te|tet|tg|th|ti|tk|tl|tn|to|tpi|tr|ts|tt|tum|tw|ty|udm|ug|uk|ur|ve|vec|vep|vi|vls|vo|wa|war|wo|wuu|xal|xh|xmf|yi|yo|za|zea|zh|zh-classical|zh-min-nan|zh-yue|zu):([^\]]+)\]\]/i',$this->getText(),$matches);
+				//if there are still links left over
+				if(count($matches) > 0)
+				{
+					$tolog = "";
+					$needlog = false;
+					if($id == ""){$tolog .= "[https://www.wikidata.org/wiki/Special:CreateItem UNSET]";}
+					else{$tolog .= "[[d:$id]]";}
+					$tolog .= " -> en is  [[".$this->getName()."]]\n";
+					foreach($matches[0] as $key => $match)
+					//make sure they are not are not a GA or FA
+					if(!preg_match('/\{\{(Link (FA|GA)|(FA|GA) Link)\|'.$matches[1][$key].'\}\}/i',$this->getText()))
+					{
+						$tolog .= "** ".$matches[1][$key]." should be  ".$matches[2][$key]."\n";
+						$needlog = true;
+					}
+					//Log
+					if($needlog)
+					{
+						$this->logevent('wikidata',$tolog);
+					}
 				}
 			}
 		}
 	}
+
+	//TODO ADD THIS TO WIKI CLASS	
+//Create log function
+//This can be used to post output to User:Addbot/log/<PARAM>
+//Data will be added to the top of the page in a bulleted list
+private function logevent ($type,$what)
+{
+	global $config,$wiki;
+	//if we are set to log this type
+	if(isset($config['Log'][$type]))
+	{
+		$text = $wiki->getpage('User:'.$config['user'].'/log/'.$config['Log'][$type]);// get previous page
+		$text = "* ".$what."\n".$text;// add our stuff
+		$wiki->edit('User:'.$config['user'].'/log/'.$config['Log'][$type],$text,$what,true);// save the page	
+	}
+}
 	
 	// returns true if there are 0 links to the page from the mainspace
 	// returns false if there is at least 1 link that fits the criteria
