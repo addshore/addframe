@@ -196,15 +196,15 @@ foreach ($list as $item)
 				{
 					//Then we can post
 					echo "\n> POST: ".$page->getSummary();
-					$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+					$return = $wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true,true,null,false,'1');
 					//$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
-					sleep(1);//sleep after an edit
+					//sleep(1);//sleep after an edit
 				}
 			}
 		}
 	}
 	
-	sleep(3);// sleep inbetween requests
+	//sleep(1);// sleep inbetween requests
 }
 
 ?>
