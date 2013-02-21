@@ -289,11 +289,11 @@ class Page {
 				}
 				if($counter > 1)
 				{
-					$this->addSummary("Updating $counter wikilinks per [[Wikipedia:Wikidata|Wikidata]] [[d:$id]]",true);
+					$this->addSummary("Migrating $counter interwiki links, now provided by [[Wikipedia:Wikidata|Wikidata]] on [[d:$id]]",true);
 				}
 				elseif($counter > 0)
 				{
-					$this->addSummary("Updating $counter wikilinks per [[Wikipedia:Wikidata|Wikidata]] [[d:$id]]",true);
+					$this->addSummary("Migrating $counter interwiki links, now provided by [[Wikipedia:Wikidata|Wikidata]] on [[d:$id]]",true);
 				}
 			
 				//Now we want to log any links left over
@@ -303,20 +303,28 @@ class Page {
 				{
 					$tolog = "";
 					$needlog = false;
-					if($id == ""){$tolog .= "[https://www.wikidata.org/wiki/Special:CreateItem UNSET]";}
-					else{$tolog .= "[[d:$id]]";}
-					$tolog .= " -> en is  [[".$this->getName()."]]\n";
+					if($id == ""){$tolog .= "=== ".$this->getName()." [https://www.wikidata.org/wiki/Special:CreateItem UNSET] ===\n";}
+					else{$tolog .= "=== [[d:$id]] ===\n";}
+					$tolog .= "* en is  [[".$this->getName()."]]\n";
 					foreach($matches[0] as $key => $match)
-					//make sure they are not are not a GA or FA
-					if(!preg_match('/\{\{(Link (FA|GA)|(FA|GA) Link)\|'.$matches[1][$key].'\}\}/i',$this->getText()))
 					{
-						$tolog .= "** ".$matches[1][$key]." should be  ".$matches[2][$key]."\n";
+						//make sure it is not included somewhere else
+						$r2 = $this->wiki->wikidatasitelinks($matches[2][$key],$matches[1][$key]);
+						if(count($r) == 1)
+						{
+							$tolog .= "** ".$matches[1][$key]." should be  ".$matches[2][$key]." [http://www.wikidata.org/w/index.php?title=Special%3AItemByTitle&site=".urlencode($matches[1][$key])."wiki&page=".urlencode($matches[2][$key])." check] CONFLICT with [[d:".$r2[0]['id']."]]\n";
 						$needlog = true;
+						}
+						else
+						{
+							$tolog .= "** ".$matches[1][$key]." should be  ".$matches[2][$key]." [http://www.wikidata.org/w/index.php?title=Special%3AItemByTitle&site=".urlencode($matches[1][$key])."wiki&page=".urlencode($matches[2][$key])." check]\n";
+						$needlog = true;
+						}
 					}
 					//Log
 					if($needlog)
 					{
-						$this->logevent('wikidata',$tolog);
+						//$this->logevent('wikidata',$tolog);
 					}
 				}
 			}
@@ -334,7 +342,7 @@ private function logevent ($type,$what)
 	if(isset($config['Log'][$type]))
 	{
 		$text = $wiki->getpage('User:'.$config['user'].'/log/'.$config['Log'][$type]);// get previous page
-		$text = "* ".$what."\n".$text;// add our stuff
+		$text = $text."\n".$what;// add our stuff
 		$wiki->edit('User:'.$config['user'].'/log/'.$config['Log'][$type],$text,$what,true);// save the page	
 	}
 }
@@ -781,24 +789,25 @@ private function logevent ($type,$what)
 	//http://en.wikipedia.org/w/index.php?title=Wikipedia:AutoEd/whitespace.js&action=raw&ctype=text/javascript
 	public function fixWhitespace()
 	{
-		$this->text = preg_replace('/\t/'," ", $this->getText() );
+		//leading whitespace
+		//$this->text = preg_replace('/\t/'," ", $this->getText() );
 		
-		$this->text = preg_replace('/^ ? ? \n/m',"\n", $this->getText() );
+		//$this->text = preg_replace('/^ ? ? \n/m',"\n", $this->getText() );
 		$this->text = preg_replace('/(\n\n)\n+/',"$1", $this->getText() );
-		$this->text = preg_replace('/== ? ?\n\n==/',"==\n==", $this->getText() );
-		$this->text = preg_replace('/\n\n(\* ?\[?http)/',"\n$1", $this->getText() );
+		//$this->text = preg_replace('/== ? ?\n\n==/',"==\n==", $this->getText() );
+		//$this->text = preg_replace('/\n\n(\* ?\[?http)/',"\n$1", $this->getText() );
 		
-		$this->text = preg_replace('/^ ? ? \n/m',"\n", $this->getText() );
-		$this->text = preg_replace('/\n\n\*/',"\n*", $this->getText() );
-		$this->text = preg_replace('/([=\n]\n)\n+/',"$1", $this->getText() );
-		$this->text = preg_replace('/ \n/',"\n", $this->getText() );
+		//$this->text = preg_replace('/^ ? ? \n/m',"\n", $this->getText() );
+		//$this->text = preg_replace('/\n\n\*/',"\n*", $this->getText() );
+		//$this->text = preg_replace('/([=\n]\n)\n+/',"$1", $this->getText() );
+		//$this->text = preg_replace('/ \n/',"\n", $this->getText() );
 		
-		$this->text = preg_replace('/^([\*#]+:*) /m',"$1", $this->getText() );
-		$this->text = preg_replace('/^([\*#]+:*)/m',"$1 ", $this->getText() );
+		//$this->text = preg_replace('/^([\*#]+:*) /m',"$1", $this->getText() );
+		//$this->text = preg_replace('/^([\*#]+:*)/m',"$1 ", $this->getText() );
 		
-		$this->text = preg_replace('/^(={1,4} )[ ]*([^= ][^=]*[^= ])[ ]*( ={1,4})$/m',"$1$2$3", $this->getText() );
-		$this->text = preg_replace('/^(={1,4})([^= ][^=]*[^= ])[ ]+(={1,4})$/m',"$1$2$3", $this->getText() );
-		$this->text = preg_replace('/^(={1,4})[ ]+([^= ][^=]*[^= ])(={1,4})$/m',"$1$2$3", $this->getText() );
+		//$this->text = preg_replace('/^(={1,4} )[ ]*([^= ][^=]*[^= ])[ ]*( ={1,4})$/m',"$1$2$3", $this->getText() );
+		//$this->text = preg_replace('/^(={1,4})([^= ][^=]*[^= ])[ ]+(={1,4})$/m',"$1$2$3", $this->getText() );
+		//$this->text = preg_replace('/^(={1,4})[ ]+([^= ][^=]*[^= ])(={1,4})$/m',"$1$2$3", $this->getText() );
 		
 		//remove leading white space
 		$this->text = preg_replace('/^(\n|\r){0,5}/',"", $this->getText() );
