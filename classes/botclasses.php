@@ -560,7 +560,13 @@ class wikipedia {
         if ($maxlag!='') {
             $maxlag='&maxlag='.$maxlag;
         }
-        return $this->query('?action=edit&format=php'.$maxlag,$params);
+		do{
+        $return = $this->query('?action=edit&format=php'.$maxlag,$params);
+		//if we didnt get a maxlag error we are done
+		if($return['error']['code'] != "maxlag"){return $return;}
+		echo "\nSleeping due to Maxlag! ".$return['error']['info']." seconds\n";
+		sleep(10);
+		} while(true);
     }
 
     /**
@@ -953,8 +959,8 @@ class wikipedia {
      * @return Array of entities the page can be found in on wikidata
 	 * @author Addshore
      **/
-	function wikidatasitelinks ($page){
-		$x = $this->http->get("http://wikidata.org/w/api.php?action=wbgetentities&sites=enwiki&props=sitelinks&format=php&titles=".urlencode($page));
+	function wikidatasitelinks ($page,$lang = "en"){
+		$x = $this->http->get("http://wikidata.org/w/api.php?action=wbgetentities&sites=".urlencode($lang)."wiki&props=sitelinks&format=php&titles=".urlencode($page));
 		$x = unserialize($x);
 		if($x['success'] == 1)
 		{
