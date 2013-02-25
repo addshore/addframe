@@ -312,7 +312,7 @@ class Page {
 						$r2 = $this->wiki->wikidatasitelinks($matches[2][$key],$matches[1][$key]);
 						if(count($r) == 1)
 						{
-							$tolog .= "** ".$matches[1][$key]." should be  ".$matches[2][$key]." [http://www.wikidata.org/w/index.php?title=Special%3AItemByTitle&site=".urlencode($matches[1][$key])."wiki&page=".urlencode($matches[2][$key])." check] CONFLICT with [[d:".$r2[0]['id']."]]\n";
+							$tolog .= "** ".$matches[1][$key]." should be  ".$matches[2][$key]." [http://www.wikidata.org/w/index.php?title=Special%3AItemByTitle&site=".urlencode($matches[1][$key])."wiki&page=".urlencode($matches[2][$key])." check] conflict with [[d:".$r2[0]['id']."]]\n";
 						$needlog = true;
 						}
 						else
@@ -324,7 +324,7 @@ class Page {
 					//Log
 					if($needlog)
 					{
-						//$this->logevent('wikidata',$tolog);
+						$this->logevent('wikidata',$tolog);
 					}
 				}
 			}
@@ -341,9 +341,16 @@ private function logevent ($type,$what)
 	//if we are set to log this type
 	if(isset($config['Log'][$type]))
 	{
-		$text = $wiki->getpage('User:'.$config['user'].'/log/'.$config['Log'][$type]);// get previous page
-		$text = $text."\n".$what;// add our stuff
-		$wiki->edit('User:'.$config['user'].'/log/'.$config['Log'][$type],$text,$what,true);// save the page	
+		$text = $wiki->getpage('User:'.$config['user'].'/log/'.$config['Log'][$type],null,true);// get previous page
+		if(strlen($text) > 2)
+			{
+			$text = $text."\n".$what;// add our stuff
+			$split = explode("\n",$what);
+			if(strlen($text) < $config['Log']['wikidatamax'])
+			{
+				$wiki->edit('User:'.$config['user'].'/log/'.$config['Log'][$type],$text,"Adding ".$split[0],true,true,null,true,$config['General']['maxlag']);// save the page
+			}
+		}
 	}
 }
 	
@@ -897,6 +904,7 @@ private function logevent ($type,$what)
 	public function preChecks()
 	{
 		$this->text = str_ireplace("<!-- Automatically added by User:SoxBot. If this is an error, please contact User:Soxred93 -->","",$this->text);
+		$this->text = preg_replace("/<!-- ?interwiki( links?)? ?-->/i","",$this->text);
 	}
 }
 	 
