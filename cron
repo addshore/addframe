@@ -3,13 +3,16 @@ MAILTO=""
 #Every Min
 #* * * * * php /data/project/addbot/enwiki/run.php
 
-*/3 * * * * php /data/project/addbot/enwiki/run.wd.php
+*/2 * * * * php /data/project/addbot/enwiki/run.wd.php
+* * * * * php /data/project/addbot/enwiki/list.iw.php
+
+*/5 * * * * php /data/project/addbot/enwiki/clean.php
 
 #Every 5 Mins
 #The below kills any run.php that has been running for over an hour wusing over 100,000kb of ram
 */5 * * * * ps -o sz,etime,pid,comm,args -U addshore | grep run.php | grep -v grep | perl -ane '($m,$s) = split /:/,$F[1]; $kb=$F[0]; $pid = $F[2]; if(($m>60)||($kb>100000)) {print "$m :: $s $kb $pid\n"; kill 9, $pid;}'
 */5 * * * * ps -o sz,etime,pid,comm,args -U addshore | grep list.php | grep -v grep | perl -ane '($m,$s) = split /:/,$F[1]; $kb=$F[0]; $pid = $F[2]; if(($m>240)||($kb>100000)) {print "$m :: $s $kb $pid\n"; kill 9, $pid;}'
-*/5 * * * * ps -o sz,etime,pid,comm,args -U addshore | grep run.wd.php | grep -v grep | perl -ane '($m,$s) = split /:/,$F[1]; $kb=$F[0]; $pid = $F[2]; if(($m>60)||($kb>100000)) {print "$m :: $s $kb $pid\n"; kill 9, $pid;}'
+*/5 * * * * ps -o sz,etime,pid,comm,args -U addshore | grep run.wd.php | grep -v grep | perl -ane '($m,$s) = split /:/,$F[1]; $kb=$F[0]; $pid = $F[2]; if(($m>240)||($kb>100000)) {print "$m :: $s $kb $pid\n"; kill 9, $pid;}'
 
 #Every 10 mins
 */10 * * * * php /data/project/addbot/enwiki/list.php --method="list" --source="User:Addbot/check"
@@ -18,10 +21,10 @@ MAILTO=""
 #Daily
 #0 0 * * * php /data/project/addbot/enwiki/list.php --method="web" --source="http://toolserver.org/~dpl/data/uncategorized_articles_list.txt" --trigger="http://toolserver.org/~dpl/data/trigger_uncat_file.php"
 #0 1 * * * php /data/project/addbot/enwiki/list.php --method="cat" --source="Category:All_articles_proposed_for_deletion"
-0 12 * * * php /data/project/addbot/enwiki/list.php --method="template" --source="Template:Welcome" --namespace="3"
-0 22 * * * php /data/project/addbot/enwiki/list.php --method="template" --source="Template:ANI-Notice" --namespace="3"
-0 22 * * * php /data/project/addbot/enwiki/list.php --method="template" --source="Template:RPA" --namespace="3"
-0 22 * * * php /data/project/addbot/enwiki/list.php --method="template" --source="Template:Test" --namespace="3"
+#0 12 * * * php /data/project/addbot/enwiki/list.php --method="template" --source="Template:Welcome" --namespace="3"
+#0 22 * * * php /data/project/addbot/enwiki/list.php --method="template" --source="Template:ANI-Notice" --namespace="3"
+#0 22 * * * php /data/project/addbot/enwiki/list.php --method="template" --source="Template:RPA" --namespace="3"
+#0 22 * * * php /data/project/addbot/enwiki/list.php --method="template" --source="Template:Test" --namespace="3"
 
 #Spread out around the a week
 #0 0 * * 0 php /data/project/addbot/enwiki/list.php --method="cat" --source="Category:Orphaned_articles_from_November_2006"
