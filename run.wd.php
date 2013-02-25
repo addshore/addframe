@@ -74,8 +74,9 @@ else
 	$count = Database::mysql2array($db->select('pending','COUNT(*)'));
 	$count = $count[0]['COUNT(*)'];
 	echo "\nCurrently ".$count." articles pending review";
-	$limit = round($count/100+10);
-	if($limit > 200) { $limit = 200; }
+	//$limit = round($count/100+10);
+	//if($limit > 200) { $limit = 200; }
+	$limit = 222;
 	$result = $db->select('pending','*',null,array("LIMIT" => $limit));
 	$list = Database::mysql2array($result);
 	echo "\nGot ".count($list)." articles from pending";
@@ -128,33 +129,6 @@ foreach ($list as $item)
 				}
 			}
 			break;
-			
-		case "User talk":
-			echo "\n> Is User talk";
-			if(!preg_match('/\//',$page->getName()))//if it is not a subpage
-			{
-				foreach($config['AWB']['usertalk'] as $template)
-				{
-					//get size before so we can see if we have changed
-					$sizebefore = strlen($page->getText());
-					//Convert our template to regex
-					$regex = preg_quote($template,'/');
-					$regex = str_replace(" ","( |_)",$regex);
-					$regex = preg_replace("/^Template\\\:/i","(Template\:)?",$regex);
-					//Do the replace
-					if(preg_match('/\{\{'.$regex.'((\|([0-9a-zA-Z _]*?)( ?= ?[0-9a-zA-Z _]*?)){0,6})?\}\}/i',$page->getText(),$matches))
-					{
-						$new = str_replace("{{","{{Subst:",$matches[0]);
-						$page->setText(str_replace($matches[0],$new,$page->getText()));
-					}
-					//if the page has changed
-					if($sizebefore != strlen($page->getText()))
-					{
-						$page->addSummary("Substing {{[[".$template."]]}}");
-					}
-				}
-			}
-			break;
 	}
 	
 	//If we have a sig change then we want to post
@@ -196,7 +170,7 @@ foreach ($list as $item)
 				{
 					//Then we can post
 					echo "\n> POST: ".$page->getSummary();
-					$return = $wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true,true,null,false,'1');
+					$return = $wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true,true,null,false,$config['General']['maxlag']);
 					//$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
 					//sleep(1);//sleep after an edit
 				}
