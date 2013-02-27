@@ -277,7 +277,7 @@ class Page {
 							$lang = str_replace("_","-",str_replace("wiki","",$l['site']));
 							//echo $lang.":".$l['title']."\n";
 							$link = "\n[[".$lang.":".$l['title']."]]";
-							if(preg_match('/'.preg_quote($link).'/',$this->getText()))
+							if(preg_match('/'.preg_quote($link,'/').'/',$this->getText()))
 							{
 								//remove the link
 								$this->setText(str_replace($link,"",$this->getText()));
@@ -301,25 +301,28 @@ class Page {
 				//if there are still links left over
 				if(count($matches) > 0)
 				{
+					if(count($matches) > 4){$needlog = true;}
 					$tolog = "";
 					$needlog = false;
-					if($id == ""){$tolog .= "=== ".$this->getName()." [https://www.wikidata.org/wiki/Special:CreateItem UNSET] ===\n";}
+					if($id == ""){$tolog .= "=== ".$this->getName()." [https://www.wikidata.org/wiki/Special:CreateItem UNSET] ===\n";$needlog = true;}
 					else{$tolog .= "=== [[d:$id]] ===\n";}
 					$tolog .= "* en is  [[".$this->getName()."]]\n";
 					foreach($matches[0] as $key => $match)
 					{
 						//make sure it is not included somewhere else
+						//$r = $this->wiki->wikidatasitelinks($this->getName());
+						/*
 						$r2 = $this->wiki->wikidatasitelinks($matches[2][$key],$matches[1][$key]);
-						if(count($r) == 1)
+						if(count($r2) == 1)
 						{
 							$tolog .= "** ".$matches[1][$key]." should be  ".$matches[2][$key]." [http://www.wikidata.org/w/index.php?title=Special%3AItemByTitle&site=".urlencode($matches[1][$key])."wiki&page=".urlencode($matches[2][$key])." check] conflict with [[d:".$r2[0]['id']."]]\n";
-						$needlog = true;
+							$needlog = true;
 						}
 						else
-						{
-							$tolog .= "** ".$matches[1][$key]." should be  ".$matches[2][$key]." [http://www.wikidata.org/w/index.php?title=Special%3AItemByTitle&site=".urlencode($matches[1][$key])."wiki&page=".urlencode($matches[2][$key])." check]\n";
-						$needlog = true;
-						}
+						{*/
+							$tolog .= "** ".$matches[1][$key]." ->  ".$matches[2][$key]." [http://www.wikidata.org/w/index.php?title=Special%3AItemByTitle&site=".urlencode($matches[1][$key])."wiki&page=".urlencode($matches[2][$key])." check]\n";
+							//$needlog = true;
+						//}
 					}
 					//Log
 					if($needlog)
