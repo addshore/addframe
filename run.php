@@ -31,6 +31,7 @@ echo "done";
 //Get further config stuff
 $config = parse_ini_string(preg_replace("/(\<syntaxhighlight lang='ini'\>|\<\/syntaxhighlight\>)/i","",$wiki->getpage("User:Addbot/config")),true);
 require 'config.php';//again
+require 'config.run.php';
 if($config['General']['run'] != true){echo "\nNot set to run"; die();}//if we are not meant to run die
 //Get AWB user talk subst list
 $awbutt = $wiki->getpage('Wikipedia:AutoWikiBrowser/User_talk_templates');
