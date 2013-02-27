@@ -465,7 +465,7 @@ foreach ($list as $item)
 				{
 					//Then we can post
 					echo "\n> POST: ".$page->getSummary();
-					//$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true);
+					$wiki->edit($page->getName(),$page->getText(),$page->getSummary(),true,true,null,false,$config['General']['maxlag']);
 					//$wiki->edit("User:Addbot/Sandbox",$page->getText(),$page->getSummary(),true);
 					sleep(15);//sleep after an edit
 				}
