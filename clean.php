@@ -33,11 +33,17 @@ $config = parse_ini_string(preg_replace("/(\<syntaxhighlight lang='ini'\>|\<\/sy
 require 'config.php';//again
 if($config['General']['run'] != true){echo "\nNot set to run"; die();}//if we are not meant to run die
 
+$rmdone = Array("User:Addbot/log/wikidata","User:Addbot/log/wikidata/1","User:Addbot/log/wikidata/2","User:Addbot/log/wikidata/3","User:Addbot/log/wikidata/4","User:Addbot/log/wikidata/5","User:Addbot/log/wikidata/6");
+
 ////Wikidata Log
-$page = new Page("User:Addbot/log/wikidata",$wiki);
-if (strlen($page->getText()) < 5){echo "\n> Page less than 5 length (may not exist)";die();}
-$page->setText(preg_replace("/===[^=]*?===\n(?<====\n)(?:(?!===).)*?done}}.*?(?=\s*===|$)/ims","",$page->getText()));
-$page->fixWhitespace();
-$wiki->edit($page->getName(),$page->getText(),"[[User:Addbot|Bot:]] Removing completed sections",true,true,null,false);
+foreach($rmdone as $title)
+{
+	$page = new Page($title,$wiki);
+	echo "\n$title";
+	if (strlen($page->getText()) < 2){echo "\n> Page less than 2 length (may not exist)";continue;}
+	$page->setText(preg_replace("/===[^=]*?===\n(?<====\n)(?:(?!===).)*?done}}.*?(?=\s*===|$)/ims","",$page->getText()));
+	$page->fixWhitespace();
+	$wiki->edit($page->getName(),$page->getText(),"[[User:Addbot|Bot:]] Removing 'done' sections",true,true,null,false);
+}
 
 ?>
