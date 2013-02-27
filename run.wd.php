@@ -3,7 +3,6 @@
 $options = getopt("",Array("page::"));
 
 echo "loading...";
-sleep(1);
 
 // load the classes and stuff
 require 'classes/botclasses.php';
@@ -21,7 +20,6 @@ $wiki->url = "http://".$config['url']."/w/api.php";
 global $wiki;
 
 echo "\nLogging in...";
-sleep(1);echo "..";
 
 // perform the login
 $wiki->login($config['user'],$config['password']);
@@ -66,7 +64,6 @@ else
 {
 	// connect to the database
 	echo "\nConnecting to database...";
-	sleep(1); echo "...";
 	$db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 	echo "done";
 
@@ -76,7 +73,7 @@ else
 	echo "\nCurrently ".$count." articles pending review";
 	//$limit = round($count/100+10);
 	//if($limit > 200) { $limit = 200; }
-	$limit = 222;
+	$limit = 200;
 	$result = $db->select('pending','*',null,array("LIMIT" => $limit));
 	$list = Database::mysql2array($result);
 	echo "\nGot ".count($list)." articles from pending";
@@ -85,7 +82,6 @@ else
 		// before we start checking we want to remove our got articles from the DB
 		// so that another instance wont try and check them also
 		echo "\nRemoving";
-		sleep(1);
 		foreach ($list as $item){
 			$res = $db->delete($config['tblist'],array('article' => $item['article']));
 			if( !$res  ){echo $db->errorStr();} // if no result then say so
