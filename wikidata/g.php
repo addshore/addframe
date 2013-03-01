@@ -102,6 +102,7 @@ foreach ($list as $item)
 						case "en":$summary = "[[User:Addbot|Bot:]] Migrating $counter interwiki links, now provided by [[Wikipedia:Wikidata|Wikidata]] on [[d:$id]]"; break;
 						case "it":$summary = "migrazione di $counter interwiki links su [[d:Wikidata:Pagina_principale|Wikidata]] - [[d:$id]]"; break;
 						case "he":$summary = "בוט: מעביר קישורי בינויקי ל[[ויקיפדיה:ויקינתונים|ויקינתונים]] - [[d:$id]]"; break;
+						case "nl":$summary = "[[Migeren van $counter interwikilinks die op [[d:|Wikidata]] beschikbaar zijn op [[d:$id]]"
 					}
 						
 					}
