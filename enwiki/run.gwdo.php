@@ -33,6 +33,17 @@ $runn = $options['num'];
 
 $filename = "/data/project/addbot/enwiki/$glang/$glang ".$runn.".txt";
 
+//Decide on the summary
+switch ($glang) {
+	case "en":
+	break;
+	case "en":
+	break;	
+	case "en":
+	break;
+	case "en":
+	break;
+	
 //TODO LOAD LIST
 $list = file_get_contents($filename);
 $list = explode("\n",$list);

@@ -73,7 +73,7 @@ else
 	echo "\nCurrently ".$count." articles pending review";
 	//$limit = round($count/100+10);
 	//if($limit > 200) { $limit = 200; }
-	$limit = 200;
+	$limit = 300;
 	$result = $db->select('pending','*',null,array("LIMIT" => $limit));
 	$list = Database::mysql2array($result);
 	echo "\nGot ".count($list)." articles from pending";

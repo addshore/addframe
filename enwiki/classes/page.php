@@ -309,20 +309,7 @@ class Page {
 					$tolog .= "* en is  [[".$this->getName()."]]\n";
 					foreach($matches[0] as $key => $match)
 					{
-						//make sure it is not included somewhere else
-						//$r = $this->wiki->wikidatasitelinks($this->getName());
-						/*
-						$r2 = $this->wiki->wikidatasitelinks($matches[2][$key],$matches[1][$key]);
-						if(count($r2) == 1)
-						{
-							$tolog .= "** ".$matches[1][$key]." should be  ".$matches[2][$key]." [http://www.wikidata.org/w/index.php?title=Special%3AItemByTitle&site=".urlencode($matches[1][$key])."wiki&page=".urlencode($matches[2][$key])." check] conflict with [[d:".$r2[0]['id']."]]\n";
-							$needlog = true;
-						}
-						else
-						{*/
 							$tolog .= "** ".$matches[1][$key]." ->  ".$matches[2][$key]." [http://www.wikidata.org/w/index.php?title=Special%3AItemByTitle&site=".urlencode($matches[1][$key])."wiki&page=".urlencode($matches[2][$key])." check]\n";
-							//$needlog = true;
-						//}
 					}
 					//Log
 					if($needlog)
@@ -334,7 +321,7 @@ class Page {
 		}
 	}
 
-	//TODO ADD THIS TO WIKI CLASS	
+//TODO ADD THIS TO WIKI CLASS	
 //Create log function
 //This can be used to post output to User:Addbot/log/<PARAM>
 //Data will be added to the top of the page in a bulleted list
@@ -907,7 +894,7 @@ private function logevent ($type,$what)
 	public function preChecks()
 	{
 		$this->text = str_ireplace("<!-- Automatically added by User:SoxBot. If this is an error, please contact User:Soxred93 -->","",$this->text);
-		$this->text = preg_replace("/<!-- ?interwiki( links?)? ?-->/i","",$this->text);
+		$this->text = preg_replace("/<!-- ?interwikis?( links?)? ?-->/i","",$this->text);
 	}
 }
 	 
