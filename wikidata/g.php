@@ -66,7 +66,7 @@ foreach ($list as $item)
 	
 	$summary = "";
 	echo ".";
-	$text = $wiki->getpage($name);
+	$text = $wiki->getpage($name,null,true);
 	if (strlen($text) < 2){echo "-";continue;}
 	
 	//$result = preg_match("/^((Talk|User|Wikipedia|File|Image|Mediawiki|Template|Help|Category|Portal|Book|Education( |_)program|TimedText)(( |_)talk)?):?/i",$name,$matches);
@@ -102,7 +102,7 @@ foreach ($list as $item)
 						case "en":$summary = "[[User:Addbot|Bot:]] Migrating $counter interwiki links, now provided by [[Wikipedia:Wikidata|Wikidata]] on [[d:$id]]"; break;
 						case "it":$summary = "migrazione di $counter interwiki links su [[d:Wikidata:Pagina_principale|Wikidata]] - [[d:$id]]"; break;
 						case "he":$summary = "בוט: מעביר קישורי בינויקי ל[[ויקיפדיה:ויקינתונים|ויקינתונים]] - [[d:$id]]"; break;
-						case "nl":$summary = "[[Migeren van $counter interwikilinks die op [[d:|Wikidata]] beschikbaar zijn op [[d:$id]]"
+						case "nl":$summary = "Verplaatsing van $counter interwikilinks die op [[d:|Wikidata]] beschikbaar zijn op [[d:$id]]"
 					}
 						
 					}
@@ -117,7 +117,7 @@ foreach ($list as $item)
 	if($summary != "")
 	{
 		echo "E";
-		$wiki->edit($name,$text,$summary,true,true,null,false,"0");
+		$wiki->edit($name,$text,$summary,true,true,null,true,"0");
 	}
 	
 }
