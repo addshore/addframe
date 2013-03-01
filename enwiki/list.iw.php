@@ -1,8 +1,8 @@
 <?PHP
 // load the classes and stuff
-require 'classes/botclasses.php';
-require 'classes/database.php';
-require 'classes/template.php';
+require '../classes/botclasses.php';
+require '../classes/database.php';
+require '../classes/template.php';
 require 'config.php';
 
 // initialise the wiki
