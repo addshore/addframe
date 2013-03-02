@@ -39,7 +39,7 @@ if(!isset($file))
 	$db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 	echo "done";
 
-	$result = $db->select('iwlinked','*',"lang = '$glang'",array("LIMIT" => 150));
+	$result = $db->select('iwlinked','*',"lang = '$glang'",array("LIMIT" => 100));
 	$list = Database::mysql2array($result);
 	echo "\nGot ".count($list)." articles from $glang pending";
 	echo "\nRemoving";
@@ -82,8 +82,7 @@ foreach ($list as $item)
 					foreach ($ent['sitelinks'] as $l)
 					{
 						$lang = str_replace("_","-",str_replace("wiki","",$l['site']));
-						$link = "\n ?[[".$lang." ?: ?".$l['title']." ?]] ?";
-						$link = str_replace(" ","( |_)",preg_quote($link,'/'));
+						$link = "\n ?\[\[".preg_quote($lang,'/')." ?: ?".str_replace(" ","( |_)",preg_quote($l['title'],'/'))." ?\]\] ?";
 						if(preg_match('/'.$link.'/',$text))
 						{
 							$text = preg_replace('/'.$link.'/',"",$text);//remove the link
@@ -115,6 +114,7 @@ foreach ($list as $item)
 	{
 		echo "E";
 		$wiki->edit($name,$text,$summary,true,true,null,true,"0");
+		sleep(1);
 	}
 	
 }
