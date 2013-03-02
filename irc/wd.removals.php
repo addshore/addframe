@@ -3,7 +3,7 @@
 /* -------------------------------- Bot Setup -------------------------------- */
 
 //From http://toolserver.org/~chris/highlight.php?d=chris/classes/&f=botclasses.php
-require 'botclasses.php';
+require '../classes/botclasses.php';
 
 $wiki = new wikipedia;
 $wiki->url = 'http://en.wikipedia.org/w/api.php';
@@ -12,11 +12,11 @@ global $wiki;
 $parentpid = posix_getpid();
 
 $user = "Addbot";
-$nickname = "Addbot";
+$nickname = "Addbot-wdr";
 $owner = "Addshore";
 
 set_time_limit(0); 
-require '.password.addbot.php';
+require '/home/addshore/.password.addbot';
 $wiki->login($user,$pass);
 echo "USER: Logged In!\n";
 unset($pass);
