@@ -1,7 +1,6 @@
 <?PHP
 
 /* -------------------------------- Bot Setup -------------------------------- */
-global $instance, $freenode;	
 
 require 'bot.login.php';
 
@@ -13,58 +12,117 @@ $rc_host = "irc.wikimedia.org";
 $rc_port = 6667;
 $rc_channel = "#en.wikipedia";
 
-$instance[0]['id'] = 0;
-$instance[0]['channel'] = "##Addshore";
-$instance[0]['regex'] = "/(WP:(HG|TW))/i";
-$instance[0]['regex'] = "/(WP:(HG|TW))/i";
-/*$instance[1]['id'] = 1;
-$instance[1]['channel'] = "##Addshore";
-$instance[0]['regex'] = "/Addbot/i";
-$instance[2]['id'] = 2;
-$instance[2]['channel'] = "##Addshore";
-$instance[0]['regex'] = "/John F\. Lewis/i";
-$instance[3]['id'] = 3;
-$instance[3]['channel'] = "##Addshore";
-$instance[0]['regex'] = "/(Riley Huntley)/i";*/
-
-
-global $instance, $freenode;	
-
 /* -------------------------------- Freenode Irc -------------------------------- */
 
-foreach($instance as $t){
-	$pid = pcntl_fork();
-	if(!$pid){
-		$freenode[$t['id']] = array(); 
-		$freenode[$t['id']]['SOCKET'] = @fsockopen($server_host, $server_port, $errno, $errstr, 2);
-				if($freenode[$t['id']]['SOCKET']){ 
-						@fwrite($freenode[$t['id']]['SOCKET'], "NICK ".$user.$t['id']."\r");
-						@fwrite($freenode[$t['id']]['SOCKET'], "USER ".$user.$t['id']." Addbot Wikipedia Bot"."\r");
-						@fwrite($freenode[$t['id']]['SOCKET'], "JOIN ".$t['channel']."\r");
-						while(!feof($freenode[$t['id']]['SOCKET'])){ 
-								$freenode[$t['id']]['READ_BUFFER'][$t['id']] = str_replace(array("\n","\r"),'',fgets($freenode[$t['id']]['SOCKET'], 1024)); //get a line of data from the server
-								if ( !preg_match('/(00(1|2|3|4|5)|2(5(0|1|2|4|5)|6(5|6))|3(53|66|7(2|6|5))) '.$nickname.'/', $freenode[$t['id']]['READ_BUFFER'][$t['id']]))
-								{ echo "IRC>: ".$freenode[$t['id']]['READ_BUFFER'][$t['id']]."\n";}
-								$d = explode(' ',$freenode[$t['id']]['READ_BUFFER'][$t['id']]);
-								if (strtolower($d[0]) == 'ping') { @fwrite($freenode[$t['id']]['SOCKET'], "PONG :".substr($freenode[$t['id']]['READ_BUFFER'][$t['id']], 6)."\r");}
-								flush(); } }
-				unset ($pid['freenode'][$t['id']]);exit();
-		break;
-	}
+$freenode = array(); 
+$freenode['SOCKET'] = @fsockopen($server_host, $server_port, $errno, $errstr, 2);
+$pid['freenode'] = pcntl_fork();
+if ( $pid['freenode'] == 0 ) {
+        set_time_limit(0); 
+        if($freenode['SOCKET']) 
+        { 
+                freenodeCommand("NICK ".$user."-1"); //sends the nickname 
+                freenodeCommand("USER ".$user."-1 Addbot Wikipedia Bot");
+                freenodeCommand("JOIN $server_chan");
+                while(!feof($freenode['SOCKET'])) //while we are connected to the server 
+                { 
+                        $freenode['READ_BUFFER'] = str_replace(array("\n","\r"),'',fgets($freenode['SOCKET'], 1024)); //get a line of data from the server
+                        if ( !eregi('(00(1|2|3|4|5)|2(5(0|1|2|4|5)|6(5|6))|3(53|66|7(2|6|5))) '.$nickname, $freenode['READ_BUFFER']))
+                        {
+                                echo "IRC>: ".$freenode['READ_BUFFER']."\n";
+                        }
+
+                        $d = explode(' ',$freenode['READ_BUFFER']);
+                        if (strtolower($d[0]) == 'ping') {
+                                freenodeCommand("PONG :".substr($freenode['READ_BUFFER'], 6)); //Reply with pong
+                        } elseif (strtolower($d[1]) == 'privmsg') {
+                                if (substr($d[3],0,2) == ':!') {
+                                        if (strtolower($d[2]) == strtolower($user)) { 
+                                                $tmp = explode('!',substr($d[0],1));
+                                                $cmd = 'NOTICE '.$tmp[0]; }
+                                        else { $cmd = 'PRIVMSG '.$d[2]; }
+
+                                        switch (substr(strtolower($d[3]),2)) {
+                                                case 'count':
+                                                        if (preg_match("/\[\[User:(.*)\]\]/",$freenode['READ_BUFFER'],$n)) {
+                                                                freenodeCommand($cmd.' :[[User:'.$n[1].']] has '.$wiki->contribcount($n[1])." contributions.");
+                                                        } else {
+                                                                freenodeCommand($cmd.' :Couldn\'t find link, Please use format !Count [[User:Addbot]]');
+                                                        }
+                                                        break;
+                                                case 'help':
+                                                        freenodeCommand($cmd.' :Please ask Addshore');
+                                                        break;
+                                        }
+                                }
+                        }
+                        flush();
+                }
+        }
+        unset ($pid['freenode']);
+        exit();
+}
+
+function MessageMe ($message) {
+        global $server_chan;
+        if ($go = true ){
+			if(rand(1,2)  == 1)
+			{freenodeCommand("PRIVMSG $server_chan :$message");}
+			else{floodCommand("PRIVMSG $server_chan :$message");}
+				
+        }
+} 
+function freenodeCommand ($cmd) { 
+        global $freenode; //Extends our $server array to this function 
+        @fwrite($freenode['SOCKET'], $cmd."\r"); //sends the command to the server 
+        echo "IRC<: $cmd\n"; //displays it on the screen 
+} 
+
+function floodCommand ($cmd) { 
+        global $flood; //Extends our $server array to this function 
+        @fwrite($flood['SOCKET'], $cmd."\r"); //sends the command to the server 
+        echo "IRC<: $cmd\n"; //displays it on the screen 
+} 
+
+$flood = array(); 
+$flood['SOCKET'] = @fsockopen($server_host, $server_port, $errno, $errstr, 2);
+$pid['flood'] = pcntl_fork();
+if ( $pid['flood'] == 0 ) {
+        set_time_limit(0); 
+        if($flood['SOCKET']) 
+        { 
+                floodCommand("NICK ".$user."-2"); //sends the nickname 
+                floodCommand("USER ".$user."-2 Addbot Wikipedia Bot");
+                floodCommand("JOIN $server_chan");
+                while(!feof($flood['SOCKET'])) //while we are connected to the server 
+                { 
+                        $flood['READ_BUFFER'] = str_replace(array("\n","\r"),'',fgets($flood['SOCKET'], 1024)); //get a line of data from the server
+                        if ( !eregi('(00(1|2|3|4|5)|2(5(0|1|2|4|5)|6(5|6))|3(53|66|7(2|6|5))) '.$nickname, $flood['READ_BUFFER']))
+                        {
+                                echo "IRC>: ".$flood['READ_BUFFER']."\n";
+                        }
+                        $d = explode(' ',$flood['READ_BUFFER']);
+                        if (strtolower($d[0]) == 'ping') {
+                                floodCommand("PONG :".substr($flood['READ_BUFFER'], 6)); //Reply with pong
+                        }
+                        flush();
+                }
+        }
+        unset ($pid['flood']);
+        exit();
 }
 
 /* -------------------------------- Wikimedia RC IRC feed -------------------------------- */
 
 $wikimedia = array();
 $wikimedia['SOCKET'] = @fsockopen($rc_host, $rc_port, $errno, $errstr, 30);
-$wpid['wikimedia'] = pcntl_fork();
-if ( $wpid['wikimedia'] == 0 ) {
+$pid['wikimedia'] = pcntl_fork();
+if ( $pid['wikimedia'] == 0 ) {
         set_time_limit(0); 
         if($wikimedia['SOCKET']) 
         { 
                 wikimediaCommand("NICK $user");
                 wikimediaCommand("USER $user Addbot Wikipedia Bot");
-				//wikimediaCommand("LIST");
                 wikimediaCommand("JOIN $rc_channel");
                 while(!feof($wikimedia['SOCKET']))//while connected to the server
                 { 
@@ -93,21 +151,7 @@ if ( $wpid['wikimedia'] == 0 ) {
                                         $change['length'] = $m[14];
                                         $change['comment'] = $m[15];
                                         $change['name'] = $m[1].$m[5];
-                                        
-						
-foreach($instance as $check)
-{
-    if ( preg_match($check['regex'],$rawline))
-    {
-            //Message($check['id'],"4".$change['user']." - 13".$change['namespace'].$change['title']." - 12".$change['comment']." - 15".$change['url']);
-			@fwrite($freenode[$check['id']]['SOCKET'], "PRIVMSG ".$check['channel']." :$message"."\r");
-			echo "PRIVMSG ".$check['channel']." :$message"."\r";
-    }
-	
-	
-}
-														
-										
+                                        include 'rc.checks.php'; //check the edit data
                                 }
                         }
                         flush();
@@ -128,8 +172,9 @@ sleep(1);
 }
 
 //Kill all the processes
+MessageMe("Ending");
 foreach ($pid as $pid) {
-        //posix_kill($pid);
+        posix_kill($pid);
 }
 exit();
 
