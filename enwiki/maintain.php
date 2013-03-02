@@ -1,6 +1,6 @@
 <?
-require '../classes/botclasses.php';
-require '../classes/database.php';
+require '/data/project/addbot/classes/botclasses.php';
+require '/data/project/addbot/classes/database.php';
 require 'config.php';
 
 //echo "Connecting to DB...\n";

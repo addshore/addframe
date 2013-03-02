@@ -1,7 +1,7 @@
 <?PHP
 $option = getopt("",Array("file::","lang::"));
-require '../classes/database.php';
-require '../enwiki/config.php';
+require '/data/project/addbot/classes/database.php';
+require '/data/project/addbot/enwiki/config.php';
 if(!isset($option['file']) || !isset($option['lang']))
 {die("Incorrect Parameters\n");}
 else
