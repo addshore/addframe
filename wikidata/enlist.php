@@ -40,27 +40,24 @@ if(count($list) > 0 )
 {
 	//Increment the on wiki counter
 	$at = $at+$am;
+	$c = 0;
 	$wiki->edit("User:Addbot/iwval.js",$at,"[[User:Addbot|Bot:]] Updating counter",true);
 
 	//start addition to db
 	$rs = "INSERT INTO iwlinked (lang, article) VALUES ";
 	$r = "";
-	$c = 0;
 	foreach($list as $item) // for each item
 	{
 		if( $item != "")
 		{
+			$c++;
 			$r .= "('en','".$db->mysqlEscape($item)."'),";
 		}
 	}
-	//If we have any left over and we didnt reach 25
-	if($c >= 1)
-	{
-		echo "Inserting $c\n";
-		$r = preg_replace('/,$/','',$r);//remove final ,
-		$res = $db->doQuery($rs.$r);
-		if( !$res  ){echo $db->errorStr();}
-	}
+	echo "Inserting $c pages\n";
+	$r = preg_replace('/,$/','',$r);//remove final ,
+	$res = $db->doQuery($rs.$r);
+	if( !$res  ){echo $db->errorStr();}
 }
 
 ?>
