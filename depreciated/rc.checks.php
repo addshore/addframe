@@ -41,17 +41,4 @@ if ( preg_match("/^Wikipedia:Tutorial \((Editing|Formatting|Wikipedia links|Citi
 	unset($header);
 }
 
-//If the AWB templates page is edited
-if ( $change['name'] == "Wikipedia:AutoWikiBrowser/User talk templates")
-{
-	Messageme($change['name']." updated");
-	//echo exec("php /home/addshore/addbot/task.awbtemplates.php");
-}
-
-//If my name is spotted then tell me
-        if ( preg_match("/Add(shore|bot)/i",$rawline))
-        {
-                Messageme("[[".$change['name']."]] changed by ".$change['user']." - ".$change['comment']);
-        }
-
 ?>

@@ -20,8 +20,8 @@ $mysandbox = "User:".$owner."/Sandbox";
 
 set_time_limit(0); 
 require '/home/addshore/.password.addbot';
-$wiki->login($user,$pass);
+$wiki->login($user,$config['password']);
 echo "USER: Logged In!\n";
-unset($pass);
+unset($config['password']);
 
 ?>
