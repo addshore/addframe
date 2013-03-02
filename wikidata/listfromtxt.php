@@ -25,7 +25,7 @@ if(count($list) > 0 )
 		
 		if( $item != "")
 		{
-			usleep(1000);
+			usleep(2500);
 			$res = $db->insert('iwlinked',array('lang' => $option['lang'],'article' => $item,) ); // inset to database table
 			if( !$res  ){echo $db->errorStr()."\n";} // if no result then break as we have an error ($db->errorStr())
 			else{echo "Added ".$item." to database\n";}
