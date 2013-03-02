@@ -786,26 +786,7 @@ private function logevent ($type,$what)
 	//http://en.wikipedia.org/w/index.php?title=Wikipedia:AutoEd/whitespace.js&action=raw&ctype=text/javascript
 	public function fixWhitespace()
 	{
-		//leading whitespace
-		//$this->text = preg_replace('/\t/'," ", $this->getText() );
-		
-		//$this->text = preg_replace('/^ ? ? \n/m',"\n", $this->getText() );
 		$this->text = preg_replace('/(\n\n)\n+/',"$1", $this->getText() );
-		//$this->text = preg_replace('/== ? ?\n\n==/',"==\n==", $this->getText() );
-		//$this->text = preg_replace('/\n\n(\* ?\[?http)/',"\n$1", $this->getText() );
-		
-		//$this->text = preg_replace('/^ ? ? \n/m',"\n", $this->getText() );
-		//$this->text = preg_replace('/\n\n\*/',"\n*", $this->getText() );
-		//$this->text = preg_replace('/([=\n]\n)\n+/',"$1", $this->getText() );
-		//$this->text = preg_replace('/ \n/',"\n", $this->getText() );
-		
-		//$this->text = preg_replace('/^([\*#]+:*) /m',"$1", $this->getText() );
-		//$this->text = preg_replace('/^([\*#]+:*)/m',"$1 ", $this->getText() );
-		
-		//$this->text = preg_replace('/^(={1,4} )[ ]*([^= ][^=]*[^= ])[ ]*( ={1,4})$/m',"$1$2$3", $this->getText() );
-		//$this->text = preg_replace('/^(={1,4})([^= ][^=]*[^= ])[ ]+(={1,4})$/m',"$1$2$3", $this->getText() );
-		//$this->text = preg_replace('/^(={1,4})[ ]+([^= ][^=]*[^= ])(={1,4})$/m',"$1$2$3", $this->getText() );
-		
 		//remove leading white space
 		$this->text = preg_replace('/^(\n|\r){0,5}/',"", $this->getText() );
 	}
