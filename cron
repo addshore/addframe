@@ -7,9 +7,9 @@ MAILTO=""
 */2 * * * * php /data/project/addbot/wikidata/g.php --lang="it"
 */2 * * * * php /data/project/addbot/wikidata/g.php --lang="he"
 #*/5 * * * * php /data/project/addbot/wikidata/g.php --lang="nl"
-#*/5 * * * * php /data/project/addbot/wikidata/g.php --lang="no"
+#*/5 * * * * php /data/project/addbot/wikidata/g.php --lang="no"#needs summary
 #*/5 * * * * php /data/project/addbot/wikidata/g.php --lang="sl"
-#*/5 * * * * php /data/project/addbot/wikidata/g.php --lang="is"
+#*/5 * * * * php /data/project/addbot/wikidata/g.php --lang="is"#needs summary
 * * * * * php /data/project/addbot/wikidata/enlist.php
 
 */5 * * * * php /data/project/addbot/enwiki/clean.php
@@ -21,7 +21,7 @@ MAILTO=""
 */5 * * * * ps -o sz,etime,pid,comm,args -U addshore | grep run.wd.php | grep -v grep | perl -ane '($m,$s) = split /:/,$F[1]; $kb=$F[0]; $pid = $F[2]; if(($m>240)||($kb>100000)) {print "$m :: $s $kb $pid\n"; kill 9, $pid;}'
 
 #Every 10 mins
-*/10 * * * * php /data/project/addbot/enwiki/list.php --method="list" --source="User:Addbot/check"
+#*/10 * * * * php /data/project/addbot/enwiki/list.php --method="list" --source="User:Addbot/check"
 #*/10 * * * * php /data/project/addbot/enwiki/list.php --method="list" --source="User:Addbot/sandboxes"
 
 #Daily
