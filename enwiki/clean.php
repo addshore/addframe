@@ -33,7 +33,7 @@ $config = parse_ini_string(preg_replace("/(\<syntaxhighlight lang='ini'\>|\<\/sy
 require 'config.php';//again
 if($config['General']['run'] != true){echo "\nNot set to run"; die();}//if we are not meant to run die
 
-$rmdone = Array("User:Addbot/log/wikidata","User:Addbot/log/wikidata/1","User:Addbot/log/wikidata/2","User:Addbot/log/wikidata/3","User:Addbot/log/wikidata/4","User:Addbot/log/wikidata/5","User:Addbot/log/wikidata/6");
+$rmdone = Array("User:Addbot/log/wikidata","User:Addbot/log/wikidata/1","User:Addbot/log/wikidata/2","User:Addbot/log/wikidata/3","User:Addbot/log/wikidata/4","User:Addbot/log/wikidata/5","User:Addbot/log/wikidata/6","User:Addbot/log/wikidata/7");
 
 ////Wikidata Log
 foreach($rmdone as $title)
