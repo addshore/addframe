@@ -5,6 +5,11 @@ MAILTO=""
 
 */2 * * * * php /data/project/addbot/wikidata/g.php --lang="en"
 */2 * * * * php /data/project/addbot/wikidata/g.php --lang="it"
+*/2 * * * * php /data/project/addbot/wikidata/g.php --lang="he"
+#*/5 * * * * php /data/project/addbot/wikidata/g.php --lang="nl"
+#*/5 * * * * php /data/project/addbot/wikidata/g.php --lang="no"
+#*/5 * * * * php /data/project/addbot/wikidata/g.php --lang="sl"
+#*/5 * * * * php /data/project/addbot/wikidata/g.php --lang="is"
 * * * * * php /data/project/addbot/wikidata/enlist.php
 
 */5 * * * * php /data/project/addbot/enwiki/clean.php
