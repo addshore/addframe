@@ -38,18 +38,28 @@ $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $co
 //If more than 1 returned
 if(count($list) > 0 )
 {
+	//Increment the on wiki counter
 	$at = $at+$am;
 	$wiki->edit("User:Addbot/iwval.js",$at,"[[User:Addbot|Bot:]] Updating counter",true);
+
+	//start addition to db
+	$rs = "INSERT INTO iwlinked (lang, article) VALUES ";
+	$r = "";
+	$c = 0;
 	foreach($list as $item) // for each item
 	{
 		if( $item != "")
 		{
-			usleep(1000);
-			//$res = $db->insert($config['tblist'],array('article' => $item,) ); // inset to database table
-			$res = $db->insert('iwlinked',array('lang' => 'en','article' => $item,) ); // inset to database table
-			if( !$res  ){echo $db->errorStr()."\n";} // if no result then break as we have an error ($db->errorStr())
-			else{echo "Added ".$item." to database\n";}
+			$r .= "('en','".$db->mysqlEscape($item)."'),";
 		}
+	}
+	//If we have any left over and we didnt reach 25
+	if($c >= 1)
+	{
+		echo "Inserting $c\n";
+		$r = preg_replace('/,$/','',$r);//remove final ,
+		$res = $db->doQuery($rs.$r);
+		if( !$res  ){echo $db->errorStr();}
 	}
 }
 
