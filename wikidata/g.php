@@ -43,11 +43,18 @@ if(!isset($file))
 	$list = Database::mysql2array($result);
 	echo "\nGot ".count($list)." articles from $glang pending";
 	echo "\nRemoving";
+	$r = "DELETE FROM iwlinked WHERE";
 	foreach ($list as $item){
-		$res = $db->delete('iwlinked',array('article' => $item['article'],'lang' => $glang));
-		if( !$res  ){echo $db->errorStr();}
+		$r .= " (`article`= '".$db->mysqlEscape($item['article'])."' AND `Lang`= '".$db->mysqlEscape($glang)."') OR";
+		//$res = $db->delete('iwlinked',array('article' => $item['article'],'lang' => $glang));
+		//if( !$res  ){echo $db->errorStr();}
 		echo "r";
 	}
+	$r = preg_replace('/ OR$/','',$r);//remove final OR
+	$res = $db->doQuery($r);
+	if( !$res  ){echo $db->errorStr();}
+	echo "R";
+	unset ($r);
 }
 else
 {
@@ -96,14 +103,16 @@ foreach ($list as $item)
 			switch($glang) {
 				case "en":$summary = "[[User:Addbot|Bot:]] Migrating $counter interwiki links, now provided by [[Wikipedia:Wikidata|Wikidata]] on [[d:$id]]"; break;
 				case "de":$summary = "Bot: Verschiebe $counter Interwikilinks, die nun in [[d:|Wikidata]] unter [[d:$id]] bereitgestellt werden"; break;
-				case "es":$summary = "Quitando $counter enlaces entre-wiki, proviendo ahora por [[d:|Wikidata]] en la página [[d:$id]]."; break; 
+				case "es":$summary = "Quitando $counter enlaces entre-wiki, proviendo ahora por [[d:|Wikidata]] en la p�gina [[d:$id]]."; break; 
 				case "fr":$summary = "Suis retirer $counter liens entre les wikis, actuellement fournis par [[d:|Wikidata]] sur la page [[d:$id]]"; break;
+				case "hu":$summary = "Bot: $counter interwiki link migr�lva a [[d:|Wikidata]] [[d:$id]] adat�ba"; break; 
 				case "it":$summary = "migrazione di $counter interwiki links su [[d:Wikidata:Pagina_principale|Wikidata]] - [[d:$id]]"; break;
-				case "he":$summary = "בוט: מעביר קישורי בינויקי ל[[ויקיפדיה:ויקינתונים|ויקינתונים]] - [[d:$id]]"; break;
+				case "he":$summary = "???: ????? ?????? ??????? ?[[????????:??????????|??????????]] - [[d:$id]]"; break;
 				case "nl":$summary = "Verplaatsing van $counter interwikilinks die op [[d:|Wikidata]] beschikbaar zijn op [[d:$id]]"; break;
 				case "sl":$summary = "Bot: Migracija $counter interwikija/-ev, od zdaj gostuje(-jo) na [[Wikipedija:Wikipodatki|Wikipodatkih]], na [[d:$id]]"; break; 
-				case "sv":$summary = "Bot överför $counter interwikilänk(ar), som nu återfinns på sidan [[d:$id]] på [[Wikipedia:Wikidata|Wikidata]]"; break;
-				case "tet":$summary = "Bot: Hasai $counter ligasaun interwiki, ne'ebé agora mai husi [[d:$id]] iha [[Wikipedia:Wikidata|Wikidata]] "; break; 
+				case "ar":$summary = "[[??????:Addbot|???:]] ????? $counter ???? ????????, ?????? ???? ?? [[d:|???? ??????]] ??? [[d:$id]]"; break;
+				case "sv":$summary = "Bot �verf�r $counter interwikil�nk(ar), som nu �terfinns p� sidan [[d:$id]] p� [[Wikipedia:Wikidata|Wikidata]]"; break;
+				case "tet":$summary = "Bot: Hasai $counter ligasaun interwiki, ne'eb� agora mai husi [[d:$id]] iha [[Wikipedia:Wikidata|Wikidata]] "; break; 
 				default:$summary = "Bot: Migrating $counter interwiki links, now provided by [[d:|Wikidata]] on [[d:$id]]";
 				}
 				
