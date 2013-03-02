@@ -3,8 +3,8 @@ MAILTO=""
 #Every Min
 #* * * * * php /data/project/addbot/enwiki/run.php
 
-*/10 * * * * php /data/project/addbot/enwiki/run.wd.php
 */2 * * * * php /data/project/addbot/wikidata/g.php --lang="en"
+*/2 * * * * php /data/project/addbot/wikidata/g.php --lang="it"
 * * * * * php /data/project/addbot/wikidata/enlist.php
 
 */5 * * * * php /data/project/addbot/enwiki/clean.php
