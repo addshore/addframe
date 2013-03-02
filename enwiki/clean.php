@@ -49,6 +49,7 @@ foreach($e['name'] as $key => $title)
 	if (strlen($e['text'][$key]) < 2){echo "\n> Page less than 2 length (may not exist)";continue;}
 	$e['text'][$key] = preg_replace("/\n===[^=]*?===\n(?<====\n)(?:(?!===).)*?done}}.*?(?=\s*===|$)/ims","",$e['text'][$key]);
 	$e['text'][$key] = preg_replace("/\n\n/","\n",$e['text'][$key]);
+	$e['text'][$key] = preg_replace("/\n\n/","\n",$e['text'][$key]);
 	$wiki->edit($title,$e['text'][$key],"[[User:Addbot|Bot:]] Removing 'done' sections",true,true,null,false);
 	$e['size'][$key] = strlen($e['text'][$key]);
 }
