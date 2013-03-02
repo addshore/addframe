@@ -33,10 +33,9 @@ if ( preg_match("/^Wikipedia:Tutorial \((Editing|Formatting|Wikipedia links|Citi
 	if(preg_match("/Template talk:X[1-9]/",$change['name']) || preg_match("/Wikipedia talk:Tutorial\/(Editing|Formatting|Wikipedia links|Citing sources|Keep in mind)\/sandbox/",$change['name']) )
 	{$header = $wiki->getpage("Template talk:X1","525055639");}
 
-	if (strpos($wiki->getpage($change['name']),$header) === FALSE) {
-		Messageme("T2 - ".$change['name']);
-		sleep(2);
-		$wiki->edit($change['name'],$header,"[[User:Addbot|Bot:]] Restoring ".$change['name']." header",true);
+	if (strpos($wiki->getpage($change['name'],null,true),$header) === FALSE) {
+		sleep(10);
+		$wiki->edit($change['name'],$header,"[[User:Addbot|Bot:]] Restoring ".$change['name']." header",true,true,null,true);
 	}
 	unset($header);
 }

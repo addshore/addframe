@@ -26,7 +26,7 @@ if($wikimedia['SOCKET'])
 
                 $line = str_replace(array("\n","\r","\002"),'',$rawline);
                 $line = preg_replace('/\003(\d\d?(,\d\d?)?)?/','',$line);
-//              echo 'FEED: '.$line."\n";
+              echo 'FEED: '.$line."\n";
                 if (!$line) { fclose($feed); break; }
                 $linea= explode(' ',$line,4);
                 if (strtolower($linea[0]) == 'ping') {
