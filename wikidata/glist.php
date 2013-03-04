@@ -1,7 +1,7 @@
 <?
 //Get our settings
 $options = getopt("",Array("file::"));
-require '/data/project/addbot/enwiki/config.php';
+require '/data/project/addbot/config/database.php';
 require '/data/project/addbot/classes/database.php';
 $file = $options['file']; //e.g. itwiki-20130131-pages-articles.xml.bz2
 $fsplit = explode('-',$file);

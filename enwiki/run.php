@@ -10,14 +10,15 @@ require '/data/project/addbot/classes/botclasses.php';
 require '/data/project/addbot/classes/database.php';
 require '/data/project/addbot/classes/page.php';
 require '/data/project/addbot/classes/template.php';
-require 'config.php';
+require '/data/project/addbot/config/database.php';
+require '/data/project/addbot/config/wiki.php';
 
 //error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 // initialise the wiki
 $wiki = new wikipedia;
-$wiki->url = "http://".$config['url']."/w/api.php";
+$wiki->url = "http://en.wikipedia.org/w/api.php";
 global $wiki;
 
 echo "\nLogging in...";

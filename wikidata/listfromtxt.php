@@ -1,11 +1,12 @@
 <?PHP
 $option = getopt("",Array("file::","lang::"));
 require '/data/project/addbot/classes/database.php';
-require '/data/project/addbot/enwiki/config.php';
-if(!isset($option['file']) || !isset($option['lang']))
+require '/data/project/addbot/config/database.php';
+if(!isset($option['lang']))
 {die("Incorrect Parameters\n");}
-else
-{echo "Adding from ".$option['file']." to ".$option['lang']."\n";}
+else{
+if(!isset($option['file'])){$option['file'] = "/data/project/legoktm/wikidata/".$option['lang']."wiki.txt";}
+echo "Adding from ".$option['file']." to ".$option['lang']."\n";}
 sleep(10);
 $file = file_get_contents($option['file']);
 if($file == ""){die("Empty File\n");}

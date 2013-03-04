@@ -2,12 +2,12 @@
 // load the classes and stuff
 require '/data/project/addbot/classes/botclasses.php';
 require '/data/project/addbot/classes/database.php';
-//require '/data/project/addbot/classes/template.php';
-require '/data/project/addbot/enwiki/config.php';
+require '/data/project/addbot/config/database.php';
+require '/data/project/addbot/config/wiki.php';
 
 // initialise the wiki
 $wiki = new wikipedia;
-$wiki->url = 'http://'.$config['url'].'/w/api.php';
+$wiki->url = 'http://en.wikipedia.org/w/api.php';
 global $wiki;
 
 // perform the login
@@ -41,7 +41,6 @@ if(count($list) > 0 )
 	//Increment the on wiki counter
 	$at = $at+$am;
 	$c = 0;
-	$wiki->edit("User:Addbot/iwval.js",$at,"[[User:Addbot|Bot:]] Updating counter",true);
 
 	//start addition to db
 	$rs = "INSERT INTO iwlinked (lang, article) VALUES ";
@@ -57,7 +56,8 @@ if(count($list) > 0 )
 	echo "Inserting $c pages\n";
 	$r = preg_replace('/,$/','',$r);//remove final ,
 	$res = $db->doQuery($rs.$r);
-	if( !$res  ){echo $db->errorStr();}
+	if( !$res  ){echo $db->errorStr();die("DB ERROR");}
+	$wiki->edit("User:Addbot/iwval.js",$at,"[[User:Addbot|Bot:]] Updating counter",true);
 }
 
 ?>
