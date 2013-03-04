@@ -105,13 +105,21 @@ foreach ($list as $item)
 					}
 				}
 			}
+			//If we have removed more than one links
 			if($counter > 0)
 			{
+			//Set an edit summary
 			switch($glang) {
-				case "en":$summary = "[[User:Addbot|Bot:]] Migrating $counter interwiki links, now provided by [[Wikipedia:Wikidata|Wikidata]] on [[d:$id]]"; break;
+				case "en":
+					$summary = "[[User:Addbot|Bot:]] Migrating $counter interwiki links, now provided by [[Wikipedia:Wikidata|Wikidata]] on [[d:$id]]";
+					$remove = "<!-- ?interwikis?( links?)? ?-->";
+					break;
 				case "de":$summary = "Bot: Verschiebe $counter Interwikilinks, die nun in [[d:|Wikidata]] unter [[d:$id]] bereitgestellt werden"; break;
 				case "es":$summary = "Quitando $counter enlaces entre-wiki, proviendo ahora por [[d:|Wikidata]] en la página [[d:$id]]."; break; 
-				case "fr":$summary = "Suis retirer $counter liens entre les wikis, actuellement fournis par [[d:|Wikidata]] sur la page [[d:$id]]"; break;
+				case "fr":
+					$summary = "Suis retirer $counter liens entre les wikis, actuellement fournis par [[d:|Wikidata]] sur la page [[d:$id]]";
+					$remove = "<!-- ?((liens? )?inter(wiki|langue)s?|other languages) ?-->";
+					break;
 				case "hu":$summary = "Bot: $counter interwiki link migrálva a [[d:|Wikidata]] [[d:$id]] adatába"; break; 
 				case "it":$summary = "migrazione di $counter interwiki links su [[d:Wikidata:Pagina_principale|Wikidata]] - [[d:$id]]"; break;
 				case "he":$summary = "???: ????? ?????? ??????? ?[[????????:??????????|??????????]] - [[d:$id]]"; break;
@@ -123,11 +131,15 @@ foreach ($list as $item)
 				case "tet":$summary = "Bot: Hasai $counter ligasaun interwiki, ne'ebé agora mai husi [[d:$id]] iha [[Wikipedia:Wikidata|Wikidata]] "; break; 
 				default:$summary = "Bot: Migrating $counter interwiki links, now provided by [[d:|Wikidata]] on [[d:$id]]";
 				}
+			//Remove any comments we have been asked to
+			if(isset($remove))
+			{
+				$text = preg_replace("/".$remove."/i","",$text);
+				unset($remove);
+			}
 				
 			}
 		}			
-			
-		$text = preg_replace("/<!-- ?interwikis?( links?)? ?-->/i","",$text);
 			
 		$text = preg_replace('/(\n\n)\n+$/',"$1", $text);
 		$text = preg_replace('/^(\n|\r){0,5}$/',"", $text );
