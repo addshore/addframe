@@ -3,7 +3,7 @@
 /* -------------------------------- Bot Setup -------------------------------- */
 
 //From http://toolserver.org/~chris/highlight.php?d=chris/classes/&f=botclasses.php
-require '../classes/botclasses.php';
+require '/data/project/addbot/classes/botclasses.php';
 
 $wiki = new wikipedia;
 $wiki->url = 'http://en.wikipedia.org/w/api.php';
