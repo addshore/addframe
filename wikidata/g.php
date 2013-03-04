@@ -122,6 +122,8 @@ foreach ($list as $item)
 				case "nl":$summary = "Verplaatsing van $counter interwikilinks die op [[d:|Wikidata]] beschikbaar zijn op [[d:$id]]"; break;
 				case "no":$summary = "bot: Fjerner $counter interwikilenker som nå hentes fra [[d:$id]] på [[d:|Wikidata]]"; break;
 				case "sl":$summary = "Bot: Migracija $counter interwikija/-ev, od zdaj gostuje(-jo) na [[Wikipedija:Wikipodatki|Wikipodatkih]], na [[d:$id]]"; break; 
+				case "ca":$summary = "Bot: Traient $counter enllaços interwiki, ara proporcionats per [[Wikipedia:Wikidata|Wikidata]] a [[d:$id]]"; break; 
+				case "is":$summary = "Bot: Flyt $counter tungumálatengla, sem eru núna sóttir frá [[Wikipedia:Wikidata|Wikidata]] á [[d:$id]]"; break;
 				case "ar":$summary = "[[??????:Addbot|???:]] ????? $counter ???? ????????, ?????? ???? ?? [[d:|???? ??????]] ??? [[d:$id]]"; break;
 				case "sv":$summary = "Bot överför $counter interwikilänk(ar), som nu återfinns på sidan [[d:$id]] på [[Wikipedia:Wikidata|Wikidata]]"; break;
 				case "tet":$summary = "Bot: Hasai $counter ligasaun interwiki, ne'ebé agora mai husi [[d:$id]] iha [[Wikipedia:Wikidata|Wikidata]] "; break; 
