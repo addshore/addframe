@@ -52,8 +52,6 @@ if(!isset($file))
 			$t = 0;
 			echo "R";
 		}
-		//$res = $db->delete('iwlinked',array('article' => $item['article'],'lang' => $glang));
-		//if( !$res  ){echo $db->errorStr();}
 		echo "r";
 	}
 	if($t >= 1)
