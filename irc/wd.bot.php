@@ -1,15 +1,39 @@
 <?PHP
+//HACKY STUFF
+
+$langs = Array('ab','ace','af','ak','als','am','an','ang','ar','arc','arz','as','ast','av','ay','az','ba','bar','bat-smg','bcl','be','be-x-old','bg','bh','bi','bjn','bm','bn','bo','bpy','br','bs','bug','bxr','ca','cbk-zam','cdo','ce','ceb','ch','chr','chy','ckb','co','cr','crh','cs','csb','cu','cv','cy','da','de','diq','dsb','dv','dz','ee','el','eml','en','eo','es','et','eu','ext','fa','ff','fi','fiu-vro','fj','fo','fr','frp','frr','fur','fy','ga','gag','gan','gd','gl','glk','gn','got','gu','gv','ha','hak','haw','he','hi','hif','hr','hsb','ht','hu','hy','ia','id','ie','ig','ik','ilo','io','is','it','iu','ja','jbo','jv','ka','kaa','kab','kbd','kg','ki','kk','kl','km','kn','ko','koi','krc','ks','ksh','ku','kv','kw','ky','la','lad','lb','lbe','lez','lg','li','lij','lmo','ln','lo','lt','ltg','lv','map-bms','mdf','mg','mhr','mi','min','mk','ml','mn','mr','mrj','ms','mt','mwl','my','myv','mzn','na','nah','nap','nds','nds-nl','ne','new','nl','nn','no','nov','nrm','nso','nv','ny','oc','om','or','os','pa','pag','pam','pap','pcd','pdc','pfl','pi','pih','pl','pms','pnb','pnt','ps','pt','qu','rm','rmy','rn','ro','roa-rup','roa-tara','ru','rue','rw','sa','sah','sc','scn','sco','sd','se','sg','sh','si','simple','sk','sl','sm','sn','so','sq','sr','srn','ss','st','stq','su','sv','sw','szl','ta','te','tet','tg','th','ti','tk','tl','tn','to','tpi','tr','ts','tt','tum','tw','ty','udm','ug','uk','ur','uz','ve','vec','vep','vi','vls','vo','wa','war','wo','wuu','xal','xh','xmf','yi','yo','za','zea','zh','zh-classical','zh-min-nan','zh-yue','zu');
+$summs = Array();
+
+$pywiki = file_get_contents("https://svn.wikimedia.org/svnroot/pywikipedia/branches/rewrite/scripts/i18n/interwiki.py");
+//foreach ($langs as $l)
+//{
+	$s1 = explode("{",$pywiki);
+	
+	foreach($s1 as $s)
+	{
+	$s2 = explode("}",$s);
+	$s3 = explode("'interwiki-adding': u'",$s2[0]);
+	$s4 = explode("%(adding)s",$s3[1]);
+	
+	
+		if(strlen($s4[0]) > 3 && $s4[0] != "")
+	{
+		array_push($summs,preg_quote($s4[0]));
+	}
+	
+	}
+//}
+
 
 /* -------------------------------- Bot Setup -------------------------------- */
 
 //IRC Settings
 $server_host = "irc.freenode.com"; 
 $server_port = 6667; 
-$server_chan = "##addshore";
+$server_chan = "#wikirc-iw";
 $rc_host = "irc.wikimedia.org";
 $rc_port = 6667;
-$nickname = "Addbotg";
-$langs = Array('ab','ace','af','ak','als','am','an','ang','ar','arc','arz','as','ast','av','ay','az','ba','bar','bat-smg','bcl','be','be-x-old','bg','bh','bi','bjn','bm','bn','bo','bpy','br','bs','bug','bxr','ca','cbk-zam','cdo','ce','ceb','ch','chr','chy','ckb','co','cr','crh','cs','csb','cu','cv','cy','da','de','diq','dsb','dv','dz','ee','el','eml','en','eo','es','et','eu','ext','fa','ff','fi','fiu-vro','fj','fo','fr','frp','frr','fur','fy','ga','gag','gan','gd','gl','glk','gn','got','gu','gv','ha','hak','haw','he','hi','hif','hr','hsb','ht','hu','hy','ia','id','ie','ig','ik','ilo','io','is','it','iu','ja','jbo','jv','ka','kaa','kab','kbd','kg','ki','kk','kl','km','kn','ko','koi','krc','ks','ksh','ku','kv','kw','ky','la','lad','lb','lbe','lez','lg','li','lij','lmo','ln','lo','lt','ltg','lv','map-bms','mdf','mg','mhr','mi','min','mk','ml','mn','mr','mrj','ms','mt','mwl','my','myv','mzn','na','nah','nap','nds','nds-nl','ne','new','nl','nn','no','nov','nrm','nso','nv','ny','oc','om','or','os','pa','pag','pam','pap','pcd','pdc','pfl','pi','pih','pl','pms','pnb','pnt','ps','pt','qu','rm','rmy','rn','ro','roa-rup','roa-tara','ru','rue','rw','sa','sah','sc','scn','sco','sd','se','sg','sh','si','simple','sk','sl','sm','sn','so','sq','sr','srn','ss','st','stq','su','sv','sw','szl','ta','te','tet','tg','th','ti','tk','tl','tn','to','tpi','tr','ts','tt','tum','tw','ty','udm','ug','uk','ur','ve','vec','vep','vi','vls','vo','wa','war','wo','wuu','xal','xh','xmf','yi','yo','za','zea','zh','zh-classical','zh-min-nan','zh-yue','zu');
+$nickname = "Addbotiw";
 
 /* -------------------------------- Freenode Irc -------------------------------- */
 
@@ -20,8 +44,8 @@ if ( $pid['freenode'] == 0 ) {
         set_time_limit(0); 
         if($freenode['SOCKET']) 
         { 
-                freenodeCommand("NICK $nickname"); //sends the nickname 
-                freenodeCommand("USER $nickname Addbot Wikipedia Bot");
+                freenodeCommand("NICK $nickname"."0"); //sends the nickname 
+                freenodeCommand("USER $nickname"."0 Addbot Wikipedia Bot");
                 freenodeCommand("JOIN $server_chan");
                 while(!feof($freenode['SOCKET'])) //while we are connected to the server 
                 { 
@@ -59,9 +83,11 @@ if ( $pid['freenode'] == 0 ) {
 function MessageMe ($message) {
         global $server_chan;
         if ($go = true ){
-			if(rand(1,2)  == 1)
+			$rnd = rand(1,3);
+			if( $rnd == 1)
 			{freenodeCommand("PRIVMSG $server_chan :$message");}
-			else{floodCommand("PRIVMSG $server_chan :$message");}
+			elseif( $rnd == 2){floodCommand("PRIVMSG $server_chan :$message");}
+			elseif( $rnd == 3){flood2Command("PRIVMSG $server_chan :$message");}
 				
         }
 } 
@@ -74,6 +100,11 @@ function freenodeCommand ($cmd) {
 function floodCommand ($cmd) { 
         global $flood; //Extends our $server array to this function 
         @fwrite($flood['SOCKET'], $cmd."\r"); //sends the command to the server 
+        echo "IRC<: $cmd\n"; //displays it on the screen 
+} 
+function flood2Command ($cmd) { 
+        global $flood2; //Extends our $server array to this function 
+        @fwrite($flood2['SOCKET'], $cmd."\r"); //sends the command to the server 
         echo "IRC<: $cmd\n"; //displays it on the screen 
 } 
 
@@ -105,6 +136,34 @@ if ( $pid['flood'] == 0 ) {
         exit();
 }
 
+$flood2 = array(); 
+$flood2['SOCKET'] = @fsockopen($server_host, $server_port, $errno, $errstr, 2);
+$pid['flood2'] = pcntl_fork();
+if ( $pid['flood2'] == 0 ) {
+        set_time_limit(0); 
+        if($flood2['SOCKET']) 
+        { 
+                flood2Command("NICK $nickname"."3"); //sends the nickname 
+                flood2Command("USER $nickname"."3 Addbot Wikipedia Bot");
+                flood2Command("JOIN $server_chan");
+                while(!feof($flood2['SOCKET'])) //while we are connected to the server 
+                { 
+                        $flood2['READ_BUFFER'] = str_replace(array("\n","\r"),'',fgets($flood2['SOCKET'], 1024)); //get a line of data from the server
+                        if ( !eregi('(00(1|2|3|4|5)|2(5(0|1|2|4|5)|6(5|6))|3(53|66|7(2|6|5))) '.$nickname, $flood2['READ_BUFFER']))
+                        {
+                                echo "IRC>: ".$flood2['READ_BUFFER']."\n";
+                        }
+                        $d = explode(' ',$flood2['READ_BUFFER']);
+                        if (strtolower($d[0]) == 'ping') {
+                                flood2Command("PONG :".substr($flood2['READ_BUFFER'], 6)); //Reply with pong
+                        }
+                        flush();
+                }
+        }
+        unset ($pid['flood2']);
+        exit();
+}
+
 /* -------------------------------- Wikimedia RC IRC feed -------------------------------- */
 
 $wikimedia = array();
@@ -116,34 +175,42 @@ if ( $pid['wikimedia'] == 0 ) {
         { 
                 wikimediaCommand("NICK $nickname");
                 wikimediaCommand("USER $nickname Addbot Wikipedia Bot");
-				foreach ($langs as $l)
-				{
-					wikimediaCommand("JOIN #".$l.".wikipedia");
-					sleep(0.3);
+				$pidt = pcntl_fork();
+				if($pidt == 0){
+					foreach ($langs as $l)
+					{
+						wikimediaCommand("JOIN #".$l.".wikipedia");
+						sleep(1);
+					}
 				}
-                while(!feof($wikimedia['SOCKET']))//while connected to the server
-                { 
-                        $rawline = fgets($wikimedia['SOCKET'], 1024);
+				else
+				{
+					while(!feof($wikimedia['SOCKET']))//while connected to the server
+					{ 
+							$rawline = fgets($wikimedia['SOCKET'], 1024);
 
-                        $line = str_replace(array("\n","\r","\002"),'',$rawline);
-                        $line = preg_replace('/\003(\d\d?(,\d\d?)?)?/','',$line);
-                      echo 'FEED: '.$line."\n";
-                        if (!$line) { fclose($feed); break; }
-                        $linea= explode(' ',$line,4);
-                        if (strtolower($linea[0]) == 'ping') {
-                                wikimediaCommand("PONG :".substr($wikimedia['READ_BUFFER'], 6)); //Reply with pong
-                        } elseif ((strtolower($linea[1]) == 'privmsg')) {
-                                $message = substr($linea[3],1);
-                                echo $message."\n";
-									if(preg_match('/Add(shore|bot|less)/i',$message))
-										{
-											Messageme($message);
-											sleep(0.5);
-											continue;
-										}
-                        }
-                        flush();
-                }
+							$line = str_replace(array("\n","\r","\002"),'',$rawline);
+							$line = preg_replace('/\003(\d\d?(,\d\d?)?)?/','',$line);
+						  echo 'FEED: '.$line."\n";
+							if (!$line) { fclose($feed); break; }
+							$linea= explode(' ',$line,4);
+							if (strtolower($linea[0]) == 'ping') {
+									wikimediaCommand("PONG :".substr($wikimedia['READ_BUFFER'], 6)); //Reply with pong
+							} elseif ((strtolower($linea[1]) == 'privmsg')) {
+									$message = substr($linea[3],1);
+									echo $message."\n";
+										if(preg_match('/('.implode("|",$summs).')/i',$message))
+											{
+												if(!preg_match('/(strong connection between|strongly connected to)/',$message))
+												{
+													Messageme($message);
+													continue;
+												}
+											}
+							}
+							flush();
+					}
+				}
         } 
         unset ($pid['wikimedia']);
         exit();
