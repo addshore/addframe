@@ -1,9 +1,7 @@
 <?PHP
 
-/* -------------------------------- Bot Setup -------------------------------- */
-
-//From http://toolserver.org/~chris/highlight.php?d=chris/classes/&f=botclasses.php
 require '/data/project/addbot/classes/botclasses.php';
+require '/data/project/addbot/config/wiki.php';
 
 $wiki = new wikipedia;
 $wiki->url = 'http://en.wikipedia.org/w/api.php';
@@ -11,15 +9,13 @@ global $wiki;
 
 $parentpid = posix_getpid();
 
-$user = "Addbot";
 $nickname = "Addbot-wdr";
-$owner = "Addshore";
 
 set_time_limit(0); 
 require '/home/addshore/.password.addbot';
-$wiki->login($user,$pass);
+$wiki->login($config['user'],$config['password']);
 echo "USER: Logged In!\n";
-unset($pass);
+unset($config['password']);
 
 $rc_host = "irc.wikimedia.org";
 $rc_port = 6667;
@@ -33,8 +29,8 @@ $wikimedia = array();
 $wikimedia['SOCKET'] = @fsockopen($rc_host, $rc_port, $errno, $errstr, 30);
         if($wikimedia['SOCKET']) 
         { 
-                wikimediaCommand("NICK $user");
-                wikimediaCommand("USER $user Addbot Wikipedia Bot");
+                wikimediaCommand("NICK $nickname");
+                wikimediaCommand("USER $nickname Addbot Wikipedia Bot");
                 wikimediaCommand("JOIN $rc_channel");
                 while(!feof($wikimedia['SOCKET']))//while connected to the server
                 { 
