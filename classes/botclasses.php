@@ -565,7 +565,7 @@ class wikipedia {
         $return = $this->query('?action=edit&format=php'.$maxlag,$params);
 		//if we didnt get a maxlag error we are done
 		if($return['error']['code'] != "maxlag"){return $return;}
-		if($sleep < 60) {$sleep = $sleep + 1;}
+		if($sleep < 30) {$sleep = $sleep + 1;}
 		echo "\nSleeping for $sleep due to Maxlag! ".$return['error']['info']." seconds\n";
 		sleep($sleep);
 		} while(true);
