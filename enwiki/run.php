@@ -118,10 +118,15 @@ foreach ($list as $item)
 				//Pre Processing
 				$page->preChecks();
 				echo ".date";
+				
+				//TODO / TOFIX
 				//$page->fixDateTags();// fix any tempaltes that need a date
 				//$page->fixSectionTags();// add section parameter to any MI template below a section (excludes some)
-				$page->multipleIssues();
+				
+				//The below should be be enabled until a function is created to fix templates unser sections by adding the section parameter correctly
+				//$page->multipleIssues();
 				//$page->multipleIssuesDupes();
+				
 				$isorphan = $page->isOrphan();
 				$isuncat = $page->isUncat();
 				$isdeadend = $page->isDeadend();
