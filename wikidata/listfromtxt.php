@@ -29,26 +29,38 @@ if(count($list) > 0 )
 	{
 		if( $item != "")
 		{
-			$c++;
-			$r .= "('".$db->mysqlEscape($option['lang'])."','".$db->mysqlEscape($item)."'),";
-			//if we have X then INSERT
-			if($c >= 100)
+			//check if the item needs to be added (or is it already there..?)
+			$chk = $db->doQuery("SELECT Count(*) as Count FROM iwlinked WHERE lang='".$option['lang']."' AND article='".$db->mysqlEscape($item)."'");
+			if( !$chk  ){echo $db->errorStr();}
+			$chkres = Database::mysql2array($chk);
+			if(intval($chkres[0]['Count']) == 0)
 			{
-				echo "Inserting $c - $c2\n";
-				$r = preg_replace('/,$/','',$r);//remove final ,
-				$res = $db->doQuery($rs.$r);
-				if( !$res  ){echo $db->errorStr();}
-				$r = "";//blank the query for the next set
-				usleep(1000);
-				$c = 0;
-				$c2++;
+				echo "+";
+				$c++;
+				$r .= "('".$db->mysqlEscape($option['lang'])."','".$db->mysqlEscape($item)."'),";
+				//if we have X then INSERT
+				if($c >= 100)
+				{
+					echo "\nInserting $c - $c2\n";
+					$r = preg_replace('/,$/','',$r);//remove final ,
+					$res = $db->doQuery($rs.$r);
+					if( !$res  ){echo $db->errorStr();}
+					$r = "";//blank the query for the next set
+					usleep(1000);
+					$c = 0;
+					$c2++;
+				}
+			}
+			else
+			{
+				echo "-";
 			}
 		}
 	}
 	//If we have any left over and we didnt reach 25
 	if($c >= 1)
 	{
-		echo "Inserting final $c\n";
+		echo "\nInserting final $c\n";
 		$r = preg_replace('/,$/','',$r);//remove final ,
 		$res = $db->doQuery($rs.$r);
 		if( !$res  ){echo $db->errorStr();}
