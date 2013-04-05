@@ -12,6 +12,8 @@ require '/data/project/addbot/config/wiki.php';
 $wiki = new wikipedia;
 $wiki->url = "http://meta.wikimedia.org/w/api.php";
 $wiki->login($config['user'],$config['password']);
+//Stat require
+require '/data/project/addbot/classes/stathat.php';
 //calculations
 $stop_time = MICROTIME(TRUE);
 $time = $stop_time - $start_time;
@@ -21,6 +23,9 @@ foreach ($res as $r)
 {
 	$c = $c + intval($r['count(*)']);
 }
+
+//Output stat
+stathat_ez_count('adamshorland@gmail.com', "Addbot - IW Removal - Remaining" , $c);
 
 //output to html page
 $out .= "<html><head><title>IWLinked</title></head><body>\n";
@@ -50,11 +55,11 @@ $out .= "|-\n| '''Total'''\n| ".number_format($c,0,'.',',')."\n|}";
 $wiki = new wikipedia;
 $wiki->url = "http://meta.wikimedia.org/w/api.php";
 $wiki->login($config['user'],$config['password']);
-$wiki->edit("User:Addbot/Interwiki_Status",$out,"Interwiki Status",true);
+$wiki->edit("User:Addbot/Interwiki_Status",$out,"Interwiki Status $c",true);
 unset($wiki);
 $wiki = new wikipedia;
 $wiki->url = "http://wikidata.org/w/api.php";
 $wiki->login($config['user'],$config['password']);
-$wiki->edit("Wikidata:Wikidata_migration/Progress",$out,"Interwiki Status",true);
+$wiki->edit("Wikidata:Wikidata_migration/Progress",$out,"Interwiki Status $c",true);
 
 ?>
