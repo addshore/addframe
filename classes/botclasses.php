@@ -75,7 +75,7 @@ class http {
         //echo 'POST: '.$url."\n";
         $time = microtime(1);
         curl_setopt($this->ch,CURLOPT_URL,$url);
-        curl_setopt($this->ch,CURLOPT_USERAGENT,'php wikibot classes');
+        curl_setopt($this->ch,CURLOPT_USERAGENT,'Addbot Wikimedia Bot');
         /* Crappy hack to add extra cookies, should be cleaned up */
         $cookies = null;
         foreach ($this->cookie_jar as $name => $value) {
