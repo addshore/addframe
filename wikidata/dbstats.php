@@ -14,6 +14,7 @@ $wiki->url = "http://meta.wikimedia.org/w/api.php";
 $wiki->login($config['user'],$config['password']);
 //Stat require
 require '/data/project/addbot/classes/stathat.php';
+require '/data/project/addbot/config/stathat.php';
 //calculations
 $stop_time = MICROTIME(TRUE);
 $time = $stop_time - $start_time;
@@ -25,7 +26,7 @@ foreach ($res as $r)
 }
 
 //Output stat
-stathat_ez_count('adamshorland@gmail.com', "Addbot - IW Removal - Remaining" , $c);
+stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Remaining" , $c);
 
 //output to html page
 $out .= "<html><head><title>IWLinked</title></head><body>\n";
