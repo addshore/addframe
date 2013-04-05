@@ -1,5 +1,5 @@
 <? 	
-
+$start_time = MICROTIME(TRUE);
 //Load
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 $options = getopt("",Array("lang::"));
@@ -13,8 +13,12 @@ $glang = $options['lang'];
 //Classes and configs
 require '/data/project/addbot/classes/botclasses.php';
 require '/data/project/addbot/classes/database.php';
+require '/data/project/addbot/classes/stathat.php';
+require '/data/project/addbot/config/stathat.php';
 require '/data/project/addbot/config/database.php';
 require '/data/project/addbot/config/wiki.php';
+
+stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Run" , 1);
 
 //Initialise the wiki
 $wiki = new wikipedia;
@@ -39,7 +43,7 @@ $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $co
 echo "done";
 
 //Get a list from the DB and remove
-$result = $db->select('iwlinked','*',"lang = '$glang' ORDER BY id ASC LIMIT 150");
+$result = $db->select('iwlinked','*',"lang = '$glang' ORDER BY id ASC LIMIT 200");
 $list = Database::mysql2array($result);
 echo "\nGot ".count($list)." articles from $glang pending";
 echo "\nRemoving ";
@@ -122,7 +126,7 @@ case "en":
  $summary = "[[User:Addbot|Bot:]] Migrating $counter interwiki links, now provided by [[Wikipedia:Wikidata|Wikidata]] on [[d:$id]]";
  $remove = "<!-- ?interwikis?( links?)? ?-->";
  break;
-case "de":$summary = "Bot: $counter [[Hilfe:Internationalisierung|Interwiki-Link(s)]] nach [[WP:Wikidata|Wikidata]] ([[d:$id]]) migriert"; /* Username and timestamp of previous edit missing! */ break;
+case "de":$summary = "Bot: $counter [[Hilfe:Internationalisierung|Interwiki-Link(s)]] nach [[WP:Wikidata|Wikidata]] ([[d:$id]]) migriert"; break;
 case "fr":
  $summary = "Retrait de $counter liens interlangues, désormais fournis par [[d:|Wikidata]] sur la page [[d:$id]]";
  $remove = "<!-- ?((liens? )?inter(wiki|langue)s?|other languages) ?-->";
@@ -139,12 +143,12 @@ case "ar":$summary = "[[مستخدم:Addbot|بوت:]] ترحيل $counter وصل
 case "arc":$summary = ""; break; 
 case "arz":$summary = ""; break; 
 case "as":$summary = ""; break; 
-case "ast":$summary = ""; break; 
+case "ast":$summary = "Moviendo $counter enllace(s) interllingüístico(s), agora proporcionao(s) por [[d:|Wikidata]] na páxina [[d:$id]]"; break;
 case "av":$summary = ""; break; 
 case "ay":$summary = ""; break; 
 case "az":$summary = ""; break; 
 case "ba":$summary = ""; break; 
-case "bar":$summary = ""; break; 
+case "bar":$summary = "$counter Links zu �ndere Spr�chn weggat�n, de w�s jetz auf [[d:|Wikidata]] bei [[d:$id]] zam Findn san"; break; 
 case "bat_smg":$summary =  "Perkeliamas $counter tarpkalbėnės nūruodas, daba esontės [[d:|Wikidata]] poslapī [[d:$id]]."; break;
 case "bcl":$summary = ""; break; 
 case "be":$summary = "Робат перанёс $counter міжмоўных спасылак да аб'екта [[d:$id]] на [[:en:Wikipedia:Wikidata|Wikidata]]"; break; 
@@ -292,11 +296,11 @@ case "mt":$summary = ""; break;
 case "mwl":$summary = ""; break; 
 case "my":$summary = ""; break; 
 case "myv":$summary = ""; break; 
-case "mzn":$summary = ""; break; 
+case "mzn":$summary = "[[کارور:Addbot|ربوت:]] $counterتا میون‌ویکی لینک دکشی‌ین، [[d:$id]] صفحه دله [[ویکی‌پدیا:ویکی‌دیتا|ویکی‌دیتا]] درون"; break; 
 case "na":$summary = ""; break; 
 case "nah":$summary = ""; break; 
 case "nap":$summary = ""; break; 
-case "nds":$summary = ""; break; 
+case "nds":$summary = "[[Bruker:Addbot|Bot:]] $counter Interwikilenken, s�nd nu na [[Wikipedia:Wikidata|Wikidata]] schaven [[d:$id]]"; break; 
 case "nds_nl":$summary = ""; break; 
 case "ne":$summary = ""; break; 
 case "new":$summary = ""; break; 
@@ -321,7 +325,7 @@ case "pam":$summary = ""; break;
 case "pap":$summary = ""; break; 
 case "pcd":$summary = ""; break; 
 case "pdc":$summary = ""; break; 
-case "pfl":$summary = ""; break; 
+case "pfl":$summary = "[[User:Addbot|Bot:]] $counter Interwikilinks geleschd. Die braach ma nimmi, die Infos wärre nu uff [[Wikipedia:Wikidata|Wikidata]] bereitgestellt: [[d:$id]]"; break; 
 case "pi":$summary = ""; break; 
 case "pih":$summary = ""; break; 
 case "pl":$summary = "[[User:Addbot|Bot:]] Przenoszę linki interwiki ($counter) do [[d:|Wikidata]], są teraz dostępne do edycji na [[d:$id]]"; break;
@@ -414,7 +418,7 @@ case "yi":$summary = ""; break;
 case "yo":$summary = ""; break; 
 case "za":$summary = ""; break; 
 case "zea":$summary = ""; break; 
-case "zh":$summary = "机器人：移除".$counter."个跨语言链接，现在由[[d:|维基数据]]的[[d:".$id."]]提供。"; break; 
+case "zh":$summary = "机器人：移除".$counter."个跨语言链接，现在由[[d:|维基数据]]的[[d:".$id."]]提供。"; break;  
 case "zh_classical":$summary = ""; break; 
 case "zh_min_nan":$summary = ""; break; 
 case "zh_yue":$summary = ""; break; 
@@ -458,7 +462,8 @@ default:$summary = "[[M:User:Addbot|Bot:]] Migrating $counter interwiki links, n
 			if($counter > 0)
 			{
 				$wiki->edit($name,$text,$summary,true,true,null,true,$config['General']['maxlag']);
-				echo "e";sleep(1);
+				stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global" , 1);
+				echo "e";
 			}
 		}
 		
@@ -468,9 +473,15 @@ default:$summary = "[[M:User:Addbot|Bot:]] Migrating $counter interwiki links, n
 		if($counter > 0)
 		{
 			$wiki->edit($name,$text,$summary,true,true,null,true,$config['General']['maxlag']);
-			echo "E";sleep(1);
+			stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global" , 1);
+			echo "E";
 		}
 	}
 }
+
+//calculate time
+$stop_time = MICROTIME(TRUE);
+$time = $stop_time - $start_time;
+stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Execution Time" , intval($time));
 
 ?>
