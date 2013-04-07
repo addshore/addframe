@@ -1,14 +1,21 @@
 <?
 
+//86400 is 24 hours
+//90000 is 25
+//129600 is 36
+set_time_limit(129600);
+
 //Load
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
-$options = getopt("",Array("lang::"));
+$options = getopt("",Array("lang::","offset::"));
 echo "\nLoading...";
 
 //Options
 $config['General']['maxlag'] = "0";
 $glang = $options['lang'];
-
+$offset = 0;
+if(isset($options['offset']))
+{$offset = $options['offset'];}
 //Make the run tracker
 file_put_contents ("/data/project/addbot/tmp/wikidataruntracker/run.$glang.tracker","true");
 
@@ -44,13 +51,16 @@ echo "done";
 
 $MAINCOUNTER = 0;
 
-while (true)
+//we project to hit 100000 with each script in 24 hours (we allow up to 36 though)
+while ($MAINCOUNTER <= 50000)
 {
 //get
-$list = Database::mysql2array($db->select('iwlinked','*',"lang = '$glang' ORDER BY id ASC LIMIT 1 OFFSET ".$MAINCOUNTER));
+$offtoget = $offset+$MAINCOUNTER;
+$list = Database::mysql2array($db->select('iwlinked','*',"lang = '$glang' ORDER BY id ASC LIMIT 20 OFFSET ".$offtoget));
 
-//sort out counter stuff
-$MAINCOUNTER++;
+//Update counter
+$MAINCOUNTER = $MAINCOUNTER + 20;
+//Did we run out of enteries..?
 if(count($list) < 1)
 {
 	exit();
@@ -458,9 +468,18 @@ default:$summary = "[[M:User:Addbot|Bot:]] Migrating $counter interwiki links, n
 	else
 	{
 		//Set the record to be removed to reflect what we have found
-		$res = $db->doQuery("INSERT DELAYED into iwlinked_del (lang,article) VALUES ('".$db->mysqlEscape($glang)."', '".$db->mysqlEscape($name)."')");
+		$rowcount = $db->doQuery("SELECT count(*) from iwlinked where $lang='".$db->mysqlEscape($glang)."' and $article='".$db->mysqlEscape($name)."'");
+		$res = $db->doQuery("DELETE FROM iwlinked WHERE id='".$db->mysqlEscape($item['id'])."'");
 		if( !$res  ){echo "\n".$db->errorStr();}
-		echo "\n\033[31mQueued for removal from database ($counter links left)\033[0m";
+		echo "\n\033[31mRemoved from database ($counter links left)\033[0m";
+		//If we had more than one row
+		if($rowcount[0]['count(*)'] > 1)
+		{
+			//queue for deletion
+			$res = $db->doQuery("INSERT DELAYED into iwlinked_del (lang,article) VALUES ('".$db->mysqlEscape($glang)."', '".$db->mysqlEscape($name)."')");
+			if( !$res  ){echo "\n".$db->errorStr();}
+			echo "\n\033[31mQueued other ".$rowcount[0]['count(*)']." instances for deletion\033[0m";
+		}
 	
 		if($counter > 0)//if we have actually removed a link on the wiki page
 		{

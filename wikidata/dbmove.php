@@ -12,7 +12,7 @@ while($c < 100)
 {
 
 	$c++;
-	$q0 = "SELECT * FROM iwlink LIMIT 20";
+	$q0 = "SELECT * FROM iwlink LIMIT 20 OFFSET ".rand(0,250);
 	echo "$q0\n";
 	$r = Database::mysql2array($db->doQuery($q0));
 	sleep(1);
@@ -36,6 +36,7 @@ while($c < 100)
 			$r = $db->doQuery($q);
 			if( !$r  ){echo $db->errorStr()."\n";}
 		}
+		unset($r);
 	}
 	
 }

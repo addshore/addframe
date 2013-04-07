@@ -1,8 +1,4 @@
 <?php
-//DB currently being migrated so we dont need this
-//before reenabling change the table name in the query below...
-exit();
-
 $start_time = MICROTIME(TRUE);
 //database
 require '/data/project/addbot/classes/database.php';
@@ -60,5 +56,21 @@ $wiki = new wikipedia;
 $wiki->url = "http://wikidata.org/w/api.php";
 $wiki->login($config['user'],$config['password']);
 $wiki->edit("Wikidata:Wikidata_migration/Sitelink_removal/Progress",$out,"Interwiki Status $c",true);
+
+//now determin how may runs we should do on higher end wikis!
+$file = "/data/project/addbot/wikidata/sites.php";
+//load the text
+$text = file_get_contents($file);
+//reset any higher value to 1
+$text = preg_replace('/[0-9]{1,7}/','0',$text);
+//for each result in the db
+foreach ($res as $r)
+{
+	$lang = $r['lang'];
+	$get = $r['count(*)'];
+	$text = str_replace('$run'."['$lang'] = 0;",'$run'."['$lang'] = $get;",$text);
+}
+//put the file back
+file_put_contents($file,$text);
 
 ?>

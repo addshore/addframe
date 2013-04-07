@@ -12,7 +12,7 @@ if($count <= 10)
 //Then see if there is any room for db migration
 $count = intval(exec("qstat |grep -c ' wd.dbm'"));
 echo "There are $count db migration processes running\n";
-if($count < 1)
+if($count < 4)
 {
 	exec("echo 'php /data/project/addbot/wikidata/dbmove.php' | qsub -N wd.dbm");
 }
@@ -23,33 +23,32 @@ require '/data/project/addbot/wikidata/sites.php';
 //we have loaded the sites
 echo "Loaded ".count($run)." sites..\n";
 
+$c = 0;
 //For each site we should be running on
 foreach($run as $lang => $todo)
 {
-	//select the job name
-	$job = "wd.g.$lang";
-	if($lang == "simple") { $job = "wd.g.simpl";}
-	//get the number of jobs for this language in the grid currently
-	$count = intval(exec("qstat |grep -c ' wd.g.$job'"));
-	//if there is a possibility we can run more jobs
-	if($count < $todo)
+	//get the number of jobs in the gird currently
+	$jobs = intval(exec("qstat |grep -c 'wd.g.'"));
+	//Check to make sure our run tracker is not present
+	if(!file_exists ("/data/project/addbot/tmp/wikidataruntracker/run.$lang.tracker"))
 	{
-		//check when the last job was submitted
-		$qstat = exec("qstat |grep ' wd.g.$job'");
-		//if the current date is NOT in the grid
-		if(!strstr($qstat, date("m/d/Y")))
+		if($jobs < 400)
 		{
-				//Finally check to make sure our run tracker is not present
-				if(!file_exists ("/data/project/addbot/tmp/wikidataruntracker/run.$lang.tracker"))
-				{
-					//lets submit a new job!
-					echo exec("echo 'php /data/project/addbot/wikidata/g.php --lang=$lang' | qsub -N wd.g.$lang")."\n";
-					//Lets give everything time to catch up with what we have just done...
-					echo "Sleeping for 30 seconds\n";
-					sleep(30);
-				}else{echo "Skiping $lang due to run tracker\n";}
-		}else{echo "Skiping $lang due running today\n";}
-	}else{echo "Skiping $lang due running max instances\n";}
+		//find out how many instances of the script we want to run depending on db size (trying to finish in 24 hours)
+		$torun = 0;
+		for($i = 30; $i != -1; $i--)
+		{
+			if($todo < $i*50000) { $torun = $i; }
+		}
+		for($i = 0; $i < $torun; $i++)
+		{
+			$offset = $i*50000;
+			echo "$lang - $offset\n";
+			$c++;
+			echo "\033[33m".exec("echo 'php /data/project/addbot/wikidata/g.php --lang=$lang --offset=$offset' | qsub -N wd.g.$lang")."\033[0m\n";
+		}
+		}else{echo "\033[33mSkiping as too many jobs in the queue\033[0m\n";}
+	}else{echo "\033[33mSkiping $lang due to run tracker (It has run in the past 24 hours)\033[0m\n";}
 }
-
+echo "Total scripts run $c\n";
 ?>
