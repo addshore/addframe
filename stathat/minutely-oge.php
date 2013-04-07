@@ -21,13 +21,32 @@ global $db,$config;
 $text = get_data("http://www.wikidata.org/wiki/Special:DispatchStats");
 preg_match_all('/'.preg_quote('<td align="right">Average</td><td align="right">-</td><td align="right">-</td><td align="right">','/').'([^<]+)<\/td>/',$text,$match);
 stathat_ez_value($config['stathatkey'], "Wikidata Dispatch Pending" , intval(str_replace(',','',$match[1][0])));
+unset($text,$match);
 
-//Total numer of articles left in the DB
+//decide how loaded the mysql server is
+$res = Database::mysql2array($db->doQuery("SHOW PROCESSLIST;"));
+$c = 0;
+foreach($res as $p)
+{
+	if($p['db'] == 'addbot')
+	{
+		$c++;
+	}
+}
+stathat_ez_value($config['stathatkey'], "Addbot - IW Removal - Queued Requests" , $c);
+unset($res,$c);
+
+//Total number of articles left in the DB
 $res1 = Database::mysql2array($db->doQuery("select count(*) as count from iwlinked;"));
 $res2 = Database::mysql2array($db->doQuery("select count(*) as count from iwlink;"));
 stathat_ez_value($config['stathatkey'], "Addbot - OLD DB count" , intval($res1[0]['count']));
 stathat_ez_value($config['stathatkey'], "Addbot - NEW DB count" , intval($res2[0]['count']));
 stathat_ez_value($config['stathatkey'], "Addbot - IW Removal - Remaining" , intval($res1[0]['count'] + $res2[0]['count']));
+unset($res1,$res2);
+
+//Total number pending deletion
+$res = Database::mysql2array($db->doQuery("select count(*) as count from iwlinked_del;"));
+stathat_ez_value($config['stathatkey'], "Addbot - IW Removal - Pending Deletion" , intval($res[0]['count']));
 
 } 
 
