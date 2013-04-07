@@ -1,4 +1,5 @@
-<? 	
+<?
+
 //Load
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 $options = getopt("",Array("lang::"));
@@ -7,6 +8,9 @@ echo "\nLoading...";
 //Options
 $config['General']['maxlag'] = "0";
 $glang = $options['lang'];
+
+//Make the run tracker
+file_put_contents ("/data/project/addbot/tmp/wikidataruntracker/run.$glang.tracker","true");
 
 //Classes and configs
 require '/data/project/addbot/classes/botclasses.php';
@@ -49,7 +53,7 @@ $list = Database::mysql2array($db->select('iwlinked','*',"lang = '$glang' ORDER 
 $MAINCOUNTER++;
 if(count($list) < 1)
 {
-	$MAINCOUNTER = 0;
+	exit();
 }
 
 //For each item in the list
