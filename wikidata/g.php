@@ -1,10 +1,12 @@
 <? 	
+
+exit();
+
 $start_time = MICROTIME(TRUE);
 //Load
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 $options = getopt("",Array("lang::"));
 echo "loading...";
-sleep(1);
 
 //Options
 $config['General']['maxlag'] = "0";
@@ -18,14 +20,11 @@ require '/data/project/addbot/config/stathat.php';
 require '/data/project/addbot/config/database.php';
 require '/data/project/addbot/config/wiki.php';
 
-stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Run" , 1);
-
 //Initialise the wiki
 $wiki = new wikipedia;
 $wiki->url = "http://$glang.wikipedia.org/w/api.php";
 global $wiki;
 echo "\nLogging in to $glang.wikipedia.org...";
-sleep(1);echo "..";
 $wiki->login($config['user'],$config['password']);
 unset($config['password']);
 
@@ -42,8 +41,27 @@ echo "\nConnecting to database...";
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 echo "done";
 
+//decide how loaded the mysql server is
+$myp = Database::mysql2array($db->doQuery("SHOW PROCESSLIST;"));
+$myc = 0;
+$toget = 5;
+foreach($myp as $p)
+{
+	if($p['db'] == 'addbot')
+	{
+		$myc++;
+	}
+}
+$toget = 300-$myc;
+if($toget  < 5){$toget = 5;}
+stathat_ez_value($config['stathatkey'], "Addbot - IW Removal - Queued Requests" , $myc);
+if($myc > 300){exit();}
+unset($myc,$myp);
+
+stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Run" , 1);
+
 //Get a list from the DB and remove
-$result = $db->select('iwlinked','*',"lang = '$glang' ORDER BY id ASC LIMIT 200");
+$result = $db->select('iwlinked','*',"lang = '$glang' ORDER BY id ASC LIMIT ".$toget);
 $list = Database::mysql2array($result);
 echo "\nGot ".count($list)." articles from $glang pending";
 echo "\nRemoving ";
@@ -78,6 +96,8 @@ foreach ($list as $item)
 	$name = $item['article'];
 	$summary = "";
 	echo ".";
+	
+	stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Articles Loaded" , 1);
 	
 	//Get the page and wikidata links
 	$text = $wiki->getpage($name,null,true);
@@ -452,8 +472,20 @@ default:$summary = "[[M:User:Addbot|Bot:]] Migrating $counter interwiki links, n
 	//if there are still links left over
 	if(count($left[1]) > 0)
 	{
-		//Insert back into the DB with the number of linkes leftover
-		$res = $db->doQuery("INSERT INTO iwlinked (lang, article, links) VALUES ('$glang', '$name', ".count($left[1]).")");
+		//Insert back into the DB with the number of linkes leftover (IF IT IS NOT ALREADY THERE)
+		//find any left overs
+		$cr = Database::mysql2array($db->doQuery("SELECT * FROM iwlinked WHERE lang='$glang' AND article='$name';"));
+		
+		if(count($cr) > 0)
+		{
+			foreach($cr as $crcr)
+			{
+				$db->doQuery("DELETE FROM iwlinked WHERE id=".$crr['id'].";");
+			}
+			stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - DB Dupe Removed" , count($cr));
+		}
+	
+		$res = $db->doQuery("INSERT INTO iwlink (lang, article, links) VALUES ('$glang', '$name', ".count($left[1]).")");
 		if( !$res  ){echo $db->errorStr();}
 		
 		//if not one of these we can post any removal
