@@ -1,12 +1,8 @@
 <? 	
-
-exit();
-
-$start_time = MICROTIME(TRUE);
 //Load
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 $options = getopt("",Array("lang::"));
-echo "loading...";
+echo "\nLoading...";
 
 //Options
 $config['General']['maxlag'] = "0";
@@ -35,72 +31,39 @@ if($run == ""){die("No Bot User Page");} unset($run);
 $run = $wiki->getpage("User:Addbot/iwrun");
 if($run == ""){sleep(2);$run = $wiki->getpage("User:Addbot/iwrun");}
 if(preg_match("/(false|no|stop|end|block|die|kill)/i",$run)){die("Disabled on wiki");} unset($run);
+//TODO make sure we have bot flag
 
 //Connect to the DB
 echo "\nConnecting to database...";
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 echo "done";
 
-//decide how loaded the mysql server is
-$myp = Database::mysql2array($db->doQuery("SHOW PROCESSLIST;"));
-$myc = 0;
-$toget = 5;
-foreach($myp as $p)
-{
-	if($p['db'] == 'addbot')
-	{
-		$myc++;
-	}
-}
-$toget = 300-$myc;
-if($toget  < 5){$toget = 5;}
-stathat_ez_value($config['stathatkey'], "Addbot - IW Removal - Queued Requests" , $myc);
-if($myc > 300){exit();}
-unset($myc,$myp);
+$MAINCOUNTER = 0;
 
-stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Run" , 1);
-
-//Get a list from the DB and remove
-$result = $db->select('iwlinked','*',"lang = '$glang' ORDER BY id ASC LIMIT ".$toget);
-$list = Database::mysql2array($result);
-echo "\nGot ".count($list)." articles from $glang pending";
-echo "\nRemoving ";
-$r = "DELETE FROM iwlinked WHERE";
-$t = 0;
-foreach ($list as $item){
-	$t++;
-	echo "r";
-	$r .= " (`id`= '".$db->mysqlEscape($item['id'])."') OR";
-	if($t >= 10)
-	{
-		$r = preg_replace('/ OR$/','',$r);//remove final OR
-		$res = $db->doQuery($r);
-		if( !$res  ){echo $db->errorStr();}
-		$r = "DELETE FROM iwlinked WHERE";
-		$t = 0;
-		echo "R";
-	}
-}
-if($t >= 1)
+while (true)
 {
-	$r = preg_replace('/ OR$/','',$r);//remove final OR
-	$res = $db->doQuery($r);
-	if( !$res  ){echo $db->errorStr();}
-	echo "R";
+//get
+$list = Database::mysql2array($db->select('iwlinked','*',"lang = '$glang' ORDER BY id ASC LIMIT 1 OFFSET ".$MAINCOUNTER));
+
+//sort out counter stuff
+$MAINCOUNTER++;
+if(count($list) < 1)
+{
+	$MAINCOUNTER = 0;
 }
-unset ($r);
 
 //For each item in the list
 foreach ($list as $item)
 {
 	$name = $item['article'];
+	echo "\n\nGot [[\033[32m$glang:$name\033[0m]]";
 	$summary = "";
-	echo ".";
 	
 	stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Articles Loaded" , 1);
 	
 	//Get the page and wikidata links
 	$text = $wiki->getpage($name,null,true);
+	echo "\nLoaded text length of ".strlen($text);
 	if (strlen($text) < 1){echo "-";continue;}
 		$wdlinks = $wiki->wikidatasitelinks($name,$glang);
 		$counter = 0;
@@ -121,6 +84,7 @@ foreach ($list as $item)
 					{
 						//Format the language in the may it is used in IW links
 						$lang = str_replace("_","-",str_replace("wiki","",$l['site']));
+						//Regexify synonimous langs
 						if($lang == "no"){$lang = "(nb|no)";}
 						else if($lang == "zh-min-nan"){$lang = "(zh-min-nan|nan)";}
 						//Create the regex matching the link we are looking for
@@ -168,13 +132,13 @@ case "av":$summary = ""; break;
 case "ay":$summary = ""; break; 
 case "az":$summary = ""; break; 
 case "ba":$summary = ""; break; 
-case "bar":$summary = "$counter Links zu �ndere Spr�chn weggat�n, de w�s jetz auf [[d:|Wikidata]] bei [[d:$id]] zam Findn san"; break; 
-case "bat_smg":$summary =  "Perkeliamas $counter tarpkalbėnės nūruodas, daba esontės [[d:|Wikidata]] poslapī [[d:$id]]."; break;
+case "bar":$summary = "$counter Links zu åndere Språchn weggatån, de wås jetz auf [[d:|Wikidata]] bei [[d:$id]] zam Findn san"; break; 
+case "bat_smg":$summary =  "Perkeliamas $counter tarpkalbėnės nūruodas, daba esontės [[d:|Wikidata]] poslapī [[d:$id]]"; break;
 case "bcl":$summary = ""; break; 
 case "be":$summary = "Робат перанёс $counter міжмоўных спасылак да аб'екта [[d:$id]] на [[:en:Wikipedia:Wikidata|Wikidata]]"; break; 
 case "be_x_old":$summary = "[[User:Addbot|Робат]]: перанос $counter міжмоўных спасылак у [[Вікіпэдыя:Вікізьвесткі|Вікізьвесткі]] да аб’екта [[d:$id]]"; break;
 case "be_tarask":$summary = "[[User:Addbot|Робат]]: перанос $counter міжмоўных спасылак у [[Вікіпэдыя:Вікізьвесткі|Вікізьвесткі]] да аб’екта [[d:$id]]"; break;
-case "bg":$summary = "[[Потребител:Addbot|Робот]]: Преместване на $counter междуезикови препратки към [[:en:Wikipedia:Wikidata|Уикиданни]], в [[d:$id]]."; break; 
+case "bg":$summary = "[[Потребител:Addbot|Робот]]: Преместване на $counter междуезикови препратки към [[:en:Wikipedia:Wikidata|Уикиданни]], в [[d:$id]]"; break; 
 case "bh":$summary = ""; break; 
 case "bi":$summary = ""; break; 
 case "bjn":$summary = ""; break; 
@@ -216,7 +180,7 @@ case "el":$summary = "[[User:Addbot|Ρομπότ:]] Μεταφέρω $counter σ
 case "eml":$summary = ""; break; 
 case "en":$summary = ""; break; 
 case "eo":$summary = "[[Uzanto:Addbot|Roboto:]] Forigo de $counter interlingvaj ligiloj, kiuj nun disponeblas per [[d:|Vikidatumoj]] ([[d:$id]])"; break; 
-case "es":$summary = "Moviendo $counter enlace(s) interlingüístico(s), ahora proporcionado(s) por [[d:|Wikidata]] en la página [[d:$id]]."; break; 
+case "es":$summary = "Moviendo $counter enlace(s) interlingüístico(s), ahora proporcionado(s) por [[d:|Wikidata]] en la página [[d:$id]]"; break; 
 case "et":$summary = "[[User:Addbot|Robot]]: muudetud $counter intervikilinki, mis on nüüd andmekogus [[d:$id|Wikidata]]"; break; 
 case "eu":$summary = "[[User:Addbot|Robota:]] hizkuntza arteko $counter lotura lekualdatzen; aurrerantzean [[Wikipedia:Wikidata|Wikidata]] webgunean izango dira, [[d:$id]] orrian"; break;
 case "ext":$summary = ""; break; 
@@ -296,7 +260,7 @@ case "lij":$summary = ""; break;
 case "lmo":$summary = ""; break; 
 case "ln":$summary = ""; break; 
 case "lo":$summary = ""; break; 
-case "lt":$summary =  "Perkeliamos $counter tarpkalbinės nuorodos, dabar pasiekiamos [[d:|Wikidata]] puslapyje [[d:$id]]."; break;
+case "lt":$summary =  "Perkeliamos $counter tarpkalbinės nuorodos, dabar pasiekiamos [[d:|Wikidata]] puslapyje [[d:$id]]"; break;
 case "ltg":$summary = ""; break; 
 case "lv":$summary = "[[User:Addbot|Bots:]] pārvieto $counter starpvikipēdiju saites, kas atrodas [[d:|Vikidatos]] [[d:$id]]"; break; 
 case "map_bms":$summary = ""; break; 
@@ -320,7 +284,7 @@ case "mzn":$summary = "[[کارور:Addbot|ربوت:]] $counterتا میون‌�
 case "na":$summary = ""; break; 
 case "nah":$summary = ""; break; 
 case "nap":$summary = ""; break; 
-case "nds":$summary = "[[Bruker:Addbot|Bot:]] $counter Interwikilenken, s�nd nu na [[Wikipedia:Wikidata|Wikidata]] schaven [[d:$id]]"; break; 
+case "nds":$summary = "[[Bruker:Addbot|Bot:]] $counter Interwikilenken, sünd nu na [[Wikipedia:Wikidata|Wikidata]] schaven [[d:$id]]"; break; 
 case "nds_nl":$summary = ""; break; 
 case "ne":$summary = ""; break; 
 case "new":$summary = ""; break; 
@@ -438,7 +402,7 @@ case "yi":$summary = ""; break;
 case "yo":$summary = ""; break; 
 case "za":$summary = ""; break; 
 case "zea":$summary = ""; break; 
-case "zh":$summary = "机器人：移除".$counter."个跨语言链接，现在由[[d:|维基数据]]的[[d:".$id."]]提供。"; break;  
+case "zh":$summary = "机器人：移除".$counter."个跨语言链接，现在由[[d:|维基数据]]的[[d:".$id."]]提供。"; break; 
 case "zh_classical":$summary = ""; break; 
 case "zh_min_nan":$summary = ""; break; 
 case "zh_yue":$summary = ""; break; 
@@ -472,48 +436,38 @@ default:$summary = "[[M:User:Addbot|Bot:]] Migrating $counter interwiki links, n
 	//if there are still links left over
 	if(count($left[1]) > 0)
 	{
-		//Insert back into the DB with the number of linkes leftover (IF IT IS NOT ALREADY THERE)
-		//find any left overs
-		$cr = Database::mysql2array($db->doQuery("SELECT * FROM iwlinked WHERE lang='$glang' AND article='$name';"));
-		
-		if(count($cr) > 0)
-		{
-			foreach($cr as $crcr)
-			{
-				$db->doQuery("DELETE FROM iwlinked WHERE id=".$crr['id'].";");
-			}
-			stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - DB Dupe Removed" , count($cr));
-		}
-	
-		$res = $db->doQuery("INSERT INTO iwlink (lang, article, links) VALUES ('$glang', '$name', ".count($left[1]).")");
-		if( !$res  ){echo $db->errorStr();}
+		echo "\n\033[33mDatabase entry left (".count($left[1])." links remain)\033[0m";
 		
 		//if not one of these we can post any removal
 		if(!preg_match("/^(ru)$/",$glang))
 		{
-			if($counter > 0)
+			if($counter > 0) //if we have actually removed a link on the wiki page
 			{
 				$wiki->edit($name,$text,$summary,true,true,null,true,$config['General']['maxlag']);
-				stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global" , 1);
-				echo "e";
+				stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global Edits" , 1);
+				stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global Removals" , $counter);
+				echo "\n\033[34mEDIT: Removed $counter links \033[0m";
 			}
 		}
 		
 	}
 	else
 	{
-		if($counter > 0)
+		//Set the record to be removed to reflect what we have found
+		$res = $db->doQuery("INSERT DELAYED into iwlinked_del (lang,article) VALUES ('".$db->mysqlEscape($glang)."', '".$db->mysqlEscape($name)."')");
+		if( !$res  ){echo "\n".$db->errorStr();}
+		echo "\n\033[31mQueued for removal from database ($counter links left)\033[0m";
+	
+		if($counter > 0)//if we have actually removed a link on the wiki page
 		{
 			$wiki->edit($name,$text,$summary,true,true,null,true,$config['General']['maxlag']);
-			stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global" , 1);
-			echo "E";
+			stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global Edits" , 1);
+			stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global Removals" , $counter);
+			echo "\n\033[34mEDIT: Removed $counter links \033[0m";
 		}
 	}
 }
 
-//calculate time
-$stop_time = MICROTIME(TRUE);
-$time = $stop_time - $start_time;
-stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Execution Time" , intval($time));
+}//end while true
 
 ?>
