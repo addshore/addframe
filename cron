@@ -23,3 +23,4 @@ MAILTO=""
 */5 * * * * rm /home/addshore/wd.g.*.*
 */5 * * * * rm /home/addshore/wd.en.*.*
 */5 * * * * rm /home/addshore/wd.del.*
+*/5 * * * * rm /data/project/addbot/wikidata/log.txt
