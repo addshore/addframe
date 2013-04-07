@@ -566,7 +566,7 @@ class wikipedia {
 		//if we didnt get a maxlag error we are done
 		if($return['error']['code'] != "maxlag"){return $return;}
 		if($sleep < 30) {$sleep = $sleep + 1;}
-		echo "\nSleeping for $sleep due to Maxlag! ".$return['error']['info']." seconds\n";
+		echo "\nSleeping for $sleep due to Maxlag!";
 		sleep($sleep);
 		} while(true);
     }
