@@ -1,7 +1,5 @@
 <?
 //Include db stuff
-require '/data/project/addbot/classes/database.php';
-require '/data/project/addbot/config/database.php'; 
 
 //First of all see if we have room to run any database cleanups
 $count = intval(exec("qstat |grep -c ' wd.del'"));
@@ -41,11 +39,6 @@ foreach($run as $lang => $todo)
 		//if the current date is NOT in the grid
 		if(!strstr($qstat, date("m/d/Y")))
 		{
-			//lets get the number of records in the db for this language
-			$res = Database::mysql2array($db->doQuery("select count(*) as count from iwlinked where lang='$lang';"));
-			//if we have 0 there is no point in running
-			if($res[0]['count'] == 0)
-			{
 				//Finally check to make sure our run tracker is not present
 				if(!file_exists ("/data/project/addbot/tmp/wikidataruntracker/run.$lang.tracker"))
 				{
@@ -55,7 +48,6 @@ foreach($run as $lang => $todo)
 					echo "Sleeping for 30 seconds\n";
 					sleep(30);
 				}else{echo "Skiping $lang due to run tracker\n";}
-			}else{echo "Skiping $lang due to no db rows\n";}
 		}else{echo "Skiping $lang due running today\n";}
 	}else{echo "Skiping $lang due running max instances\n";}
 }
