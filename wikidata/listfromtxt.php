@@ -30,11 +30,13 @@ if(count($list) > 0 )
 		if( $item != "")
 		{
 			//check if the item needs to be added (or is it already there..?)
+			/*
 			$chk = $db->doQuery("SELECT Count(*) as Count FROM iwlinked WHERE lang='".$option['lang']."' AND article='".$db->mysqlEscape($item)."'");
 			if( !$chk  ){echo $db->errorStr();}
 			$chkres = Database::mysql2array($chk);
 			if(intval($chkres[0]['Count']) == 0)
 			{
+			*/
 				echo "+";
 				$c++;
 				$r .= "('".$db->mysqlEscape($option['lang'])."','".$db->mysqlEscape($item)."'),";
@@ -50,11 +52,13 @@ if(count($list) > 0 )
 					$c = 0;
 					$c2++;
 				}
+			/*
 			}
 			else
 			{
 				echo "-";
 			}
+			*/
 		}
 	}
 	//If we have any left over and we didnt reach 25
