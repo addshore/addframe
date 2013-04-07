@@ -1,4 +1,8 @@
 <?php
+//DB currently being migrated so we dont need this
+//before reenabling change the table name in the query below...
+exit();
+
 $start_time = MICROTIME(TRUE);
 //database
 require '/data/project/addbot/classes/database.php';
@@ -12,9 +16,6 @@ require '/data/project/addbot/config/wiki.php';
 $wiki = new wikipedia;
 $wiki->url = "http://meta.wikimedia.org/w/api.php";
 $wiki->login($config['user'],$config['password']);
-//Stat require
-require '/data/project/addbot/classes/stathat.php';
-require '/data/project/addbot/config/stathat.php';
 //calculations
 $stop_time = MICROTIME(TRUE);
 $time = $stop_time - $start_time;
@@ -24,9 +25,6 @@ foreach ($res as $r)
 {
 	$c = $c + intval($r['count(*)']);
 }
-
-//Output stat
-stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Remaining" , $c);
 
 //output to html page
 $out .= "<html><head><title>IWLinked</title></head><body>\n";
@@ -61,6 +59,6 @@ unset($wiki);
 $wiki = new wikipedia;
 $wiki->url = "http://wikidata.org/w/api.php";
 $wiki->login($config['user'],$config['password']);
-$wiki->edit("Wikidata:Wikidata_migration/Progress",$out,"Interwiki Status $c",true);
+$wiki->edit("Wikidata:Wikidata_migration/Sitelink_removal/Progress",$out,"Interwiki Status $c",true);
 
 ?>
