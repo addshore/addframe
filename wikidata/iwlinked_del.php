@@ -20,14 +20,22 @@ while($c<$toget)
 {
 	$c++;
 	$item = Database::mysql2array($db->doQuery('SELECT * from iwlinked_del ORDER BY added ASC LIMIT 1 OFFSET '.rand(0,100)));
-	$q = "DELETE FROM iwlinked_del WHERE (lang='".$db->mysqlEscape($item[0]['lang'])."' AND article='".$db->mysqlEscape($item[0]['article'])."')";
-	echo "\n$q";
-	$res = $db->doQuery($q);
-	if( !$res  ){echo "\n".$db->errorStr();}
-	$q = "DELETE FROM iwlinked WHERE (lang='".$db->mysqlEscape($item[0]['lang'])."' AND article='".$db->mysqlEscape($item[0]['article'])."')";
-	echo "\n$q";
-	$res = $db->doQuery($q);
-	if( !$res  ){echo "\n".$db->errorStr();}
+	if(count($item) > 0)
+	{
+		$q = "DELETE FROM iwlinked_del WHERE (lang='".$db->mysqlEscape($item[0]['lang'])."' AND article='".$db->mysqlEscape($item[0]['article'])."')";
+		echo "\n$q";
+		$res = $db->doQuery($q);
+		if( !$res  ){echo "\n".$db->errorStr();}
+		$q = "DELETE FROM iwlinked WHERE (lang='".$db->mysqlEscape($item[0]['lang'])."' AND article='".$db->mysqlEscape($item[0]['article'])."')";
+		echo "\n$q";
+		$res = $db->doQuery($q);
+		if( !$res  ){echo "\n".$db->errorStr();}
+	}
+	else
+	{
+		echo "\nReturned none, exiting";
+		exit();
+	}
 }
 
 ?>

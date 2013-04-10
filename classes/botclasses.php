@@ -243,6 +243,16 @@ class wikipedia {
         $x = $this->query('?action=query&list=allusers&format=php&auprop=editcount&aulimit=1&aufrom='.urlencode($user));
         return $x['query']['allusers'][0]['editcount'];
     }
+	
+	/**
+     * Gets the rights of a user
+     * @param $user The username for which to get the edit count.
+     * @return The number of contributions the user has.
+     **/
+    function getuserrights ($user) {
+        $x = $this->query('?action=query&list=allusers&format=php&auprop=rights&aulimit=1&aufrom='.urlencode($user));
+        return $x['query']['allusers'][0]['rights'];
+    }
 
     /**
      * Returns an array with all the members of $category
@@ -566,7 +576,7 @@ class wikipedia {
 		//if we didnt get a maxlag error we are done
 		if($return['error']['code'] != "maxlag"){return $return;}
 		if($sleep < 30) {$sleep = $sleep + 1;}
-		echo "\nSleeping for $sleep due to Maxlag!";
+		echo "\nSleeping for $sleep due to Maxlag!\n";
 		sleep($sleep);
 		} while(true);
     }
@@ -639,7 +649,7 @@ class wikipedia {
         if ($reason != null) { $params['summary'] = $reason; }
             return $this->query('?action=rollback&format=php',$params);
         }
-
+		
     /**
      * Blocks a user.
      * @param $user The user to block.

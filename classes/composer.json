@@ -1,0 +1,21 @@
+{
+	"name": "tpt/wikibase-api-php",
+	"description": "Libary for interaction with the Wikibase API",
+	"keywords": ["wikibase", "wikidata"],
+	"homepage": "",
+	"license": "GPL-2.0+",
+	"authors": [
+		{
+			"name": "Thomas Pellissier Tanon",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.3.0",
+		"lib-curl": "*",
+		"mediawiki/data-values": "dev-master"
+	},
+	"autoload": {
+		"classmap": ["includes/", "extensions/DataValues"]
+	}
+}

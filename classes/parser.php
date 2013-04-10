@@ -37,12 +37,14 @@ class wikObject_htmlComment extends wikObject {
 	}
 }
 
+//Slightly modified by Addshore to also provide a guessed $text
 class wikObject_section extends wikObject {
 	public $level, $line;
 	
 	public function __construct ($title,$level,$line,$start,$rawCode) {
 		$this->level = $level;
 		$this->line = $line;
+		
 		parent::__construct('wikObject_section',$title,$start,$rawCode);
 	}
 }
