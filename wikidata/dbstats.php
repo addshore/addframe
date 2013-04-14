@@ -71,11 +71,11 @@ foreach ($res as $r)
 	//determine what get should be
 	if($count < 1){$get = 0;}
 	if($count > 0){$get = 1;}
-	if($count > 10000){$get = 2;}
-	if($count > 100000){$get = 3;}
-	if($count > 500000){$get = 4;}
-	if($count > 1000000){$get = 5;}
-	if($count > 2000000){$get = 7;}
+	if($count > 10000){$get = 1;}
+	if($count > 100000){$get = 2;}
+	if($count > 500000){$get = 3;}
+	if($count > 1000000){$get = 4;}
+	if($count > 2000000){$get = 6;}
 	
 	$text = str_replace('$run'."['$lang'] = 0;",'$run'."['$lang'] = $get;",$text);
 }

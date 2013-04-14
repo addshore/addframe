@@ -4,7 +4,7 @@
 //First of all see if we have room to run any database cleanups
 $count = intval(exec("qstat |grep -c ' wd.del'"));
 echo "There are $count delete queue processes running\n";
-if($count <= 10)
+if($count <= 7)
 {
 	echo exec("echo 'php /data/project/addbot/wikidata/iwlinked_del.php' | qsub -N wd.del");
 	
@@ -13,14 +13,13 @@ if($count <= 10)
 //Then see if there is any room for db migration
 $count = intval(exec("qstat |grep -c ' wd.dbm'"));
 echo "There are $count db migration processes running\n";
-if($count < 4)
+if($count < 5)
 {
 	echo exec("echo 'php /data/project/addbot/wikidata/dbmove.php' | qsub -N wd.dbm");
 }
-
+exit();
 //Require the list of sites we are running on
 require '/data/project/addbot/wikidata/sites.php';
-
 //we have loaded the sites
 echo "Loaded ".count($run)." sites..\n";
 $c = 0;
