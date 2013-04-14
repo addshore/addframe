@@ -30,7 +30,7 @@ $pywiki = file_get_contents("https://svn.wikimedia.org/svnroot/pywikipedia/branc
 //IRC Settings
 $server_host = "irc.freenode.com"; 
 $server_port = 6667; 
-$server_chan = "#wikirc-iw";
+$server_chan = "##addshore";
 $rc_host = "irc.wikimedia.org";
 $rc_port = 6667;
 $nickname = "Addbotiw";
@@ -199,13 +199,10 @@ if ( $pid['wikimedia'] == 0 ) {
 							} elseif ((strtolower($linea[1]) == 'privmsg')) {
 									$message = substr($linea[3],1);
 									echo $message."\n";
-										if(preg_match('/('.implode("|",$summs).')/i',$message))
+										if(preg_match('/(Addbot)/i',$message))
 											{
-												if(!preg_match('/(strong connection between|strongly connected to)/',$message))
-												{
-													Messageme($message);
-													continue;
-												}
+											Messageme($message);
+											continue;
 											}
 							}
 							flush();
