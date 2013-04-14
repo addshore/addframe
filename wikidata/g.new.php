@@ -70,7 +70,7 @@ if(count($list) < 1)
 foreach ($list as $item)
 {
 	$name = $item['article'];
-	echo "\n\nGot [[\033[32m$glang:$name\033[0m]]";
+	echo "\n\nGot [[\033[1;32m$glang:$name\033[0m]]";
 	$summary = "";
 	
 	stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Articles Loaded" , 1);
@@ -81,7 +81,7 @@ foreach ($list as $item)
 	if (strlen($text) == 0){
 		$res = $db->doQuery("DELETE FROM iwlinked WHERE id='".$db->mysqlEscape($item['id'])."'");
 		if( !$res  ){echo "\n".$db->errorStr();}
-		echo "\n\033[31mRemoved from database (0 page size)\033[0m";
+		echo "\n\033[1;31mRemoved from database (0 page size)\033[0m";
 		continue;
 	}
 		$wdlinks = $wiki->wikidatasitelinks($name,$glang);
@@ -455,7 +455,7 @@ default:$summary = "[[M:User:Addbot|Bot:]] Migrating $counter interwiki links, n
 	//if there are still links left over
 	if(count($left[1]) > 0)
 	{
-		echo "\n\033[33mDatabase entry left (".count($left[1])." links remain)\033[0m";
+		echo "\n\033[1;33mDatabase entry left (".count($left[1])." links remain)\033[0m";
 		
 		//if not one of these we can post any removal
 		if(!preg_match("/^(ru)$/",$glang))
@@ -465,7 +465,7 @@ default:$summary = "[[M:User:Addbot|Bot:]] Migrating $counter interwiki links, n
 				$wiki->edit($name,$text,$summary,true,true,null,true,$config['General']['maxlag']);
 				stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global Edits" , 1);
 				stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global Removals" , $counter);
-				echo "\n\033[34mEDIT: Removed $counter links \033[0m";
+				echo "\n\033[1;34mEDIT: Removed $counter links \033[0m";
 			}
 		}
 		
@@ -476,14 +476,14 @@ default:$summary = "[[M:User:Addbot|Bot:]] Migrating $counter interwiki links, n
 		$rowcount = $db->doQuery("SELECT count(*) from iwlinked where $lang='".$db->mysqlEscape($glang)."' and $article='".$db->mysqlEscape($name)."'");
 		$res = $db->doQuery("DELETE FROM iwlinked WHERE id='".$db->mysqlEscape($item['id'])."'");
 		if( !$res  ){echo "\n".$db->errorStr();}
-		echo "\n\033[31mRemoved from database ($counter links left)\033[0m";
+		echo "\n\033[1;31mRemoved from database ($counter links left)\033[0m";
 		//If we had more than one row
 		if($rowcount[0]['count(*)'] > 1)
 		{
 			//queue for deletion
 			$res = $db->doQuery("INSERT DELAYED into iwlinked_del (lang,article) VALUES ('".$db->mysqlEscape($glang)."', '".$db->mysqlEscape($name)."')");
 			if( !$res  ){echo "\n".$db->errorStr();}
-			echo "\n\033[31mQueued other ".$rowcount[0]['count(*)']." instances for deletion\033[0m";
+			echo "\n\033[1;31mQueued other ".$rowcount[0]['count(*)']." instances for deletion\033[0m";
 		}
 	
 		if($counter > 0)//if we have actually removed a link on the wiki page
@@ -491,7 +491,7 @@ default:$summary = "[[M:User:Addbot|Bot:]] Migrating $counter interwiki links, n
 			$wiki->edit($name,$text,$summary,true,true,null,true,$config['General']['maxlag']);
 			stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global Edits" , 1);
 			stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global Removals" , $counter);
-			echo "\n\033[34mEDIT: Removed $counter links \033[0m";
+			echo "\n\033[1;34mEDIT: Removed $counter links \033[0m";
 		}
 	}
 }

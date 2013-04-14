@@ -10,14 +10,8 @@ if($count <= 7)
 	
 }
 
-//Then see if there is any room for db migration
-$count = intval(exec("qstat |grep -c ' wd.dbm'"));
-echo "There are $count db migration processes running\n";
-if($count < 5)
-{
-	echo exec("echo 'php /data/project/addbot/wikidata/dbmove.php' | qsub -N wd.dbm");
-}
 exit();
+
 //Require the list of sites we are running on
 require '/data/project/addbot/wikidata/sites.php';
 //we have loaded the sites

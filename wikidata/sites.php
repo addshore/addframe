@@ -245,12 +245,12 @@ $run['vls'] = 1;
 $run['vo'] = 1;
 $run['wa'] = 1;
 $run['war'] = 1;
-$run['wo'] = 0;
-$run['xal'] = 0;
+$run['wo'] = 1;
+$run['xal'] = 1;
 $run['yi'] = 1;
 $run['yo'] = 1;
 $run['zea'] = 1;
 $run['zh'] = 2;
-$run['zu'] = 0;
+$run['zu'] = 1;
 
 ?>
