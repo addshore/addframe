@@ -1,7 +1,7 @@
 <?
 $start_time = MICROTIME(TRUE);
 //Load
-error_reporting(E_ERROR | E_PARSE);
+//error_reporting(E_ERROR | E_PARSE);
 $options = getopt("", Array(
 	"lang::"
 ));
@@ -17,6 +17,7 @@ require '/data/project/addbot/classes/stathat.php';
 require '/data/project/addbot/config/stathat.php';
 require '/data/project/addbot/config/database.php';
 require '/data/project/addbot/config/wiki.php';
+require '/data/project/addbot/wikidata/namespace.php';
 
 //Initialise the wiki array
 $wiki           = Array();
@@ -34,19 +35,22 @@ echo "\nConnecting to database...";
 $db = new Database($config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 echo "done";
 
+/*
 //decide how loaded the mysql server is
 $myp   = Database::mysql2array($db->doQuery("SHOW PROCESSLIST;"));
 $myc   = 0;
 $toget = 5;
 foreach ($myp as $p) {if ($p['db'] == 'addbot') {$myc++;}}
-$toget = 300 - ($myc / 2);
+$toget = 200 - ($myc / 2);
 if ($toget < 25) {$toget = 25;}
-if ($myc > 500) {exit();}
+if ($myc > 400) {exit();}
 unset($myc, $myp);
-$toget = 25;
+//$toget = 3;
+*/
+$toget = 160;
 
 //Get a list from the DB and remove
-$result = $db->select('iwlinked', '*', "lang = '$glang' ORDER BY checked ASC LIMIT " . $toget);
+$result = $db->select('iwlinked', '*', "lang = '$glang' and links < 1 ORDER BY checked ASC LIMIT " . $toget);
 $list   = Database::mysql2array($result);
 echo "\nGot " . count($list) . " articles from $glang pending";
 echo "\nRemoving ";
@@ -84,16 +88,17 @@ foreach ($list as $item) {
 	$title1 = $item['article'];
 	$lang1 = $item['lang'];
 	if(strstr($title1,'/')){continue;}
-	//get the links that are already on wikidata
-	$wikidatalinks1 = getlinksfromwikidata($lang1,$title1);
 	//get the page and links from text
 	checklogin($lang1);
 	$text1 = $wiki[$lang1]->getpage($title1, null, true);
 	stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Articles Loaded", 1);
 	if(strlen($text1) < 1){continue;}
-	$linksonpage1 = getlinksfromtext($text1);
 	echo "\n\nChecking [[\033[1;32m$lang1:$title1\033[0m]] - found ".count($linksonpage1);
+	//get the links on the page
+	$linksonpage1 = getlinksfromtext($text1);
 	$linksonpage1[$lang1] = $title1;
+	//and from wikidata
+	$wikidatalinks1 = getlinksfromwikidata($lang1,$title1);
 	
 	//remove langs from the array that are already on wikidata
 	foreach ($wikidatalinks1['links'] as $rmlang => $rmtitle)
@@ -129,7 +134,11 @@ foreach ($list as $item) {
 		}
 		
 	}
-	
+	else
+	{
+		//no links so we can just remove it..?
+	}
+
 	//get the links that are now on wikidata
 	$wikidatalinks1 = getlinksfromwikidata($lang1,$title1);
 	//for each lang entry
@@ -139,52 +148,56 @@ foreach ($list as $item) {
 		checklogin($lang2);
 		$text2 = $wiki[$lang2]->getpage($title2, null, true);
 		stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Articles Loaded", 1);
-		if(strlen($text2) < 1){break;}
+		if(strlen($text2) < 1){continue;}
 		$result = removelinksfromtext($text2,$wikidatalinks1['links']);
-		
 		//if we have actually removed something from this page
 		if($result['removed'] > 0)
 		{
-			echo "\n\033[1;34mRemoving ".$result['removed']." links from $lang2:$title2\033[0m";
-			$wiki[$lang2]->edit($title2, $result['text'], getmysum($lang2, $wikidatalinks1['id'], $result['removed']), true, true, null, true, $config['General']['maxlag']);
-			stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global Removals", $results['removed']);
-			stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global Edits", 1);
+			//skip these langs (we are not a bot there)
+			if($lang2 != "fiu-vro" && $lang2 != "fy")
+			{
+				//skip these namespaces
+				if (!preg_match('/^('.implode($ns[$lang2][1]).'|'.implode($ns[$lang2][2]).'|'.implode($ns[$lang2][3]).'):/',$title2))
+				{
+					echo "\n\033[1;34mRemoving ".$result['removed']." links from $lang2:$title2\033[0m";
+					$eresult = $wiki[$lang2]->edit($title2, $result['text'], getmysum($lang2, $wikidatalinks1['id'], $result['removed']), true, true, null, true, $config['General']['maxlag']);
+					if($eresult['edit']['result'] != "Success"  || !isset($eresult['edit']['result']))
+					{continue;}
+					stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global Removals", $result['removed']);
+					stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Global Edits", 1);
+				}
+				else{echo "Not editing due to namespace\n";}
+			}
+			else{echo "Not approved on $lang2.wikipedia.org\n";}
 		}
 		
-		$inresulttext = getlinksfromtext($result);
+		$inresulttext = getlinksfromtext($result['text']);
 		if(count($inresulttext) == 0)
 		{
-			//add to queue to delete
-			$res = $db->doQuery("INSERT DELAYED into iwlinked_del (lang,article) VALUES ('".$db->mysqlEscape($lang2)."', '".$db->mysqlEscape($title2)."')");
-			echo "\n\033[1;31mQueued removal from database $lang2:$title2 (".count($inresulttext)." links left)\033[0m";
+			
+			if($lang2 == $lang1)
+			{
+				//delete
+				$res = $db->doQuery("DELETE FROM iwlinked WHERE lang='$lang2' AND article='$title2'");
+				echo "\n\033[1;31mRemoved from database $lang2:$title2 (" . count($inresulttext) . " links left)\033[0m";
+			}
+			else
+			{
+				//see if it exists in db
+				$res = $db->doQuery("SELECT * from iwlinked_del Where lang='".$db->mysqlEscape($lang2)."' and article='".$db->mysqlEscape($title2)."'");
+				if(count($res)>0)
+				{
+					$res = $db->doQuery("DELETE FROM iwlinked WHERE lang='$lang2' AND article='$title2'");
+					echo "\n\033[1;31mRemoved from database $lang2:$title2 (" . count($inresulttext) . " links left)\033[0m";
+					//$res = $db->doQuery("INSERT DELAYED into iwlinked_del (lang,article) VALUES ('".$db->mysqlEscape($lang2)."', '".$db->mysqlEscape($title2)."')");
+					//echo "\n\033[1;31mQueued removal from database $lang2:$title2 (".count($inresulttext)." links left)\033[0m";
+				}
+			}
 		}
 	}
 	
-	
-	//get the page and links from text
-	$text1 = $wiki[$lang1]->getpage($title1, null, true);
-	stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Articles Loaded", 1);
-	$linksonpage1 = getlinksfromtext($text1);
-	$linksonpage1[$lang1]=$title1;
-	//decide on what should happen to the DB (greater than 1 as we count the page itself)
-	unset($linksonpage1[$lang1]);//unset the page itself
-	if(count($linksonpage1) > 0)
-	{
-		//update the db entry
-		$res = $db->doQuery("UPDATE iwlinked SET links=" . count($linksonpage1) . " WHERE id= '" . $db->mysqlEscape($item['id']) . "'");
-		echo "\n" . $db->errorStr();
-		echo "\n\033[1;33mDatabase entry left (" . count($linksonpage1) . " links remain)\033[0m";
+	//sleep(1);
 	}
-	else
-	{
-		//remove the db entry
-		$res = $db->doQuery("DELETE FROM iwlinked WHERE id='" . $db->mysqlEscape($item['id']) . "'");
-		echo "\n\033[1;31mRemoved from database $lang1:$title1 (" . count($linksonpage1) . " links left)\033[0m";
-		//$res = $db->doQuery("INSERT DELAYED into iwlinked_del (lang,article) VALUES ('".$db->mysqlEscape($lang1)."', '".$db->mysqlEscape($title1)."')");
-		//echo "\n\033[1;31mQueued removal from database (".count($linksonpage1)." links left)\033[0m";
-		echo "\n" . $db->errorStr();
-	}
-}
 
 //END OF SCRIPT
 
@@ -228,12 +241,18 @@ function checklogin($lang)
 
 function getlinksfromtext($text)
 {
+
+	global $ns;
 	$return = Array();
 	preg_match_all("/\[\[(nostalgia|ten|aa|ab|ace|af|ak|als|am|an|ang|ar|arc|arz|as|ast|av|ay|az|ba|bar|bat-smg|bcl|be|be-x-old|bg|bh|bi|bjn|bm|bn|bo|bpy|br|bs|bug|bxr|ca|cbk-zam|cdo|ce|ceb|ch|cho|chr|chy|ckb|co|cr|crh|cs|csb|cu|cv|cy|da|de|diq|dsb|dv|dz|ee|el|eml|en|eo|es|et|eu|ext|fa|ff|fi|fiu-vro|fj|fo|fr|frp|frr|fur|fy|ga|gag|gan|gd|gl|glk|gn|got|gu|gv|ha|hak|haw|he|hi|hif|ho|hr|hsb|ht|hu|hy|hz|ia|id|ie|ig|ii|ik|ilo|io|is|it|iu|ja|jbo|jv|ka|kaa|kab|kbd|kg|ki|kj|kk|kl|km|kn|ko|koi|kr|krc|ks|ksh|ku|kv|kw|ky|la|lad|lb|lbe|lez|lg|li|lij|lmo|ln|lo|lt|ltg|lv|map-bms|mdf|mg|mh|mhr|mi|min|mk|ml|mn|mo|mr|mrj|ms|mt|mus|mwl|my|myv|mzn|na|nah|nap|nds|nds-nl|ne|new|ng|nl|nn|no|nov|nrm|nso|nv|ny|oc|om|or|os|pa|pag|pam|pap|pcd|pdc|pfl|pi|pih|pl|pms|pnb|pnt|ps|pt|qu|rm|rmy|rn|ro|roa-rup|roa-tara|ru|rue|rw|sa|sah|sc|scn|sco|sd|se|sg|sh|si|simple|sk|sl|sm|sn|so|sq|sr|srn|ss|st|stq|su|sv|sw|szl|ta|te|tet|tg|th|ti|tk|tl|tn|to|tpi|tr|ts|tt|tum|tw|ty|udm|ug|uk|ur|ve|vec|vep|vi|vls|vo|wa|war|wo|wuu|xal|xh|xmf|yi|yo|za|zea|zh|zh-classical|zh-min-nan|zh-yue|zu):([^\]]+)\]\]/i",$text,$match);
 	//[0] is whole match [1] is langs [2] is articles
 	foreach($match[0] as $key => $m)
 	{
-		$return[$match[1][$key]] = $match[2][$key];
+		//onyl return if not talk, user, or usertalk
+		if (!preg_match('/^('.implode($ns[$match[1][$key]][1]).'|'.implode($ns[$match[1][$key]][2]).'|'.implode($ns[$match[1][$key]][3]).'):/',$match[2][$key]))
+		{
+			$return[$match[1][$key]] = $match[2][$key];
+		}
 	}
 	return $return;
 }
@@ -591,7 +610,7 @@ function getmysum($lang, $id, $counter = 1)
 			$summary = "Bot: $counter interwiki link áthelyezve a [[d:|Wikidata]] [[d:$id]] adatába";
 			break;
 		case "hy":
-			$summary = "";
+			$summary = "[[Մասնակից:Addbot|Բտթը՝]] Հեռացրեց $counter ինտերվիքիի հղումները, հիմա հղումները հանդես կգան [[Wikipedia:Wikidata|Վիքիդատայում]]՝ [[d:$id|$ համարի]] տակ";
 			break;
 		case "ia":
 			$summary = "[[Usator:Addbot|Robot:]] Migration de $counter ligamines interwiki, fornite ora per [[Wikipedia:Wikidata|Wikidatos]] in [[d:$id]]";
@@ -966,7 +985,7 @@ function getmysum($lang, $id, $counter = 1)
 			$summary = "";
 			break;
 		case "sq":
-			$summary = "";
+			$summary = "[[User:Addbot|Bot:]] Transferoi $counter lidhje ndërwiki, të cilat tashmë janë në dispozicion tek [[Wikipedia:Wikidata|Wikidata]] në artikullin [[d:$id]]";
 			break;
 		case "sr":
 			$summary = "[[User:Addbot|Бот:]] Селим $counter међујезичких веза, које су сад на [[Википедија:Википодаци|Википодацима]] на [[d:$id]]";

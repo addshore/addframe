@@ -14,7 +14,7 @@ stathat_ez_value($config['stathatkey'], "Addbot - IW Removal - Pending Deletion"
 
 $toget = 200;
 $rnd = $res['count(*)'];
-if($rnd > 50){$rnd = 50;}
+if($rnd > 60){$rnd = 60;}
 unset($res);
 
 echo "\nSelecting $toget deletions\n";

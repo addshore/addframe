@@ -4,13 +4,13 @@
 //First of all see if we have room to run any database cleanups
 $count = intval(exec("qstat |grep -c ' wd.del'"));
 echo "There are $count delete queue processes running\n";
-if($count <= 7)
+if($count <= 5)
 {
 	echo exec("echo 'php /data/project/addbot/wikidata/iwlinked_del.php' | qsub -N wd.del");
 	
 }
 
-exit();
+//exit();
 
 //Require the list of sites we are running on
 require '/data/project/addbot/wikidata/sites.php';
@@ -28,7 +28,7 @@ foreach($run as $lang => $torun)
 	//Check to make sure our run tracker is not present
 	//if(!file_exists ("/data/project/addbot/tmp/wikidataruntracker/run.$lang.tracker"))
 	//{
-		if($jobs < 500)
+		if($jobs < 400)
 		{
 			$jobs = intval(exec("qstat |grep -c 'wd.g.".substr($lang,0,4)."'"));
 			if($jobs < $torun)
