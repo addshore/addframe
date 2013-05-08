@@ -10,7 +10,7 @@ sleep(5);
 
 foreach ($split as $line)
 {
-	echo exec($line)."\n";
+	echo exec("echo 'php /data/project/addbot/bot/wikidata/g.php --lang=$line' | qsub -N wd.g.$line");
 	sleep(1);
 }
 ?>

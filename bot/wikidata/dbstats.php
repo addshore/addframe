@@ -70,7 +70,7 @@ foreach ($res as $r)
 	if($count < 1){$get = 0;}
 	if($count > 0){$get = 1;}
 	
-	$text .= "echo 'php /data/project/addbot/bot/wikidata/g.php --lang=$lang' | qsub -N wd.g.$lang\n";
+	$text .= "$lang\n";
 }
 //put the file back
 file_put_contents($file,$text);
