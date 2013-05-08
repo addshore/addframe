@@ -59,7 +59,7 @@ $wiki->login($config['user'],$config['password']);
 $wiki->edit("Wikidata:Wikidata_migration/Sitelink_removal/Progress",$out,"Interwiki Status $c",true);
 
 //now determin how may runs we should do on higher end wikis!
-$file = "/data/project/addbot/wikidata/sites.php";
+$file = "../sites.php";
 $text = "";
 //for each result in the db
 foreach ($res as $r)
@@ -70,7 +70,7 @@ foreach ($res as $r)
 	if($count < 1){$get = 0;}
 	if($count > 0){$get = 1;}
 	
-	$text .= "echo 'php /data/project/addbot/wikidata/g.php --lang=$lang' | qsub -N wd.g.$lang\n";
+	$text .= "echo 'php /data/project/addbot/bot/wikidata/g.php --lang=$lang' | qsub -N wd.g.$lang\n";
 }
 //put the file back
 file_put_contents($file,$text);
