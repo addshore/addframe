@@ -1,35 +1,11 @@
 <?PHP
-error_reporting(E_ALL ^ E_NOTICE);
-ini_set('display_errors', 1);
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 
-//From http://toolserver.org/~chris/highlight.php?d=chris/classes/&f=botclasses.php
-require '/data/project/addbot/classes/botclasses.php';
-
-$wiki = new wikipedia;
-$wiki->url = 'http://en.wikipedia.org/w/api.php';
+require 'bot.login.php';
 global $wiki;
 
-$parentpid = posix_getpid();
-
-$user = "Addbot";
-$nickname = "Addbot";
-$owner = "Addshore";
-
-$mysandbox = "User:".$owner."/Sandbox";
-
-set_time_limit(0); 
-require '/mnt/secure/addshore/.password.addbot'; 
-$wiki->login($user,$config['password']);
-echo "USER: Logged In!\n";
-unset($config['password']);
-
-
-
-global $wiki;
-
-//$cat = $argv[1];
-$cat = 'Category:Orphaned articles';
-//$cat = 'Category:Orphaned_articles_from_May_2012';
+$cat = $argv[1];
 
 $count_removed = 0;
 $count_skipped = 0;
@@ -39,16 +15,17 @@ foreach($orphans as $orphan)
 {
 	if(preg_match("/Category\:/",$orphan) == FALSE)
 	{
+		//echo exec("python /home/addshore/addbot/pywikipedia/lonelypages.py -page:".$orphan);
+		
 		//At the moment we can presume the page is still an orphan
 		$isorphan = true;
-		$cause = "";
-		
-		//Get a list of links to the page in the main space		
-		$links = $wiki->whatlinkshere($orphan,"&blnamespace=0&blfilterredir=nonredirects&bllimit=500");
+		//Get a list of links to the page in the main space
+		sleep(5);
+		$links = $wiki->whatlinkshere($orphan,"&blnamespace=0");
 		
 			foreach($links as $link)
 			{
-				//sleep(3);
+				sleep(3);
 				if($isorphan == true)
 				{
 					//Check the name to see if we can skip
@@ -58,13 +35,7 @@ foreach($orphans as $orphan)
 						$linktext = $wiki->getpage($link);
 						if (preg_match("/(may refer to ?\:|# ?REDIRECT|\{\{Soft ?(Redir(ect)?|link)|\{\{.*((dis(amb?(ig(uation( page)?)?)?)?)(\-cleanup)?|d(big|ab|mbox)|sia|set index( articles)?).*\}\})/i",$linktext) == FALSE)
 						{
-							//The below if fixes the bug of recognising itself as a link if nothing else is returned...
-							if($link != $orphan)
-							{
-								echo "$link << IS NOT ORPHAN\n";
-								$isorphan = false;
-								$cause = $link;
-							}
+							$isorphan = false;
 						}
 					}
 				}
@@ -72,13 +43,23 @@ foreach($orphans as $orphan)
 		if($isorphan == false)
 		{
 			//Remove the tag
+			sleep(1);
 			$text = $wiki->getpage($orphan);
-			$text = preg_replace("/\{\{(orp(han)?|Lonely|Do\-attempt)(\| ?(date|att|geo|incat)? ?(= ?(January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])? ?){0,4} *\}\}(\r|\n){0,4}/i","",$text);
+			$text = preg_replace("/\{\{(orp(han)?|Lonely|Do\-attempt)(\| ?(date|att|geo|incat) ?(= ?(January|February|March|April|May|June|July|August|September|October|November|December) ?20[0-9][0-9])? ?){0,4} *\}\}(\r|\n){0,4}/i","",$text);
 			if($text != "")
 			{
-				echo "    EDIT $orphan\n";
-				$wiki->edit($orphan,$text,"[[User:Addbot|Bot:]] Removing Orphan Tag - Linked from [[$cause]] ([[User_talk:Addbot|Report Errors]])",true);
+				$wiki->edit($orphan,$text,"[[User:Addbot|Bot:]] Removing Orphan Tag ([[User_talk:Addbot|Report Errors]])",true);
+				sleep(15);
+				$count_removed++;
 			}
+			else
+			{
+				$count_skipped++;
+			}
+		}
+		else
+		{
+			$count_skipped++;
 		}
 		
 		
