@@ -1,6 +1,6 @@
 <?
 //run everything in the site file
-$file = "/data/project/addbot/wikidata/sites.php";
+$file = "sites.php";
 $text = file_get_contents($file);
 $split = explode("\n",$text);
 
