@@ -1,4 +1,0 @@
-addbot
-======
-
-addbot wikipedia bot
