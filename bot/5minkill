@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ps -o sz,etime,pid,comm,args -U addshore | grep g.php | grep -v grep | perl -ane '($m,$s) = split /:/,$F[1]; $kb=$F[0]; $pid = $F[2]; if(($kb>100000)) {print "$m :: $s $kb $pid\n"; kill 9, $pid;}'
