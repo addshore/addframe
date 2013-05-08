@@ -1,6 +1,6 @@
 <?
 //requires
-require '/data/project/addbot/classes/botclasses.php';
+require '../classes/botclasses.php';
 require '/data/project/addbot/config/wiki.php';
 
 //list of wikipedia languages split with spaces

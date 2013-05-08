@@ -1,7 +1,7 @@
 <?PHP
 // load the classes and stuff
-require '/data/project/addbot/classes/botclasses.php';
-require '/data/project/addbot/classes/database.php';
+require '../classes/botclasses.php';
+require '../classes/database.php';
 require '/data/project/addbot/config/database.php';
 require '/data/project/addbot/config/wiki.php';
 

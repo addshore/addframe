@@ -6,10 +6,10 @@ echo "loading...";
 sleep(1);
 
 // load the classes and stuff
-require '/data/project/addbot/classes/botclasses.php';
-require '/data/project/addbot/classes/database.php';
-require '/data/project/addbot/classes/page.php';
-require '/data/project/addbot/classes/template.php';
+require '../classes/botclasses.php';
+require '../classes/database.php';
+require '../classes/page.php';
+require '../classes/template.php';
 require '/data/project/addbot/config/database.php';
 require '/data/project/addbot/config/wiki.php';
 

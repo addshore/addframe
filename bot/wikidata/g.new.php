@@ -20,9 +20,9 @@ if(isset($options['offset']))
 file_put_contents ("/data/project/addbot/tmp/wikidataruntracker/run.$glang.tracker","true");
 
 //Classes and configs
-require '/data/project/addbot/classes/botclasses.php';
-require '/data/project/addbot/classes/database.php';
-require '/data/project/addbot/classes/stathat.php';
+require '../classes/botclasses.php';
+require '../classes/database.php';
+require '../classes/stathat.php';
 require '/data/project/addbot/config/stathat.php';
 require '/data/project/addbot/config/database.php';
 require '/data/project/addbot/config/wiki.php';

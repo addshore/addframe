@@ -1,10 +1,10 @@
 <?
 //require
-require '/data/project/addbot/classes/stathat.php';
+require '../classes/stathat.php';
 require '/data/project/addbot/config/stathat.php';
 
 //database
-require '/data/project/addbot/classes/database.php';
+require '../classes/database.php';
 require '/data/project/addbot/config/database.php'; 
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 unset($config['dbpass']);

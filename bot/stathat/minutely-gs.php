@@ -1,6 +1,6 @@
 <?
 //require
-require '/data/project/addbot/classes/stathat.php';
+require '../classes/stathat.php';
 require '/data/project/addbot/config/stathat.php';
 doChecks();
 sleep(30);

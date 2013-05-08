@@ -2,13 +2,13 @@
 $start_time = MICROTIME(TRUE);
 
 //database
-require '/data/project/addbot/classes/database.php';
+require '../classes/database.php';
 require '/data/project/addbot/config/database.php'; 
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 unset($config['dbpass']);
 $res = Database::mysql2array($db->doQuery("select lang,count(*) from iwlink group by lang;"));
 //loginto wiki
-require '/data/project/addbot/classes/botclasses.php';
+require '../botclasses.php';
 require '/data/project/addbot/config/wiki.php';
 $wiki = new wikipedia;
 $wiki->url = "http://meta.wikimedia.org/w/api.php";

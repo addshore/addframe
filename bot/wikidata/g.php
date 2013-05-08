@@ -13,9 +13,9 @@ $glang                       = $options['lang'];
 $apilang                     = str_replace('-', '', $glang);
 
 //Classes and configs
-require '/data/project/addbot/classes/botclasses.php';
-require '/data/project/addbot/classes/database.php';
-require '/data/project/addbot/classes/stathat.php';
+require '../classes/botclasses.php';
+require '../classes/database.php';
+require '../classes/stathat.php';
 require '/data/project/addbot/config/stathat.php';
 require '/data/project/addbot/config/database.php';
 require '/data/project/addbot/config/wiki.php';

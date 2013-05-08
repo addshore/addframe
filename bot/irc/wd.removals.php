@@ -1,6 +1,6 @@
 <?PHP
 
-require '/data/project/addbot/classes/botclasses.php';
+require '../classes/botclasses.php';
 require '/data/project/addbot/config/wiki.php';
 
 $wiki = new wikipedia;
