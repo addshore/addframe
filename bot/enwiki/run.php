@@ -10,8 +10,8 @@ require '../../classes/botclasses.php';
 require '../../classes/database.php';
 require '../../classes/page.php';
 require '../../classes/template.php';
-require '../../config/database.php';
-require '../../config/wiki.php';
+require '../../config/database.cfg';
+require '../../config/wiki.cfg';
 
 //error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 error_reporting(E_ERROR | E_WARNING | E_PARSE);

@@ -2,9 +2,9 @@
 echo "\nRunning";
 //database
 require '../../classes/stathat.php';
-require '../../config/stathat.php';
+require '../../config/stathat.cfg';
 require '../../classes/database.php';
-require '../../config/database.php'; 
+require '../../config/database.cfg'; 
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 unset($config['dbpass']);
 
