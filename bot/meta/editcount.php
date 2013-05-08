@@ -6,8 +6,8 @@ echo "loading...";
 sleep(1);
 
 // load the classes and stuff
-require '../classes/botclasses.php';
-require '../config/wiki.php';
+require '../../classes/botclasses.php';
+require '../../config/wiki.php';
 
 //error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 error_reporting(E_ERROR | E_WARNING | E_PARSE);

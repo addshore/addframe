@@ -3,7 +3,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require '../classes/botclasses.php';
+require '../../classes/botclasses.php';
 
 $wiki = new wikipedia;
 $wiki->url = 'http://en.wikipedia.org/w/api.php';
