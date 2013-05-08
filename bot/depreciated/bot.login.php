@@ -3,8 +3,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-//From http://toolserver.org/~chris/highlight.php?d=chris/classes/&f=botclasses.php
-require 'botclasses.php';
+require '../classes/botclasses.php';
 
 $wiki = new wikipedia;
 $wiki->url = 'http://en.wikipedia.org/w/api.php';
