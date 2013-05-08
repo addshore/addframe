@@ -32,7 +32,7 @@
  *      Gutza    - [[User:Gutza]]        - Submitted a patch for http->setHTTPcreds(), and http->quiet
  *      Sean     - [[User:SColombo]]     - Wrote the lyricwiki class (now moved to lyricswiki.php)
  *      Brain    - [[User:Brian_McNeil]] - Wrote wikipedia->getfileuploader() and wikipedia->getfilelocation
- * 		Addshore - [[User:Addshore]]     - Functions for Addbot (lastedit,lasteditonpage,firstedit,update nobots)
+ * 		Addshore - [[User:Addshore]]     - Functions for Addbot (lastedit,lasteditonpage,firstedit,updateupdateupdate nobots)
  **/
 
 /**
@@ -165,6 +165,12 @@ class wikipedia {
     public $url;
 	public $loggedin;
 
+	
+	function hashbashandcrash () {
+        $x = $this->query('?action=query&list=logevents&leuser=addshore&letype=delete&lelimit=500&format=php');
+		return $x;
+    }
+	
     /**
      * This is our constructor.
      * @return void
@@ -576,7 +582,11 @@ class wikipedia {
 		do{
         $return = $this->query('?action=edit&format=php'.$maxlag,$params);
 		//if we didnt get a maxlag error we are done
-		if($return['error']['code'] != "maxlag"){
+		//print_r($return);
+		if(isset($return['success'])){ if($return['success'] == 1){
+			return $return;
+		}}
+		else if($return['error']['code'] != "maxlag"){
 			return $return;
 		}
 		if($sleep < 30) {$sleep = $sleep + 1;}
@@ -799,6 +809,24 @@ class wikipedia {
         );
         return $this->query('?action=delete&format=php',$params);
     }
+	
+	/**
+     * Deletes a page.
+     * @param $pageid Page id of the page
+     * @param $reason The delete reason.
+     * @return api result
+     **/
+    function deletepageid ($pageid,$reason) {
+        if ($this->token==null) {
+            $this->token = $this->getedittoken();
+        }
+        $params = array(
+            'pageid' => $pageid,
+            'reason' => $reason,
+            'token' => $this->token
+        );
+        return $this->query('?action=delete&format=php',$params);
+    }
 
     /**
      * Undeletes a page.
@@ -812,6 +840,24 @@ class wikipedia {
         }
         $params = array(
             'title' => $title,
+            'reason' => $reason,
+            'token' => $this->token
+        );
+        return $this->query('?action=undelete&format=php',$params);
+    }
+	
+	/**
+     * Undeletes a page.
+     * @param $title The page to undelete.
+     * @param $reason The undelete reason.
+     * @return api result
+     **/
+    function undeletepageid ($pageid,$reason) {
+        if ($this->token==null) {
+            $this->token = $this->getedittoken();
+        }
+        $params = array(
+            'pageid' => $pageid,
             'reason' => $reason,
             'token' => $this->token
         );
@@ -995,6 +1041,11 @@ class wikipedia {
 		return $x['query']['pages'][0]['revisions'][0]['timestamp'];
 	}
 	
+	function pageidhistory ($pageid) {
+		$x = $this->query('?action=query&prop=revisions&rvlimit=50&pageids='.urlencode($pageid).'&rvprop=user|comment|size&format=php');
+		return $x['query']['pages'][$pageid]['revisions'];
+	}
+	
 	/**
      * Gets the date of the last edit the user has made
      * @param $user The username for which to get the first edit
@@ -1028,7 +1079,7 @@ class wikipedia {
      * @return Array of entities the page can be found in on wikidata
 	 * @author Addshore
      **/
-	function wikidatasitelinks ($page,$lang = "en"){
+	function wikidatasitelinks ($page,$lang = "enwiki"){
 		$x = $this->http->get("http://wikidata.org/w/api.php?action=wbgetentities&sites=".urlencode($lang)."&props=sitelinks&format=php&titles=".urlencode($page));
 		$x = unserialize($x);
 		if($x['success'] == 1)
@@ -1254,11 +1305,42 @@ class wikidata extends extended
 			$more = "&site=$site&title=$title";
 		}
 		
-		//echo ">> ".$post['data']." <<\n";
 		$x = $this->http->post($this->url.'?action=wbeditentity&format=json'.$more,$post);
-		//print_r(json_decode($x,true));
 		return json_decode($x,true);
     }
+	
+	function overwriteentity ($data,$id="",$site="",$title=""){
+	    if ($this->token==null) {
+            $this->token = $this->getedittoken();
+        }
+	    $post = array(
+            'token'       => $this->token,
+			'bot'  => "1",
+            'data' => json_encode($data),
+			'clear' => "1"
+        );
+		
+		$more = "";
+		if($id != "")
+		{
+			$more = "&id=$id";
+		}
+		else if ($site != "" && $title != "")
+		{
+			$more = "&site=$site&title=$title";
+		}
+		
+		$x = $this->http->post($this->url.'?action=wbeditentity&format=json'.$more,$post);
+		return json_decode($x,true);
+    }
+	
+	function getentity ($id){
+		return $this->query('?action=wbgetentities&ids='.urlencode($id).'&format=php');
+	}
+	
+	function getentityfor ($site,$title){
+		return $this->query('?action=wbgetentities&sites='.urlencode($site).'&titles='.urlencode($title).'&format=php');
+	}
 	
 	/*
 	function setsitelink ($id,$lang,$title){

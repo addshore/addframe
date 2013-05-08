@@ -21,7 +21,7 @@ $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $co
 //If more than 1 returned
 if(count($list) > 0 )
 {
-	$rs = "INSERT INTO iwlinked (lang, article) VALUES ";
+	$rs = "INSERT INTO iwlink (lang, article) VALUES ";
 	$r = "";
 	$c = 0;
 	$c2 = 0;
@@ -46,7 +46,9 @@ if(count($list) > 0 )
 					echo "\nInserting $c - $c2\n";
 					$r = preg_replace('/,$/','',$r);//remove final ,
 					$res = $db->doQuery($rs.$r);
-					if( !$res  ){echo $db->errorStr();}
+					if( !$res  ){
+					echo $db->errorStr();
+					}
 					$r = "";//blank the query for the next set
 					usleep(1000);
 					$c = 0;

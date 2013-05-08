@@ -1,11 +1,12 @@
 <?php
 $start_time = MICROTIME(TRUE);
+
 //database
 require '/data/project/addbot/classes/database.php';
 require '/data/project/addbot/config/database.php'; 
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 unset($config['dbpass']);
-$res = Database::mysql2array($db->doQuery("select lang,count(*) from iwlinked group by lang;"));
+$res = Database::mysql2array($db->doQuery("select lang,count(*) from iwlink group by lang;"));
 //loginto wiki
 require '/data/project/addbot/classes/botclasses.php';
 require '/data/project/addbot/config/wiki.php';
@@ -53,31 +54,23 @@ $wiki->login($config['user'],$config['password']);
 $wiki->edit("User:Addbot/Interwiki_Status",$out,"Interwiki Status $c",true);
 unset($wiki);
 $wiki = new wikipedia;
-$wiki->url = "http://wikidata.org/w/api.php";
+$wiki->url = "http://www.wikidata.org/w/api.php";
 $wiki->login($config['user'],$config['password']);
 $wiki->edit("Wikidata:Wikidata_migration/Sitelink_removal/Progress",$out,"Interwiki Status $c",true);
 
 //now determin how may runs we should do on higher end wikis!
 $file = "/data/project/addbot/wikidata/sites.php";
-//load the text
-$text = file_get_contents($file);
-//reset any higher value to 1
-$text = preg_replace('/[0-9]{1,7}/','0',$text);
+$text = "";
 //for each result in the db
 foreach ($res as $r)
 {
-	$lang = $r['lang'];
+	$lang = str_replace('_','-',$r['lang']);
 	$count = $r['count(*)'];
 	//determine what get should be
 	if($count < 1){$get = 0;}
 	if($count > 0){$get = 1;}
-	if($count > 10000){$get = 2;}
-	if($count > 100000){$get = 3;}
-	if($count > 500000){$get = 4;}
-	if($count > 1000000){$get = 5;}
-	if($count > 2000000){$get = 6;}
 	
-	$text = str_replace('$run'."['$lang'] = 0;",'$run'."['$lang'] = $get;",$text);
+	$text .= "echo 'php /data/project/addbot/wikidata/g.php --lang=$lang' | qsub -N wd.g.$lang\n";
 }
 //put the file back
 file_put_contents($file,$text);

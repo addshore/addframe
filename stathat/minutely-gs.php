@@ -12,7 +12,6 @@ global $config;
 
 //Labs Bots OGE Job count
 stathat_ez_value($config['stathatkey'], "Wikimedia Labs Bots Job Count (Total)" , intval(exec("qstat -u '*' | grep addshore | grep -c @")));
-stathat_ez_value($config['stathatkey'], "Wikimedia Labs Bots Job Count (Running)" , intval(exec("qstat -u '*' | grep addshore | grep -c '   r   '")));
 
 } 
 

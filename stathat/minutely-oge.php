@@ -11,7 +11,7 @@ unset($config['dbpass']);
 
 doChecks();
 sleep(20);
-doChecks();
+//doChecks();
 
 function doChecks() 
 { 
@@ -37,17 +37,9 @@ stathat_ez_value($config['stathatkey'], "Addbot - IW Removal - Queued Requests" 
 unset($res,$c);
 
 //Total number of articles left in the DB
-$res1 = Database::mysql2array($db->doQuery("select count(*) as count from iwlinked;"));
-$res2 = Database::mysql2array($db->doQuery("select count(*) as count from iwlink;"));
-stathat_ez_value($config['stathatkey'], "Addbot - OLD DB count" , intval($res1[0]['count']));
-stathat_ez_value($config['stathatkey'], "Addbot - NEW DB count" , intval($res2[0]['count']));
-stathat_ez_value($config['stathatkey'], "Addbot - IW Removal - Remaining" , intval($res1[0]['count'] + $res2[0]['count']));
+$res1 = Database::mysql2array($db->doQuery("select count(*) as count from iwlink;"));
+stathat_ez_value($config['stathatkey'], "Addbot - IW Removal - Remaining" , intval($res1[0]['count']));
 unset($res1,$res2);
-
-//Total number pending deletion
-$res = Database::mysql2array($db->doQuery("select count(*) as count from iwlinked_del;"));
-stathat_ez_value($config['stathatkey'], "Addbot - IW Removal - Pending Deletion" , intval($res[0]['count']));
-
 } 
 
 function get_data($url) {

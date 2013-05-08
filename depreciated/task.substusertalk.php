@@ -1,5 +1,31 @@
 <?PHP
-require 'bot.login.php';
+error_reporting(E_ALL ^ E_NOTICE);
+ini_set('display_errors', 1);
+
+//From http://toolserver.org/~chris/highlight.php?d=chris/classes/&f=botclasses.php
+require '/data/project/addbot/classes/botclasses.php';
+
+$wiki = new wikipedia;
+$wiki->url = 'http://en.wikipedia.org/w/api.php';
+global $wiki;
+
+$parentpid = posix_getpid();
+
+$user = "Addbot";
+$nickname = "Addbot";
+$owner = "Addshore";
+
+$mysandbox = "User:".$owner."/Sandbox";
+
+set_time_limit(0); 
+require '/mnt/secure/addshore/.password.addbot'; 
+$wiki->login($user,$config['password']);
+echo "USER: Logged In!\n";
+unset($config['password']);
+
+
+
+global $wiki;
 
 //Get the list of templates and strip away the rubbish
 $awbutt = explode('expand the template(s) on the user talk page.',$wiki->getpage('Wikipedia:AutoWikiBrowser/User_talk_templates'));
@@ -11,7 +37,7 @@ echo "Got the list\n";
 //check each template
 foreach ($awbutt as $template)
 {
-	sleep(1);
+	//sleep(1);
 	echo "Geting Transclusions for $template\n";
 	//Get the pages the template is found on
 	$pages = $wiki->getTransclusions($template,null,"&einamespace=3");
@@ -65,8 +91,8 @@ foreach ($awbutt as $template)
 			
 			
 			echo "Attempting to Subst $template on $page\n\r";
-			$wiki->edit($page,$text,"[[User:Addbot|Bot:]] Substing template $template",true);
-			sleep(30);
+			$wiki->edit($page,$text,"[[User:Addbot|Bot:]] Substing template {{[[$template]]}}",true);
+			//sleep(30);
 		}
 	}
 }

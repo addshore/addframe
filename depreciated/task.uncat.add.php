@@ -1,9 +1,31 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+error_reporting(E_ALL ^ E_NOTICE);
+ini_set('display_errors', 1);
 
-require 'bot.login.php';
+//From http://toolserver.org/~chris/highlight.php?d=chris/classes/&f=botclasses.php
+require '/data/project/addbot/classes/botclasses.php';
+
+$wiki = new wikipedia;
+$wiki->url = 'http://en.wikipedia.org/w/api.php';
+global $wiki;
+
+$parentpid = posix_getpid();
+
+$user = "Addbot";
+$nickname = "Addbot";
+$owner = "Addshore";
+
+$mysandbox = "User:".$owner."/Sandbox";
+
+set_time_limit(0); 
+require '/mnt/secure/addshore/.password.addbot'; 
+$wiki->login($user,$config['password']);
+echo "USER: Logged In!\n";
+unset($config['password']);
+
+
+
 global $wiki;
 
 $tag = "{{Uncategorized|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}";
