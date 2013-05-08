@@ -23,8 +23,8 @@ else
 	$footer = "</ul>".$footer;
 	echo $header;
 
-	include '../../botclasses.php';
-	include 'wikitexttohtml.php';
+	include '../../../classes/botclasses.php';
+	include '../../../classes/wikitexttohtml.php';
 
 	$wiki = new wikipedia;
 	$wiki->url = 'http://en.wikipedia.org/w/api.php';
