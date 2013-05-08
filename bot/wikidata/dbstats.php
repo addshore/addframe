@@ -8,7 +8,7 @@ $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $co
 unset($config['dbpass']);
 $res = Database::mysql2array($db->doQuery("select lang,count(*) from iwlink group by lang;"));
 //loginto wiki
-require '../botclasses.php';
+require '../../classes/botclasses.php';
 require '../../config/wiki.php';
 $wiki = new wikipedia;
 $wiki->url = "http://meta.wikimedia.org/w/api.php";

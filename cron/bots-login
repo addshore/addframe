@@ -3,15 +3,12 @@ MAILTO=""
 #Auto update cron
 */5 * * * * crontab /data/project/addbot/cron/bots-login
 #Wikidata migration deploy
-* * * * * php /data/project/addbot/wikidata/deploy.php
+* * * * * php /data/project/addbot/bot/wikidata/deploy.php
 #Stathat runs
-* * * * * echo "php /data/project/addbot/stathat/minutely-oge.php" | qsub -N st.min
-* * * * * php /data/project/addbot/stathat/minutely-gs.php
+* * * * * echo "php /data/project/addbot/scripts/stats/minutely-oge.php" | qsub -N st.min
+* * * * * php /data/project/addbot/scripts/stats/minutely-gs.php
 * * * * * rm /home/addshore/st.min.*
 #Update DB stats pages
-*/30 * * * * echo "php /data/project/addbot/wikidata/dbstats.php" | qsub -N wd.dbstat
-*/30 * * * * rm /home/addshore/wd.dbstat.*
+*/30 * * * * echo "php /data/project/addbot/bot/wikidata/dbstats.php" | qsub -N wd.dbstat
 #Cleanup of grid log files
-*/5 * * * * rm /home/addshore/wd.g.*.*
-*/5 * * * * rm /home/addshore/wd.en.*.*
-*/5 * * * * rm /home/addshore/wd.del.*
+*/5 * * * * rm /home/addshore/wd.*.*
