@@ -1,3 +1,3 @@
 <?
-require '/mnt/secure/addshore/.stathat.key';
+$config['stathatkey'] = file_get_contents("../.p/.p.apikey.stathat");
 ?>
