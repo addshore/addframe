@@ -25,7 +25,7 @@ else
 
 //database
 require '../../../classes/database.php';
-require '../../../config/database.php';
+require '../../../config/database.cfg';
 
 //db
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
