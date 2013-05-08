@@ -1,9 +1,9 @@
 <?PHP
 // load the classes and stuff
-require '../classes/botclasses.php';
-require '../classes/database.php';
-require '../config/database.php';
-require '../config/wiki.php';
+require '../../classes/botclasses.php';
+require '../../classes/database.php';
+require '../../config/database.php';
+require '../../config/wiki.php';
 
 // initialise the wiki
 $wiki = new wikipedia;

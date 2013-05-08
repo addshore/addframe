@@ -1,9 +1,9 @@
 <?php
 //database
-require '../classes/database.php';
-require '../config/database.php'; 
-require '../classes/stathat.php';
-require '../config/stathat.php';
+require '../../classes/database.php';
+require '../../config/database.php'; 
+require '../../classes/stathat.php';
+require '../../config/stathat.php';
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 unset($config['dbpass']);
 $c = 0;
