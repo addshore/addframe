@@ -3,8 +3,8 @@
 require '../classes/botclasses.php';
 require '../classes/database.php';
 require '../classes/template.php';
-require '/data/project/addbot/config/database.php';
-require '/data/project/addbot/config/wiki.php';
+require '../config/database.php';
+require '../config/wiki.php';
 
 // initialise the wiki
 $wiki = new wikipedia;

@@ -1,7 +1,7 @@
 <?PHP
 
 require '../classes/botclasses.php';
-require '/data/project/addbot/config/wiki.php';
+require '../config/wiki.php';
 
 $wiki = new wikipedia;
 $wiki->url = 'http://en.wikipedia.org/w/api.php';

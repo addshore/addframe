@@ -16,9 +16,9 @@ $apilang                     = str_replace('-', '', $glang);
 require '../classes/botclasses.php';
 require '../classes/database.php';
 require '../classes/stathat.php';
-require '/data/project/addbot/config/stathat.php';
-require '/data/project/addbot/config/database.php';
-require '/data/project/addbot/config/wiki.php';
+require '../config/stathat.php';
+require '../config/database.php';
+require '../config/wiki.php';
 require '/data/project/addbot/wikidata/namespace.php';
 
 //Initialise the wiki array

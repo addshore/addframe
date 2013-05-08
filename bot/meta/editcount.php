@@ -7,7 +7,7 @@ sleep(1);
 
 // load the classes and stuff
 require '../classes/botclasses.php';
-require '/data/project/addbot/config/wiki.php';
+require '../config/wiki.php';
 
 //error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 error_reporting(E_ERROR | E_WARNING | E_PARSE);

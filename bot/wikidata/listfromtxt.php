@@ -1,7 +1,7 @@
 <?PHP
 $option = getopt("",Array("file::","lang::"));
 require '../classes/database.php';
-require '/data/project/addbot/config/database.php';
+require '../config/database.php';
 if(!isset($option['lang']))
 {die("Incorrect Parameters\n");}
 else{

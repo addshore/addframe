@@ -1,7 +1,7 @@
 <?
 //require
 require '../classes/stathat.php';
-require '/data/project/addbot/config/stathat.php';
+require '../config/stathat.php';
 doChecks();
 sleep(30);
 doChecks();
