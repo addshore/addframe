@@ -55,6 +55,6 @@ foreach($namespaces as $key1 => $lang)
 }
 
 $out .= "\n?>";
-$wiki->edit("User:Addshore/Sandbox",$out,"Posting dump of all namespaces",true,true,null,true,"0");
+$wiki->edit("User:".$config['user']."/Sandbox",$out,"Posting dump of all namespaces",true,true,null,true,"0");
 
 ?>
