@@ -59,7 +59,7 @@ $wiki->login($config['user'],$config['password']);
 $wiki->edit("Wikidata:Wikidata_migration/Sitelink_removal/Progress",$out,"Interwiki Status $c",true);
 
 //now determin how may runs we should do on higher end wikis!
-$file = "../sites.php";
+$file = "sites.php";
 $text = "";
 //for each result in the db
 foreach ($res as $r)
