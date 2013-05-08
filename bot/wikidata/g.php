@@ -19,7 +19,7 @@ require '../../classes/stathat.php';
 require '../../config/stathat.php';
 require '../../config/database.php';
 require '../../config/wiki.php';
-require '/data/project/addbot/wikidata/namespace.php';
+require 'namespace.php';
 
 //Initialise the wiki array
 $wiki           = Array();
