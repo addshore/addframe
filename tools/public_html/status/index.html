@@ -1,0 +1,32 @@
+<?
+
+$text = get_data("http://www.wikidata.org/wiki/Special:DispatchStats");
+preg_match_all('/'.preg_quote('<td align="right">Average</td><td align="right">-</td><td align="right">-</td><td align="right">','/').'([^<]+)<\/td>/',$text,$match);
+$dispatchqueue = $match[1][0];
+unset($text,$match);
+
+$text = get_data("http://en.wikipedia.org/w/index.php?maxlag=-1");
+preg_match_all('/: ([0-9]{1,9}) seconds lagged/',$text,$match);
+$maxlag = $match[1][0];
+unset($text,$match);
+
+$text = get_data("http://en.wikipedia.org/w/index.php?maxlag=-1");
+preg_match_all('/: ([0-9]{1,9}) seconds lagged/',$text,$match);
+$maxlag = $match[1][0];
+unset($text,$match);
+
+echo "Maxlag: $maxlag </br>Wikibase Queue: $dispatchqueue";
+
+function get_data($url) {
+	$ch = curl_init();
+	$timeout = 5;
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+	curl_setopt($ch,CURLOPT_USERAGENT,'Addbot Wikimedia Bot');
+	$data = curl_exec($ch);
+	curl_close($ch);
+	return $data;
+}
+
+?>

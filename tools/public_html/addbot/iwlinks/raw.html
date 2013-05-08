@@ -1,0 +1,46 @@
+<?php
+include("../../buildpage.php");
+$start_time = MICROTIME(TRUE);
+
+//database
+require '/data/project/addshore/database.php';
+$db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
+unset($config['dbpass']);
+$res = Database::mysql2array($db->doQuery($q));
+
+if(!isset($_GET['lang']))
+{
+	echo "<html>".getHeader("Remaining Interwikis")."<body>\n".getSideBar().'</br><div id="content-column">';
+	echo "<h1>Remaining Interwikis (raw)</h1><p>You can view a raw list of any of the below languages</p><p>This should be used for bots that which to move interwiki links to wikidata</p>";
+	//echo a list of langs to select
+	$q = "SELECT lang,count(*) as remain from iwlink GROUP BY lang";
+	$r = $db->doQuery($q);
+	$a = Database::mysql2array($r);
+	foreach ($a as $row)
+	{
+		echo "<a href='http://tools.wmflabs.org/addshore/addbot/iwlinks/raw.html?lang=".$row['lang']."'>".$row['lang']."</a>  ";
+	}
+	echo "</div></body></html>";
+}
+else
+{
+	echo "<html><meta charset='UTF-8'>\n";
+	//list the specific lang
+	$q = "SELECT article from iwlink WHERE lang ='".$_GET['lang']."'";
+	$r = $db->doQuery($q);
+	$a = Database::mysql2array($r);
+	echo "<ul style='list-style:none;padding:0'>\n";
+	echo "<!--LIST START-->\n";
+	foreach ($a as $row)
+	{
+		echo "<li>".$row['article']."</li>\n";
+	}
+	if(count($a) == 0)
+	{
+		echo "<marquee>NO PAGES LEFT</marquee>";
+	}
+	echo "<!--LIST END-->\n";
+	echo "</ul></html>";
+}
+
+?>

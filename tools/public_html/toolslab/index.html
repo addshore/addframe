@@ -1,0 +1,43 @@
+<?php include("../buildpage.php");?>
+<html>
+	<?php echo getHeader("Tools Lab");?>
+	<body>
+	<?php echo getSideBar();?>
+	<div id="content-column">
+
+    <h1>Tools Labs Stuff</h1>
+    <p>
+        Check out the status of the tools labs grid<br />
+    </p>
+    
+    <fieldset>
+	<legend>Hosts</legend>
+	<table border="0" cellspacing='10'>
+	<tr>
+	<th>Host</th>
+	<th>Load</th>
+	<th>Tasks</th>
+	<th>Mem</th>
+	</tr>
+	<?
+	preg_match_all('/(tools-[^\.]+).pmtpa.wmflabs +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^\n]+)/',shell_exec('qhost'),$hosts);
+	foreach($hosts[0] as $key => $host)
+	{
+		echo "<tr>";
+		echo "<td>".$hosts[1][$key]."</td>";
+		echo "<td>".$hosts[4][$key]."</td>";
+		echo "<td>".exec("qstat -u '*' |grep -c ".$hosts[1][$key])."</td>";
+		echo "<td>".$hosts[6][$key]." / ".$hosts[5][$key]."</td>";
+		echo "</tr>";
+	}
+	?>
+	</table></br>
+	
+	<? echo shell_exec('qstat -j'); ?>
+	
+    </fieldset>
+	
+	</div>
+	</body>
+</html>
+

@@ -1,0 +1,65 @@
+<?php include("../buildpage.php");?>
+<html>
+	<?php echo getHeader("Regex Tester");?>
+	<body>
+	<?php echo getSideBar();?>
+	<div id="content-column">
+
+<?php
+//THIS IS THE START OF THE CODE FOR THE SCRIPT
+	function getPost($key, $default = null) {
+    return array_key_exists($key, $_POST) ? $_POST[$key] : $default;
+}
+
+// Handle the inputs
+$p = getPost('pattern');
+$s = getPost('subject');
+$g = getPost('grouped') !== null;
+$o = getPost('offsets') !== null;
+$m = array();
+
+// Only process if we have a pattern and subject
+if ($p && $s) {
+    // Set our flags for the return, starting with which type of grouping
+    $f = $g ? PREG_SET_ORDER : PREG_PATTERN_ORDER;
+    
+    // If we want to capture offsets, add those in now
+    if ($o) {
+        $f = $f | PREG_OFFSET_CAPTURE;
+    }
+    
+    // Run the test now
+    preg_match_all($p, $s, $m, $f);
+}
+
+//END OF THE CODE FOR THE SCRIPT
+?>
+    <h1>Regex Tester</h1>
+    <p>
+        It's simple... you provide your regular expression and your subject string, this provides your matches, if there are any.<br />
+    </p>
+    
+    <fieldset>
+	<legend><?php echo $pagetitle ?></legend>
+	
+    <h5 id="output">Matches: <?php echo count($m[0]) ?></h3>
+    <pre style="background-color:<?if(count($m[0]) == 0) { echo "#F5A9A9";} else {echo "#CEF6CE";}?>">
+	<?php if(count($m[0]) != 0){var_dump($m);} ?></pre>
+		
+        <form id="table-maker" method="post" action="<?php echo basename(__FILE__) ?>">
+            <p>Pattern:<br /> 
+                <textarea name="pattern" id="pattern" rows="5"><?php echo $p ?></textarea>
+            </p>
+            <p>Subject:<br /> 
+                <textarea name="subject" id="subject" rows="5"><?php echo $s ?></textarea>
+            </p>
+            <p><input type="checkbox" name="grouped"<?php if ($g): ?> checked="checked"<?php endif; ?> /> Group matches together</p>
+            <p><input type="checkbox" name="offsets"<?php if ($o): ?> checked="checked"<?php endif; ?> /> Include string position of the match in the subject</p>
+            <p><input type="submit" name="submit" value="Process" /></p>
+        </form>
+    </fieldset>
+	
+	</div>
+	</body>
+</html>
+
