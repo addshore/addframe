@@ -5,7 +5,7 @@ error_reporting(E_ALL ^ E_NOTICE);
 ini_set('display_errors', 1);
 
 //From http://toolserver.org/~chris/highlight.php?d=chris/classes/&f=botclasses.php
-require '../classes/botclasses.php';
+require __DIR__.'/../classes/botclasses.php';
 
 $wiki = new wikipedia;
 $wiki->url = 'http://en.wikipedia.org/w/api.php';
@@ -20,7 +20,7 @@ $owner = "Addshore";
 $mysandbox = "User:".$owner."/Sandbox";
 
 set_time_limit(0); 
-require '../config/wiki.cfg';
+require __DIR__.'/../config/wiki.cfg';
 $wiki->login($config['user'],$config['password']);
 echo "USER: Logged In!\n";
 unset($config['password']);

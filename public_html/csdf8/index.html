@@ -1,5 +1,5 @@
 <?PHP
-include(__DIR__."../buildpage.php");
+include(__DIR__."/../buildpage.php");
 //Static content
 $header = "<html>".getHeader("CSDF8 Comparison")."<body>".getSideBar()."<div id='content-column'>
 <h1>CSDF8 Tool</h1>";
@@ -23,8 +23,8 @@ else
 	$footer = "</ul>".$footer;
 	echo $header;
 
-	include __DIR__.'../../../classes/botclasses.php';
-	include __DIR__.'../../../classes/wikitexttohtml.php';
+	include __DIR__.'/../../../classes/botclasses.php';
+	include __DIR__.'/../../../classes/wikitexttohtml.php';
 
 	$wiki = new wikipedia;
 	$wiki->url = 'http://en.wikipedia.org/w/api.php';

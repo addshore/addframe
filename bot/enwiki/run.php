@@ -6,12 +6,12 @@ echo "loading...";
 sleep(1);
 
 // load the classes and stuff
-require __DIR__.'../../classes/botclasses.php';
-require __DIR__.'../../classes/database.php';
-require __DIR__.'../../classes/page.php';
-require __DIR__.'../../classes/template.php';
-require __DIR__.'../../config/database.cfg';
-require __DIR__.'../../config/wiki.cfg';
+require __DIR__.'/../../classes/botclasses.php';
+require __DIR__.'/../../classes/database.php';
+require __DIR__.'/../../classes/page.php';
+require __DIR__.'/../../classes/template.php';
+require __DIR__.'/../../config/database.cfg';
+require __DIR__.'/../../config/wiki.cfg';
 
 //error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
@@ -31,8 +31,8 @@ echo "done";
 
 //Get further config stuff
 $config = parse_ini_string(preg_replace("/(\<syntaxhighlight lang='ini'\>|\<\/syntaxhighlight\>)/i","",$wiki->getpage("User:Addbot/config")),true);
-require 'config.php';//again
-require 'config.run.php';
+require __DIR__.'/config.php';//again
+require __DIR__.'/config.run.php';
 if($config['General']['run'] != true){echo "\nNot set to run"; die();}//if we are not meant to run die
 //Get AWB user talk subst list
 $awbutt = $wiki->getpage('Wikipedia:AutoWikiBrowser/User_talk_templates');

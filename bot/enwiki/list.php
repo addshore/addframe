@@ -35,11 +35,11 @@ echo "loading...\n";
 sleep(1);
 
 // load the classes and stuff
-require __DIR__.'../../classes/botclasses.php';
-require __DIR__.'../../classes/database.php';
-require __DIR__.'../../classes/template.php';
-require __DIR__.'../../config/database.cfg';
-require __DIR__.'../../config/wiki.cfg';
+require __DIR__.'/../../classes/botclasses.php';
+require __DIR__.'/../../classes/database.php';
+require __DIR__.'/../../classes/template.php';
+require __DIR__.'/../../config/database.cfg';
+require __DIR__.'/../../config/wiki.cfg';
 
 // initialise the wiki
 $wiki = new wikipedia;

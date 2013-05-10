@@ -1,7 +1,7 @@
 <?
 //require
-require __DIR__.'../../classes/stathat.php';
-require __DIR__.'../../config/stathat.cfg';
+require __DIR__.'/../../classes/stathat.php';
+require __DIR__.'/../../config/stathat.cfg';
 doChecks();
 sleep(30);
 doChecks();

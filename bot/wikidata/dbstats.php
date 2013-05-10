@@ -2,14 +2,14 @@
 $start_time = MICROTIME(TRUE);
 
 //database
-require __DIR__.'../../classes/database.php';
-require __DIR__.'../../config/database.cfg'; 
+require __DIR__.'/../../classes/database.php';
+require __DIR__.'/../../config/database.cfg'; 
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 unset($config['dbpass']);
 $res = Database::mysql2array($db->doQuery("select lang,count(*) from iwlink group by lang;"));
 //loginto wiki
-require __DIR__.'../../classes/botclasses.php';
-require __DIR__.'../../config/wiki.cfg';
+require __DIR__.'/../../classes/botclasses.php';
+require __DIR__.'/../../config/wiki.cfg';
 $wiki = new wikipedia;
 $wiki->url = "http://meta.wikimedia.org/w/api.php";
 $wiki->login($config['user'],$config['password']);

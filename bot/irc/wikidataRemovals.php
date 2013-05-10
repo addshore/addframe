@@ -1,7 +1,7 @@
 <?PHP
 
-require __DIR__.'../../classes/botclasses.php';
-require __DIR__.'../../config/wiki.php';
+require __DIR__.'/../../classes/botclasses.php';
+require __DIR__.'/../../config/wiki.php';
 
 $wiki = new wikipedia;
 $wiki->url = 'http://en.wikipedia.org/w/api.php';

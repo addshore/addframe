@@ -1,11 +1,11 @@
 <?
 //require
-require __DIR__.'../../classes/stathat.php';
-require __DIR__.'../../config/stathat.cfg';
+require __DIR__.'/../../classes/stathat.php';
+require __DIR__.'/../../config/stathat.cfg';
 
 //database
-require __DIR__.'../../classes/database.php';
-require __DIR__.'../../config/database.cfg'; 
+require __DIR__.'/../../classes/database.php';
+require __DIR__.'/../../config/database.cfg'; 
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 unset($config['dbpass']);
 
