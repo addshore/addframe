@@ -12,7 +12,9 @@ unset($config['dbpass']);
 //Here is the loop for the process
 while (true)
 {
+	echo "Doing checks\n";
 	doChecks();
+	echo "Sleeping for 50..\n";
 	sleep(50);
 }
 
@@ -35,6 +37,9 @@ function doChecks()
 	$res1 = Database::mysql2array($res);
 	stathat_ez_value($config['stathatkey'], "Addbot - IW Removal - Remaining" , intval($res1[0]['count']));
 	unset($res,$res1,$res2);
+
+	//Total number of jobs on LABS
+	stathat_ez_value($config['stathatkey'], "Tool Labs Jobs" , intval(exec("qstat -u '*' | grep -c @")));
 } 
 
 function get_data($url) {
