@@ -59,71 +59,16 @@ foreach ($list as $item) {
 	if(strlen($text) < 1){continue;}
 	
 	$id = "";
-	/*
-	//check the links found in the text
-	$toaddtowikidata = Array();
-	$linksonpage1 = getlinksfromtext($text);
-	foreach($linksonpage1 as $langt => $titlet)
-	{
-		$return = $wikidata->wikidatasitelinks($titlet,str_replace("-","_",$langt)."wiki");
-		foreach ($return as $q)
-		{
-			if(!isset($q['id']))
-			{
-				//only add them if they are not on WD
-				$toaddtowikidata[$langt] = $titlet;
-				$STUFFTOADD = true;
-			}
-			else
-			{
-				$CONFLICT = true;
-			}
-		}
-	}
-
-	//try and get the id for our current article
-	$return = getlinksfromwikidata($lang1,$title1);
-	if(isset($return['id']))
-	{
-		$id = $return['id'];
-		foreach($toaddtowikidata as $langt => $titlet)
-		{
-			if(isset($return[$langt]))
-			{
-				//make sure there are no conflicts
-				unset($toaddtowikidata[$langt]);
-			}
-		}
-	}
-	unset($return);
 	
-	//if we have something to add to WD
-	if($STUFFTOADD && $CONFLICT == false)
+	//First remove the comments (if we want to)
+	if(getmyrem($lang1) != "")
 	{
-		$extra = "";
-		$result = "";
-		if($id != "")
-		{
-			$result = $wikidata->editentity(composeentity($toaddtowikidata),$id);
-			$extra = "old";
-		}
-		else
-		{
-			$toaddtowikidata[$lang1] = $title1;
-			$result = $wikidata->editentity(composeentity($toaddtowikidata));
-			$extra = "new";
-		}
-		if($result['success'] == 1)
-		{
-		echo "\n\033[1;35m\n".count($linksonpage1)." links added to wikidata ($extra)\033[0m";stathat_ez_count($config['stathatkey'], "Addbot - Wikidata Edits", 1);
-		}else{echo "\n\033[1;35m\nFAILED to add links to wikidata ($extra)\033[0m";}
+		$text = preg_replace('/'.getmyrem($lang1).'\n?/i','',$text);
 	}
-	
-	*/
-	
-	//now try and remove stuff from text
+	//Then remove the links
 	$return = getlinksfromwikidata($lang1,$title1);
 	$result = removelinksfromtext($text,$return['links']);
+	
 	if($text != $result['text'])//if it is different
 	{
 		//skip certain namespaces
@@ -273,6 +218,7 @@ function removelinksfromtext($text,$links)
 			}
 		}
 	}
+	//Remove any extra space at the end of the article
 	$return = preg_replace('/(\n\n)\n+$/', "$1", $return);
 	$return = preg_replace('/^(\n|\r){0,5}$/', "", $return);
 	
