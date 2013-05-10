@@ -2,3 +2,5 @@ MAILTO=""
 
 #Auto update
 */5 * * * * cd /data/project/addshore/ && git pull && crontab cron/tools-login-addshore
+
+#Remember to leave the empty line under this comment for EOF

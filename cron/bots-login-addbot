@@ -12,3 +12,5 @@ MAILTO=""
 #*/30 * * * * echo "php /data/project/addbot/bot/wikidata/dbstats.php" | qsub -N wd.dbstat
 #Cleanup of grid log files
 #*/5 * * * * rm /home/addshore/wd.*.*
+
+#Remember to leave the empty line under this comment for EOF
