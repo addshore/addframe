@@ -25,12 +25,14 @@ function doChecks()
 	global $db,$config;
 
 	//Wikidata Dispatch Stats
+	echo "1";
 	$text = get_data("http://www.wikidata.org/wiki/Special:DispatchStats");
 	preg_match_all('/'.preg_quote('<td align="right">Average</td><td align="right">-</td><td align="right">-</td><td align="right">','/').'([^<]+)<\/td>/',$text,$match);
 	stathat_ez_value($config['stathatkey'], "Wikidata Dispatch Pending" , intval(str_replace(',','',$match[1][0])));
 	unset($text,$match);
 
 	//Total number of articles left in the DB
+	echo "2";
 	$res = $db->doQuery("select count(*) as count from iwlink;");
 	if (!$res) {
 		echo $db->errorStr();
@@ -40,6 +42,7 @@ function doChecks()
 	unset($res,$res1,$res2);
 
 	//Total number of jobs on LABS
+	echo "3";
 	stathat_ez_value($config['stathatkey'], "Tool Labs Jobs" , intval(exec("qstat -u '*' | grep -c @")));
 } 
 
