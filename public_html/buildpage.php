@@ -6,7 +6,7 @@ function getSideBar()
 {
 	global $config;
 	return "<div id='sidebar'>
-		<h4>Addshore's tools</h4>
+		<h4><a href='".$config['myurl']."'>Addshore's tools</a></h4>
 			<h5>Wikimedia</h5>
 			<ul>
 			<li><a href='".$config['myurl']."addbot/status' title='monitor addbots current stats'>Addbot Status</a></li>
