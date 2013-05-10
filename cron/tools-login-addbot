@@ -1,0 +1,7 @@
+MAILTO=""
+
+#Auto update
+*/5 * * * * cd /data/project/addbot/ && git pull && crontab cron/tools-login-addbot
+#Bot Tasks
+0 9 * * * cd /data/project/addbot/bot/ && jsub -mem 1G -cwd -once enwiki-usertalksubst.php
+0 10 * * * cd /data/project/addbot/bot/ && jsub -mem 1G -cwd -once enwiki-orphanremoval.php

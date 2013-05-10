@@ -1,5 +1,0 @@
-MAILTO=""
-
-#Bot Tasks
-0 9 * * * jsub -mem 1G /data/project/addbot/bot/enwiki/usertalksubst.php
-0 10 * * 1 jsub -mem 1G /data/project/addbot/bot/enwiki/orphanremoval.php
