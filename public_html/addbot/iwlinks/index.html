@@ -53,7 +53,8 @@ foreach ($resall as $r)
 	$all = $all + intval($r['remain']);
 }
 
-$out .="<p>For a history of this list please see <a href='http://meta.wikimedia.org/w/index.php?title=User:Addbot/Interwiki_Status&action=history'> the list on meta</a>.</p>\n";
+$out .="<p>For a history of this list please see <a href='http://meta.wikimedia.org/w/index.php?title=User:Addbot/Interwiki_Status&action=history'> the list on meta</a>.
+ For a raw bot list please see <a href='http://tools.wmflabs.org/addshore/addbot/iwlinks/raw.html'>this special page</a>\n";
 $out .="<p>Total in DB = ".number_format($all,0,'.',',').", ";
 $out .="Total bot checked = ".number_format($total,0,'.',',').", ";
 $out .="Total to go= ".number_format($all - $total,0,'.',',')."</p>\n";
