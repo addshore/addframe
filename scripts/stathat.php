@@ -13,7 +13,7 @@ unset($config['dbpass']);
 while (true)
 {
 	doChecks();
-	sleep(50)
+	sleep(50);
 }
 
 //Below is the function with the tasks to complete
