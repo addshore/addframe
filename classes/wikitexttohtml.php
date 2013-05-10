@@ -1,4 +1,5 @@
-<?
+<?php
+
 class WikiTextToHTML {
 	/**
 	 * Wiki text to HTML script.

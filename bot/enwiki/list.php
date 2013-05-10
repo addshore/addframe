@@ -1,4 +1,4 @@
-<?
+<?php
 
 //TODO: Enable to be passed just 1 page name to be added to the list
 

@@ -1,4 +1,4 @@
-<?
+<?php
 // load the classes and stuff
 require __DIR__.'/../../classes/botclasses.php';
 require __DIR__.'/../../classes/database.php';

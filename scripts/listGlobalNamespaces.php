@@ -1,4 +1,5 @@
-<?
+<?php
+
 /*
 This file create an array for all namespaces for all language wikipedias listed below.
 This file also gets all aliases for said namespaces

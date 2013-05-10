@@ -1,4 +1,4 @@
-<?
+<?php
 //exit();
 $start_time = MICROTIME(TRUE);
 //Load

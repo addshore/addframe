@@ -1,4 +1,4 @@
-<?
+<?php
 //run.php --page="value"
 $options = getopt("",Array("page::"));
 

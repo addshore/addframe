@@ -1,5 +1,5 @@
-<?
-require 'parser.php';
+<?php
+require __DIR__.'/parser.php';
 
 class Page {
 

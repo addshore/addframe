@@ -1,4 +1,4 @@
-<?
+<?php
 // main settings
 $config['debug'] = false;									// true for debugging
 // table settings

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $text = get_data("http://www.wikidata.org/wiki/Special:DispatchStats");
 preg_match_all('/'.preg_quote('<td align="right">Average</td><td align="right">-</td><td align="right">-</td><td align="right">','/').'([^<]+)<\/td>/',$text,$match);

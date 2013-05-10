@@ -1,4 +1,4 @@
-<?
+<?php
 $edit = Array();
 //array_push($edit,Array("name"=>"User:Addbot","text"=>"{{bot|Addshore}}","summ"=>"Adding {{bot}} template"));
 //array_push($edit,Array("name"=>"User:Legobot","text"=>"{{bot|Legoktm}}\n[[File:Redirectltr.png|#REDIRECT|link=]][[:meta:User:Legobot]]","summ"=>"Adding {{bot}} template"));

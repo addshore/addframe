@@ -1,4 +1,4 @@
-<?
+<?php
 
 $config['myurl'] = "//tools.wmflabs.org/addshore/";
 

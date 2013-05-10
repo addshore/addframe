@@ -1,4 +1,4 @@
-<?
+<?php
 
 require 'bot.login.php';
 

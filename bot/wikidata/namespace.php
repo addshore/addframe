@@ -1,4 +1,4 @@
-<?
+<?php
 $ns = Array();
 global $ns;
 

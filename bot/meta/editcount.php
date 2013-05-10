@@ -1,4 +1,4 @@
-<?
+<?php
 //run.php --page="value"
 $options = getopt("",Array("page::"));
 
@@ -9,7 +9,6 @@ sleep(1);
 require __DIR__.'/../../classes/botclasses.php';
 require __DIR__.'/../../config/wiki.cfg';
 
-//error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 // initialise the wiki
