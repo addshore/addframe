@@ -1,15 +1,31 @@
 <?php include(__DIR__."/../buildpage.php");?>
 <html>
 	<?php echo getHeader("Tools Lab");?>
+	<script src="http://www.stathat.com/javascripts/embed.js"></script>
 	<body>
 	<?php echo getSideBar();?>
 	<div id="content-column">
 
     <h1>Tools Labs Stuff</h1>
     <p>
-        Check out the status of the tools labs grid<br />
+        Check out the status of the tools labs grid.<br />
     </p>
     
+	<fieldset>
+	<legend>Grid Info</legend>
+	<? echo shell_exec('qstat -j'); ?>
+    </fieldset>
+	
+	<fieldset>
+	<legend>Job graphs</legend>
+	<table border="0" cellspacing='0'>
+	<tr>
+	<th><script>StatHatEmbed.render({s1: '4WEeY', w: 375, h: 200, tf: 'hour_compare', title: 'ToolLab Jobs (hour)'});</script></th>
+	<th><script>StatHatEmbed.render({s1: '4WEeY', w: 375, h: 200, tf: 'day_compare', title: 'ToolLab Jobs (day)'});</script></th>
+	<th><script>StatHatEmbed.render({s1: '4WEeY', w: 375, h: 200, tf: 'week_compare', title: 'ToolLab Jobs (week)'});</script></th>
+	</tr>
+	</table>
+	</fieldset>
     <fieldset>
 	<legend>Hosts</legend>
 	<table border="0" cellspacing='10'>
@@ -32,10 +48,7 @@
 	}
 	?>
 	</table></br>
-	
-	<? echo shell_exec('qstat -j'); ?>
-	
-    </fieldset>
+	</fieldset>
 	
 	</div>
 	</body>
