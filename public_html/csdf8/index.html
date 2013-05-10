@@ -1,14 +1,14 @@
 <?PHP
 include(__DIR__."/../buildpage.php");
-//Static content
 $header = "<html>".getHeader("CSDF8 Comparison")."<body>".getSideBar()."<div id='content-column'>
 <h1>CSDF8 Tool</h1>";
 $footer = "</div></body></html>";
 
+//Output the first page asking for a number of files to compare
 if(!isset($_GET['toget']) || !is_numeric($_GET['toget']))
 {
 	echo $header;
-	echo "<p>This tool very hackily compares a file version on enwiki along side the same file on commons, this allows admins to easily spot identical files with the correct permissions on both sites to be deleted from enwiki</p>";
+	echo "<p>This tool very hackily loads Category:Wikipedia_files_with_the_same_name_on_Wikimedia_Commons and compares the file version on enwiki along side the same file on commons while highlighting certain words in each files description, this allows admins to easily spot identical files with the correct permissions on both sites to be deleted from enwiki</p>";
 	echo "<form action='index.html' method='get'>
 	Number of files to compare: <input type='text' name='toget'>
 	<input type='submit'>
@@ -16,6 +16,7 @@ if(!isset($_GET['toget']) || !is_numeric($_GET['toget']))
 	echo "<p>Files are taken from Category:Wikipedia_files_with_the_same_name_on_Wikimedia_Commons</p>";
 	echo $footer;
 }
+//Output the results
 else
 {
 
@@ -23,8 +24,8 @@ else
 	$footer = "</ul>".$footer;
 	echo $header;
 
-	include __DIR__.'/../../../classes/botclasses.php';
-	include __DIR__.'/../../../classes/wikitexttohtml.php';
+	require __DIR__.'/../../../classes/botclasses.php';
+	require __DIR__.'/../../../classes/wikitexttohtml.php';
 
 	$wiki = new wikipedia;
 	$wiki->url = 'http://en.wikipedia.org/w/api.php';
@@ -35,7 +36,6 @@ else
 	global $comm;
 
 	$cat = 'Category:Wikipedia_files_with_the_same_name_on_Wikimedia_Commons';
-	//$cat = 'Category:Wikipedia files with the same name on Wikimedia Commons as of 27 December 2012';
 	$files = $wiki->categorymembers($cat,true);
 	$counter = 0;
 
@@ -49,20 +49,17 @@ else
 			$ci = $comm->getfilelocation($file);
 			$wu = $wiki->getfileuploader($file);
 			$cu = $comm->getfileuploader($file);
-			//$ws= getimagesize($wi);
-			//$cs= getimagesize($ci);
 			$wimg = "<img align='left' src='$wi' alt='$file' height='100' width='100'>";
 			$cimg = "<img align='left' src='$ci' alt='$file' height='100' width='100'>";
 			$wp = $wiki->getpage($file);
 			$cp = $comm->getpage($file);
-			$wpe = preg_replace("/(\{\{cc|PD|GFDL|self|Non|public domain)/i","<b>$0</b>",$wp);
-			$cpe = preg_replace("/(\{\{cc|PD|GFDL|self|Non|$wu|public domain|User:)/i","<b>$0</b>",$cp);
+			$wpe = preg_replace("/(\{\{(cc|puf|pui(disputed)|imagevio)|PD|GFDL|self|Non|public domain|delete)/i","<b>$0</b>",$wp);
+			$cpe = preg_replace("/(\{\{(cc|puf|pui(disputed)|imagevio)|PD|GFDL|self|Non|$wu|public domain|User:|delete)/i","<b>$0</b>",$cp);
 			
 			echo "<li><a target='_blank' href='http://en.wikipedia.org/w/index.php?title=$file&action=delete&wpReason=CSDF8'><b>Delete</b></a>";
 			echo "<table border='0' width='100%'><col width='50%'><col width='50%'>";
 			echo "<tr><td>$wimg <a target='_blank' href='http://en.wikipedia.org/wiki/$file'>Wikipedia:$file </a> by <b>$wu</b></td><td>$cimg <a target='_blank' href='$ci'>Commons:$file </a> by $cu</td></tr>";
 			echo "<tr><td>$wpe</td><td>$cpe</td></tr>";
-			//echo "<tr><td>$wpe</td><td>$cpe</td><td></td></tr>";
 			echo "</table>";
 		}
 	} 

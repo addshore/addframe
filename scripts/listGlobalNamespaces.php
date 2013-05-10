@@ -1,4 +1,10 @@
 <?
+/*
+This file create an array for all namespaces for all language wikipedias listed below.
+This file also gets all aliases for said namespaces
+The file currently outputs in a rather large text version of an array which can easily be imported into scripts
+*/
+
 //requires
 require __DIR__.'/../classes/botclasses.php';
 require __DIR__.'/../config/wiki.php';

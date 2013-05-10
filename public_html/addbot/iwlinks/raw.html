@@ -19,7 +19,7 @@ if(!isset($_GET['lang']))
 	$a = Database::mysql2array($r);
 	foreach ($a as $row)
 	{
-		echo "<a href='http://tools.wmflabs.org/addshore/addbot/iwlinks/raw.html?lang=".$row['lang']."'>".$row['lang']."</a>  ";
+		echo "<a href='http://tools.wmflabs.org/addshore/addbot/iwlinks/raw.html?lang=".$row['lang']."'>".$row['lang']."</a> , ";
 	}
 	echo "</div></body></html>";
 }
@@ -38,7 +38,8 @@ else
 	}
 	if(count($a) == 0)
 	{
-		echo "<marquee>NO PAGES LEFT</marquee>";
+		//I blame Reedy for this
+		echo "<marquee>blame Reedy for this >>   NO PAGES LEFT   << blame Reedy for this</marquee>";
 	}
 	echo "<!--LIST END-->\n";
 	echo "</ul></html>";

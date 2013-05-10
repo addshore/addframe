@@ -29,9 +29,7 @@ unset($config['password']);
 
 global $wiki;
 
-//$cat = $argv[1];
 $cat = 'Category:Orphaned articles';
-//$cat = 'Category:Orphaned_articles_from_May_2012';
 
 $count_removed = 0;
 $count_skipped = 0;
@@ -91,6 +89,5 @@ foreach($orphans as $orphan)
 }
 $log = "User:Addbot/log/orphan";
 
-//$wiki->edit($log,$wiki->getpage($log)."\n|row=".date("Y-m-d h:i:s")."{{!!}}$count_removed{{!!}}$count_skipped{{!!}}[[:$cat]]","[[User:Addbot|Bot:]] Updating Orphan Removal Stats",true);
 ?>
 

@@ -32,7 +32,7 @@
  *      Gutza    - [[User:Gutza]]        - Submitted a patch for http->setHTTPcreds(), and http->quiet
  *      Sean     - [[User:SColombo]]     - Wrote the lyricwiki class (now moved to lyricswiki.php)
  *      Brain    - [[User:Brian_McNeil]] - Wrote wikipedia->getfileuploader() and wikipedia->getfilelocation
- * 		Addshore - [[User:Addshore]]     - Functions for Addbot (lastedit,lasteditonpage,firstedit,updateupdateupdate nobots)
+ * 		Addshore - [[User:Addshore]]     - Functions for Addbot (lastedit,lasteditonpage,firstedit,update nobots,wikibase)
  **/
 
 /**
@@ -1262,6 +1262,11 @@ class lyricwiki extends extended
 
 } // end class lyricwiki
 
+
+/**
+ * This class extends the wiki class to provide wikibase functionality
+ * @author Addshore
+ */
 class wikidata extends extended
 {
 
@@ -1341,14 +1346,6 @@ class wikidata extends extended
 	function getentityfor ($site,$title){
 		return $this->query('?action=wbgetentities&sites='.urlencode($site).'&titles='.urlencode($title).'&format=php');
 	}
-	
-	/*
-	function setsitelink ($id,$lang,$title){
-		$x = $this->http->post("http://wikidata.org/w/api.php?action=wblinktitles&id=".urlencode($id)."&site=".urlencode($lang)."wiki&title=".urlencode($title)."&format=php");
-		$x = unserialize($x);
-		return $x;
-	}
-	*/
 
 }
 
