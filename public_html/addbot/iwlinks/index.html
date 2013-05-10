@@ -100,8 +100,8 @@ $out .= "\n<div><table><tr><th>Article</th><th>Wikidata</th><th>Links</th><th>La
 foreach ($res as $r)
 {
 	//check if the article already has a wikidata entry
-	$out .= "<tr><td><a href='https://".$_GET['lang'].".wikipedia.org/wiki/".$r['article']."'>".$r['article']."</a></td>";
-	$out .= "<td><a href='https://www.wikidata.org/wiki/Special:ItemByTitle/".$_GET['lang']."wiki/".$r['article']."'>LINK</a></td>";
+	$out .= "<tr><td><a href='https://".$_GET['lang'].".wikipedia.org/wiki/".urlencode($r['article'])."'>".$r['article']."</a></td>";
+	$out .= "<td><a href='https://www.wikidata.org/wiki/Special:ItemByTitle/".$_GET['lang']."wiki/".urlencode($r['article'])."'>LINK</a></td>";
 	$out .= "<td>".$r['links']."</td>";
 	$out .= "<td>".$r['checked']."</td></tr>\n";
 }
