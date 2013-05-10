@@ -3,7 +3,7 @@ AddType application/x-httpd-php .html
 <IfModule mod_rewrite.c>
   RewriteEngine On
   
-  RewriteCond %{HTTP_HOST} !="tools.wmflabs.org"
+  RewriteCond %{SERVER_NAME} !^tools\.wmflabs\.org$
   RewriteRule .* http://tools.wmflabs.org%{REQUEST_URI} [R=301]
   RewriteCond %{REQUEST_URI} !^/addshore
   RewriteRule /[^/]/(.*) /addshore/$1 [R=301,L]
