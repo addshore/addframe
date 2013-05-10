@@ -1,10 +1,10 @@
 <?php
 echo "\nRunning";
 //database
-require '../../classes/stathat.php';
-require '../../config/stathat.cfg';
-require '../../classes/database.php';
-require '../../config/database.cfg'; 
+require __DIR__.'../../classes/stathat.php';
+require __DIR__.'../../config/stathat.cfg';
+require __DIR__.'../../classes/database.php';
+require __DIR__.'../../config/database.cfg'; 
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 unset($config['dbpass']);
 

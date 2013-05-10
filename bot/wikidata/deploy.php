@@ -1,6 +1,6 @@
 <?
 //run everything in the site file
-$file = "sites.php";
+$file = __DIR__."sites.php";
 $text = file_get_contents($file);
 $split = explode("\n",$text);
 

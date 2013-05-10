@@ -1,7 +1,7 @@
 <?PHP
 $option = getopt("",Array("file::","lang::"));
-require '../../classes/database.php';
-require '../../config/database.cfg';
+require __DIR__.'../../classes/database.php';
+require __DIR__.'../../config/database.cfg';
 if(!isset($option['lang']))
 {die("Incorrect Parameters\n");}
 else{

@@ -13,13 +13,13 @@ $glang                       = $options['lang'];
 $apilang                     = str_replace('-', '', $glang);
 
 //Classes and configs
-require '../../classes/botclasses.php';
-require '../../classes/database.php';
-require '../../classes/stathat.php';
-require '../../config/stathat.cfg';
-require '../../config/database.cfg';
-require '../../config/wiki.cfg';
-require 'namespace.php';
+require __DIR__.'../../classes/botclasses.php';
+require __DIR__.'../../classes/database.php';
+require __DIR__.'../../classes/stathat.php';
+require __DIR__.'../../config/stathat.cfg';
+require __DIR__.'../../config/database.cfg';
+require __DIR__.'../../config/wiki.cfg';
+require __DIR__.'namespace.php';
 
 //Initialise the wiki array
 $wiki           = Array();

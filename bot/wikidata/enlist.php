@@ -1,9 +1,9 @@
 <?PHP
 // load the classes and stuff
-require '../../classes/botclasses.php';
-require '../../classes/database.php';
-require '../../config/database.cfg';
-require '../../config/wiki.cfg';
+require __DIR__.'../../classes/botclasses.php';
+require __DIR__.'../../classes/database.php';
+require __DIR__.'../../config/database.cfg';
+require __DIR__.'../../config/wiki.cfg';
 
 // initialise the wiki
 $wiki = new wikipedia;
@@ -17,7 +17,7 @@ echo "done";
 
 //Get further config stuff
 $config = parse_ini_string(preg_replace("/(\<syntaxhighlight lang='ini'\>|\<\/syntaxhighlight\>)/i","",$wiki->getpage("User:Addbot/config")),true);
-require '../enwiki/config.cfg';//again
+require __DIR__.'../enwiki/config.cfg';//again
 if($config['General']['run'] != true){echo "\nNot set to run"; die();}//if we are not meant to run die
 
 $at = $wiki->getpage('User:Addbot/iwval.js');

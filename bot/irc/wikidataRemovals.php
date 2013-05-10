@@ -1,7 +1,7 @@
 <?PHP
 
-require '../../classes/botclasses.php';
-require '../../config/wiki.php';
+require __DIR__.'../../classes/botclasses.php';
+require __DIR__.'../../config/wiki.php';
 
 $wiki = new wikipedia;
 $wiki->url = 'http://en.wikipedia.org/w/api.php';
@@ -12,7 +12,6 @@ $parentpid = posix_getpid();
 $nickname = "Addbot-wdr";
 
 set_time_limit(0); 
-require '/home/addshore/.password.addbot';
 $wiki->login($config['user'],$config['password']);
 echo "USER: Logged In!\n";
 unset($config['password']);

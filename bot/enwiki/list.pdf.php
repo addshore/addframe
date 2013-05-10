@@ -1,10 +1,10 @@
 <?
 // load the classes and stuff
-require '../../classes/botclasses.php';
-require '../../classes/database.php';
-require '../../classes/template.php';
-require '../../config/database.cfg';
-require '../../config/wiki.cfg';
+require __DIR__.'../../classes/botclasses.php';
+require __DIR__.'../../classes/database.php';
+require __DIR__.'../../classes/template.php';
+require __DIR__.'../../config/database.cfg';
+require __DIR__.'../../config/wiki.cfg';
 
 // initialise the wiki
 $wiki = new wikipedia;
