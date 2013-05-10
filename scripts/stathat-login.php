@@ -12,7 +12,7 @@ echo "Sleeping for 20..\n";
 sleep(20);
 echo "Doing checks\n";
 doChecks();
-exit()
+exit();
 
 //Below is the function with the tasks to complete
 function doChecks() 
