@@ -62,23 +62,23 @@ else
 		if($counter <$_GET['toget'] && strstr($file,"Category:") == false)
 		{
 			$counter++;
-			$wi = $wiki->getfilethumblocation($file);
-			$ci = $comm->getfilethumblocation($file);			
+			$wi = $wiki->getfilethumblocation($file,100);
+			$ci = $comm->getfilethumblocation($file,100);			
 			$wu = $wiki->getfileuploader($file);
 			$cu = $comm->getfileuploader($file);
 			$wimg = "<img align='left' src='$wi' alt='$file' height='100' width='100'>";
 			$cimg = "<img align='left' src='$ci' alt='$file' height='100' width='100'>";
 			$wp = $wiki->getpage($file);
 			$cp = $comm->getpage($file);
-			$wpe = preg_replace("/(\{\{(cc|puf|pui(disputed)|imagevio)|PD|GFDL|self|Non|public domain|delete)/i","<b>$0</b>",$wp);
-			$cpe = preg_replace("/(\{\{(cc|puf|pui(disputed)|imagevio)|PD|GFDL|self|Non|$wu|public domain|User:|delete)/i","<b>$0</b>",$cp);
-			$wpe = preg_replace("/(\{\{(puf|pui(disputed)|imagevio))/i","<font color='red'>$0</font>",$wp);
-			$cpe = preg_replace("/(\{\{(puf|pui(disputed)|imagevio))/i","<font color='red'>$0</font>",$cp);
+			$wp = preg_replace("/(\{\{(cc|puf|pui(disputed)|imagevio)|PD|GFDL|self|Non|public domain|delete)/i","<b>$0</b>",$wp);
+			$cp = preg_replace("/(\{\{(cc|puf|pui(disputed)|imagevio)|PD|GFDL|self|Non|$wu|public domain|User:|delete)/i","<b>$0</b>",$cp);
+			$wp = preg_replace("/(\{\{(puf|pui(disputed)|imagevio))/i","<font color='red'>$0</font>",$wp);
+			$cp = preg_replace("/(\{\{(puf|pui(disputed)|imagevio))/i","<font color='red'>$0</font>",$cp);
 			
 			echo "<li><a target='_blank' href='http://en.wikipedia.org/w/index.php?title=$file&action=delete&wpReason=CSDF8'><b>Delete</b></a>";
 			echo "<table border='0' width='100%'><col width='50%'><col width='50%'>";
 			echo "<tr><td>$wimg <a target='_blank' href='http://en.wikipedia.org/wiki/$file'>Wikipedia:$file </a> by <b>$wu</b></td><td>$cimg <a target='_blank' href='$ci'>Commons:$file </a> by $cu</td></tr>";
-			echo "<tr><td>$wpe</td><td>$cpe</td></tr>";
+			echo "<tr><td>$wp</td><td>$cp</td></tr>";
 			echo "</table>";
 		}
 	}
