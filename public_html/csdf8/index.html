@@ -7,9 +7,29 @@ $footer = "</div></body></html>";
 //Output the first page asking for a number of files to compare
 if(!isset($_GET['toget']) || !is_numeric($_GET['toget']))
 {
+	//wiki instance
+	require __DIR__.'/../../classes/botclasses.php';
+	$wiki = new wikipedia;
+	$wiki->url = 'http://en.wikipedia.org/w/api.php';
+	global $wiki;
+
+	//Get a list of possible cats
+	$cat = 'Category:Wikipedia_files_with_the_same_name_on_Wikimedia_Commons';
+	$cats = $wiki->categorymembers($cat,false);
+	$selection = "<option value='$cat'>$cat</option>";
+	foreach($cats as $c)
+	{
+		$selection .= "<option value='$c'>$c</option>";
+	}
+	
+	//output the page
 	echo $header;
 	echo "<p>This tool very hackily loads Category:Wikipedia_files_with_the_same_name_on_Wikimedia_Commons and compares the file version on enwiki along side the same file on commons while highlighting certain words in each files description, this allows admins to easily spot identical files with the correct permissions on both sites to be deleted from enwiki</p>";
 	echo "<form action='index.html' method='get'>
+	Category to get files from:
+	<select name='category'>
+	$selection
+	</select></br>
 	Number of files to compare: <input type='text' name='toget'>
 	<input type='submit'>
 	</form>";
@@ -23,10 +43,10 @@ else
 	$header = $header."<ul>";
 	$footer = "</ul>".$footer;
 	echo $header;
-
-	require __DIR__.'/../../classes/botclasses.php';
+	
 	require __DIR__.'/../../classes/wikitexttohtml.php';
 
+	require __DIR__.'/../../classes/botclasses.php';
 	$wiki = new wikipedia;
 	$wiki->url = 'http://en.wikipedia.org/w/api.php';
 	global $wiki;
@@ -35,7 +55,8 @@ else
 	$comm->url = 'http://commons.wikimedia.org/w/api.php';
 	global $comm;
 
-	$cat = 'Category:Wikipedia_files_with_the_same_name_on_Wikimedia_Commons';
+	$cat = $_GET['category'];
+	echo $cat;
 	$files = $wiki->categorymembers($cat,true);
 	$counter = 0;
 
