@@ -1011,6 +1011,7 @@ class wikipedia {
 	function getfilethumblocation ($page,$px = 200) {
 		$filelocation = $this->getfilelocation($page);
 		$filelocation = preg_replace('/(http:\/\/[^\.]+\.[^\.]+\.[^\.]+\/[^\/]+\/[^\/]+\/)([^\/]+\/[^\/]+\/)(.*?)$/','$1thumb/$2/$3/'.$px.'px-$3',$filelocation);
+		return $filelocation;
 	}
  
     /**  BMcN 2012-09-16
