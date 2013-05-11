@@ -10,12 +10,13 @@ $wiki = new wikipedia;
 $wiki->url = 'http://en.wikipedia.org/w/api.php';
 global $wiki;
 
+$cat = 'Category:Wikipedia files with the same name on Wikimedia Commons';
+
 //Output the first page asking for a number of files to compare
 if(!isset($_GET['toget']) || !is_numeric($_GET['toget']))
 {
 
 	//Get a list of possible cats
-	$cat = 'Category:Wikipedia_files_with_the_same_name_on_Wikimedia_Commons';
 	$cats = $wiki->categorymembers($cat,false);
 	$selection = "<option value='$cat'>$cat</option>";
 	foreach($cats as $c)
@@ -25,7 +26,7 @@ if(!isset($_GET['toget']) || !is_numeric($_GET['toget']))
 	
 	//output the page
 	echo $header;
-	echo "<p>This tool very hackily loads Category:Wikipedia_files_with_the_same_name_on_Wikimedia_Commons and compares the file version on enwiki along side the same file on commons while highlighting certain words in each files description, this allows admins to easily spot identical files with the correct permissions on both sites to be deleted from enwiki</p>";
+	echo "<p>This tool very hackily loads $cat and compares the file version on enwiki along side the same file on commons while highlighting certain words in each files description, this allows admins to easily spot identical files with the correct permissions on both sites to be deleted from enwiki</p>";
 	echo "<form action='index.html' method='get'>
 	Category to get files from:
 	<select name='category'>
@@ -34,7 +35,7 @@ if(!isset($_GET['toget']) || !is_numeric($_GET['toget']))
 	Number of files to compare: <input type='text' name='toget'>
 	<input type='submit'>
 	</form>";
-	echo "<p>Files are taken from Category:Wikipedia_files_with_the_same_name_on_Wikimedia_Commons</p>";
+	echo "<p>Files are taken from $cat</p>";
 	echo $footer;
 }
 //Output the results
@@ -61,8 +62,8 @@ else
 		if($counter <$_GET['toget'] && strstr($file,"Category:") == false)
 		{
 			$counter++;
-			$wi = $wiki->getfilelocation($file);
-			$ci = $comm->getfilelocation($file);
+			$wi = $wiki->getfilethumblocation($file);
+			$ci = $comm->getfilethumblocation($file);			
 			$wu = $wiki->getfileuploader($file);
 			$cu = $comm->getfileuploader($file);
 			$wimg = "<img align='left' src='$wi' alt='$file' height='100' width='100'>";
@@ -71,6 +72,8 @@ else
 			$cp = $comm->getpage($file);
 			$wpe = preg_replace("/(\{\{(cc|puf|pui(disputed)|imagevio)|PD|GFDL|self|Non|public domain|delete)/i","<b>$0</b>",$wp);
 			$cpe = preg_replace("/(\{\{(cc|puf|pui(disputed)|imagevio)|PD|GFDL|self|Non|$wu|public domain|User:|delete)/i","<b>$0</b>",$cp);
+			$wpe = preg_replace("/(\{\{(puf|pui(disputed)|imagevio))/i","<font color='red'>$0</font>",$wp);
+			$cpe = preg_replace("/(\{\{(puf|pui(disputed)|imagevio))/i","<font color='red'>$0</font>",$cp);
 			
 			echo "<li><a target='_blank' href='http://en.wikipedia.org/w/index.php?title=$file&action=delete&wpReason=CSDF8'><b>Delete</b></a>";
 			echo "<table border='0' width='100%'><col width='50%'><col width='50%'>";
@@ -83,7 +86,7 @@ else
 	if($counter == 0)
 	{
 		echo "It appears that this category is empty...</br>";
-		echo "<a href='//en.wikipedia.org/wiki/$cat'>Category</a> - <a href='//en.wikipedia.org/w/index.php?title=$cat&action=delete&wpReason=".urlencode("[[WP:CSD#C1|C1]]: Empty Category")."'>Delete</a></br>";
+		echo "<a href='//en.wikipedia.org/wiki/$cat'>Category</a> - <a href='//en.wikipedia.org/w/index.php?title=$cat&action=delete&wpReason=".urlencode("[[WP:CSD#C1|C1]]: Empty Category")."'>Delete</a></br><p>The script returned...</p>";
 		print_r($files);
 	}
 

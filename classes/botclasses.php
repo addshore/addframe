@@ -1002,6 +1002,16 @@ class wikipedia {
                 return false;
         }
     }
+	
+	/**  @addshore
+     * Retrieve a media file's thumb location at specified size
+     * @param $page The "File:" page on the wiki which the URL of is desired.
+     * @return The URL pointing directly to the media file thumb (Eg http://upload.mediawiki.org/wikipedia/en/thumb/1/1/Example.jpg/200px-Example.jpg)
+     **/
+	function getfilethumblocation ($page,$px = 200) {
+		$filelocation = $this->getfilelocation($page);
+		$filelocation = preg_replace('/(http:\/\/[^\.]+\.[^\.]+\.[^\.]+\/[^\/]+\/[^\/]+\/)([^\/]+\/[^\/]+\/)(.*?)$/','$1thumb/$2/$3/'.$px.'px-$3',$filelocation);
+	}
  
     /**  BMcN 2012-09-16
      * Retrieve a media file's uploader.
