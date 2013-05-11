@@ -24,8 +24,8 @@ else
 	$footer = "</ul>".$footer;
 	echo $header;
 
-	require __DIR__.'/../../../classes/botclasses.php';
-	require __DIR__.'/../../../classes/wikitexttohtml.php';
+	require __DIR__.'/../../classes/botclasses.php';
+	require __DIR__.'/../../classes/wikitexttohtml.php';
 
 	$wiki = new wikipedia;
 	$wiki->url = 'http://en.wikipedia.org/w/api.php';
