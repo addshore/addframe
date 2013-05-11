@@ -1013,6 +1013,16 @@ class wikipedia {
 		$filelocation = preg_replace('/(http:\/\/[^\.]+\.[^\.]+\.[^\.]+\/[^\/]+\/[^\/]+\/)([^\/]+\/[^\/]+\/)(.*?)$/','$1thumb/$2/$3/'.$px.'px-$3',$filelocation);
 		return $filelocation;
 	}
+	
+	function getfilesha1 ($page) {
+        $x = $this->query('?action=query&format=php&prop=imageinfo&titles='.urlencode($page).'&iilimit=1&iiprop=sha1');
+        foreach ($x['query']['pages'] as $ret ) {
+            if (isset($ret['imageinfo'][0]['sha1'])) {
+                return $ret['imageinfo'][0]['sha1'];
+            } else
+                return false;
+        }
+    }
  
     /**  BMcN 2012-09-16
      * Retrieve a media file's uploader.

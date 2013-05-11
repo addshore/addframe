@@ -74,8 +74,13 @@ else
 			$cp = preg_replace("/(\{\{(cc|puf|pui(disputed)|imagevio)|PD|GFDL|self|Non|$wu|public domain|User:|delete)/i","<b>$0</b>",$cp);
 			$wp = preg_replace("/(\{\{(puf|pui(disputed)|imagevio))/i","<font color='red'>$0</font>",$wp);
 			$cp = preg_replace("/(\{\{(puf|pui(disputed)|imagevio))/i","<font color='red'>$0</font>",$cp);
+			$filematch = false;
+			if($wiki->getfilesha1($file) == $comm->getfilesha1($file))
+			{$filematch = true;}
 			
-			echo "<li><a target='_blank' href='http://en.wikipedia.org/w/index.php?title=$file&action=delete&wpReason=CSDF8'><b>Delete</b></a>";
+			echo "<li><a target='_blank' href='http://en.wikipedia.org/w/index.php?title=$file&action=delete&wpReason=CSDF8'><b>Delete</b></a> - ";
+			if($filematch){echo "<small><font color='green'>SHA1s of files appear to match!</font></small>";}
+			else{echo "<BIG><font color='red'>SHA1s of files DONT MATCH!</font></BIG>";}
 			echo "<table border='0' width='100%'><col width='50%'><col width='50%'>";
 			echo "<tr><td>$wimg <a target='_blank' href='http://en.wikipedia.org/wiki/$file'>Wikipedia:$file </a> by <b>$wu</b></td><td>$cimg <a target='_blank' href='$ci'>Commons:$file </a> by $cu</td></tr>";
 			echo "<tr><td>$wp</td><td>$cp</td></tr>";
