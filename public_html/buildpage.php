@@ -23,14 +23,19 @@ function getSideBar()
 
 function getHeader($title = "No Title")
 {
-	global $config;
 	return "<head>
-		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+	".getHead($title)."
+	</head>";
+}
+
+function getHead($title = "No Title")
+{
+	global $config;
+	return "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 		<title>$title</title>
 		<link rel='shortcut icon' href='".$config['myurl']."favicon.ico' />
 		<link rel='stylesheet' type='text/css' href='".$config['myurl']."stylesheet.css' />
-		<script src='//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'></script>
-	</head>";
+		<script src='//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'></script>";
 }
 
 
