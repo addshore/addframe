@@ -4,14 +4,15 @@ $header = "<html>".getHeader("CSDF8 Comparison")."<body>".getSideBar()."<div id=
 <h1>CSDF8 Tool</h1>";
 $footer = "</div></body></html>";
 
+//Wiki instance
+require __DIR__.'/../../classes/botclasses.php';
+$wiki = new wikipedia;
+$wiki->url = 'http://en.wikipedia.org/w/api.php';
+global $wiki;
+
 //Output the first page asking for a number of files to compare
 if(!isset($_GET['toget']) || !is_numeric($_GET['toget']))
 {
-	//wiki instance
-	require __DIR__.'/../../classes/botclasses.php';
-	$wiki = new wikipedia;
-	$wiki->url = 'http://en.wikipedia.org/w/api.php';
-	global $wiki;
 
 	//Get a list of possible cats
 	$cat = 'Category:Wikipedia_files_with_the_same_name_on_Wikimedia_Commons';
@@ -40,23 +41,17 @@ if(!isset($_GET['toget']) || !is_numeric($_GET['toget']))
 else
 {
 
-	$header = $header."<ul>";
+	$header .= "<h2>".$_GET['category']."</h2><ul>";
 	$footer = "</ul>".$footer;
 	echo $header;
 	
 	require __DIR__.'/../../classes/wikitexttohtml.php';
-
-	require __DIR__.'/../../classes/botclasses.php';
-	$wiki = new wikipedia;
-	$wiki->url = 'http://en.wikipedia.org/w/api.php';
-	global $wiki;
 
 	$comm = new wikipedia;
 	$comm->url = 'http://commons.wikimedia.org/w/api.php';
 	global $comm;
 
 	$cat = $_GET['category'];
-	echo $cat;
 	$files = $wiki->categorymembers($cat,true);
 	$counter = 0;
 
@@ -83,7 +78,14 @@ else
 			echo "<tr><td>$wpe</td><td>$cpe</td></tr>";
 			echo "</table>";
 		}
-	} 
+	}
+	//did we actually get anything for the page?
+	if($counter == 0)
+	{
+		echo "It appears that this category is empty...</br>";
+		echo "<a href='//en.wikipedia.org/wiki/$cat'>Category</a> - <a href='//en.wikipedia.org/w/index.php?title=$cat&action=delete&wpReason=".urlencode("[[WP:CSD#C1|C1]]: Empty Category")."'>Delete</a></br>";
+		print_r($files);
+	}
 
 	print $footer;
 }
