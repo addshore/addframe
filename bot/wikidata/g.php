@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 //exit();
 $start_time = MICROTIME(TRUE);
 //Load
@@ -270,7 +270,7 @@ function getmysum($lang, $id, $counter = 1)
 			$summary = "[[مستخدم:Addbot|بوت:]] ترحيل $counter وصلة إنترويكي, موجودة الآن في [[d:|ويكي بيانات]] على [[d:$id]]";
 			break;
 		case "arc":
-			$summary = "";
+			$summary = "[[ܡܦܠܚܢܐ:Addbot|ܒܘܛ:]] ܫܘܢܝܐ ܕ $counter ܐܣܘܪ̈ܐ ܕܐܢܛܪܘܝܩܝ, ܐܝܬ ܗܫܐ ܒ[[d:|ܘܝܩܝܓܠܝܬ̈ܐ]] ܥܠ [[d:$id]]";
 			break;
 		case "arz":
 			$summary = "";
