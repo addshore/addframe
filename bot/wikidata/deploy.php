@@ -21,36 +21,43 @@ while(true)
 	//For each language
 	foreach ($LIST as $lang)
 	{
-		//While we are yet to queue this item
-		$queued = false;
-		while($queued == false)
+	
+		//If we are still running this job from the last cycle
+		if(!isset($RUNNING[$lang]))
 		{
-			//check the status of everything we have run already
-			foreach($RUNNING as $oldlang => $ran)
+		
+			//While we are yet to queue this item
+			$queued = false;
+			while($queued == false)
 			{
-				//try to get each jobid
-				$jid = exec("job wd-mig-$oldlang");
-				//if we got nothing then it must be done
-				if($jid == "")
+				//check the status of everything we have run already
+				foreach($RUNNING as $oldlang => $ran)
 				{
-					//remove it from out running array
-					$RUNNING[$oldlang] = false;
-					unset($RUNNING[$oldlang]);
-					echo "$oldlang is no longer running\n";
+					//try to get each jobid
+					$jid = exec("job wd-mig-$oldlang");
+					//if we got nothing then it must be done
+					if($jid == "")
+					{
+						//remove it from out running array
+						$RUNNING[$oldlang] = false;
+						unset($RUNNING[$oldlang]);
+						echo "$oldlang is no longer running\n";
+					}
 				}
+				
+				//Do we have enough space to run?
+				if(count($RUNNING) < $TORUN)
+				{
+					//ADD THE JOB TO THE GRID wd-mig-$lang
+					exec("jsub -mem 1G -once -N wd-mig-$lang php /data/project/addbot/bot/wikidata/g.php");
+					$RUNNING[$lang] = true;
+					echo "Started $lang on the grid\n";
+					$queued = true;
+				}
+				//If we do not then sleep until we can try again
+				else{sleep(120);}
 			}
 			
-			//Do we have enough space to run?
-			if(count($RUNNING) < $TORUN)
-			{
-				//ADD THE JOB TO THE GRID wd-mig-$lang
-				exec("jsub -mem 1G -once -N wd-mig-$lang php /data/project/addbot/bot/wikidata/g.php");
-				$RUNNING[$lang] = true;
-				echo "Started $lang on the grid\n";
-				$queued = true;
-			}
-			//If we do not then sleep until we can try again
-			else{sleep(120);}
 		}
 		
 		//If we get to here then we have queued the last job
