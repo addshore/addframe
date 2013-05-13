@@ -49,7 +49,7 @@ while(true)
 				if(count($RUNNING) < $TORUN)
 				{
 					//ADD THE JOB TO THE GRID wd-mig-$lang
-					exec("jsub -mem 1G -once -N wd-mig-$lang php /data/project/addbot/bot/wikidata/g.php");
+					echo exec("jsub -mem 1G -once -N wd-mig-$lang php /data/project/addbot/bot/wikidata/g.php --lang=$lang");
 					$RUNNING[$lang] = true;
 					echo "Started $lang on the grid\n";
 					$queued = true;

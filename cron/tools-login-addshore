@@ -4,6 +4,6 @@ MAILTO=""
 */5 * * * * cd /data/project/addshore/ && git pull && crontab cron/tools-login-addshore
 
 #Stats
-0 0 * * * jsub -mem 512m -once -continuous -N stathat php /data/project/addshore/scripts/stathat.php
+0 0 * * * /usr/local/bin/jsub -mem 512m -once -continuous -N stathat php /data/project/addshore/scripts/stathat.php
 
 #Remember to leave the empty line under this comment for EOF
