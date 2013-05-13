@@ -34,7 +34,7 @@ while(true)
 				foreach($RUNNING as $oldlang => $ran)
 				{
 					//try to get each jobid
-					$jid = exec("job wd-mig-$oldlang");
+					$jid = exec("/usr/local/bin/job wd-mig-$oldlang");
 					//if we got nothing then it must be done
 					if($jid == "")
 					{
@@ -49,7 +49,7 @@ while(true)
 				if(count($RUNNING) < $TORUN)
 				{
 					//ADD THE JOB TO THE GRID wd-mig-$lang
-					echo exec("jsub -mem 1G -once -N wd-mig-$lang php /data/project/addbot/bot/wikidata/g.php --lang=$lang");
+					echo shell_exec("/usr/local/bin/jsub -mem 1G -once -N wd-mig-$lang php /data/project/addbot/bot/wikidata/g.php --lang=$lang");
 					$RUNNING[$lang] = true;
 					echo "Started $lang on the grid\n";
 					$queued = true;

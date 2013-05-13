@@ -2,7 +2,6 @@
 //exit();
 $start_time = MICROTIME(TRUE);
 //Load
-//error_reporting(E_ERROR | E_PARSE);
 $options = getopt("", Array(
 	"lang::"
 ));
@@ -38,7 +37,7 @@ echo "done";
 
 $dblang = str_replace("-","_",$glang);
 //Get a list from the DB and remove
-$result = $db->select('iwlink', '*', "lang='$dblang' ORDER BY checked ASC"); //LIMIT " . $toget);
+$result = $db->select('iwlink', '*', "lang='$dblang' ORDER BY checked ASC LIMIT 100"); //LIMIT " . $toget);
 $list   = Database::mysql2array($result);
 echo "\nGot " . count($list) . " articles from $dblang pending";
 
@@ -56,7 +55,6 @@ foreach ($list as $item) {
 	$text = $wiki[$glang]->getpage($title1, null, true);
 	echo "\n\nGot [[\033[32m$lang1:$title1\033[0m]]";
 	stathat_ez_count($config['stathatkey'], "Addbot - IW Removal - Articles Loaded", 1);
-	if(strlen($text) < 1){continue;}
 	
 	$id = "";
 	
@@ -95,7 +93,8 @@ foreach ($list as $item) {
 	}
 	else
 	{
-		$res = $db->doQuery("UPDATE iwlink SET links='".strval(count($linksonpage2))."' WHERE lang='".$db->mysqlEscape($dblang)."' and article='".$db->mysqlEscape($title1)."'");
+		echo time();
+		$res = $db->doQuery("UPDATE iwlink SET links='".count($linksonpage2)."', checked='".time()."' WHERE lang='".$db->mysqlEscape($dblang)."' and article='".$db->mysqlEscape($title1)."'");
 		if (!$res) {echo $db->errorStr();}
 		echo "\n\033[1;31mUpdated in database $lang1:$title1 (" . count($linksonpage2) . " links left)\033[0m";
 	}
