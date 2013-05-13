@@ -4,7 +4,7 @@
 // But we will just have to make do with checking that this is still running every so often
 // For now we will run this on tools-dev on a cron
 
-$TORUN = 5; // This is the maximum number of jobs we want to spawn for this task at any one time
+$TORUN = 10; // This is the maximum number of jobs we want to spawn for this task at any one time
 $RUNNING = ARRAY(); // This will be an array of the languages that are running 
 $FILE = $file = __DIR__."/sites.php"; // Location for the list of languages
 $LIST = Array(); // This will be the list of langs from the file
@@ -41,7 +41,7 @@ while(true)
 						//remove it from out running array
 						$RUNNING[$oldlang] = false;
 						unset($RUNNING[$oldlang]);
-						echo "$oldlang is no longer running\n";
+						echo "ENDED: $oldlang is no longer running\n";
 					}
 				}
 				
@@ -51,11 +51,11 @@ while(true)
 					//ADD THE JOB TO THE GRID wd-mig-$lang
 					echo shell_exec("/usr/local/bin/jsub -mem 1G -once -N wd-mig-$lang php /data/project/addbot/bot/wikidata/g.php --lang=$lang");
 					$RUNNING[$lang] = true;
-					echo "Started $lang on the grid\n";
+					echo "START: $lang on the grid\n";
 					$queued = true;
 				}
 				//If we do not then sleep until we can try again
-				else{sleep(120);}
+				else{sleep(60);}
 			}
 			
 		}
@@ -65,7 +65,7 @@ while(true)
 		if($EOF == $lang)
 		{
 			//Load the list from the file and set the new $EOF
-			echo "Got to the end of the list, starting again\n";
+			echo "CYCLE: Got to the end of the list, starting again\n";
 			$LIST = explode("\n",file_get_contents($file));
 			$EOF = $LIST[count($LIST)-1];
 			break 2; //make sure we now start again
