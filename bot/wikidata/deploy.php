@@ -4,7 +4,7 @@
 // But we will just have to make do with checking that this is still running every so often
 // For now we will run this on tools-dev on a cron
 
-$TORUN = 12; // This is the maximum number of jobs we want to spawn for this task at any one time
+$TORUN = 20; // This is the maximum number of jobs we want to spawn for this task at any one time
 $RUNNING = ARRAY(); // This will be an array of the languages that are running 
 $FILE = $file = __DIR__."/sites.php"; // Location for the list of languages
 $LIST = Array(); // This will be the list of langs from the file
