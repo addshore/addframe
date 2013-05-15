@@ -99,9 +99,9 @@ $out .= ")</br>\n";
 $out .= "\n<div><table><tr><th>Article</th><th>Wikidata</th><th>Links</th><th>Last Checked*</th></tr>\n";
 foreach ($res as $r)
 {
-	//check if the article already has a wikidata entry
-	$out .= "<tr><td><a href='https://".str_replace('_','-',$_GET['lang']).".wikipedia.org/wiki/".urlencode($r['article'])."'>".$r['article']."</a></td>";
-	$out .= "<td><a href='https://www.wikidata.org/wiki/Special:ItemByTitle/".str_replace('_','-',$_GET['lang'])."wiki/".urlencode($r['article'])."'>LINK</a></td>";
+	//check if the article already has a wikidata entry 
+	$out .= "<tr><td><a href='https://".str_replace('_','-',$_GET['lang']).".wikipedia.org/wiki/".urlencode(str_replace(' ','_',$r['article']))."'>".$r['article']."</a></td>";
+	$out .= "<td><a href='https://www.wikidata.org/wiki/Special:ItemByTitle/".str_replace('_','-',$_GET['lang'])."wiki/".urlencode(str_replace(' ','_',$r['article']))."'>LINK</a></td>";
 	$out .= "<td>".$r['links']."</td>";
 	$out .= "<td>".$r['checked']."</td></tr>\n";
 }
