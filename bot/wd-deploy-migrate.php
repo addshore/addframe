@@ -5,8 +5,8 @@
 // For now we will run this on tools-dev on a cron daily
 
 //Database
-require __DIR__.'/../../classes/database.php';
-require __DIR__.'/../../config/database.cfg'; 
+require __DIR__.'/../classes/database.php';
+require __DIR__.'/../config/database.cfg'; 
 
 //Connect to the DB
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
