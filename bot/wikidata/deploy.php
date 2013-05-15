@@ -2,75 +2,29 @@
 
 // If we could run this on the grid and submit from there then we would
 // But we will just have to make do with checking that this is still running every so often
-// For now we will run this on tools-dev on a cron
+// For now we will run this on tools-dev on a cron daily
 
-$TORUN = 20; // This is the maximum number of jobs we want to spawn for this task at any one time
-$RUNNING = ARRAY(); // This will be an array of the languages that are running 
-$FILE = $file = __DIR__."/sites.php"; // Location for the list of languages
-$LIST = Array(); // This will be the list of langs from the file
-$EOF = ""; // This will be the last language that is in the file
+//Database
+require __DIR__.'/../../classes/database.php';
+require __DIR__.'/../../config/database.cfg'; 
 
-//Load the list from the file and set the $EOF
-$LIST = explode("\n",file_get_contents($file));
-$EOF = $LIST[count($LIST)-1];
+//Connect to the DB
+$db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
+unset($config['dbpass']);
+$LIST = Database::mysql2array($db->doQuery("select lang,count(*) from iwlink group by lang;"));
 
-//We should try and do this forever
-while(true)
+//For each language
+foreach ($LIST as $row)
 {
-
-	//For each language
-	foreach ($LIST as $lang)
-	{
-	
-		//If we are still running this job from the last cycle
-		if(!isset($RUNNING[$lang]))
-		{
-		
-			//While we are yet to queue this item
-			$queued = false;
-			while($queued == false)
-			{
-				//check the status of everything we have run already
-				foreach($RUNNING as $oldlang => $ran)
-				{
-					//try to get each jobid
-					$jid = exec("/usr/local/bin/job wd-mig-$oldlang");
-					//if we got nothing then it must be done
-					if($jid == "")
-					{
-						//remove it from out running array
-						$RUNNING[$oldlang] = false;
-						unset($RUNNING[$oldlang]);
-						echo "ENDED: $oldlang is no longer running\n";
-					}
-				}
-				
-				//Do we have enough space to run?
-				if(count($RUNNING) < $TORUN)
-				{
-					//ADD THE JOB TO THE GRID wd-mig-$lang
-					echo shell_exec("/usr/local/bin/jsub -mem 700M -once -N wd-mig-$lang php /data/project/addbot/bot/wikidata/g.php --lang=$lang");
-					$RUNNING[$lang] = true;
-					echo "START: $lang on the grid\n";
-					$queued = true;
-				}
-				//If we do not then sleep until we can try again
-				else{sleep(60);}
-			}
-			
-		}
-		
-		//If we get to here then we have queued the last job
-		//Now we need to see if we need to reload the list (only if we have just submitted the last lang
-		if($EOF == $lang)
-		{
-			//Load the list from the file and set the new $EOF
-			echo "CYCLE: Got to the end of the list, starting again\n";
-			$LIST = explode("\n",file_get_contents($file));
-			$EOF = $LIST[count($LIST)-1];
-			break 2; //make sure we now start again
-		}
-	}
+	//try to submit the job to the grid
+	//Remember this will only allow one job with this name on the grid at any one time
+	$lang = $row['lang'];
+	echo shell_exec("/usr/local/bin/jsub -mem 700M -once -N wd-mig-$lang php /data/project/addbot/bot/wikidata/g.php --lang=$lang");
+	//Then sleep for an apropriate ammount of time
+	//This should deploy this script over the period of an hour
+	sleep(86400/count($LIST));
 }
-	
+
+//Then end as this script will be run again by cron
+
 ?>
