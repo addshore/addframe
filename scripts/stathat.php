@@ -7,16 +7,24 @@ require __DIR__.'/../config/stathat.cfg';
 //database
 require __DIR__.'/../classes/database.php';
 require __DIR__.'/../config/database.cfg'; 
+
+//Here is the loop for the database connection
+while (true)
+{
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 unset($config['dbpass']);
 
-//Here is the loop for the process
-while (true)
-{
-	echo "Doing checks\n";
-	doChecks();
-	echo "Sleeping for 50..\n";
-	sleep(50);
+	//Here is the loop for the checking process
+	while (true)
+	{
+		echo "Doing checks\n";
+		if(doChecks() == false)
+		{
+			break;
+		}
+		echo "Sleeping for 50..\n";
+		sleep(50);
+	}
 }
 
 //Below is the function with the tasks to complete
@@ -36,6 +44,7 @@ function doChecks()
 	$res = $db->doQuery("select count(*) as count from iwlink;");
 	if (!$res) {
 		echo $db->errorStr();
+		return false;
 	}
 	$res1 = Database::mysql2array($res);
 	stathat_ez_value($config['stathatkey'], "Addbot - IW Removal - Remaining" , intval($res1[0]['count']));
@@ -44,6 +53,8 @@ function doChecks()
 	//Total number of jobs on LABS
 	echo "3";
 	stathat_ez_value($config['stathatkey'], "Tool Labs Jobs" , intval(exec("qstat -u '*' | grep -c @")));
+	
+	return true;
 } 
 
 function get_data($url) {
