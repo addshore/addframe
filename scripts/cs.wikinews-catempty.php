@@ -8,7 +8,7 @@ $wiki      = new wikipedia;
 $wiki->url = "http://cs.wikinews.org/w/api.php";
 global $wiki;
 echo "\nLogging in to cs.wikinews.org...";
-$wiki->login("User", "Password");
+$wiki->login("", "");
 
 $reason = "Nahrazeno nominativní kategorií";
 
