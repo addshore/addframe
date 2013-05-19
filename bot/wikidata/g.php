@@ -37,7 +37,7 @@ echo "done";
 
 $dblang = str_replace("-","_",$glang);
 //Get a list from the DB and remove
-$result = $db->select('iwlink', '*', "lang='$dblang' ORDER BY checked ASC LIMIT 100"); //LIMIT " . $toget);
+$result = $db->select('iwlink', '*', "lang='$dblang' ORDER BY checked ASC"); //LIMIT " . $toget);
 $list   = Database::mysql2array($result);
 echo "\nGot " . count($list) . " articles from $dblang pending";
 

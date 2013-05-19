@@ -8,7 +8,7 @@ $t = "";
 $STATE = "";
 if(isset($_GET['lang']))
 {
-	$q = "SELECT article,links,checked FROM iwlink	WHERE lang='".$_GET['lang']."' ORDER BY links DESC LIMIT 50";
+	$q = "SELECT article,links,checked FROM iwlink	WHERE lang='".$_GET['lang']."' ORDER BY links DESC LIMIT 200";
 	$t = "List of articles where links remain on ".$_GET['lang'];
 	$STATE = "ARTICLES";
 	if(isset($_GET['offset']))
@@ -90,7 +90,7 @@ $url = "http://tools.wmflabs.org/addshore/addbot/iwlinks/index.html?lang=".$_GET
 $out .= "Pick an offset for the list (";
 for($i = 0; $i <= 10; $i++)
 {
-	$c = 50*$i;
+	$c = 200*$i;
 	$out .= "<a href='$url&offset=$c'>$c</a>, ";
 } 
 $out = trim($out,', ');
@@ -99,9 +99,9 @@ $out .= ")</br>\n";
 $out .= "\n<div><table><tr><th>Article</th><th>Wikidata</th><th>Links</th><th>Last Checked*</th></tr>\n";
 foreach ($res as $r)
 {
-	//check if the article already has a wikidata entry
-	$out .= "<tr><td><a href='https://".$_GET['lang'].".wikipedia.org/wiki/".urlencode($r['article'])."'>".$r['article']."</a></td>";
-	$out .= "<td><a href='https://www.wikidata.org/wiki/Special:ItemByTitle/".$_GET['lang']."wiki/".urlencode($r['article'])."'>LINK</a></td>";
+	//check if the article already has a wikidata entry 
+	$out .= "<tr><td><a href='https://".str_replace('_','-',$_GET['lang']).".wikipedia.org/wiki/".urlencode(str_replace(' ','_',$r['article']))."'>".$r['article']."</a></td>";
+	$out .= "<td><a href='https://www.wikidata.org/wiki/Special:ItemByTitle/".str_replace('_','-',$_GET['lang'])."wiki/".urlencode(str_replace(' ','_',$r['article']))."'>LINK</a></td>";
 	$out .= "<td>".$r['links']."</td>";
 	$out .= "<td>".$r['checked']."</td></tr>\n";
 }

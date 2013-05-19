@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * botclasses.php - Bot classes for interacting with mediawiki.
  *
@@ -581,15 +581,14 @@ class wikipedia {
 		$sleep=10;
 		do{
         $return = $this->query('?action=edit&format=php'.$maxlag,$params);
-		//were we successfull?
+		//if we didnt get a maxlag error we are done
+		//print_r($return);
 		if(isset($return['success'])){ if($return['success'] == 1){
 			return $return;
 		}}
-		//or did we get an error (not maxlag)
-		else if(isset($return['error']['code'])){ if ($return['error']['code'] != "maxlag"){
+		else if($return['error']['code'] != "maxlag"){
 			return $return;
-		}}
-		//the only other option is we should wait for maxlag
+		}
 		if($sleep < 30) {$sleep = $sleep + 1;}
 		echo "\nSleeping for $sleep due to Maxlag!\n";
 		sleep($sleep);
@@ -1015,9 +1014,6 @@ class wikipedia {
 		return $filelocation;
 	}
 	
-	/**  @addshore
-	 * Retrieve the SHA1 hash of a file
-	 **/
 	function getfilesha1 ($page) {
         $x = $this->query('?action=query&format=php&prop=imageinfo&titles='.urlencode($page).'&iilimit=1&iiprop=sha1');
         foreach ($x['query']['pages'] as $ret ) {
@@ -1315,8 +1311,6 @@ class wikidata extends extended
 
 	}
 	
-	/**  @addshore
-	 **/
 	function editentity ($data,$id="",$site="",$title=""){
 	    if ($this->token==null) {
             $this->token = $this->getedittoken();
@@ -1341,8 +1335,6 @@ class wikidata extends extended
 		return json_decode($x,true);
     }
 	
-	/**  @addshore
-	 **/
 	function overwriteentity ($data,$id="",$site="",$title=""){
 	    if ($this->token==null) {
             $this->token = $this->getedittoken();
@@ -1367,15 +1359,11 @@ class wikidata extends extended
 		$x = $this->http->post($this->url.'?action=wbeditentity&format=json'.$more,$post);
 		return json_decode($x,true);
     }
-
-	/**  @addshore
-	 **/
+	
 	function getentity ($id){
 		return $this->query('?action=wbgetentities&ids='.urlencode($id).'&format=php');
 	}
 	
-	/**  @addshore
-	 **/
 	function getentityfor ($site,$title){
 		return $this->query('?action=wbgetentities&sites='.urlencode($site).'&titles='.urlencode($title).'&format=php');
 	}
