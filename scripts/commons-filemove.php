@@ -22,17 +22,25 @@ foreach($pages as $page)
 	if($page != $new)
 	{
 		echo "$page -> $new\n";
-		//function move ($old,$new,$reason,$options=null) {
-		$pages = $wiki->move($page,$new,$reason,"movetalk|movesubpages");
-		$template = "{{universal replace|".preg_replace('/^File:/','',$page)."|".preg_replace('/^File:/','',$new)."|reason=[[COM:FR|File renamed]]: $reason}}\n";
-		echo $template;
-		$todo .= $template;
-		sleep(10);
+		if(getInput("Do you want to move this?") == '#')
+		{
+			//function move ($old,$new,$reason,$options=null) {
+			print_r($wiki->move($page,$new,$reason,"movetalk|movesubpages"));
+			$template = "{{universal replace|".preg_replace('/^File:/','',$page)."|".preg_replace('/^File:/','',$new)."|reason=[[COM:FR|File renamed]]: $reason}}\n";
+			echo $template;
+			$todo .= $template;
+		}
 	}
 }
 
 //Now add the todo to a page
 $wiki->edit($filemovepage,$todo,"Requesting after moves",true,true,null,true,"0");
 echo "Posted";
+
+function getInput($msg){
+  fwrite(STDOUT, "$msg: ");
+  $varin = trim(fgets(STDIN));
+  return $varin;
+}
 
 ?>
