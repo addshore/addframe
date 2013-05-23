@@ -18,7 +18,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-include("include.php");
+require(__DIR__.'/include.php');
+require(__DIR__."/../../config/replication.cfg");
 
 head();
 
@@ -48,8 +49,7 @@ head();
 if(isset($_GET['pattern']) &&
 	isset($_GET['lang']) && isset($lang[$_GET['lang']]) &&
 	isset($_GET['wiki']) && isset($wiki[$_GET['wiki']])) {
-
-	mysql_connect($_GET['lang'].$_GET['wiki'].".labsdb","user...",$mysql_pass);
+	mysql_connect($_GET['lang'].$_GET['wiki'].$config['rephostsufix'],$config['repuser'],$config['reppass']);
 	mysql_select_db($_GET['lang'].$_GET['wiki']."_p");
 
 	$ns=intval($_GET['ns']);

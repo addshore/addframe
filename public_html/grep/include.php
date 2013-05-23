@@ -18,17 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-$mysql_pass="";
-
-if(isset($_GET['view_source'])) {
-	head();
-	echo "<pre>".
-	htmlspecialchars(preg_replace("/$mysql_pass/","<<MYSQL_PASS>>",implode("",file($_SERVER['SCRIPT_FILENAME'])))).
-	"</pre>";
-	foot();
-	die();
-}
-
 function head() {
 ?><html>
 <head>
