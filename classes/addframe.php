@@ -3,9 +3,8 @@
 /* - Example Usage - 
 
 $wiki = new wiki("http://en.wikipedia.org/w/api.php");
-global $wiki;
 echo "Logging in to ".$wiki->url."\n";
-print_r($wiki->login("",""));
+$wiki->login("user","pass");
 $wiki->edittitle ("User:Addshore/Sandbox","BLANK","Blanking text",true,false);
 
 */
@@ -29,6 +28,12 @@ class wiki {
             $this->http->setHTTPcreds($hu,$hp);
     }
 
+	/*
+	* Performes a request to the api given the query and post data
+	* @param $query Array of query data
+	* @param $post Array of post data
+	* @return Array of the returning data
+	**/
 	function api ($query,$post=null){
 		$query['format'] = 'php';
 		$query = "?".http_build_query($query);
@@ -39,24 +44,35 @@ class wiki {
         return unserialize($ret);
 	}
 	
+	//Performes a query action request to the api given the query and post data
 	function query ($query,$post=null){
 		$query['action'] = 'query';
 		return $this->api($query,$post);
 	}
+	//Performes a list action request to the api given the query and post data
 	function listt ($query,$post=null){
 		$query['action'] = 'list';
 		return $this->api($query,$post);
 	}
+	//Performes a prop action request to the api given the query and post data
 	function prop ($query,$post=null){
 		$query['action'] = 'prop';
 		return $this->api($query,$post);
 	}
+	//Performes a meta action request to the api given the query and post data
 	function meta ($query,$post=null){
 		$query['action'] = 'meta';
 		return $this->api($query,$post);
 	}
 	
-	//Log in to the given api
+	/**
+	* Performs an API login of a username and password
+	* @param String $user Username to login as.
+	* @param String $pass Password that corrisponds to the username.
+	* @return void
+	**/
+	//TODO this should return the status of the login and have a function
+	//doLogin() to carry out the login and parse the result as success or error
 	function login ($username,$password) {
 		$query['action'] = 'login';
 		$post['lgname'] = $username;
@@ -77,12 +93,17 @@ class wiki {
         }
     }
 	
-	//Log out of the given api
+	/**
+	* Performs API logout
+	* @return void
+	**/
+	//TODO return some sort of success or failer..
 	function logout () {
 		$query['action'] = 'logout';
 		return $this->api($query);
 	}
 	
+	//Performes API edit
 	function edittitle ($title,$text,$summary = '',$minor = false,$bot = true,$section = null,$detectEC=true,$maxlag='5') {
         if ($this->token==null) {
             $this->token = $this->gettoken();
@@ -181,8 +202,13 @@ class wiki {
 	//Modules : continuation
 	function expandtemplates ($text) {return action ('expandtemplates',"text=".$text);}
 	function compare () {}
-	//Gets tokens for data-modifying actions
-	//$type is block, delete, deleteglobalaccount, edit, email, import, move, options, patrol, protect, setglobalaccountstatus, unblock, watch
+	
+	/*
+	* Performes a request to the api for an action tokens
+	* @param $type Default='edit'
+	* Can be: block, delete, deleteglobalaccount, edit, email, import, move, options, patrol, protect, setglobalaccountstatus, unblock, watch
+	* @return Array of the returning data
+	**/
 	function tokens ($type='edit') { 
 		$query['action'] = 'tokens';
 		$query['type'] = $type;
@@ -192,7 +218,7 @@ class wiki {
 		//TODO return the token
 	}
 	
-	//from wikibot classes
+	//from old wikibot classes
 	function gettoken () {
 		$query['prop'] = 'info';
 		$query['intoken'] = 'edit';
@@ -203,7 +229,7 @@ class wiki {
         }
     }
 	
-	//Purge the cache for the given titles.
+	//Performes a perge of the given page title
 	function purge ($titles) {
 		$return = action ( 'purge', "titles=".implode('|',$titles));
 		print_r($return);
