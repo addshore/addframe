@@ -1,5 +1,15 @@
 <?php
 
+/* - Example Usage - 
+
+$wiki = new wiki("http://en.wikipedia.org/w/api.php");
+global $wiki;
+echo "Logging in to ".$wiki->url."\n";
+print_r($wiki->login("",""));
+$wiki->edittitle ("User:Addshore/Sandbox","BLANK","Blanking text",true,false);
+
+*/
+
 class wiki {
     private $http;
     private $token;
