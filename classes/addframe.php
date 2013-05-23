@@ -44,26 +44,19 @@ class wiki {
         return unserialize($ret);
 	}
 	
-	//Performes a query action request to the api given the query and post data
-	function query ($query,$post=null){
-		$query['action'] = 'query';
-		return $this->api($query,$post);
+	function action ($type,$post=null){
+		$query['action'] = $type;
+		return $this->api($query,$post)
 	}
-	//Performes a list action request to the api given the query and post data
-	function listt ($query,$post=null){
-		$query['action'] = 'list';
-		return $this->api($query,$post);
-	}
-	//Performes a prop action request to the api given the query and post data
-	function prop ($query,$post=null){
-		$query['action'] = 'prop';
-		return $this->api($query,$post);
-	}
-	//Performes a meta action request to the api given the query and post data
-	function meta ($query,$post=null){
-		$query['action'] = 'meta';
-		return $this->api($query,$post);
-	}
+	
+	// Actions
+	function query ($query,$post=null){return $this->action('query',$post);}
+	function listt ($query,$post=null){return $this->action('list',$post);}
+	function prop ($query,$post=null){return $this->action('prop',$post);}
+	function meta ($query,$post=null){return $this->action('meta',$post);}
+	function login ($query,$post=null){return $this->action('login',$post);}
+	function logout () {return $this->action ('logout',null);}
+	function createaccount ($query,$post=null){return $this->action('createaccount',$post);}
 	
 	/**
 	* Performs an API login of a username and password
@@ -73,7 +66,7 @@ class wiki {
 	**/
 	//TODO this should return the status of the login and have a function
 	//doLogin() to carry out the login and parse the result as success or error
-	function login ($username,$password) {
+	function doLogin ($username,$password) {
 		$query['action'] = 'login';
 		$post['lgname'] = $username;
 		$post['lgpassword'] = $password;
@@ -92,41 +85,11 @@ class wiki {
             return $r;
         }
     }
-	
-	/**
-	* Performs API logout
-	* @return void
-	**/
-	//TODO return some sort of success or failer..
-	function logout () {
-		$query['action'] = 'logout';
-		return $this->api($query);
-	}
-	
-	//Performes API edit
-	function edittitle ($title,$text,$summary = '',$minor = false,$bot = true,$section = null,$detectEC=true,$maxlag='5') {
-        if ($this->token==null) {
-            $this->token = $this->gettoken();
-        }
-		$post['title'] = $title;
-		$post['text'] = $text;
-		$post['token'] = $this->token;
-		$post['summary'] = $summary;
-		if($minor == true){$post['minor'] = '1';}
-		if($bot == true){$post['bot'] = '1';}
-        if ($section != null) {$post['section'] = $section;}
-        if ($this->ecTimestamp != null && $detectEC == true) {
-            $post['basetimestamp'] = $this->ecTimestamp;
-            $this->ecTimestamp = null;
-        }
-        if ($maxlag!='') {$query['maxlag'] = $maxlag;}
-		return $this->api($query,$post);
-    }
+
 	
 	//PROP
 	function categories (){}
-	//$titles is a | seperated list of categories to get info for
-	function categoryinfo ($titles){return prop('categoryinfo',"titles=".implode('|',$titles));}
+	function categoryinfo ($parameters){return prop('categoryinfo',$parameters);}
 	function coordinates (){}
 	function duplicatefiles (){}
 	function extlinks (){}
@@ -200,7 +163,7 @@ class wiki {
 	function wikibase (){}
 
 	//Modules : continuation
-	function expandtemplates ($text) {return action ('expandtemplates',"text=".$text);}
+	function expandtemplates ($parameters) {return action ('expandtemplates',$parameters);}
 	function compare () {}
 	
 	/*
@@ -217,6 +180,7 @@ class wiki {
 		// $this->token['type'] = $return something
 		//TODO return the token
 	}
+	function tokens ($parameters)
 	
 	//from old wikibot classes
 	function gettoken () {
@@ -229,11 +193,7 @@ class wiki {
         }
     }
 	
-	//Performes a perge of the given page title
-	function purge ($titles) {
-		$return = action ( 'purge', "titles=".implode('|',$titles));
-		print_r($return);
-	}
+	function purge ($parameters) {return action ( 'purge', $parameters);}
 	function rollback () {}
 	function delete () {}
 	function undelete () {}
@@ -241,7 +201,7 @@ class wiki {
 	function block () {}
 	function unblock () {}
 	function move () {}
-	function edit () {}
+	function edit ($parameters){return  action ( 'edit', $parameters);}
 	function upload () {}
 	function filerevert () {}
 	function emailuser () {}
