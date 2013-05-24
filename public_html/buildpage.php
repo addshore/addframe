@@ -12,6 +12,7 @@ function getSideBar()
 			<li><a href='".$config['myurl']."addbot/status' title='monitor addbots current stats'>Addbot Status</a></li>
 			<li><a href='".$config['myurl']."addbot/iwlinks' title='remaining wikipedia interwiki links'>Remaining interwikis</a></li>
 			<li><a href='".$config['myurl']."csdf8' title='english wikipedia CFD F8 compare tool'>CSDF8 comparison</a></li>
+			<li><a href='".$config['myurl']."grep' title='grep tool for article names'>Grep tool</a></li>
 			<li><a href='".$config['myurl']."toolslab' title='monitor tools lab'>Tools lab stuff</a></li>
 			</ul>
 			<h5>generic</h5>
