@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $start_time = MICROTIME(TRUE);
 //Load
 $options = getopt("", Array(
@@ -10,7 +10,7 @@ $config['General']['maxlag'] = "2";
 $glang                       = $options['lang'];
 $apilang                     = str_replace('-', '', $glang);
 
-exec("echo '##addshore Running $glang wikidata migrate script' | nc bots-labs 64834");
+exec("echo '##addshore Running $glang wikidata migration' | nc bots-labs 64834");
 
 //Classes and configs
 require __DIR__.'/../../classes/botclasses.php';
