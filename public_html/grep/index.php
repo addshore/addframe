@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Grep v 1.2 © 2007-08 Nikola Smolenski <smolensk@eunet.yu>
 Modified for use on wmflabs by Addshore 2013
@@ -18,10 +18,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
+include(__DIR__."/../buildpage.php");
 require(__DIR__.'/include.php');
 require(__DIR__."/../../config/replication.cfg");
 
-head();
+$header = "<html>".getHeader("Grep")."<body>".getSideBar()."<div id='content-column'>
+<h1>Grep</h1>";
+$footer = "</div></body></html>";
+
+echo $header;
 
 ?><p>This tool shows all article titles that match a <a href="http://en.wikipedia.org/wiki/Regular_expression">regular expression</a> pattern.</p>
 <div style="float: right;"><a href="grep.php?view_source">view source</a> <a href="include.php?view_source">view include.php source</a></div>
@@ -67,5 +72,5 @@ if(isset($_GET['pattern']) &&
 	echo "</table>\n";
 }
 
-foot();
+echo $footer;
 ?>
