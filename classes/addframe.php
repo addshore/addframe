@@ -34,7 +34,7 @@ class wiki {
 	* @param $post Array of post data
 	* @return Array of the returning data
 	**/
-	function api ($query,$post=null){
+	function apiRequest ($query,$post=null){
 		$query['format'] = 'php';
 		$query = "?".http_build_query($query);
         if ($post==null)
@@ -44,19 +44,19 @@ class wiki {
         return unserialize($ret);
 	}
 	
-	function action ($type,$post=null){
+	function apiAction ($type,$post=null){
 		$query['action'] = $type;
-		return $this->api($query,$post)
+		return $this->apiRequest($query,$post)
 	}
 	
 	// Actions
-	function query ($query,$post=null){return $this->action('query',$post);}
-	function listt ($query,$post=null){return $this->action('list',$post);}
-	function prop ($query,$post=null){return $this->action('prop',$post);}
-	function meta ($query,$post=null){return $this->action('meta',$post);}
-	function login ($query,$post=null){return $this->action('login',$post);}
-	function logout () {return $this->action ('logout',null);}
-	function createaccount ($query,$post=null){return $this->action('createaccount',$post);}
+	function apiQuery ($query,$post=null){return $this->apiAction('query',$post);}
+	function apiList ($query,$post=null){return $this->apiAction('list',$post);}
+	function apiProp ($query,$post=null){return $this->apiAction('prop',$post);}
+	function apiMeta ($query,$post=null){return $this->apiAction('meta',$post);}
+	function apiLogin ($query,$post=null){return $this->apiAction('login',$post);}
+	function apiLogout () {return $this->apiAction ('logout',null);}
+	function apiCreateaccount ($query,$post=null){return $this->apiAction('createaccount',$post);}
 	
 	/**
 	* Performs an API login of a username and password
