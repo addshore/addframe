@@ -1,3 +1,5 @@
+#! /usr/bin/php5
+
 <?php
 
 // If we could run this on the grid and submit from there then we would
