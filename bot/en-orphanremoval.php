@@ -7,8 +7,6 @@ ini_set('display_errors', 1);
 //From http://toolserver.org/~chris/highlight.php?d=chris/classes/&f=botclasses.php
 require __DIR__.'/../classes/botclasses.php';
 
-exec("echo '##addshore Running en orphan removal' | nc bots-labs 64834");
-
 $wiki = new wikipedia;
 $wiki->url = 'http://en.wikipedia.org/w/api.php';
 global $wiki;

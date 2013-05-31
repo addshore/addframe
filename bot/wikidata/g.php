@@ -10,8 +10,6 @@ $config['General']['maxlag'] = "2";
 $glang                       = $options['lang'];
 $apilang                     = str_replace('-', '', $glang);
 
-exec("echo '##addshore Running $glang wikidata migration' | nc bots-labs 64834");
-
 //Classes and configs
 require __DIR__.'/../../classes/botclasses.php';
 require __DIR__.'/../../classes/database.php';

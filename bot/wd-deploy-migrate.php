@@ -8,8 +8,6 @@
 require __DIR__.'/../classes/database.php';
 require __DIR__.'/../config/database.cfg'; 
 
-exec("echo '##addshore Running wikidata migrate deploy script' | nc bots-labs 64834");
-
 //Connect to the DB
 $db = new Database( $config['dbhost'], $config['dbport'], $config['dbuser'], $config['dbpass'], $config['dbname'], false);
 unset($config['dbpass']);
