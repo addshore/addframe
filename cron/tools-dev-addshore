@@ -4,6 +4,6 @@ MAILTO=""
 */5 * * * * crontab cron/tools-dev-addshore
 
 #Stats
-* * * * * php /data/project/addshore/scripts/stathat-nongrid.php
+* * * * * php ~/scripts/stathat-nongrid.php
 
 #Remember to leave the empty line under this comment for EOF

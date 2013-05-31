@@ -1,3 +1,5 @@
+#! /usr/bin/php5
+
 <?php
 $start_time = MICROTIME(TRUE);
 
