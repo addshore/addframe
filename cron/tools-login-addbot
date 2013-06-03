@@ -4,7 +4,7 @@ MAILTO=""
 */5 * * * * cd ~ && git pull && crontab cron/tools-login-addbot
 #Bot Tasks
 0 9 * * * /usr/local/bin/jsub -mem 512m -once -N en-usertalksubst php ~/bot/en-usertalksubst.php
-0 10 */2 * * /usr/local/bin/jsub -mem 512m -once -N en-orphanremoval php ~/bot/en-orphanremoval.php
+#0 10 */2 * * /usr/local/bin/jsub -mem 512m -once -N en-orphanremoval php ~/bot/en-orphanremoval.php
 */30 * * * * /usr/local/bin/jsub -mem 512m -once -N wd-iwdbstats php ~/wd-iwdbstats.php
 0 0 * * * /usr/bin/php ~/bot/wd-deploy-migrate.php
 
