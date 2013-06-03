@@ -57,35 +57,42 @@ class wiki {
 	function apiLogin ($query,$post=null){return $this->apiAction('login',$post);}
 	function apiLogout () {return $this->apiAction ('logout',null);}
 	function apiCreateaccount ($query,$post=null){return $this->apiAction('createaccount',$post);}
+	function apitokens ($query,$post=null){return $this->apiAction('tokens',$post);}
 	
 	/**
 	* Performs an API login of a username and password
 	* @param String $user Username to login as.
 	* @param String $pass Password that corrisponds to the username.
-	* @return void
+	* @return true OR error
 	**/
-	//TODO this should return the status of the login and have a function
-	//doLogin() to carry out the login and parse the result as success or error
 	function doLogin ($username,$password) {
-		$query['action'] = 'login';
 		$post['lgname'] = $username;
 		$post['lgpassword'] = $password;
-		$r = $this->api($query,$post);
+		$r = $this->apiLogin($query,$post);
         /* This is now required - see https://bugzilla.wikimedia.org/show_bug.cgi?id=23076 */
         if ($r['login']['result'] == 'NeedToken') {
             $post['lgtoken'] = $r['login']['token'];
-            $r = $this->api($query,$post);
+            $r = $this->apiLogin($query,$post);
         }
+		//Return the login result, error or true
         if ($r['login']['result'] != 'Success') {
-			//TODO error handeling instead fo just die()
-            echo "Login error: \n";
-            print_r($r);
-            die();
+			return $r['login']['result'];
         } else {
-            return $r;
+            return true;
         }
     }
-
+	
+	/*
+	* Performes a request to the api for an action tokens
+	* @param $type Default='edit'
+	* Can be: block, delete, deleteglobalaccount, edit, email, import, move, options, patrol, protect, setglobalaccountstatus, unblock, watch
+	* @return Array of the returning data
+	**/
+	function getToken ($type='edit') { 
+		$query['type'] = $type;
+		$return = apiTokens($query,"type=$type");
+		return $return;
+	}
 	
 	//PROP
 	function categories (){}
@@ -164,35 +171,7 @@ class wiki {
 
 	//Modules : continuation
 	function expandtemplates ($parameters) {return action ('expandtemplates',$parameters);}
-	function compare () {}
-	
-	/*
-	* Performes a request to the api for an action tokens
-	* @param $type Default='edit'
-	* Can be: block, delete, deleteglobalaccount, edit, email, import, move, options, patrol, protect, setglobalaccountstatus, unblock, watch
-	* @return Array of the returning data
-	**/
-	function tokens ($type='edit') { 
-		$query['action'] = 'tokens';
-		$query['type'] = $type;
-		$return = api( 'tokens',"type=$type");
-		print_r($return);
-		// $this->token['type'] = $return something
-		//TODO return the token
-	}
-	function tokens ($parameters)
-	
-	//from old wikibot classes
-	function gettoken () {
-		$query['prop'] = 'info';
-		$query['intoken'] = 'edit';
-		$query['titles'] = 'Main Page';
-        $x = $this->query($query);
-        foreach ($x['query']['pages'] as $ret) {
-            return $ret['edittoken'];
-        }
-    }
-	
+	function compare () {}	
 	function purge ($parameters) {return action ( 'purge', $parameters);}
 	function rollback () {}
 	function delete () {}
