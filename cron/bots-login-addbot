@@ -1,8 +1,0 @@
-MAILTO=""
-
-#Wikidata migration deploy
-#* * * * * php ~/bot/wikidata/deploy.php
-#Update DB stats pages
-#*/30 * * * * echo "php ~/bot/wikidata/dbstats.php" | qsub -N wd.dbstat
-
-#Remember to leave the empty line under this comment for EOF
