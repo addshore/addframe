@@ -1,7 +1,5 @@
 MAILTO=""
 
-#Auto update
-*/5 * * * * cd ~ && git pull && crontab cron/bots-login-addbot
 #Wikidata migration deploy
 #* * * * * php ~/bot/wikidata/deploy.php
 #Update DB stats pages
