@@ -8,17 +8,13 @@
 require_once( dirname(__FILE__).'/../init.php' );
 
 //Create a site
-$site['localhost'] = Globals::$Sites->newSite("localhost","127.0.0.1","/mediawiki/api.php");
-$site['localhost']->userlogin = new userlogin('localhost','Bot','botp123');
+$site['localhost'] = Globals::$Sites->newSite("localhost","127.0.0.1","/Mediawiki/api.php");
+$site['localhost']->userlogin = new UserLogin('localhost','Bot','botp123');
 
 //Login
 $site['localhost']->dologin();
 //Play
 $playpage = $site['localhost']->getPage($site['localhost']->userlogin->getUserPage()->title."/Sandbox");
-$site['localhost']->doEdit(
-	$playpage->title,
-	"Some random text = ".rand(0,100),
-	"This is a summary (minor edit)",
-	true
-);
-echo $playpage->getText();
+$playpage->getText();
+$playpage->appendText(".");
+$playpage->save();

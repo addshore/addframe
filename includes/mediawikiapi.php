@@ -5,10 +5,9 @@
  * @author Addshore
  **/
 
-class mediawikiApi {
+class MediawikiAPI {
 	private $http;
 	private $token;
-	private $ecTimestamp;
 	public $url;
 
 	/**
@@ -18,7 +17,6 @@ class mediawikiApi {
 		$this->http = new http;
 		$this->token = null;
 		$this->url = $url;
-		$this->ecTimestamp = null;
 	}
 
 	/*
@@ -34,7 +32,7 @@ class mediawikiApi {
 			$returned = $this->http->get($this->url.$query);
 		else
 			$returned = $this->http->post($this->url.$query,$post);
-		return $this->parseReturned(unserialize($returned));
+		return new mediawikiapiresult(unserialize($returned));
 	}
 
 	function doAction ($type,$post=null){
@@ -77,14 +75,18 @@ class mediawikiApi {
 	 * @return string Edit token.
 	 **/
 	function getEditToken () {
+		if( $this->token != null ){
+			return $this->token;
+		}
 		$apiresult = $this->doQuery( array('prop' => 'info','intoken' => 'edit', 'titles' => 'Main Page') );
 		return $apiresult->value['query']['pages']['1']['edittoken'];
 	}
 
-	//@deprecated
-	function parseReturned($value){
-		$returned = new mediawikiapiresult($value);
-		return $returned;
+	/**
+	 * This function resets the edit token incase we need to get a new one
+	 */
+	function resetEditToken () {
+		$this->token = null;
 	}
 
 }

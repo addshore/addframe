@@ -5,31 +5,31 @@
  * @author Addshore
  **/
 
-class mediawiki {
+class Mediawiki {
 	public $handel;
 	/**
-	 * @var string Hostname of mediawiki site
+	 * @var string Hostname of Mediawiki site
 	 */
 	public $hostname;
 	/**
-	 * @var mediawikiApi Location in relation to hostname of api.php
+	 * @var MediawikiAPI Location in relation to hostname of api.php
 	 */
 	public $api;
 
 	/**
-	 * @var userlogin
+	 * @var UserLogin
 	 */
 	public $userlogin;
 
 	/**
-	 * @param $hostname string Hostname of mediawiki site
+	 * @param $hostname string Hostname of Mediawiki site
 	 * @param null $api Location in relation to hostname of api.php
 	 */
 	function __construct ($handel, $hostname,$api = null) {
 		$this->handel = $handel;
 		$this->hostname = $hostname;
 		if(isset($api)){
-			$this->api = new mediawikiApi($this->hostname.$api);
+			$this->api = new MediawikiAPI($this->hostname.$api);
 		}
 	}
 
@@ -80,7 +80,7 @@ class mediawiki {
 
 
 	function getPage ($page) {
-		return new page($this->handel,$page);
+		return new Page($this->handel,$page);
 	}
 	
 }

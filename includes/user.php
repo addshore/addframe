@@ -1,11 +1,11 @@
 <?php
 
 /**
- * This class is designed to represet a mediawiki user
+ * This class is designed to represet a Mediawiki User
  * @author Addshore
  **/
 
-class user {
+class User {
 
 	/**
 	 * @var string handel for associated site
@@ -19,11 +19,11 @@ class user {
 	}
 
 	function getUserPage(){
-		return new page($this->handel,"User:$this->username");
+		return new Page($this->handel,"User:$this->username");
 	}
 
 	function getUserTalkPage(){
-		return new page($this->handel,"User talk:$this->username");
+		return new Page($this->handel,"User talk:$this->username");
 	}
 
 }
