@@ -56,7 +56,6 @@ class Page {
 		}
 	}
 
-
 	/**
 	 * @param null $hidden
 	 * @return mixed

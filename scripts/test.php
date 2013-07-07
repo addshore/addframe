@@ -18,6 +18,5 @@ $playpage = $site['localhost']->getPage($site['localhost']->userlogin->getUserPa
 $playpage->getText();
 $playpage->appendText(".");
 $playpage->save("Save Summary",true);
-$me = $site['localhost']->userlogin;
-$me->getRights();
-$playpage->getCategories();
+$playentity = $site['localhost']->getEntity('q2');
+$playentity->getEntity();

@@ -39,6 +39,9 @@ class Mediawiki {
 	function getUser ($username) {
 		return new User($this->handel,$username);
 	}
+	function getEntity ($id) {
+		return new WikibaseEntity($this->handel,$id);
+	}
 
 	/**
 	 * @return bool
