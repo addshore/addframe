@@ -31,6 +31,8 @@ class Page {
 	 */
 	public $timestamp;
 
+	public $categories;
+
 	function __construct( $handel , $title ) {
 		$this->handel = $handel;
 		$this->title = $title;
@@ -42,14 +44,39 @@ class Page {
 	function getText(){
 		$param['titles'] = $this->title;
 		$param['rvprop'] = 'content|timestamp';
+
 		$result = Globals::$Sites->getSite($this->handel)->api->doPropRevsions($param);
+
 		foreach($result->value['query']['pages'] as $x){
 			$this->pageid = $x['pageid'];
 			$this->ns = $x['ns'];
 			$this->text = $x['revisions']['0']['*'];
 			$this->timestamp = $x['revisions']['0']['timestamp'];
+			return $this->text;
 		}
-		return $this->text;
+	}
+
+
+	/**
+	 * @param null $hidden
+	 * @return mixed
+	 * @todo return an array of category objects which would extend Page
+	 */
+	function getCategories($hidden = null){
+		$param['titles'] = $this->title;
+		$param['cllimit'] = '500';
+		$param['clprop'] = 'hidden';
+		if($hidden === true){ $param['clshow'] = 'hidden';}
+		elseif($hidden === false){ $param['clshow'] = '!hidden';}
+
+		$result = Globals::$Sites->getSite($this->handel)->api->doPropCategories($param);
+
+		foreach($result->value['query']['pages'] as $x){
+			$this->pageid = $x['pageid'];
+			$this->ns = $x['ns'];
+			$this->categories = $x['categories'];
+			return $this->categories;
+		}
 	}
 
 	/**

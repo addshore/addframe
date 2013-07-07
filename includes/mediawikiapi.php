@@ -61,6 +61,11 @@ class MediawikiAPI {
 		return $this->doQuery($parameters);
 	}
 
+	function doPropCategories($parameters){
+		$parameters['prop'] = 'categories';
+		return $this->doQuery($parameters);
+	}
+
 	function doListAllusers($parameters){
 		$parameters['list'] = 'allusers';
 		return $this->doQuery($parameters);

@@ -20,3 +20,4 @@ $playpage->appendText(".");
 $playpage->save("Save Summary",true);
 $me = $site['localhost']->userlogin;
 $me->getRights();
+$playpage->getCategories();
