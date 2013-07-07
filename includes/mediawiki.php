@@ -40,22 +40,19 @@ class mediawiki {
 		$post['lgname'] = $this->userlogin->username;
 		$post['lgpassword'] = $this->userlogin->getPassword();
 
-		$apiresult = $this->api->doLogin(null,$post);
-		$result = $this->api->parseReturned( $apiresult );
+		$result = $this->api->doLogin(null,$post);
 
-		if ($result == 'NeedToken') {
-			$post['lgtoken'] = $apiresult['login']['token'];
-			$apiresult = $this->api->doLogin(null,$post);
-			$result = $this->api->parseReturned( $apiresult );
+		if ($result->statusCode == 'NeedToken') {
+			$post['lgtoken'] = $result->getInside()['token'];
+			$result = $this->api->doLogin(null,$post);
 		}
 
-		if ($result == "Success") {
-			print "Log in: $result\n";
+		if ($result->statusCode == "Success") {
+			print "Log in: ".$result->statusCode."\n";
 			return true;
 		}
 		else{
-			print_r($apiresult);
-			die();
+			throw new Exception('Failed login');
 		}
 	}
 
@@ -68,14 +65,21 @@ class mediawiki {
 	 */
 	function doEdit ($title,$text,$summary = null, $minor = false) {
 
-		$post['title'] = $title;
-		$post['text'] = $text;
-		if( isset($summary) ) { $post['summary'] = $summary; }
-		if( $minor == true ) { $post['minor'] = '1'; }
+		$param['title'] = $title;
+		$param['text'] = $text;
+		if( isset($summary) ) { $param['summary'] = $summary; }
+		if( $minor == true ) { $param['minor'] = '1'; }
 
-		$result = $this->api->doEdit($post);
+		$result = $this->api->doEdit($param);
 
-		print "Edit: $result\n";
+		print "Edit: ".$result->statusCode."\n";
+		return $result;
+	}
+
+
+	function getPageText ($page) {
+		$param['titles'] = $page;
+		$result = $this->api->doPropRevsions($param);
 		return $result;
 	}
 	

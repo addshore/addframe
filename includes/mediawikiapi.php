@@ -31,10 +31,10 @@ class mediawikiApi {
 		$query['format'] = 'php';
 		$query = "?".http_build_query($query);
 		if ($post==null)
-			$ret = $this->http->get($this->url.$query);
+			$returned = $this->http->get($this->url.$query);
 		else
-			$ret = $this->http->post($this->url.$query,$post);
-		return unserialize($ret);
+			$returned = $this->http->post($this->url.$query,$post);
+		return $this->parseReturned(unserialize($returned));
 	}
 
 	function doAction ($type,$post=null){
@@ -55,8 +55,12 @@ class mediawikiApi {
 	}
 
 	function doEdit ($parameters){
-		$returned = $this->doAction ( 'edit', $this->mergeToken($parameters) );
-		return $this->parseReturned($returned);
+		return $this->doAction ( 'edit', $this->mergeToken($parameters) );
+	}
+
+	function doPropRevsions($parameters){
+		$parameters['prop'] = 'revisions';
+		return $this->doQuery($parameters);
 	}
 
 	/**
@@ -73,31 +77,14 @@ class mediawikiApi {
 	 * @return string Edit token.
 	 **/
 	function getEditToken () {
-		$returned = $this->doQuery( array('prop' => 'info','intoken' => 'edit', 'titles' => 'Main Page') );
-		return $this->parseReturned($returned['query']['pages'], 'edittoken');
+		$apiresult = $this->doQuery( array('prop' => 'info','intoken' => 'edit', 'titles' => 'Main Page') );
+		return $apiresult->value['query']['pages']['1']['edittoken'];
 	}
 
-	/**
-	 * @param $value array Value that contains $key we want
-	 * @param $key string Key in $value to find
-	 * @return string of $key from $value
-	 */
-	function parseReturned($value,$key = null){
-		if($key == null){
-			foreach ($value as $return){
-				if( isset($return['result']) ){
-					return $return['result'];
-				}else{
-					return $return['code'];
-				}
-			}
-		}
-		else{
-			foreach ($value as $return){
-				return $return[$key];
-			}
-		}
-		return false;
+	//@deprecated
+	function parseReturned($value){
+		$returned = new mediawikiapiresult($value);
+		return $returned;
 	}
 
 }

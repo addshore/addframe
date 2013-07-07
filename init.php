@@ -12,4 +12,8 @@ $IP = dirname(__FILE__) . '/';
 foreach (glob("$IP/includes/*.php") as $filename){ include $filename; }
 
 //Factory for creating sites
-$Sites = new SiteFactory();
+Globals::$Sites = new SiteFactory();
+/**
+ * @var $Sites SiteFactory
+ */
+$Sites =& Globals::$Sites;
