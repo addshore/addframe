@@ -1,13 +1,14 @@
 <?php
 /**
- * This file is the main point of access for the framework
+ * This file is first 'test' script
  * @author Addshore
  **/
 
-require_once( '../init.php' );
+//Initiate the script
+require_once( dirname(__FILE__).'/../init.php' );
 
 //Create a site
-$Sites->localhost = new mediawiki("127.0.0.1","/mediawiki/api.php");
+$Sites->newSite("localhost","127.0.0.1","/mediawiki/api.php");
 //Add the login info to the site
 $Sites->localhost->userlogin = new userlogin('bot','botp123');
 
