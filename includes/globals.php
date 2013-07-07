@@ -5,6 +5,7 @@
  */
 class Globals {
 
+	/** @var SiteFactory */
 	public static $Sites;
 
 }

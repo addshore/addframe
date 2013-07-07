@@ -31,6 +31,11 @@ class Registry {
 		return $this->objects[$index];
 	}
 
+
+	public function getKeys() {
+		return array_keys($this->objects);
+	}
+
 	/*
 	 * These helps save system resources if your Registry gets on the larger side.
 	 */

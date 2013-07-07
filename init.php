@@ -13,7 +13,3 @@ foreach (glob("$IP/includes/*.php") as $filename){ include $filename; }
 
 //Factory for creating sites
 Globals::$Sites = new SiteFactory();
-/**
- * @var $Sites SiteFactory
- */
-$Sites =& Globals::$Sites;

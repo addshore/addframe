@@ -8,15 +8,15 @@
 require_once( dirname(__FILE__).'/../init.php' );
 
 //Create a site
-$Sites->newSite("localhost","127.0.0.1","/mediawiki/api.php");
+$site['localhost'] = Globals::$Sites->newSite("localhost","127.0.0.1","/mediawiki/api.php");
 //Add the login info to the site
-$Sites->localhost->userlogin = new userlogin('bot','botp123');
+$site['localhost']->userlogin = new userlogin('bot','botp123');
 
 //Login
-$Sites->localhost->dologin();
+$site['localhost']->dologin();
 //Edit
-$Sites->localhost->doEdit(
-	$Sites->localhost->userlogin->getUserPage()->title."/Sandbox",
+$site['localhost']->doEdit(
+	$site['localhost']->userlogin->getUserPage()->title."/Sandbox",
 	"Some random text = ".rand(0,100),
 	"This is a summary (minor edit)",
 	true
