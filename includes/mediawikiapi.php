@@ -1,11 +1,19 @@
 <?php
 
+/**
+ * This class is designed to represet a medawiki api
+ * @author Addshore
+ **/
+
 class mediawikiApi {
 	private $http;
 	private $token;
 	private $ecTimestamp;
 	public $url;
 
+	/**
+	 * @param $url string Location of the API
+	 */
 	function __construct ($url) {
 		$this->http = new http;
 		$this->token = null;
@@ -34,14 +42,30 @@ class mediawikiApi {
 		return $this->doRequest ($query,$post);
 	}
 
-	function doLogin ($query,$post=null){return $this->doAction ('login',$post);}
-	function doLogout () {return $this->doAction ('logout',null);}
+	function doLogin ($query,$post=null){
+		return $this->doAction ('login',$post);
+	}
 
-	function doQuery ($parameters){return  $this->doAction ( 'query', $parameters);}
+	function doLogout () {
+		return $this->doAction ('logout',null);
+	}
+
+	function doQuery ($parameters){
+		return  $this->doAction ( 'query', $parameters);
+	}
 
 	function doEdit ($parameters){
-		$returned = $this->doAction ( 'edit', array_merge($parameters,array('token' => $this->getEditToken() ) ) );
+		$returned = $this->doAction ( 'edit', $this->mergeToken($parameters) );
 		return $this->parseReturned($returned);
+	}
+
+	/**
+	 * Merges the an edit token an array of parameters
+	 * @param $array
+	 * @return array
+	 */
+	function mergeToken($array){
+		return array_merge( $array,array('token' => $this->getEditToken() ) );
 	}
 
 	/**

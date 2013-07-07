@@ -1,4 +1,8 @@
 <?php
+/**
+ * This file is the main point of access for the framework
+ * @author Addshore
+ **/
 
 //Include all files in /includes
 foreach (glob("includes/*.php") as $filename){ include $filename; }
