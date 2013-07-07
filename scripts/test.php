@@ -4,8 +4,7 @@
  * @author Addshore
  **/
 
-//Include all files in /includes
-foreach (glob("includes/*.php") as $filename){ include $filename; }
+require_once( '../init.php' );
 
 //Add our settings
 $wiki = new mediawiki("127.0.0.1","/mediawiki/api.php");
