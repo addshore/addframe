@@ -1,0 +1,4 @@
+addwiki
+=======
+
+addbot wikipedia bot
