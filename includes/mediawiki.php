@@ -22,17 +22,17 @@ class mediawiki {
 		$post['lgpassword'] = $userLogin->password;
 
 		$apiresult = $this->api->doLogin(null,$post);
-		$result = $this->parseResult( $apiresult );
+		$result = $this->api->parseReturned( $apiresult );
 
 		if ($result == 'NeedToken') {
 			$post['lgtoken'] = $apiresult['login']['token'];
 			$apiresult = $this->api->doLogin(null,$post);
-			$result = $this->parseResult( $apiresult );
+			$result = $this->api->parseReturned( $apiresult );
 		}
 
-		if ($result === true) {
-			print "Logged in\n";
-			return $result;
+		if ($result == "Success") {
+			print "Log in: $result\n";
+			return true;
 		}
 		else{
 			print_r($apiresult);
@@ -47,31 +47,10 @@ class mediawiki {
 		if( isset($summary) ) { $post['text'] = $text; }
 		if( isset($minor) ) { $post['minor'] = $minor; }
 
-		$apiresult = $this->api->doEdit($post);
-		$result = $this->parseResult( $apiresult );
+		$result = $this->api->doEdit($post);
 
-		print "Edit Returned: $result\n";
+		print "Edit: $result\n";
 		return $result;
-	}
-
-	/**
-	 * @param $results
-	 * @return bool
-	 * @todo create an api result class and parser
-	 */
-	function parseResult($results){
-		foreach($results as $result)
-		{
-			if(isset($result['result'])){ $result = $result['result']; }
-			else if(isset($result['code'])){ $result = $result['code']; }
-			if($result == "Success"){
-				return true;
-			}
-			else{
-				return $result;
-			}
-		}
-		return false;
 	}
 	
 }

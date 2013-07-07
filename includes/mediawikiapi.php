@@ -39,19 +39,41 @@ class mediawikiApi {
 
 	function doQuery ($parameters){return  $this->doAction ( 'query', $parameters);}
 
-	function doEdit ($parameters){return  $this->doAction ( 'edit', array_merge($parameters,array('token' => $this->getedittoken() ) ) ) ;}
+	function doEdit ($parameters){
+		$returned = $this->doAction ( 'edit', array_merge($parameters,array('token' => $this->getEditToken() ) ) );
+		return $this->parseReturned($returned);
+	}
 
 	/**
 	 * This function returns and edit token from the api
 	 * @return string Edit token.
 	 **/
-	function getedittoken () {
-		$x = $this->doQuery( array('prop' => 'info','intoken' => 'edit', 'titles' => 'Main Page') );
-		foreach ($x['query']['pages'] as $ret) {
-			$token = $ret['edittoken'];
-			return $ret['edittoken'];
+	function getEditToken () {
+		$returned = $this->doQuery( array('prop' => 'info','intoken' => 'edit', 'titles' => 'Main Page') );
+		return $this->parseReturned($returned['query']['pages'], 'edittoken');
+	}
+
+	/**
+	 * @param $value array Value that contains $key we want
+	 * @param $key string Key in $value to find
+	 * @return string of $key from $value
+	 */
+	function parseReturned($value,$key = null){
+		if($key == null){
+			foreach ($value as $return){
+				if( isset($return['result']) ){
+					return $return['result'];
+				}else{
+					return $return['code'];
+				}
+			}
 		}
-		return "";
+		else{
+			foreach ($value as $return){
+				return $return[$key];
+			}
+		}
+		return false;
 	}
 
 }
