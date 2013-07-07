@@ -34,11 +34,21 @@ class WikibaseEntity extends Page{
 			$this->lastrevid = $x['lastrevid'];
 			$this->timestamp = $x['modified'];
 			$this->type = $x['type'];
-			$this->parts['labels'] = $x['labels'];
-			$this->parts['descriptions'] = $x['descriptions'];
-			$this->parts['aliases'] = $x['aliases'];
-			$this->parts['claims'] = $x['claims'];
-			$this->parts['sitelinks'] = $x['sitelinks'];
+			if ( isset( $x['labels'] ) ) {
+				$this->parts['labels'] = $x['labels'];
+			}
+			if ( isset( $x['descriptions'] ) ) {
+				$this->parts['descriptions'] = $x['descriptions'];
+			}
+			if ( isset( $x['aliases'] ) ) {
+				$this->parts['aliases'] = $x['aliases'];
+			}
+			if ( isset( $x['claims'] ) ) {
+				$this->parts['claims'] = $x['claims'];
+			}
+			if ( isset( $x['sitelinks'] ) ) {
+				$this->parts['sitelinks'] = $x['sitelinks'];
+			}
 			return $this->buildEntity();
 		}
 	}
@@ -51,7 +61,9 @@ class WikibaseEntity extends Page{
 	function buildEntity(){
 		$parts = array();
 		foreach ($this->parts as $key => $part){
-			$parts[$key] = $part;
+			if($part != null){
+				$parts[$key] = $part;
+			}
 		}
 		return $parts;
 	}
