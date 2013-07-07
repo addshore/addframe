@@ -17,4 +17,6 @@ $site['localhost']->dologin();
 $playpage = $site['localhost']->getPage($site['localhost']->userlogin->getUserPage()->title."/Sandbox");
 $playpage->getText();
 $playpage->appendText(".");
-$playpage->save();
+$playpage->save("Save Summary",true);
+$me = $site['localhost']->userlogin;
+$me->getRights();

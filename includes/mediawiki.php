@@ -33,6 +33,13 @@ class Mediawiki {
 		}
 	}
 
+	function getPage ($page) {
+		return new Page($this->handel,$page);
+	}
+	function getUser ($username) {
+		return new User($this->handel,$username);
+	}
+
 	/**
 	 * @return bool
 	 * @throws Exception
@@ -76,11 +83,6 @@ class Mediawiki {
 
 		print "Edit: ".$result->statusCode."\n";
 		return $result;
-	}
-
-
-	function getPage ($page) {
-		return new Page($this->handel,$page);
 	}
 	
 }

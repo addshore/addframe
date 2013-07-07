@@ -26,6 +26,10 @@ class Page {
 	 * @var string namespace id number eg. 2
 	 */
 	public $ns;
+	/**
+	 * @var string timestamp for the particular revision text we have got
+	 */
+	public $timestamp;
 
 	function __construct( $handel , $title ) {
 		$this->handel = $handel;
@@ -37,13 +41,13 @@ class Page {
 	 */
 	function getText(){
 		$param['titles'] = $this->title;
-		$param['rvprop'] = 'content';
+		$param['rvprop'] = 'content|timestamp';
 		$result = Globals::$Sites->getSite($this->handel)->api->doPropRevsions($param);
-		print_r($result);
 		foreach($result->value['query']['pages'] as $x){
 			$this->pageid = $x['pageid'];
 			$this->ns = $x['ns'];
 			$this->text = $x['revisions']['0']['*'];
+			$this->timestamp = $x['revisions']['0']['timestamp'];
 		}
 		return $this->text;
 	}
@@ -72,6 +76,13 @@ class Page {
 		if ( ! empty( $this ) ) {
 			$this->text = $text.$this->text;
 		}
+	}
+
+	/**
+	 * Empties the text of the page
+	 */
+	function emptyText(){
+		$this->text = "";
 	}
 
 }

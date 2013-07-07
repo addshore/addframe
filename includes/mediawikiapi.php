@@ -61,6 +61,11 @@ class MediawikiAPI {
 		return $this->doQuery($parameters);
 	}
 
+	function doListAllusers($parameters){
+		$parameters['list'] = 'allusers';
+		return $this->doQuery($parameters);
+	}
+
 	/**
 	 * Merges the an edit token an array of parameters
 	 * @param $array
