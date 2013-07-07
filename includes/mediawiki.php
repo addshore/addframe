@@ -16,6 +16,11 @@ class mediawiki {
 	public $api;
 
 	/**
+	 * @var userlogin
+	 */
+	public $userlogin;
+
+	/**
 	 * @param $hostname string Hostname of mediawiki site
 	 * @param null $api Location in relation to hostname of api.php
 	 */
@@ -30,10 +35,10 @@ class mediawiki {
 	 * @param userlogin $userLogin
 	 * @return bool
 	 */
-	function doLogin (userlogin $userLogin) {
+	function doLogin () {
 
-		$post['lgname'] = $userLogin->username;
-		$post['lgpassword'] = $userLogin->getPassword();
+		$post['lgname'] = $this->userlogin->username;
+		$post['lgpassword'] = $this->userlogin->getPassword();
 
 		$apiresult = $this->api->doLogin(null,$post);
 		$result = $this->api->parseReturned( $apiresult );

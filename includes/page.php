@@ -8,9 +8,6 @@ class page {
 
 	public $title;
 
-	/**
-	 * @param $title string Title of page
-	 */
 	function __construct( $title ) {
 		$this->title = $title;
 	}
