@@ -13,14 +13,13 @@ class mediawiki {
 	}
 
 	/**
-	 * @param $username string Username to be logged into
-	 * @param $password string Password for login
-	 * @return bool True if success, die if not
+	 * @param userlogin $userLogin
+	 * @return bool
 	 */
-	function doLogin ($username, $password) {
+	function doLogin (userlogin $userLogin) {
 
-		$post['lgname'] = $username;
-		$post['lgpassword'] = $password;
+		$post['lgname'] = $userLogin->username;
+		$post['lgpassword'] = $userLogin->password;
 
 		$apiresult = $this->api->doLogin(null,$post);
 		$result = $this->parseResult( $apiresult );
@@ -51,10 +50,15 @@ class mediawiki {
 		$apiresult = $this->api->doEdit($post);
 		$result = $this->parseResult( $apiresult );
 
-		print "Returned: $result\n";
+		print "Edit Returned: $result\n";
 		return $result;
 	}
 
+	/**
+	 * @param $results
+	 * @return bool
+	 * @todo create an api result class and parser
+	 */
 	function parseResult($results){
 		foreach($results as $result)
 		{
