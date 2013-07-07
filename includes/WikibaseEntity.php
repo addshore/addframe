@@ -21,7 +21,7 @@ class WikibaseEntity extends Page{
 
 	/**
 	 * Get the entity from the api
-	 * @return mixed
+	 * @return array of entity parts
 	 */
 	function getEntity(){
 		$param['action'] = 'wbgetentities';
@@ -49,7 +49,7 @@ class WikibaseEntity extends Page{
 			if ( isset( $x['sitelinks'] ) ) {
 				$this->parts['sitelinks'] = $x['sitelinks'];
 			}
-			return $this->buildEntity();
+			return $this->parts;
 		}
 	}
 
