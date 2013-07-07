@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This class is designed to represet a medawiki instalation
+ * This class is designed to represent a mediawiki installation
  * @author Addshore
  **/
 
@@ -15,7 +15,6 @@ class Mediawiki {
 	 * @var MediawikiAPI Location in relation to hostname of api.php
 	 */
 	public $api;
-
 	/**
 	 * @var UserLogin
 	 */
@@ -33,12 +32,29 @@ class Mediawiki {
 		}
 	}
 
+	/**
+	 * Creates a page item from a pagetitle for the site
+	 * @param $page
+	 * @return Page
+	 */
 	function getPage ($page) {
 		return new Page($this->handel,$page);
 	}
+
+	/**
+	 * Creates a user item from a username for the site
+	 * @param $username
+	 * @return User
+	 */
 	function getUser ($username) {
 		return new User($this->handel,$username);
 	}
+
+	/**
+	 * Creates a entity item from a entityid for the site
+	 * @param $id
+	 * @return WikibaseEntity
+	 */
 	function getEntity ($id) {
 		return new WikibaseEntity($this->handel,$id);
 	}

@@ -75,7 +75,7 @@ class MediawikiAPI {
 	}
 
 	/**
-	 * Merges the an edit token an array of parameters
+	 * Merges the an edit token an array of parameters (for requests that need it)
 	 * @param $array
 	 * @return array
 	 */

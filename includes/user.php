@@ -11,25 +11,54 @@ class User {
 	 * @var string handel for associated site
 	 */
 	public $handel;
+	/**
+	 * @var string username
+	 */
 	public $username;
+	/**
+	 * @var string userid
+	 */
 	public $userid;
+	/**
+	 * @var array userrights
+	 */
 	public $rights;
+	/**
+	 * @var string editcount
+	 */
 	public $editcount;
+	/**
+	 * @var string timestamp we got the editcount
+	 */
 	public $editcounttime;
 
+	/**
+	 * @param $handel
+	 * @param $username
+	 */
 	function __construct( $handel, $username ) {
 		$this->handel = $handel;
 		$this->username = $username;
 	}
 
+	/**
+	 * @return Page object for this users page
+	 */
 	function getUserPage(){
 		return new Page($this->handel,"User:$this->username");
 	}
 
+	/**
+	 * @return Page object for this users talk pages
+	 */
 	function getUserTalkPage(){
 		return new Page($this->handel,"User talk:$this->username");
 	}
 
+	/**
+	 * Gets a users rights
+	 * @return mixed
+	 */
 	function getRights(){
 		$param['auprop'] = 'rights';
 		$param['aufrom'] = $this->username;
@@ -40,6 +69,10 @@ class User {
 		return $this->rights;
 	}
 
+	/**
+	 * gets a users edit count
+	 * @return mixed
+	 */
 	function getEditcount(){
 		$param['auprop'] = 'editcount';
 		$param['aufrom'] = $this->username;

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This class is designed to represet a Mediawiki Page
+ * This class is designed to represent a Mediawiki Page
  * @author Addshore
  **/
 class Page {
@@ -39,6 +39,10 @@ class Page {
 	 */
 	public $protection;
 
+	/**
+	 * @param $handel
+	 * @param $title
+	 */
 	function __construct( $handel , $title ) {
 		$this->handel = $handel;
 		$this->title = $title;
@@ -61,6 +65,9 @@ class Page {
 		}
 	}
 
+	/**
+	 * Gets the current protection status of the page
+	 */
 	function getProtectionStatus(){
 		//@todo write this
 		////http://en.wikipedia.org/w/api.php?action=query&titles=Cyprus&prop=info&inprop=protection
