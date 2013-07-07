@@ -13,4 +13,4 @@ $me = new userlogin('bot','botp123');
 
 //Do stuff
 $wiki->dologin($me);
-$wiki->doEdit($me->getUserPageTitle()."/Sandbox","Some random text = ".rand(0,100) );
+$wiki->doEdit($me->getUserPage()->title."/Sandbox","Some random text = ".rand(0,100),"This is a summary (minor edit)",true );

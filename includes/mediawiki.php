@@ -65,7 +65,7 @@ class mediawiki {
 
 		$post['title'] = $title;
 		$post['text'] = $text;
-		if( isset($summary) ) { $post['text'] = $text; }
+		if( isset($summary) ) { $post['summary'] = $summary; }
 		if( $minor == true ) { $post['minor'] = '1'; }
 
 		$result = $this->api->doEdit($post);

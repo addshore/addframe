@@ -13,12 +13,12 @@ class user {
 		$this->username = $username;
 	}
 
-	function getUserPageTitle(){
-		return "User:".$this->username;
+	function getUserPage(){
+		return new page("User:$this->username");
 	}
 
-	function getUserTalkPageTitle(){
-		return "User talk:".$this->username;
+	function getUserTalkPage(){
+		return new page("User talk:$this->username");
 	}
 
 }
