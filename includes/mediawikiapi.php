@@ -58,11 +58,14 @@ class MediawikiAPI {
 
 	function doPropRevsions($parameters){
 		$parameters['prop'] = 'revisions';
+		$parameters['rvprop'] = 'timestamp|content';
 		return $this->doQuery($parameters);
 	}
 
 	function doPropCategories($parameters){
 		$parameters['prop'] = 'categories';
+		$parameters['clprop'] = 'hidden';
+		$parameters['cllimit'] = '500';
 		return $this->doQuery($parameters);
 	}
 

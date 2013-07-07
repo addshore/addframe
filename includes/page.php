@@ -43,7 +43,6 @@ class Page {
 	 */
 	function getText(){
 		$param['titles'] = $this->title;
-		$param['rvprop'] = 'content|timestamp';
 
 		$result = Globals::$Sites->getSite($this->handel)->api->doPropRevsions($param);
 
@@ -63,8 +62,6 @@ class Page {
 	 */
 	function getCategories($hidden = null){
 		$param['titles'] = $this->title;
-		$param['cllimit'] = '500';
-		$param['clprop'] = 'hidden';
 		if($hidden === true){ $param['clshow'] = 'hidden';}
 		elseif($hidden === false){ $param['clshow'] = '!hidden';}
 
