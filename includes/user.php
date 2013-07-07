@@ -7,18 +7,23 @@
 
 class user {
 
+	/**
+	 * @var string handel for associated site
+	 */
+	public $handel;
 	public $username;
 
-	function __construct( $username ) {
+	function __construct( $handel, $username ) {
+		$this->handel = $handel;
 		$this->username = $username;
 	}
 
 	function getUserPage(){
-		return new page("User:$this->username");
+		return new page($this->handel,"User:$this->username");
 	}
 
 	function getUserTalkPage(){
-		return new page("User talk:$this->username");
+		return new page($this->handel,"User talk:$this->username");
 	}
 
 }

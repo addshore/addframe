@@ -13,7 +13,8 @@ class userlogin extends user {
 	 * @param $username string Username for login
 	 * @param $password string Password for login
 	 */
-	function __construct( $username, $password ) {
+	function __construct( $handel, $username, $password ) {
+		$this->handel = $handel;
 		$this->username = $username;
 		$this->password = $password;
 	}

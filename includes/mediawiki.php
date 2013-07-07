@@ -6,6 +6,7 @@
  **/
 
 class mediawiki {
+	public $handel;
 	/**
 	 * @var string Hostname of mediawiki site
 	 */
@@ -24,7 +25,8 @@ class mediawiki {
 	 * @param $hostname string Hostname of mediawiki site
 	 * @param null $api Location in relation to hostname of api.php
 	 */
-	function __construct ($hostname,$api = null) {
+	function __construct ($handel, $hostname,$api = null) {
+		$this->handel = $handel;
 		$this->hostname = $hostname;
 		if(isset($api)){
 			$this->api = new mediawikiApi($this->hostname.$api);
@@ -32,8 +34,8 @@ class mediawiki {
 	}
 
 	/**
-	 * @param userlogin $userLogin
 	 * @return bool
+	 * @throws Exception
 	 */
 	function doLogin () {
 
@@ -77,10 +79,8 @@ class mediawiki {
 	}
 
 
-	function getPageText ($page) {
-		$param['titles'] = $page;
-		$result = $this->api->doPropRevsions($param);
-		return $result;
+	function getPage ($page) {
+		return new page($this->handel,$page);
 	}
 	
 }

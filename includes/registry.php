@@ -31,7 +31,9 @@ class Registry {
 		return $this->objects[$index];
 	}
 
-
+	/**
+	 * @return array of keys currently stored
+	 */
 	public function getKeys() {
 		return array_keys($this->objects);
 	}
