@@ -34,7 +34,7 @@ class WikibaseEntity extends Page{
 			$this->timestamp = $x['modified'];
 			$this->type = $x['type'];
 			//@todo this list of returns should probably be somewhere else
-			$canGet = Array('labels', 'descriptions', 'aliases', 'claims', 'sitelinks');
+			$canGet = Array('labels', 'descriptions', 'aliases', 'sitelinks');
 			foreach ( $canGet as $returnType){
 				if ( isset( $x[$returnType]) ) {
 					$this->parts[$returnType] = $x[$returnType];
@@ -44,19 +44,32 @@ class WikibaseEntity extends Page{
 		}
 	}
 
+	/**
+	 * Get the entity from the api
+	 */
+	function saveEntity(){
+		//@todo some of this should probably go in the api...
+		$param['action'] = 'wbeditentity';
+		$param['id'] = $this->id;
+		$post['data'] = $this->buildEntity();
+		$post['token'] = Globals::$Sites->getSite($this->handel)->api->getEditToken();
+		$result = Globals::$Sites->getSite($this->handel)->api->doRequest($param,$post);
+		//@todo this should return a status
+		print_r($result);
+		return null;
+	}
 
 	/**
 	 * Builds an entity out of the parts specified
 	 * @return array
 	 */
 	function buildEntity(){
-		$parts = array();
-		foreach ($this->parts as $key => $part){
-			if($part != null){
-				$parts[$key] = $part;
-			}
-		}
-		return $parts;
+		return json_encode($this->parts);
+	}
+
+	function modifyLabel($language, $label){
+		$this->parts['labels'][$language]['language'] = $language;
+		$this->parts['labels'][$language]['value'] = $label;
 	}
 
 }
