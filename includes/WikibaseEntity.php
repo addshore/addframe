@@ -12,6 +12,8 @@ class WikibaseEntity extends Page{
 	public $lastrevid;
 	public $type;
 	public $parts;
+	
+	//@todo we should keep a changed status, if we call save without changing just dont bother..?
 
 	function __construct( $handel, $id ) {
 		$this->id = $id;//@todo validate  and correct the id (lower case)
@@ -23,9 +25,8 @@ class WikibaseEntity extends Page{
 	 * @return array of entity parts
 	 */
 	function getEntity(){
-		$param['action'] = 'wbgetentities';
 		$param['ids'] = $this->id;
-		$result = Globals::$Sites->getSite($this->handel)->api->doRequest($param);
+		$result = Globals::$Sites->getSite($this->handel)->api->doWbGetEntities($param);
 		foreach($result->value['entities'] as $x){
 			$this->pageid = $x['pageid'];
 			$this->ns = $x['ns'];
@@ -49,11 +50,9 @@ class WikibaseEntity extends Page{
 	 */
 	function saveEntity(){
 		//@todo some of this should probably go in the api...
-		$param['action'] = 'wbeditentity';
 		$param['id'] = $this->id;
-		$post['data'] = $this->buildEntity();
-		$result = Globals::$Sites->getSite($this->handel)->api->doRequest($param,$post);
-		//@todo this should return a status
+		$param['data'] = $this->buildEntity();
+		$result = Globals::$Sites->getSite($this->handel)->api->doWbEditEntity($param);
 		print_r($result);
 		return null;
 	}

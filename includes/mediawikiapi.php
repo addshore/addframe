@@ -38,6 +38,33 @@ class MediawikiAPI {
 		return new mediawikiapiresult(unserialize($returned));
 	}
 
+	/**
+	 * This function returns and edit token from the api
+	 * @return string Edit token.
+	 **/
+	function getEditToken () {
+		if( isset( $this->token ) ){
+			return $this->token;
+		}
+		$apiresult = $this->doRequest( array('action' => 'query', 'prop' => 'info','intoken' => 'edit', 'titles' => 'Main Page') );
+		return $apiresult->value['query']['pages']['1']['edittoken'];
+	}
+
+	/**
+	 * This function resets the edit token in case we need to get a new one
+	 * //@todo catch token errors and call this to reset the token
+	 */
+	function resetEditToken () {
+		unset( $this->token );
+		return $this->getEditToken();
+	}
+
+
+	/*
+	* Below this line we start to have module specific methods
+	 * @todo it would be great to be able to include each module only if it is actually use onwiki (i.e. wikibase)
+	**/
+
 	function doLogin ($query,$post=null){
 		$parameters['action'] = 'login';
 		return $this->doRequest($parameters,$post);
@@ -45,7 +72,8 @@ class MediawikiAPI {
 
 	function doEdit ($parameters){
 		$parameters['action'] = 'edit';
-		return $this->doRequest(null, $this->mergeToken($parameters) );
+		$parameters['token'] = $this->getEditToken();
+		return $this->doRequest(null, $parameters );
 	}
 
 	function doPropRevsions($parameters){
@@ -69,34 +97,15 @@ class MediawikiAPI {
 		return $this->doRequest($parameters);
 	}
 
-	/**
-	 * Merges the an edit token an array of parameters (for requests that need it)
-	 * @param $array
-	 * @return array
-	 */
-	function mergeToken($array){
-		return array_merge( $array,array('token' => $this->getEditToken() ) );
+	function doWbGetEntities ($parameters){
+		$parameters['action'] = 'wbgetentities';
+		return $this->doRequest($parameters );
 	}
 
-	/**
-	 * This function returns and edit token from the api
-	 * @return string Edit token.
-	 **/
-	function getEditToken () {
-		if( isset( $this->token ) ){
-			return $this->token;
-		}
-		$apiresult = $this->doRequest( array('action' => 'query', 'prop' => 'info','intoken' => 'edit', 'titles' => 'Main Page') );
-		return $apiresult->value['query']['pages']['1']['edittoken'];
-	}
-
-	/**
-	 * This function resets the edit token incase we need to get a new one
-	 * //@todo catch token errors and call this to reset the token
-	 */
-	function resetEditToken () {
-		unset( $this->token );
-		return $this->getEditToken();
+	function doWbEditEntity ($parameters){
+		$parameters['action'] = 'wbeditentity';
+		$parameters['token'] = $this->getEditToken();
+		return $this->doRequest(null, $parameters );
 	}
 
 }
