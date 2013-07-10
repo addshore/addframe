@@ -13,10 +13,7 @@ $site['localhost']->userlogin = new UserLogin('localhost','Bot','botp123');
 
 //Login
 $site['localhost']->dologin();
+
 //Play
-$playpage = $site['localhost']->getPage($site['localhost']->userlogin->getUserPage()->title."/Sandbox");
-$playpage->getText();
-$playpage->appendText(".");
-$playpage->save("Save Summary",true);
 $playentity = $site['localhost']->getEntity('q2');
 $playentity->getEntity();

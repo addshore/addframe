@@ -13,9 +13,8 @@ class WikibaseEntity extends Page{
 	public $type;
 	public $parts;
 
-
 	function __construct( $handel, $id ) {
-		$this->id = $id;//@todo validate the id
+		$this->id = $id;//@todo validate  and correct the id (lower case)
 		$this->handel = $handel;
 	}
 
@@ -34,20 +33,12 @@ class WikibaseEntity extends Page{
 			$this->lastrevid = $x['lastrevid'];
 			$this->timestamp = $x['modified'];
 			$this->type = $x['type'];
-			if ( isset( $x['labels'] ) ) {
-				$this->parts['labels'] = $x['labels'];
-			}
-			if ( isset( $x['descriptions'] ) ) {
-				$this->parts['descriptions'] = $x['descriptions'];
-			}
-			if ( isset( $x['aliases'] ) ) {
-				$this->parts['aliases'] = $x['aliases'];
-			}
-			if ( isset( $x['claims'] ) ) {
-				$this->parts['claims'] = $x['claims'];
-			}
-			if ( isset( $x['sitelinks'] ) ) {
-				$this->parts['sitelinks'] = $x['sitelinks'];
+			//@todo this list of returns should probably be somewhere else
+			$canGet = Array('labels', 'descriptions', 'aliases', 'claims', 'sitelinks');
+			foreach ( $canGet as $returnType){
+				if ( isset( $x[$returnType]) ) {
+					$this->parts[$returnType] = $x[$returnType];
+				}
 			}
 			return $this->parts;
 		}
