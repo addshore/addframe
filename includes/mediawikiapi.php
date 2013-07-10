@@ -27,51 +27,46 @@ class MediawikiAPI {
 	**/
 	function doRequest ($query,$post=null){
 		$query['format'] = 'php';
-		$query = "?".http_build_query($query);
-		if ($post==null)
+
+		if ($post==null){
+			$query = "?".http_build_query($query);
 			$returned = $this->http->get($this->url.$query);
-		else
+		} else {
+			$query = "?".http_build_query($query);
 			$returned = $this->http->post($this->url.$query,$post);
+		}
 		return new mediawikiapiresult(unserialize($returned));
 	}
 
-	function doAction ($type,$post=null){
-		$query['action'] = $type;
-		return $this->doRequest ($query,$post);
-	}
-
 	function doLogin ($query,$post=null){
-		return $this->doAction ('login',$post);
-	}
-
-	function doLogout () {
-		return $this->doAction ('logout',null);
-	}
-
-	function doQuery ($parameters){
-		return  $this->doAction ( 'query', $parameters);
+		$parameters['action'] = 'login';
+		return $this->doRequest($parameters,$post);
 	}
 
 	function doEdit ($parameters){
-		return $this->doAction ( 'edit', $this->mergeToken($parameters) );
+		$parameters['action'] = 'edit';
+		return $this->doRequest(null, $this->mergeToken($parameters) );
 	}
 
 	function doPropRevsions($parameters){
+		$parameters['action'] = 'query';
 		$parameters['prop'] = 'revisions';
 		$parameters['rvprop'] = 'timestamp|content';
-		return $this->doQuery($parameters);
+		return $this->doRequest($parameters);
 	}
 
 	function doPropCategories($parameters){
+		$parameters['action'] = 'query';
 		$parameters['prop'] = 'categories';
 		$parameters['clprop'] = 'hidden';
 		$parameters['cllimit'] = '500';
-		return $this->doQuery($parameters);
+		return $this->doRequest($parameters);
 	}
 
 	function doListAllusers($parameters){
+		$parameters['action'] = 'query';
 		$parameters['list'] = 'allusers';
-		return $this->doQuery($parameters);
+		return $this->doRequest($parameters);
 	}
 
 	/**
@@ -88,18 +83,20 @@ class MediawikiAPI {
 	 * @return string Edit token.
 	 **/
 	function getEditToken () {
-		if( $this->token != null ){
+		if( isset( $this->token ) ){
 			return $this->token;
 		}
-		$apiresult = $this->doQuery( array('prop' => 'info','intoken' => 'edit', 'titles' => 'Main Page') );
+		$apiresult = $this->doRequest( array('action' => 'query', 'prop' => 'info','intoken' => 'edit', 'titles' => 'Main Page') );
 		return $apiresult->value['query']['pages']['1']['edittoken'];
 	}
 
 	/**
 	 * This function resets the edit token incase we need to get a new one
+	 * //@todo catch token errors and call this to reset the token
 	 */
 	function resetEditToken () {
-		$this->token = null;
+		unset( $this->token );
+		return $this->getEditToken();
 	}
 
 }

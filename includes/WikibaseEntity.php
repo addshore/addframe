@@ -52,7 +52,6 @@ class WikibaseEntity extends Page{
 		$param['action'] = 'wbeditentity';
 		$param['id'] = $this->id;
 		$post['data'] = $this->buildEntity();
-		$post['token'] = Globals::$Sites->getSite($this->handel)->api->getEditToken();
 		$result = Globals::$Sites->getSite($this->handel)->api->doRequest($param,$post);
 		//@todo this should return a status
 		print_r($result);
