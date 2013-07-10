@@ -15,6 +15,7 @@ $site['localhost']->userlogin = new UserLogin('localhost','Bot','botp123');
 $site['localhost']->dologin();
 
 //Play
+$site['localhost']->getEntity('q24');
 $playentity = $site['localhost']->getEntity('q24');
 $playentity->getEntity();
 echo $playentity->buildEntity()."\n";

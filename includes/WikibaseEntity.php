@@ -12,7 +12,7 @@ class WikibaseEntity extends Page{
 	public $lastrevid;
 	public $type;
 	public $parts;
-	
+
 	//@todo we should keep a changed status, if we call save without changing just dont bother..?
 
 	function __construct( $handel, $id ) {
@@ -65,6 +65,14 @@ class WikibaseEntity extends Page{
 		return json_encode($this->parts);
 	}
 
+	//add label if it doesn't already exist
+	function addLabel($language, $label){
+		if( !isset($this->parts['labels'][$language]) ){
+			$this->modifyLabel($label, $label);
+		}
+	}
+
+	//Modify the label (this will over write if it already exists)
 	function modifyLabel($language, $label){
 		$this->parts['labels'][$language]['language'] = $language;
 		$this->parts['labels'][$language]['value'] = $label;
