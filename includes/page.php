@@ -7,9 +7,9 @@
 class Page {
 
 	/**
-	 * @var string handel for associated site
+	 * @var string siteHandel for associated site
 	 */
-	public $handel;
+	public $siteHandel;
 	/**
 	 * @var string title of Page
 	 */
@@ -40,12 +40,17 @@ class Page {
 	public $protection;
 
 	/**
-	 * @param $handel
+	 * @param $siteHandel
 	 * @param $title
 	 */
-	function __construct( $handel , $title ) {
-		$this->handel = $handel;
+	function __construct( $siteHandel , $title ) {
+		$this->siteHandel = $siteHandel;
 		$this->title = $title;
+	}
+
+	//@todo load as much stuff as we can here
+	function loadPage(){
+
 	}
 
 	/**
@@ -54,7 +59,7 @@ class Page {
 	function getText(){
 		$param['titles'] = $this->title;
 
-		$result = Globals::$Sites->getSite($this->handel)->api->doPropRevsions($param);
+		$result = Globals::$Sites->getSite($this->siteHandel)->api->doPropRevsions($param);
 
 		foreach($result->value['query']['pages'] as $x){
 			$this->pageid = $x['pageid'];
@@ -85,7 +90,7 @@ class Page {
 		if($hidden === true){ $param['clshow'] = 'hidden';}
 		elseif($hidden === false){ $param['clshow'] = '!hidden';}
 
-		$result = Globals::$Sites->getSite($this->handel)->api->doPropCategories($param);
+		$result = Globals::$Sites->getSite($this->siteHandel)->api->doPropCategories($param);
 
 		foreach($result->value['query']['pages'] as $x){
 			$this->pageid = $x['pageid'];
@@ -100,7 +105,7 @@ class Page {
 	 * @param bool $minor should be minor?
 	 */
 	function save($summary = null, $minor = false){
-		Globals::$Sites->getSite($this->handel)->doEdit($this->title,$this->text,$summary,$minor);
+		Globals::$Sites->getSite($this->siteHandel)->doEdit($this->title,$this->text,$summary,$minor);
 	}
 
 	/**
@@ -142,9 +147,9 @@ class Page {
 
 	/**
 	 * Replace a string
-	 * @param $string The string that you want to replace.
-	 * @param $newstring The string that will replace the present string.
-	 * @return the new text of page
+	 * @param $string string The string that you want to replace.
+	 * @param $newstring string The string that will replace the present string.
+	 * @return string the new text of page
 	 **/
 	function replaceString( $string, $newstring ){
 		$this->text = str_replace( $string, $newstring, $this->text );
@@ -178,7 +183,7 @@ class Page {
 	 */
 	function getEntityFromPage()
 	{
-		//@todo this can only work if we also know the pages language / sitelink code (could we use handel?)
+		//@todo this can only work if we also know the pages language / sitelink code (could we use siteHandel?)
 		//return new WikibaseEntity('')
 	}
 }

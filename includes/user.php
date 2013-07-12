@@ -8,9 +8,9 @@
 class User {
 
 	/**
-	 * @var string handel for associated site
+	 * @var string siteHandel for associated site
 	 */
-	public $handel;
+	public $siteHandel;
 	/**
 	 * @var string username
 	 */
@@ -36,8 +36,8 @@ class User {
 	 * @param $handel
 	 * @param $username
 	 */
-	function __construct( $handel, $username ) {
-		$this->handel = $handel;
+	function __construct( $siteHandel, $username ) {
+		$this->siteHandel = $siteHandel;
 		$this->username = $username;
 	}
 
@@ -45,14 +45,14 @@ class User {
 	 * @return Page object for this users page
 	 */
 	function getUserPage(){
-		return new Page($this->handel,"User:$this->username");
+		return new Page($this->siteHandel,"User:$this->username");
 	}
 
 	/**
 	 * @return Page object for this users talk pages
 	 */
 	function getUserTalkPage(){
-		return new Page($this->handel,"User talk:$this->username");
+		return new Page($this->siteHandel,"User talk:$this->username");
 	}
 
 	/**
@@ -63,7 +63,7 @@ class User {
 		$param['auprop'] = 'rights';
 		$param['aufrom'] = $this->username;
 		$param['aulimit'] = '1';
-		$result = Globals::$Sites->getSite($this->handel)->api->doListAllusers($param);
+		$result = Globals::$Sites->getSite($this->siteHandel)->api->doListAllusers($param);
 		$this->rights = $result->value['query']['allusers']['0']['rights'];
 		$this->userid = $result->value['query']['allusers']['0']['userid'];
 		return $this->rights;
@@ -77,7 +77,7 @@ class User {
 		$param['auprop'] = 'editcount';
 		$param['aufrom'] = $this->username;
 		$param['aulimit'] = '1';
-		$result = Globals::$Sites->getSite($this->handel)->api->doListAllusers($param);
+		$result = Globals::$Sites->getSite($this->siteHandel)->api->doListAllusers($param);
 		$this->editcount = $result->value['query']['allusers']['0']['editcount'];
 		$this->userid = $result->value['query']['allusers']['0']['userid'];
 		$this->editcounttime = time();
