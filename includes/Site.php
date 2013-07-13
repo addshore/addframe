@@ -11,6 +11,7 @@ class Mediawiki {
 	private $http;
 	private $token;
 	private $loggedIn;
+	private $namespaces;
 	/**
 	 * @var UserLogin
 	 */
@@ -92,6 +93,7 @@ class Mediawiki {
 
 	function getSitematrix () {
 		//@todo catch if sitematrix isnt recognised by the api
+		//@todo possible store this in the object? (not really needed)
 		$siteArray = array();
 		$returned = $this->doRequest( array('action' => 'sitematrix', 'smlangprop' => 'site') );
 		foreach($returned['sitematrix'] as $langmatrix){
@@ -104,32 +106,51 @@ class Mediawiki {
 	}
 
 	/**
+	 * Gets and returns array of namespaces for the site and aliases
+	 *
+	 * @return array of namespaces
+	 */
+	function getNamespaces () {
+		if(!isset($this->namespaces)){
+			$returned = $this->doRequest(array('action' => 'query', 'meta' => 'siteinfo', 'siprop' => 'namespaces|namespacealiases'));
+			foreach( $returned['query']['namespaces'] as $key => $nsArray){
+				$this->namespaces[$key][] = $nsArray['*'];
+				$this->namespaces[$key][] = $nsArray['canonical'];
+			}
+			foreach( $returned['query']['namespacealiases'] as $nsArray){
+				$this->namespaces[$nsArray['id']][] = $nsArray['*'];
+			}
+			$this->namespaces = array_values(array_unique($this->namespaces));
+		}
+		return $this->namespaces;
+	}
+
+	/**
 	 * Logs in to the UserLogin associated with the site if not already logged in
 	 * @return bool
 	 * @throws Exception
 	 */
 	function doLogin () {
-		if($this->loggedIn == true){
-			return $this->loggedIn;
-		}
-		$post['action'] = 'login';
-		$post['lgname'] = $this->userlogin->username;
-		$post['lgpassword'] = $this->userlogin->getPassword();
+		if($this->loggedIn !== true){
+			$post['action'] = 'login';
+			$post['lgname'] = $this->userlogin->username;
+			$post['lgpassword'] = $this->userlogin->getPassword();
 
-		$result = $this->doRequest(null,$post);
-
-		if ($result->statusCode == 'NeedToken') {
-			$post['lgtoken'] = $result->getInside()['token'];
 			$result = $this->doRequest(null,$post);
-		}
 
-		if ($result->statusCode == "Success") {
-			$this->loggedIn = true;
-			return $this->loggedIn;
+			if ($result->statusCode == 'NeedToken') {
+				$post['lgtoken'] = $result->getInside()['token'];
+				$result = $this->doRequest(null,$post);
+			}
+
+			if ($result->statusCode == "Success") {
+				$this->loggedIn = true;
+			}
+			else{
+				throw new Exception('Failed login');
+			}
 		}
-		else{
-			throw new Exception('Failed login');
-		}
+		return $this->loggedIn;
 	}
 
 	/**
