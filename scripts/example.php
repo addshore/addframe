@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is first 'test' script
+ * This file is an example use of various parts of the frame
  * @author Addshore
  **/
 
@@ -13,10 +13,3 @@ $site['localhost']->userlogin = new UserLogin('localhost','Bot','botp123');
 
 //Login
 $site['localhost']->dologin();
-
-//Play
-$playentity = $site['localhost']->getEntity('q66');
-
-$playentity->loadEntity();
-print_r($playentity->languageData);
-//$playentity->saveEntity();
