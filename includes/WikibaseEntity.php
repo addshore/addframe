@@ -100,7 +100,7 @@ class WikibaseEntity extends Page{
 	function removeSitelink($siteid){ $this->removeLanguageData('sitelinks',$siteid); }
 
 	function modifyAliases($language, $value){
-		$this->languageData['aliases'][$siteid]['site'] = $language;
+		$this->languageData['aliases'][$language]['site'] = $language;
 		$this->languageData['aliases'][$language]['value'] = $value;
 	}
 
@@ -116,7 +116,16 @@ class WikibaseEntity extends Page{
 		}
 	}
 
-	//@todo aliases
+	function addAlias($language, $string){
+		$this->languageData['aliases'][$language][] = Array('language' => $language, 'value' => $string);
+	}
+	function removeAlias($language, $string){
+		foreach($this->languageData['aliases'][$language] as $key => $alias){
+			if( $alias['value'] == $string ){
+				unset($this->languageData['aliases'][$language][$key]);
+			}
+		}
+	}
 
 	//@todo statements
 
