@@ -9,8 +9,9 @@
 require_once( dirname(__FILE__).'/../init.php' );
 
 //Create a site
-$wikidata = Globals::$Sites->newSite("wikidata","www.wikidata.org","/w/api.php");
-$wikidata->newLogin('Bot','botp123',true);
+$wmFamily = new Family('wikimedia',new UserLogin('localhost','Bot','botp123'),'meta.wikimedia.org/w/api.php');
+$wikidata = $wmFamily->addSiteFromMatrix('wikidatawiki');
+$wikidata->doLogin();
 
 $dbConfig = parse_ini_file('~/replica.my.cnf');
 $db = new Mysql('tools-db','3306',$dbConfig['user'],$dbConfig['password'],$dbConfig['user'].'wikidata_p');

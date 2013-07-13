@@ -8,17 +8,11 @@ class SiteFactory extends Registry{
 
 	/**
 	 * @param $handel string of site
-	 * @param null $hostname
-	 * @param null $api
+	 * @param $api string url pointing to api
 	 * @return Mediawiki
 	 */
-	function newSite( $handel, $hostname = null, $api = null){
-		if(isset($hostname) && isset($api)){
-			$this->$handel = new Mediawiki($handel,$hostname,$api);
-		}
-		else{
-			//@todo lookup site from a sitematrix kind of thing
-		}
+	function addSite( $handel, $api){
+		$this->$handel = new Mediawiki($handel,$api);
 		return $this->$handel;
 	}
 
@@ -27,11 +21,6 @@ class SiteFactory extends Registry{
 	 * @return Mediawiki
 	 */
 	function getSite( $handel ){
-		if( isset($this->$handel) ){
-			return $this->$handel;
-		} else{
-			//return site from config
-		}
-
+		return $this->$handel;
 	}
 }

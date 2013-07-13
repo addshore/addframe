@@ -25,7 +25,7 @@ class WikibaseEntity {
 	 */
 	function loadEntity(){
 		$param['ids'] = $this->id;
-		$result = Globals::$Sites->getSite($this->siteHandel)->api->doWbGetEntities($param);
+		$result = Globals::$Sites->getSite($this->siteHandel)->doWbGetEntities($param);
 		foreach($result->value['entities'] as $x){
 			$this->pageid = $x['pageid'];
 			$this->ns = $x['ns'];
@@ -40,8 +40,8 @@ class WikibaseEntity {
 					$this->languageData[$returnType] = $x[$returnType];
 				}
 			}
-			return $this->languageData;
 		}
+		return $this->languageData;
 	}
 
 	/**
@@ -51,7 +51,7 @@ class WikibaseEntity {
 		//@todo some of this should probably go in the api...
 		$param['id'] = $this->id;
 		$param['data'] = $this->serializaData();
-		return Globals::$Sites->getSite($this->siteHandel)->api->doWbEditEntity($param);
+		return Globals::$Sites->getSite($this->siteHandel)->doWbEditEntity($param);
 	}
 
 	/**

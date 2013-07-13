@@ -8,15 +8,16 @@
 require_once( dirname(__FILE__).'/../init.php' );
 
 //Create a site
-$testsite = Globals::$Sites->newSite("localhost","127.0.0.1","/Mediawiki/api.php");
+$testsite = Globals::$Sites->addSite("localhost","127.0.0.1/Mediawiki/api.php");
 $testsite->newLogin('Bot','botp123',true);
 
 //Play with a regular page
 $playpage = $testsite->getPage("PageTitle");
 $playpage->getText();
 $playpage->emptyText();
-$playpage->text	= "This is some starting text";
+$playpage->text	= "This is some starting text with a random number >> ".rand(0,100);
 $playpage->appendText("\nThis shoulddd be added to the end of the page");
+$playpage->prependText("This is the first line! :O\n");
 $playpage->replaceString('shoulddd', 'should');
 $playpage->save("edit summary for edit",true);
 

@@ -59,7 +59,7 @@ class Page {
 	function getText(){
 		$param['titles'] = $this->title;
 
-		$result = Globals::$Sites->getSite($this->siteHandel)->api->doPropRevsions($param);
+		$result = Globals::$Sites->getSite($this->siteHandel)->doPropRevsions($param);
 
 		foreach($result->value['query']['pages'] as $x){
 			$this->ns = $x['ns'];
@@ -72,8 +72,8 @@ class Page {
 			{
 				//MSG page doesn't exist
 			}
-			return $this->text;
 		}
+		return $this->text;
 	}
 
 	/**
@@ -96,14 +96,14 @@ class Page {
 		if($hidden === true){ $param['clshow'] = 'hidden';}
 		elseif($hidden === false){ $param['clshow'] = '!hidden';}
 
-		$result = Globals::$Sites->getSite($this->siteHandel)->api->doPropCategories($param);
+		$result = Globals::$Sites->getSite($this->siteHandel)->doPropCategories($param);
 
 		foreach($result->value['query']['pages'] as $x){
 			$this->pageid = $x['pageid'];
 			$this->ns = $x['ns'];
 			$this->categories = $x['categories'];
-			return $this->categories;
 		}
+		return $this->categories;
 	}
 
 	/**
@@ -141,7 +141,7 @@ class Page {
 
 	/**
 	 * Find a string
-	 * @param $string The string that you want to find.
+	 * @param $string string The string that you want to find.
 	 * @return bool value (1 found and 0 not-found)
 	 **/
 	function findString( $string ){
