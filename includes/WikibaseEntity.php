@@ -4,7 +4,7 @@
  * This class is designed to represent a Mediawiki Wikibase entity
  * @author Addshore
  **/
-class WikibaseEntity extends Page{
+class WikibaseEntity {
 
 	public $siteHandel;
 	public $id;
@@ -32,7 +32,7 @@ class WikibaseEntity extends Page{
 			$this->title = $x['title'];
 			$this->lastrevid = $x['lastrevid'];
 			$this->timestamp = $x['modified'];
-			$this->entityType = $x['entityType'];
+			$this->entityType = $x['type'];
 			//@todo this list of returns should probably be somewhere else
 			$canGet = Array('labels', 'descriptions', 'aliases', 'sitelinks');
 			foreach ( $canGet as $returnType){
@@ -66,9 +66,9 @@ class WikibaseEntity extends Page{
 	}
 
 	/**
-	 * @param $type type of language data to modify
-	 * @param $identifier of the data such as language or site
-	 * @param $value value to set the data to to the identifier
+	 * @param $type string type of language data to modify
+	 * @param $identifier string of the data such as language or site
+	 * @param $value string value to set the data to to the identifier
 	 */
 	function modifyLanguageData($type, $identifier, $value){
 		$idkey = 'language'; //default
@@ -120,10 +120,16 @@ class WikibaseEntity extends Page{
 		$this->languageData['aliases'][$language][] = Array('language' => $language, 'value' => $string);
 	}
 	function removeAlias($language, $string){
-		foreach($this->languageData['aliases'][$language] as $key => $alias){
-			if( $alias['value'] == $string ){
-				unset($this->languageData['aliases'][$language][$key]);
+		if( isset($this->languageData['aliases'][$language]) ){
+			foreach($this->languageData['aliases'][$language] as $key => $alias){
+				if( $alias['value'] == $string ){
+					unset($this->languageData['aliases'][$language][$key]);
+					$this->languageData['aliases'][$language] = array_values( $this->languageData['aliases'][$language] );
+				}
 			}
+		}
+		else{
+			//NOTICE: no aliases to remove for this language...
 		}
 	}
 
