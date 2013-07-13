@@ -15,7 +15,7 @@ $site['localhost']->userlogin = new UserLogin('localhost','Bot','botp123');
 $site['localhost']->dologin();
 
 //Play
-$playentity = $site['localhost']->getEntity('q33');
+$playentity = $site['localhost']->getEntity('q66');
 
 $playentity->loadEntity();
 print_r($playentity->languageData);

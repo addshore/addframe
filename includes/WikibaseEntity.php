@@ -37,17 +37,7 @@ class WikibaseEntity extends Page{
 			$canGet = Array('labels', 'descriptions', 'aliases', 'sitelinks');
 			foreach ( $canGet as $returnType){
 				if ( isset( $x[$returnType]) ) {
-					//@todo work out how to handle claims
-					if( $returnType == 'aliases' ){
-						//Aliases are an array of arrays, so split them up into a simple array
-						foreach ($x[$returnType] as $xLanguage => $xArrayList){
-							foreach ($xArrayList as $xArray){
-								$this->languageData[$returnType][$xLanguage][] = $xArray['value'];
-							}
-						}
-					}else{
-						$this->languageData[$returnType] = $x[$returnType];
-					}
+					$this->languageData[$returnType] = $x[$returnType];
 				}
 			}
 			return $this->languageData;
@@ -60,7 +50,7 @@ class WikibaseEntity extends Page{
 	function saveEntity(){
 		//@todo some of this should probably go in the api...
 		$param['id'] = $this->id;
-		$param['data'] = $this->buildEntity();
+		$param['data'] = $this->serializaData();
 		$result = Globals::$Sites->getSite($this->siteHandel)->api->doWbEditEntity($param);
 		print_r($result);
 		return null;
@@ -70,70 +60,59 @@ class WikibaseEntity extends Page{
 	 * Builds an entity out of the languageData specified
 	 * @return string of json encoded languageData
 	 */
-	function buildEntity(){
+	function serializaData(){
 		//@todo remove empty languageData and normalise stuff
 		return json_encode($this->languageData);
 	}
 
-	//@todo below labels and descriptions are effectively the same.. use the same stuff
-
-	//Modify the label (this will over write if it already exists)
-	function modifyLabel($language, $value){
-		$this->languageData['labels'][$language]['language'] = $language;
-		$this->languageData['labels'][$language]['value'] = $value;
+	/**
+	 * @param $type type of language data to modify
+	 * @param $identifier of the data such as language or site
+	 * @param $value value to set the data to to the identifier
+	 */
+	function modifyLanguageData($type, $identifier, $value){
+		$idkey = 'language'; //default
+		if( $type == 'sitelinks' ){ $idkey = 'sites'; }
+		$this->languageData[$type][$identifier][$idkey] = $identifier;
+		$this->languageData[$type][$identifier]['value'] = $value;
 	}
 
-	//add label if it doesn't already exist
-	function addLabel($language, $value){
-		if( !isset($this->languageData['labels'][$language]) ){
-			$this->modifyLabel($language, $value);
+	function addLanguageData($type, $identifier, $value){
+		if( !isset($this->languageData[$type][$identifier]) ){
+			$this->modifyLanguageData($type, $identifier, $value);
 		}
 	}
 
-	//remove the label for the language
-	function removeLabel($language){
-		if( isset($this->languageData['labels'][$language]) ){
-			unset($this->languageData['labels'][$language]);
+	function removeLanguageData($type, $identifier){
+		if( isset($this->languageData[$type][$identifier]) ){
+			unset($this->languageData[$type][$identifier]);
 		}
 	}
 
-	//Modify the description (this will over write if it already exists)
-	function modifyDescription($language, $value){
-		$this->languageData['descriptions'][$language]['language'] = $language;
-		$this->languageData['descriptions'][$language]['value'] = $value;
+	function modifyLabel($language, $value){ $this->modifyLanguageData('labels',$language,$value); }
+	function addLabel($language, $value){ $this->addLanguageData('labels', $language, $value); }
+	function removeLabel($language){ $this->removeLanguageData('labels',$language); }
+	function modifyDescription($language, $value){ $this->modifyLanguageData('descriptions',$language,$value); }
+	function addDescription($language, $value){ $this->addLanguageData('descriptions', $language, $value); }
+	function removeDescription($language){ $this->removeLanguageData('descriptions',$language); }
+	function modifySitelink($siteid, $value){ $this->modifyLanguageData('sitelinks',$siteid,$value); }
+	function addSitelink($siteid, $value){ $this->addLanguageData('sitelinks', $siteid, $value); }
+	function removeSitelink($siteid){ $this->removeLanguageData('sitelinks',$siteid); }
+
+	function modifyAliases($language, $value){
+		$this->languageData['aliases'][$siteid]['site'] = $language;
+		$this->languageData['aliases'][$language]['value'] = $value;
 	}
 
-	//add description if it doesn't already exist
-	function addDescription($language, $value){
-		if( !isset($this->languageData['descriptions'][$language]) ){
-			$this->modifyLabel($language, $value);
+	function addAliases($language, $value){
+		if( !isset($this->languageData['aliases'][$language]) ){
+			$this->modifySitelink($language, $value);
 		}
 	}
 
-	//remove the description for the language
-	function removeDescription($language){
-		if( isset($this->languageData['descriptions'][$language]) ){
-			unset($this->languageData['descriptions'][$language]);
-		}
-	}
-
-	//Modify the sitelink (this will over write if it already exists)
-	function modifySitelink($language, $value){
-		$this->languageData['sitelinks'][$language]['language'] = $language;
-		$this->languageData['sitelinks'][$language]['value'] = $value;
-	}
-
-	//add sitelink if it doesn't already exist
-	function addSitelink($language, $value){
-		if( !isset($this->languageData['sitelinks'][$language]) ){
-			$this->modifyLabel($language, $value);
-		}
-	}
-
-	//remove the sitelink for the language
-	function removeSitelink($language){
-		if( isset($this->languageData['sitelinks'][$language]) ){
-			unset($this->languageData['sitelinks'][$language]);
+	function removeAliases($language){
+		if( isset($this->languageData['aliases'][$language]) ){
+			unset($this->languageData['aliases'][$language]);
 		}
 	}
 
