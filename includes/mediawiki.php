@@ -21,8 +21,9 @@ class Mediawiki {
 	public $userlogin;
 
 	/**
+	 * @param $handel string handel used through script for this site
 	 * @param $hostname string Hostname of Mediawiki site
-	 * @param null $api Location in relation to hostname of api.php
+	 * @param $api string Location in relation to hostname of api.php
 	 */
 	function __construct ($handel, $hostname,$api = null) {
 		$this->handel = $handel;
@@ -76,7 +77,6 @@ class Mediawiki {
 		}
 
 		if ($result->statusCode == "Success") {
-			print "Log in: ".$result->statusCode."\n";
 			return true;
 		}
 		else{
@@ -98,10 +98,7 @@ class Mediawiki {
 		if( isset($summary) ) { $param['summary'] = $summary; }
 		if( $minor == true ) { $param['minor'] = '1'; }
 
-		$result = $this->api->doEdit($param);
-
-		print "Edit: ".$result->statusCode."\n";
-		return $result;
+		return $this->api->doEdit($param);
 	}
 	
 }

@@ -14,6 +14,15 @@ $site['localhost']->userlogin = new UserLogin('localhost','Bot','botp123');
 //Login
 $site['localhost']->dologin();
 
+//Play with a regular page
+$playpage = $site['localhost']->getPage("PageTitle");
+$playpage->getText();
+$playpage->emptyText();
+$playpage->text	= "This is some starting text";
+$playpage->appendText("\nThis shoulddd be added to the end of the page");
+$playpage->replaceString('shoulddd', 'should');
+$playpage->save("edit summary for edit",true);
+
 //Play with a wikibase entity
 $playentity = $site['localhost']->getEntity('q70');
 $playentity->loadEntity();

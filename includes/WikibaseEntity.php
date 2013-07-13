@@ -51,9 +51,7 @@ class WikibaseEntity {
 		//@todo some of this should probably go in the api...
 		$param['id'] = $this->id;
 		$param['data'] = $this->serializaData();
-		$result = Globals::$Sites->getSite($this->siteHandel)->api->doWbEditEntity($param);
-		print_r($result);
-		return null;
+		return Globals::$Sites->getSite($this->siteHandel)->api->doWbEditEntity($param);
 	}
 
 	/**
@@ -129,7 +127,7 @@ class WikibaseEntity {
 			}
 		}
 		else{
-			//NOTICE: no aliases to remove for this language...
+			//MSG: no aliases to remove for this language...
 		}
 	}
 

@@ -49,9 +49,9 @@ class Page {
 	}
 
 	//@todo load as much stuff as we can here
-	function loadPage(){
+	//function loadPage(){
 
-	}
+	//}
 
 	/**
 	 * @return string text of Page
@@ -62,10 +62,16 @@ class Page {
 		$result = Globals::$Sites->getSite($this->siteHandel)->api->doPropRevsions($param);
 
 		foreach($result->value['query']['pages'] as $x){
-			$this->pageid = $x['pageid'];
 			$this->ns = $x['ns'];
-			$this->text = $x['revisions']['0']['*'];
-			$this->timestamp = $x['revisions']['0']['timestamp'];
+			if( !isset( $x['missing'] ) ){
+				$this->pageid = $x['pageid'];
+				$this->text = $x['revisions']['0']['*'];
+				$this->timestamp = $x['revisions']['0']['timestamp'];
+			}
+			else
+			{
+				//MSG page doesn't exist
+			}
 			return $this->text;
 		}
 	}
