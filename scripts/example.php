@@ -8,14 +8,11 @@
 require_once( dirname(__FILE__).'/../init.php' );
 
 //Create a site
-$site['localhost'] = Globals::$Sites->newSite("localhost","127.0.0.1","/Mediawiki/api.php");
-$site['localhost']->userlogin = new UserLogin('localhost','Bot','botp123');
-
-//Login
-$site['localhost']->dologin();
+$testsite = Globals::$Sites->newSite("localhost","127.0.0.1","/Mediawiki/api.php");
+$testsite->newLogin('Bot','botp123',true);
 
 //Play with a regular page
-$playpage = $site['localhost']->getPage("PageTitle");
+$playpage = $testsite->getPage("PageTitle");
 $playpage->getText();
 $playpage->emptyText();
 $playpage->text	= "This is some starting text";
@@ -24,7 +21,7 @@ $playpage->replaceString('shoulddd', 'should');
 $playpage->save("edit summary for edit",true);
 
 //Play with a wikibase entity
-$playentity = $site['localhost']->getEntity('q70');
+$playentity = $testsite->getEntity('q70');
 $playentity->loadEntity();
 $playentity->addLabel('en-gb','Item Label');
 $playentity->addDescription('en-gb', 'This is a description added by the script');

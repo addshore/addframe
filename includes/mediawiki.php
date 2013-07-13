@@ -60,6 +60,17 @@ class Mediawiki {
 		return new WikibaseEntity($this->handel,$id);
 	}
 
+	function setLogin($userLogin){
+		$this->userlogin = $userLogin;
+	}
+
+	function newLogin($username, $password, $doLogin = false) {
+		$this->setLogin( new UserLogin($this->handel,$username,$password) );
+		if($doLogin === true){
+			$this->doLogin();
+		}
+	}
+
 	/**
 	 * @return bool
 	 * @throws Exception
