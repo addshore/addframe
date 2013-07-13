@@ -12,10 +12,14 @@ require_once( dirname(__FILE__).'/../init.php' );
 $wikidata = Globals::$Sites->newSite("wikidata","www.wikidata.org","/w/api.php");
 $wikidata->newLogin('Bot','botp123',true);
 
-//connect to database
-//query for the 100 least recently checked articles
-//we will have 'language', 'site', 'namespace', 'title'
-//foreach row as $pageinfo
+$dbConfig = parse_ini_file('~/replica.my.cnf');
+$db = new Mysql('tools-db','3306',$dbConfig['user'],$dbConfig['password'],$dbConfig['user'].'wikidata_p');
+unset($dbConfig);
+$dbQuery = $db->select('iwlink','*',null,array('ORDER BY' => 'updated ASC', 'LIMIT' => '100'));
+$rows = $db->mysql2array($dbQuery);
+foreach($rows as $row){
+
+}
 	//getlogin for 'language'.'site'
 	//create a page for 'namespace.title'
 	//load text

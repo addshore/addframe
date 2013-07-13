@@ -27,6 +27,11 @@ class SiteFactory extends Registry{
 	 * @return Mediawiki
 	 */
 	function getSite( $handel ){
-		return $this->$handel;
+		if( isset($this->$handel) ){
+			return $this->$handel;
+		} else{
+			//return site from config
+		}
+
 	}
 }

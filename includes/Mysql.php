@@ -30,8 +30,7 @@ class Mysql {
 	 * @param $db string Database to connect to
 	 * @param bool $readonly
 	 */
-	//@todo default mysql port?
-	public function __construct( $host, $port, $user, $pass, $db, $readonly = false ) {
+	public function __construct( $host, $port = '3306', $user, $pass, $db, $readonly = false ) {
 		$this->mHost = $host;
 		$this->mPort = $port;
 		$this->mUser = $user;
