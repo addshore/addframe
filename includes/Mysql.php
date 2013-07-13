@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class Mysql
+ */
 class Mysql {
 	/**
 	 * MySQL object
@@ -20,15 +23,14 @@ class Mysql {
 	private $mDb;
 
 	/**
-	 * Construct function, front-end for mysql_connect.
-	 * @param string $host Server to connect to
-	 * @param string $port Port
-	 * @param string $user Username
-	 * @param string $pass Password
-	 * @param string $db Database
-	 * @param bool readonly Read-only mode. Default false
-	 * @return void
+	 * @param $host string Host of server
+	 * @param $port string Post of server
+	 * @param $user string User for server
+	 * @param $pass string Password for user
+	 * @param $db string Database to connect to
+	 * @param bool $readonly
 	 */
+	//@todo default mysql port?
 	public function __construct( $host, $port, $user, $pass, $db, $readonly = false ) {
 		$this->mHost = $host;
 		$this->mPort = $port;
@@ -40,6 +42,9 @@ class Mysql {
 		$this->connectToServer();
 	}
 
+	/**
+	 * @param bool $force
+	 */
 	private function connectToServer( $force = false ) {
 		$this->mConn = mysql_connect( $this->mHost.':'.$this->mPort, $this->mUser, $this->mPass, $force );
 		mysql_select_db( $this->mDb, $this->mConn );
@@ -180,10 +185,11 @@ class Mysql {
 
 	/**
 	 * INSERT frontend
-	 * @param string $table Table to insert into.
-	 * @param array $values Values to set.
-	 * @param array $options Options
+	 * @param $table string Table to insert into.
+	 * @param $values array Values to set.
+	 * @param $options array Options
 	 * @return object MySQL object
+	 * @throws Exception Write query called while under read-only mode
 	 */
 	public function insert( $table, $values, $options = array() ) {
 		//echo "Running insert.";
@@ -213,10 +219,11 @@ class Mysql {
 
 	/**
 	 * UPDATE frontend
-	 * @param string $table Table to update.
-	 * @param array $values Values to set.
-	 * @param array $conds Conditions to update. Default *, updates every entry.
+	 * @param $table string Table to update.
+	 * @param $values array Values to set.
+	 * @param $conds string Conditions to update. Default *, updates every entry.
 	 * @return object MySQL object
+	 * @throws Exception Write query called while under read-only mode
 	 */
 	public function update( $table, $values, $conds = '*' ) {
 		if( $this->mReadonly == true ) throw new Exception( "Write query called while under read-only mode" );
@@ -241,9 +248,10 @@ class Mysql {
 
 	/**
 	 * DELETE frontend
-	 * @param string $table Table to delete from.
-	 * @param array $conds Conditions to delete. Default *, deletes every entry.
+	 * @param $table string Table to delete from.
+	 * @param $conds array Conditions to delete. Default *, deletes every entry.
 	 * @return object MySQL object
+	 * @throws Exception Write query called while under read-only mode
 	 */
 	public function delete( $table, $conds ) {
 		if( $this->mReadonly == true ) throw new Exception( "Write query called while under read-only mode" );
