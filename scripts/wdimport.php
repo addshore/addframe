@@ -9,8 +9,8 @@
 require_once( dirname(__FILE__).'/../init.php' );
 
 //Create a site
-$wmFamily = new Family('wikimedia',new UserLogin('localhost','Bot','botp123'),'meta.wikimedia.org/w/api.php');
-$wikidata = $wmFamily->addSiteFromMatrix('wikidatawiki');
+$wm = new Family('wikimedia',new UserLogin('localhost','Bot','botp123'),'meta.wikimedia.org/w/api.php');
+$wikidata = $wm->addSiteFromMatrix('wikidatawiki');
 $wikidata->doLogin();
 
 $dbConfig = parse_ini_file('~/replica.my.cnf');
@@ -19,9 +19,10 @@ unset($dbConfig);
 $dbQuery = $db->select('iwlink','*',null,array('ORDER BY' => 'updated ASC', 'LIMIT' => '100'));
 $rows = $db->mysql2array($dbQuery);
 foreach($rows as $row){
+	$site = $wm->getSite($row['language'].$row['site']);
+	$site->doLogin();
 
 }
-	//getlogin for 'language'.'site'
 	//create a page for 'namespace.title'
 	//load text
 	//match remaining interwiki links

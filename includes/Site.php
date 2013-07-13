@@ -10,6 +10,7 @@ class Mediawiki {
 	public $url;
 	private $http;
 	private $token;
+	private $loggedIn;
 	/**
 	 * @var UserLogin
 	 */
@@ -23,6 +24,7 @@ class Mediawiki {
 		$this->handel = $handel;
 		$this->url = $url;
 		$this->http = new Http();
+		$this->loggedIn = false;
 	}
 
 	function getPage ($page) {
@@ -102,11 +104,14 @@ class Mediawiki {
 	}
 
 	/**
-	 * Logs in to the UserLogin associated with the site
+	 * Logs in to the UserLogin associated with the site if not already logged in
 	 * @return bool
 	 * @throws Exception
 	 */
 	function doLogin () {
+		if($this->loggedIn == true){
+			return $this->loggedIn;
+		}
 		$post['action'] = 'login';
 		$post['lgname'] = $this->userlogin->username;
 		$post['lgpassword'] = $this->userlogin->getPassword();
@@ -119,7 +124,8 @@ class Mediawiki {
 		}
 
 		if ($result->statusCode == "Success") {
-			return true;
+			$this->loggedIn = true;
+			return $this->loggedIn;
 		}
 		else{
 			throw new Exception('Failed login');
