@@ -23,9 +23,9 @@ foreach($rows as $row){
 	$site->doLogin();
 	$page = $site->getPage($site->getNamespace($row['namespace']).$row['title']);
 	$page->getText();
+	$pageInterwikis = $page->getInterwikisFromtext();
 
 }
-	//match remaining interwiki links
 	//find item for the article
 		//if no item..
 			//foreach interwikilink
