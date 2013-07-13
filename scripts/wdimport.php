@@ -21,10 +21,10 @@ $rows = $db->mysql2array($dbQuery);
 foreach($rows as $row){
 	$site = $wm->getSite($row['language'].$row['site']);
 	$site->doLogin();
+	$page = $site->getPage($site->getNamespace($row['namespace']).$row['title']);
+	$page->getText();
 
 }
-	//create a page for 'namespace.title'
-	//load text
 	//match remaining interwiki links
 	//find item for the article
 		//if no item..

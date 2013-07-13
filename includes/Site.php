@@ -125,6 +125,13 @@ class Mediawiki {
 		return $this->namespaces;
 	}
 
+	function getNamespace ($id){
+		if(!isset($this->namespaces)){
+			$this->getNamespaces();
+		}
+		return $this->namespaces[$id][0];
+	}
+
 	/**
 	 * Logs in to the UserLogin associated with the site if not already logged in
 	 * @return bool
