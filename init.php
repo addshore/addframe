@@ -22,6 +22,7 @@ include $IP . 'includes/UserLogin.php';
 include $IP . 'includes/Page.php';
 include $IP . 'includes/Category.php';
 include $IP . 'includes/WikibaseEntity.php';
+include $IP . 'includes/Mysql.php';
 
 //Factory for creating sites
 Globals::$Sites = new SiteFactory();
