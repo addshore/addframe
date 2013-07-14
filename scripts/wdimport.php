@@ -19,32 +19,34 @@ unset($dbConfig);
 $dbQuery = $db->select('iwlink','*',null,array('ORDER BY' => 'updated ASC', 'LIMIT' => '100'));
 $rows = $db->mysql2array($dbQuery);
 foreach($rows as $row){
-	$site = $wm->getSite($row['language'].$row['site']);
-	$site->doLogin();
 
-	//##--## Find the entity that we want to work with!
-	$basePage = $site->getPage($site->getNamespace($row['namespace']).$row['title']);
+	// Load our site
+	$baseSite = $wm->getSite($row['language'].$row['site']);
+	$baseSite->doLogin();
+
+	// Find the entity we want to work with
+	$basePage = $baseSite->getPage($baseSite->getNamespace($row['namespace']).$row['title']);
 	$basePage->load();
 	$pageInterwikis = $basePage->getInterwikisFromtext();
-	$baseEntity = $site->getEntityFromPage($site->dbname,$basePage->title);
+	$baseEntity = $baseSite->getEntityFromPage($baseSite->dbname,$basePage->title);
 	if( !isset($baseEntity->id) ){
-		//@todo make this looking a bit recursive? (maybe a function)
 		foreach($pageInterwikis as $interwikiData){
-			//find item (if we do break out of the loop)!
+			$remoteSite = $wm->getSite($interwikiData['site'].$row['site']);
+			$remoteEntity = $remoteSite->getEntityFromPage($interwikiData['link']);
+			if( isset($remoteEntity->id) ){
+				$baseEntity = $remoteEntity;
+				break 1;
+			}
 		}
-		//also look for links between projects here and thus entities
 	}
 	if( !isset($baseEntity->id) ){
-		//then we are working on a new entity!
+		//look for entities for links to other sites! wikipedia {{wikipedia}}, [[wikipedia:en:target]] wikivoyage
+	}
+	if( !isset($baseEntity->id) ){
+		//then we are working on a new entity! (we currently don't have to do anything extra..)
 	}
 
-	//##--## Add stuff to the entity!
-
-	//First look for links to other sites! wikipedia {{wikipedia}}, [[wikipedia:en:target]] wikivoyage
-		//if found, add them
-		//if wikipedia
-			//add label
-			//add aliases from redirects?
+	// Add everything we can to the entity
 	foreach($pageInterwikis as $interwikiData){
 		//@todo need a way of converting the match of en:pagename to enwiki:pagename
 		//$baseEntity->addSitelink()
@@ -52,6 +54,12 @@ foreach($rows as $row){
 			//add label
 			//add aliases from redirects?
 	}
+
+	//Look for links to other sites! wikipedia {{wikipedia}}, [[wikipedia:en:target]] wikivoyage
+		//if found, add them
+		//if wikipedia
+			//add label
+			//add aliases from redirects?
 	//save item
 	//reload item from wikidata
 	//foreach sitelink

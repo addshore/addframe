@@ -40,9 +40,9 @@ class Mediawiki {
 		return new WikibaseEntity($this->dbname,$id);
 	}
 
-	function getEntityFromPage ($site, $title) {
+	function getEntityFromPage ($title) {
 		$entity = new WikibaseEntity($this->dbname);
-		$entity->getIdFromPage($site,$title);
+		$entity->getIdFromPage($this->dbname,$title);
 		return $entity;
 	}
 

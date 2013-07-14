@@ -21,6 +21,7 @@ class WikibaseEntity extends Page{
 		$this->siteHandel = $siteHandel;
 	}
 
+	//@todo this should use the stored side db name rather than being passed one
 	function getIdFromPage ($site,$title){
 		$param['sites'] = $site;
 		$param['titles'] = $title;
