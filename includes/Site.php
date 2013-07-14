@@ -99,14 +99,21 @@ class Mediawiki {
 
 	function getSitematrix () {
 		//@todo catch if sitematrix isnt recognised by the api
-		//@todo possible store this in the object? (not really needed)
 		$siteArray = array();
 		$returned = $this->doRequest( array('action' => 'sitematrix', 'smlangprop' => 'site') );
-		foreach($returned['sitematrix'] as $langmatrix){
-			foreach($langmatrix['site'] as $site){
-				$siteArray[$site['dbname']] = $site;
+		if($returned == null){die("Sitematrix failed... Maybe you are offline.");}
+		foreach($returned['sitematrix'] as $key => $langmatrix){
+			if($key == 'count'){ continue; }//skip the count of sites..
+			if($key == 'specials'){
+				foreach($langmatrix as $site){
+					$siteArray[$site['dbname']] = $site;
+				}
+			}else{
+				//this is the default
+				foreach($langmatrix['site'] as $site){
+					$siteArray[$site['dbname']] = $site;
+				}
 			}
-
 		}
 		return $siteArray;
 	}
@@ -151,12 +158,12 @@ class Mediawiki {
 
 			$result = $this->doRequest(null,$post);
 
-			if ($result->statusCode == 'NeedToken') {
-				$post['lgtoken'] = $result->getInside()['token'];
+			if ($result['login']['result'] == 'NeedToken') {
+				$post['lgtoken'] = $result['login']['token'];
 				$result = $this->doRequest(null,$post);
 			}
 
-			if ($result->statusCode == "Success") {
+			if ($result['login']['result'] == "Success") {
 				$this->loggedIn = true;
 			}
 			else{

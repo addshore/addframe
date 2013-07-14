@@ -10,12 +10,10 @@ class UserLogin extends User {
 	private $password;
 
 	/**
-	 * @param $siteHandel string for associated site
 	 * @param $username string Username for login
 	 * @param $password string Password for login
 	 */
-	function __construct( $siteHandel, $username, $password ) {
-		$this->siteHandel = $siteHandel;
+	function __construct($username, $password ) {
 		$this->username = $username;
 		$this->password = $password;
 	}

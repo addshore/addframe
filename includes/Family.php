@@ -42,7 +42,7 @@ class Family {
 	function addSiteFromMatrix($dbname){
 		if(isset($this->sitematrix[$dbname])){
 			//@todo need a better way to know where the api is
-			$this->addSite($this->sitematrix['dbname'],$this->sitematrix['url'].'/w/api.php');
+			$this->addSite($this->sitematrix[$dbname]['dbname'],$this->sitematrix[$dbname]['url'].'/w/api.php');
 		}
 		return $this->getSite($dbname);
 	}
