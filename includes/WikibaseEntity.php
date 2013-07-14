@@ -4,7 +4,7 @@
  * This class is designed to represent a Mediawiki Wikibase entity
  * @author Addshore
  **/
-class WikibaseEntity {
+class WikibaseEntity extends Page{
 
 	public $siteHandel;
 	public $id;
@@ -14,16 +14,30 @@ class WikibaseEntity {
 
 	//@todo we should keep a changed status, if we call save without changing just dont bother..?
 
-	function __construct( $siteHandel, $id ) {
-		$this->id = $id;//@todo validate  and correct the id (lower case)
+	function __construct( $siteHandel, $id = null ) {
+		if( isset ( $id ) ){
+			$this->id = $id;//@todo validate  and correct the id (lower case)
+		}
 		$this->siteHandel = $siteHandel;
 	}
+
+	function getIdFromPage ($site,$title){
+		$param['sites'] = $site;
+		$param['titles'] = $title;
+		$param['props'] = 'info';
+		$result = Globals::$Sites->getSite($this->siteHandel)->doWbGetEntities($param);
+		foreach($result['entities'] as $entity){
+			$this->id = $entity['id'];
+		}
+		return $this->id;
+	}
+
 
 	/**
 	 * Get the entity from the api
 	 * @return array of entity languageData
 	 */
-	function loadEntity(){
+	function load(){
 		$param['ids'] = $this->id;
 		$result = Globals::$Sites->getSite($this->siteHandel)->doWbGetEntities($param);
 		foreach($result->value['entities'] as $x){
@@ -47,10 +61,11 @@ class WikibaseEntity {
 	/**
 	 * Get the entity from the api
 	 */
-	function saveEntity(){
-		//@todo some of this should probably go in the api...
+	function save($summary = null, $minor = null){
+		//@todo if there is no id we want a new entity!
 		$param['id'] = $this->id;
 		$param['data'] = $this->serializaData();
+		if(isset($summary)){ $param['summary'] = $summary;}
 		return Globals::$Sites->getSite($this->siteHandel)->doWbEditEntity($param);
 	}
 

@@ -13,7 +13,7 @@ $testsite->newLogin('Bot','botp123',true);
 
 //Play with a regular page
 $playpage = $testsite->getPage("PageTitle");
-$playpage->getText();
+$playpage->load();
 $playpage->emptyText();
 $playpage->text	= "This is some starting text with a random number >> ".rand(0,100);
 $playpage->appendText("\nThis shoulddd be added to the end of the page");

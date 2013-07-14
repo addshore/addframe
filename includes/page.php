@@ -54,9 +54,9 @@ class Page {
 	//}
 
 	/**
-	 * @return string text of Page
+	 * @return string Load page from the api
 	 */
-	function getText(){
+	function load(){
 		$param['titles'] = $this->title;
 
 		$result = Globals::$Sites->getSite($this->siteHandel)->doPropRevsions($param);

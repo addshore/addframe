@@ -36,8 +36,14 @@ class Mediawiki {
 		return new User($this->handel,$username);
 	}
 
-	function getEntity ($id) {
+	function getEntityFromId ($id) {
 		return new WikibaseEntity($this->handel,$id);
+	}
+
+	function getEntityFromPage ($site, $title) {
+		$entity = new WikibaseEntity($this->handel);
+		$entity->getIdFromPage($site,$title);
+		return $entity;
 	}
 
 	function setLogin($userLogin){

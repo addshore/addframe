@@ -22,7 +22,7 @@ foreach($rows as $row){
 	$site = $wm->getSite($row['language'].$row['site']);
 	$site->doLogin();
 	$page = $site->getPage($site->getNamespace($row['namespace']).$row['title']);
-	$page->getText();
+	$page->load();
 	$pageInterwikis = $page->getInterwikisFromtext();
 
 }
