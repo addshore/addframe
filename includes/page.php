@@ -79,6 +79,7 @@ class Page {
 	/**
 	 * @return array of interwikilinks [1] => array(site=>en,link=>Pagename) etc.
 	 */
+	//@todo add data about site type here i.e. wiki or wikivoyage?
 	function getInterwikisFromtext(){
 		$toReturn = array();
 		preg_match_all('/\n\[\[([^:]+):([^\]]+)\]\]/',$this->text,$matches);
