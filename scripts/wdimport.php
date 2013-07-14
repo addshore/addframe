@@ -25,12 +25,22 @@ foreach($rows as $row){
 	$page->load();
 	$pageInterwikis = $page->getInterwikisFromtext();
 
+	$baseEntity = $site->getEntityFromPage($site->dbname,$page->title);
+	if( !isset($baseEntity->id) ){
+		foreach($pageInterwikis as $interwikiData){
+			//find item (if we do break out of the loop)!
+		}
+	}
+	if( !isset($baseEntity->id) ){
+		//then we are working on a new entity!
+	}
+
+	foreach($pageInterwikis as $interwikiData){
+		//@todo need a way of converting the match of en:pagename to enwiki:pagename
+		//$baseEntity->addSitelink()
+	}
 }
-	//find item for the article
-		//if no item..
-			//foreach interwikilink
-				//find item
-	//if still no item create a new item
+
 	//foreach interwikilink
 		//add sitelink to item
 		//if sitelink successfull

@@ -6,7 +6,7 @@
  **/
 
 class Mediawiki {
-	public $handel;
+	public $dbname;
 	public $url;
 	private $http;
 	private $token;
@@ -18,30 +18,30 @@ class Mediawiki {
 	public $userlogin;
 
 	/**
-	 * @param $handel string handel used through script for this site
+	 * @param $dbname string dbname used through script for this site
 	 * @param $url string URL of the api
 	 */
-	function __construct ($handel, $url) {
-		$this->handel = $handel;
+	function __construct ($dbname, $url) {
+		$this->dbname = $dbname;
 		$this->url = $url;
 		$this->http = new Http();
 		$this->loggedIn = false;
 	}
 
 	function getPage ($page) {
-		return new Page($this->handel,$page);
+		return new Page($this->dbname,$page);
 	}
 
 	function getUser ($username) {
-		return new User($this->handel,$username);
+		return new User($this->dbname,$username);
 	}
 
 	function getEntityFromId ($id) {
-		return new WikibaseEntity($this->handel,$id);
+		return new WikibaseEntity($this->dbname,$id);
 	}
 
 	function getEntityFromPage ($site, $title) {
-		$entity = new WikibaseEntity($this->handel);
+		$entity = new WikibaseEntity($this->dbname);
 		$entity->getIdFromPage($site,$title);
 		return $entity;
 	}
@@ -51,7 +51,7 @@ class Mediawiki {
 	}
 
 	function newLogin($username, $password, $doLogin = false) {
-		$this->setLogin( new UserLogin($this->handel,$username,$password) );
+		$this->setLogin( new UserLogin($this->dbname,$username,$password) );
 		if($doLogin === true){
 			$this->doLogin();
 		}
