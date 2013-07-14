@@ -174,13 +174,12 @@ class Page {
 		return $this->text;
 	}
 
-	/**
-	 * Gets an entity from this page
-	 * @return WikibaseEntity
-	 */
-	function getEntityFromPage()
-	{
-		//@todo this can only work if we also know the pages language / sitelink code (could we use siteHandel?)
-		//return new WikibaseEntity('')
+	function pregReplace($patern, $replacment){
+		$this->text = preg_replace($patern,$replacment,$this->text);
+		return $this->text;
+	}
+
+	function removeRegexMatched($patern){
+		return $this->pregReplace($patern,'');
 	}
 }
