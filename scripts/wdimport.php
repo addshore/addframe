@@ -33,23 +33,27 @@ foreach($rows as $row){
 	$basePage->load();
 	$pageInterwikis = $basePage->getInterwikisFromtext();
 	$baseEntity = $basePage->getEntity();
-	//$baseEntity = $baseSite->getEntityFromPage($baseSite->wikiid,$basePage->title);
 	if( !isset($baseEntity->id) ){
+		echo "Failed to get entity from page, Looking at interwiki links..\n";
 		foreach($pageInterwikis as $interwikiData){
 			$remoteSite = $wm->getFromMatrix($interwikiData['site'].$row['site']);
 			$remotePage = $remoteSite->getPage($interwikiData['link']);
 			$remoteEntity = $remotePage->getEntity();
 			if( isset($remoteEntity->id) ){
+				echo "Found baseEntity from ".$remoteSite->wikiid." ".$remotePage->title." ".$remoteEntity->id."\n";
 				$baseEntity = $remoteEntity;
 				break 1;
 			}
 		}
 	}
 	if( !isset($baseEntity->id) ){
+		echo "Failed to get entiy from iwlinks, Looking at possible templates\n";
 		//look for entities for links to other sites! wikipedia {{wikipedia}}, [[wikipedia:en:target]] wikivoyage
 	}
 	if( !isset($baseEntity->id) ){
-		//then we are working on a new entity! (we currently don't have to do anything extra..)
+		echo "We could not link the page to an entity\n";
+		//for now we will move on, at some point we can start creating new entities
+		break;
 	}
 
 	// Add everything we can to the entity
