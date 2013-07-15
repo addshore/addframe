@@ -55,12 +55,6 @@ class Mediawiki {
 		return new WikibaseEntity($this->wikiid,$id);
 	}
 
-	function getEntityFromPage ($title) {
-		$entity = new WikibaseEntity($this->wikiid);
-		$entity->getIdFromPage($this->wikiid,$title);
-		return $entity;
-	}
-
 	function setLogin($userLogin){
 		$this->userlogin = $userLogin;
 	}

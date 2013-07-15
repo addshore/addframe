@@ -77,7 +77,16 @@ class Page {
 	}
 
 	function getEntity(){
-
+		$q['action'] = 'query';
+		$q['prop'] = 'pageprops';
+		$q['titles'] = $this->title;
+		$result = Globals::$Sites->getSite($this->siteHandel)->doRequest($q);
+		foreach($result['query']['pages'] as $page){
+			if( isset( $page['pageprops']['wikibase_item'] ) ){
+				return  new WikibaseEntity(Globals::$Sites->getSite($this->siteHandel)->wikibase,$page['pageprops']['wikibase_item']);
+			}
+		}
+		return null;
 	}
 
 	/**

@@ -19,7 +19,7 @@ $wikidata->doLogin();
 //$dbQuery = $db->select('iwlink','*',null,array('ORDER BY' => 'updated ASC', 'LIMIT' => '100'));
 //$rows = $db->mysql2array($dbQuery);
 $rows = array(
-	array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'À Beira do Caminho'),
+	//array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'À Beira do Caminho'),
 	array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Pear'),
 	array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Banana'),
 );
@@ -32,11 +32,13 @@ foreach($rows as $row){
 	$basePage = $baseSite->getPage($baseSite->getNamespace($row['namespace']).$row['title']);
 	$basePage->load();
 	$pageInterwikis = $basePage->getInterwikisFromtext();
-	$baseEntity = $baseSite->getEntityFromPage($baseSite->wikiid,$basePage->title);
+	$baseEntity = $basePage->getEntity();
+	//$baseEntity = $baseSite->getEntityFromPage($baseSite->wikiid,$basePage->title);
 	if( !isset($baseEntity->id) ){
 		foreach($pageInterwikis as $interwikiData){
 			$remoteSite = $wm->getFromMatrix($interwikiData['site'].$row['site']);
-			$remoteEntity = $remoteSite->getEntityFromPage($interwikiData['link']);
+			$remotePage = $remoteSite->getPage($interwikiData['link']);
+			$remoteEntity = $remotePage->getEntity();
 			if( isset($remoteEntity->id) ){
 				$baseEntity = $remoteEntity;
 				break 1;
