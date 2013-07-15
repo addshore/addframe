@@ -9,7 +9,7 @@
 require_once( dirname(__FILE__).'/../init.php' );
 
 //Create a site
-$wm = new Family('wikimedia',new UserLogin('addbot','password'),'meta.wikimedia.org/w/api.php');
+$wm = new Family('wikimedia',new UserLogin('addbot','password'),'meta.wikimedia.org');
 $wikidata = $wm->getFromMatrix('wikidatawiki');
 $wikidata->doLogin();
 
@@ -32,7 +32,7 @@ foreach($rows as $row){
 	$basePage = $baseSite->getPage($baseSite->getNamespace($row['namespace']).$row['title']);
 	$basePage->load();
 	$pageInterwikis = $basePage->getInterwikisFromtext();
-	$baseEntity = $baseSite->getEntityFromPage($baseSite->dbname,$basePage->title);
+	$baseEntity = $baseSite->getEntityFromPage($baseSite->wikiid,$basePage->title);
 	if( !isset($baseEntity->id) ){
 		foreach($pageInterwikis as $interwikiData){
 			$remoteSite = $wm->getFromMatrix($interwikiData['site'].$row['site']);

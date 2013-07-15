@@ -4,13 +4,11 @@
  */
 class Family {
 
-	public $name;
 	public $login;
 	private $siteFactory;
-	private $homeHandel;
 	/**
 	 * @var array of sites with the following keys
-	 * [url][dbname][code][sitename][closed][private]
+	 * [url][wikiid][code][sitename][closed][private]
 	 */
 	private $sitematrix;
 
@@ -20,15 +18,13 @@ class Family {
 	 *
 	 * @param $familyName
 	 * @param null $globalLogin
-	 * @param null $homeApi
+	 * @param null $homeUrl
 	 */
-	function __construct( $familyName, $globalLogin = null, $homeApi = null ) {
+	function __construct( $familyName, $globalLogin = null, $homrUrl = null ) {
 		$this->siteFactory = new SiteFactory();
-		$this->name = $familyName;
-		if(isset($homeApi)){
-			$this->homeHandel = $familyName.'-homesite';
-			Globals::$Sites->addSite($this->homeHandel, $homeApi);
-			$this->sitematrix = Globals::$Sites->getSite($this->homeHandel)->getSitematrix();
+		if(isset($homrUrl)){
+			$homeSite = Globals::$Sites->addSite($homrUrl);
+			$this->sitematrix = $homeSite->getSitematrix();
 		}
 		if(isset($globalLogin)){
 			$this->login = $globalLogin;
@@ -36,23 +32,24 @@ class Family {
 	}
 
 	/**
-	 * @param $dbname
+	 * @param $dbname string of the dbname for the site
 	 * @return Mediawiki
 	 */
 	function getFromMatrix($dbname){
 		if( isset($this->sitematrix[$dbname]) && !isset(Globals::$Sites->objects[$dbname]) ){
 			//@todo need a better way to know where the api is
 			echo "Adding $dbname to registry of sites\n";
-			$this->addSite($this->sitematrix[$dbname]['dbname'],$this->sitematrix[$dbname]['url'].'/w/api.php');
+			$this->addSite($this->sitematrix[$dbname]['url']);
 		}
 		return $this->getSite($dbname);
 	}
 
-	function addSite($handle, $api){
-		Globals::$Sites->addSite($handle,$api);
+	function addSite($url){
+		$site = Globals::$Sites->addSite($url);
 		if(isset($this->login)){
-			Globals::$Sites->getSite($handle)->setLogin($this->login);
+			Globals::$Sites->getSite($site->wikiid)->setLogin($this->login);
 		}
+		return $site;
 	}
 
 	/**

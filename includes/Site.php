@@ -6,8 +6,12 @@
  **/
 
 class Mediawiki {
-	public $dbname;
+	public $wikiid;
 	public $url;
+	public $apiurl;
+	public $name;
+	public $lang;
+	public $wikibase;
 	private $http;
 	private $token;
 	private $loggedIn;
@@ -21,31 +25,39 @@ class Mediawiki {
 	public $userlogin;
 
 	/**
-	 * @param $dbname string dbname used through script for this site
 	 * @param $url string URL of the api
 	 */
-	function __construct ($dbname, $url) {
-		$this->dbname = $dbname;
+	function __construct ($url) {
 		$this->url = $url;
 		$this->http = new Http();
 		$this->loggedIn = false;
+
+		//todo this in its own function findapi()
+		$pageData = $this->http->get($this->url);
+		preg_match('/\<link rel=\"EditURI.*?$/im', $pageData, $pageData);
+		preg_match('/href=\"([^\"]+)\"/i', $pageData[0], $pageData);
+		$parsedApiUrl = parse_url($pageData[1]);
+		$this->apiurl = $parsedApiUrl['host'].$parsedApiUrl['path'];
+
+		$this->getSiteinfo();
+		$this->getWikibaseinfo();
 	}
 
 	function getPage ($page) {
-		return new Page($this->dbname,$page);
+		return new Page($this->wikiid,$page);
 	}
 
 	function getUser ($username) {
-		return new User($this->dbname,$username);
+		return new User($this->wikiid,$username);
 	}
 
 	function getEntityFromId ($id) {
-		return new WikibaseEntity($this->dbname,$id);
+		return new WikibaseEntity($this->wikiid,$id);
 	}
 
 	function getEntityFromPage ($title) {
-		$entity = new WikibaseEntity($this->dbname);
-		$entity->getIdFromPage($this->dbname,$title);
+		$entity = new WikibaseEntity($this->wikiid);
+		$entity->getIdFromPage($this->wikiid,$title);
 		return $entity;
 	}
 
@@ -54,7 +66,7 @@ class Mediawiki {
 	}
 
 	function newLogin($username, $password, $doLogin = false) {
-		$this->setLogin( new UserLogin($this->dbname,$username,$password) );
+		$this->setLogin( new UserLogin($this->wikiid,$username,$password) );
 		if($doLogin === true){
 			$this->doLogin();
 		}
@@ -71,10 +83,10 @@ class Mediawiki {
 
 		if ($post==null){
 			$query = "?".http_build_query($query);
-			$returned = $this->http->get($this->url.$query);
+			$returned = $this->http->get($this->apiurl.$query);
 		} else {
 			$query = "?".http_build_query($query);
-			$returned = $this->http->post($this->url.$query,$post);
+			$returned = $this->http->post($this->apiurl.$query,$post);
 		}
 		return unserialize($returned);
 	}
@@ -152,7 +164,28 @@ class Mediawiki {
 		if($id == '0'){
 			return '';
 		}
-		throw new Exception("Could not return a namespace for id $id in ".$this->dbname);
+		throw new Exception("Could not return a namespace for id $id in ".$this->wikiid);
+	}
+
+	function getSiteinfo () {
+		$q['action'] = 'query';
+		$q['meta'] = 'siteinfo';
+		$result = $this->doRequest($q);
+		$this->wikiid = $result['query']['general']['wikiid'];
+		$this->name = $result['query']['general']['sitename'];
+		$this->lang = $result['query']['general']['lang'];
+	}
+
+	function getWikibaseinfo () {
+		$q['action'] = 'query';
+		$q['meta'] = 'wikibase';
+		$result = $this->doRequest($q);
+		if( isset($result['query']['wikibase']['repo']['url']['base']) ){
+			$parsedApiUrl = parse_url($result['query']['wikibase']['repo']['url']['base']);
+			$this->wikibase = $parsedApiUrl['host'];
+		} else {
+			$this->wikibase = false;
+		}
 	}
 
 	/**
@@ -162,7 +195,7 @@ class Mediawiki {
 	 */
 	function doLogin () {
 		if($this->loggedIn !== true){
-			echo "Loging in to ".$this->dbname."\n";
+			echo "Loging in to ".$this->wikiid."\n";
 			$post['action'] = 'login';
 			$post['lgname'] = $this->userlogin->username;
 			$post['lgpassword'] = $this->userlogin->getPassword();

@@ -7,20 +7,21 @@
 class SiteFactory extends Registry{
 
 	/**
-	 * @param $handel string of site
-	 * @param $api string url pointing to api
+	 * @param $url string url pointing to the site
 	 * @return Mediawiki
 	 */
-	function addSite( $handel, $api){
-		$this->$handel = new Mediawiki($handel,$api);
-		return $this->$handel;
+	function addSite( $url ){
+		$site = new Mediawiki($url);
+		$wikiid = $site->wikiid;
+		$this->$wikiid = $site;
+		return $this->$wikiid;
 	}
 
 	/**
-	 * @param $handel
+	 * @param $wikiid
 	 * @return Mediawiki
 	 */
-	function getSite( $handel ){
-		return $this->$handel;
+	function getSite( $wikiid ){
+		return $this->$wikiid;
 	}
 }

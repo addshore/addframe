@@ -76,6 +76,10 @@ class Page {
 		return $this->text;
 	}
 
+	function getEntity(){
+
+	}
+
 	/**
 	 * @return array of interwikilinks [1] => array(site=>en,link=>Pagename) etc.
 	 */
