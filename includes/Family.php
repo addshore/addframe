@@ -42,6 +42,7 @@ class Family {
 	function getFromMatrix($dbname){
 		if( isset($this->sitematrix[$dbname]) && !isset(Globals::$Sites->objects[$dbname]) ){
 			//@todo need a better way to know where the api is
+			echo "Adding $dbname to registry of sites\n";
 			$this->addSite($this->sitematrix[$dbname]['dbname'],$this->sitematrix[$dbname]['url'].'/w/api.php');
 		}
 		return $this->getSite($dbname);

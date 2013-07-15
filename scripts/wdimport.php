@@ -9,7 +9,7 @@
 require_once( dirname(__FILE__).'/../init.php' );
 
 //Create a site
-$wm = new Family('wikimedia',new UserLogin('addbot','password!'),'meta.wikimedia.org/w/api.php');
+$wm = new Family('wikimedia',new UserLogin('addbot','password'),'meta.wikimedia.org/w/api.php');
 $wikidata = $wm->getFromMatrix('wikidatawiki');
 $wikidata->doLogin();
 

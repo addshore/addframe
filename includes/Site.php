@@ -162,6 +162,7 @@ class Mediawiki {
 	 */
 	function doLogin () {
 		if($this->loggedIn !== true){
+			echo "Loging in to ".$this->dbname."\n";
 			$post['action'] = 'login';
 			$post['lgname'] = $this->userlogin->username;
 			$post['lgpassword'] = $this->userlogin->getPassword();
@@ -175,9 +176,13 @@ class Mediawiki {
 
 			if ($result['login']['result'] == "Success") {
 				$this->loggedIn = true;
+			} else if($result['login']['result'] == "Throttled"){
+				echo "Throttled! Waiting for ".$result['login']['wait']."\n";
+				sleep($result['login']['wait']);
+				return $this->doLogin();
 			}
 			else{
-				throw new Exception('Failed login');
+				throw new Exception('Failed login, with result '.$result['login']['result']);
 			}
 		}
 		return $this->loggedIn;
