@@ -25,5 +25,4 @@ include $IP . 'includes/WikibaseEntity.php';
 include $IP . 'includes/Mysql.php';
 include $IP . 'includes/WikitextParser.php';
 
-//Factory for creating sites
 Globals::$Sites = new SiteFactory();

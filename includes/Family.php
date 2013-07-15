@@ -27,8 +27,8 @@ class Family {
 		$this->name = $familyName;
 		if(isset($homeApi)){
 			$this->homeHandel = $familyName.'-homesite';
-			$this->siteFactory->addSite($this->homeHandel, $homeApi);
-			$this->sitematrix = $this->siteFactory->getSite($this->homeHandel)->getSitematrix();
+			Globals::$Sites->addSite($this->homeHandel, $homeApi);
+			$this->sitematrix = Globals::$Sites->getSite($this->homeHandel)->getSitematrix();
 		}
 		if(isset($globalLogin)){
 			$this->login = $globalLogin;
@@ -39,8 +39,8 @@ class Family {
 	 * @param $dbname
 	 * @return Mediawiki
 	 */
-	function addSiteFromMatrix($dbname){
-		if(isset($this->sitematrix[$dbname])){
+	function getFromMatrix($dbname){
+		if( isset($this->sitematrix[$dbname]) && !isset(Globals::$Sites->objects[$dbname]) ){
 			//@todo need a better way to know where the api is
 			$this->addSite($this->sitematrix[$dbname]['dbname'],$this->sitematrix[$dbname]['url'].'/w/api.php');
 		}
@@ -48,9 +48,9 @@ class Family {
 	}
 
 	function addSite($handle, $api){
-		$this->siteFactory->addSite($handle,$api);
+		Globals::$Sites->addSite($handle,$api);
 		if(isset($this->login)){
-			$this->siteFactory->getSite($handle)->setLogin($this->login);
+			Globals::$Sites->getSite($handle)->setLogin($this->login);
 		}
 	}
 
@@ -59,7 +59,8 @@ class Family {
 	 * @return Mediawiki
 	 */
 	function getSite($handle){
-		return $this->siteFactory->getSite($handle);
+
+		return Globals::$Sites->getSite($handle);
 	}
 
 }

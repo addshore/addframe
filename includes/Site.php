@@ -11,6 +11,9 @@ class Mediawiki {
 	private $http;
 	private $token;
 	private $loggedIn;
+	/**
+	 * @var Array
+	 */
 	private $namespaces;
 	/**
 	 * @var UserLogin
@@ -127,13 +130,14 @@ class Mediawiki {
 		if(!isset($this->namespaces)){
 			$returned = $this->doRequest(array('action' => 'query', 'meta' => 'siteinfo', 'siprop' => 'namespaces|namespacealiases'));
 			foreach( $returned['query']['namespaces'] as $key => $nsArray){
-				$this->namespaces[$key][] = $nsArray['*'];
-				$this->namespaces[$key][] = $nsArray['canonical'];
+				if($nsArray['id'] != '0'){
+					$this->namespaces[$key][] = $nsArray['*'];
+					$this->namespaces[$key][] = $nsArray['canonical'];
+				}
 			}
 			foreach( $returned['query']['namespacealiases'] as $nsArray){
 				$this->namespaces[$nsArray['id']][] = $nsArray['*'];
 			}
-			$this->namespaces = array_values(array_unique($this->namespaces));
 		}
 		return $this->namespaces;
 	}
@@ -142,7 +146,13 @@ class Mediawiki {
 		if(!isset($this->namespaces)){
 			$this->getNamespaces();
 		}
-		return $this->namespaces[$id][0];
+		if(isset($this->namespaces[$id])){
+			return $this->namespaces[$id][0];
+		}
+		if($id == '0'){
+			return '';
+		}
+		throw new Exception("Could not return a namespace for id $id in ".$this->dbname);
 	}
 
 	/**

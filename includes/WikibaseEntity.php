@@ -27,6 +27,7 @@ class WikibaseEntity extends Page{
 		$param['titles'] = $title;
 		$param['props'] = 'info';
 		$result = Globals::$Sites->getSite($this->siteHandel)->doWbGetEntities($param);
+		if(!isset($result['entities'])){return false;}
 		foreach($result['entities'] as $entity){
 			$this->id = $entity['id'];
 		}

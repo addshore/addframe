@@ -9,8 +9,8 @@
 require_once( dirname(__FILE__).'/../init.php' );
 
 //Create a site
-$wm = new Family('wikimedia',new UserLogin('addbot','ella250'),'meta.wikimedia.org/w/api.php');
-$wikidata = $wm->addSiteFromMatrix('wikidatawiki');
+$wm = new Family('wikimedia',new UserLogin('addbot','password!'),'meta.wikimedia.org/w/api.php');
+$wikidata = $wm->getFromMatrix('wikidatawiki');
 $wikidata->doLogin();
 
 //$dbConfig = parse_ini_file('~/replica.my.cnf');
@@ -19,14 +19,13 @@ $wikidata->doLogin();
 //$dbQuery = $db->select('iwlink','*',null,array('ORDER BY' => 'updated ASC', 'LIMIT' => '100'));
 //$rows = $db->mysql2array($dbQuery);
 $rows = array(
-	array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Apple'),
+	array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'À Beira do Caminho'),
 	array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Pear'),
 	array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Banana'),
 );
 foreach($rows as $row){
-
 	// Load our site
-	$baseSite = $wm->getSite($row['lang'].$row['site']);
+	$baseSite = $wm->getFromMatrix($row['lang'].$row['site']);
 	$baseSite->doLogin();
 
 	// Find the entity we want to work with
@@ -36,7 +35,7 @@ foreach($rows as $row){
 	$baseEntity = $baseSite->getEntityFromPage($baseSite->dbname,$basePage->title);
 	if( !isset($baseEntity->id) ){
 		foreach($pageInterwikis as $interwikiData){
-			$remoteSite = $wm->getSite($interwikiData['site'].$row['site']);
+			$remoteSite = $wm->getFromMatrix($interwikiData['site'].$row['site']);
 			$remoteEntity = $remoteSite->getEntityFromPage($interwikiData['link']);
 			if( isset($remoteEntity->id) ){
 				$baseEntity = $remoteEntity;
