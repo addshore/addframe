@@ -7,6 +7,7 @@
 
 class Mediawiki {
 	public $wikiid;
+	public $code;
 	public $url;
 	public $apiurl;
 	public $name;
@@ -168,6 +169,7 @@ class Mediawiki {
 		$this->wikiid = $result['query']['general']['wikiid'];
 		$this->name = $result['query']['general']['sitename'];
 		$this->lang = $result['query']['general']['lang'];
+		$this->code = preg_replace('/^'.$this->lang.'/i','',$this->wikiid);
 	}
 
 	function getWikibaseinfo () {

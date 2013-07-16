@@ -121,7 +121,7 @@ class WikibaseEntity extends Page{
 
 	function addAliases($language, $value){
 		if( !isset($this->languageData['aliases'][$language]) ){
-			$this->modifySitelink($language, $value);
+			$this->modifyAliases($language, $value);
 		}
 	}
 

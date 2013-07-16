@@ -18,7 +18,7 @@ class Family {
 	 *
 	 * @param $familyName
 	 * @param null $globalLogin
-	 * @param null $homeUrl
+	 * @param null $homrUrl
 	 */
 	function __construct( $familyName, $globalLogin = null, $homrUrl = null ) {
 		$this->siteFactory = new SiteFactory();
