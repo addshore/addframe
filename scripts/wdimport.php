@@ -81,6 +81,7 @@ foreach($rows as $row){
 		//look for links to wikivoyage and add thme (no idea how these are formatted
 	}
 
+	//@todo only save if there is a change?
 	$baseEntity->save();
 
 	//Now see if we can update the pages

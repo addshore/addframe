@@ -95,7 +95,7 @@ class Mediawiki {
 			return $this->token;
 		}
 		$apiresult = $this->doRequest( array('action' => 'query', 'prop' => 'info','intoken' => 'edit', 'titles' => 'Main Page') );
-		return $apiresult->value['query']['pages']['1']['edittoken'];
+		return $apiresult['query']['pages']['-1']['edittoken'];
 	}
 
 	/**
