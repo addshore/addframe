@@ -7,9 +7,9 @@
 class Page {
 
 	/**
-	 * @var string siteHandel for associated site
+	 * @var string siteUrl for associated site
 	 */
-	public $siteHandel;
+	public $siteUrl;
 	/**
 	 * @var string title of Page
 	 */
@@ -40,11 +40,11 @@ class Page {
 	public $protection;
 
 	/**
-	 * @param $siteHandel
+	 * @param $siteUrl
 	 * @param $title
 	 */
-	function __construct( $siteHandel , $title ) {
-		$this->siteHandel = $siteHandel;
+	function __construct( $siteUrl , $title ) {
+		$this->siteUrl = $siteUrl;
 		$this->title = $title;
 	}
 
@@ -57,10 +57,10 @@ class Page {
 	 * @return string Load page from the api
 	 */
 	function load(){
-		echo "Loading page ".$this->siteHandel." ".$this->title."\n";
+		echo "Loading page ".$this->siteUrl." ".$this->title."\n";
 		$param['titles'] = $this->title;
 
-		$result = Globals::$Sites->getSite($this->siteHandel)->doPropRevsions($param);
+		$result = Globals::$Sites->getSite($this->siteUrl)->doPropRevsions($param);
 
 		foreach($result['query']['pages'] as $x){
 			$this->ns = $x['ns'];
@@ -81,10 +81,10 @@ class Page {
 		$q['action'] = 'query';
 		$q['prop'] = 'pageprops';
 		$q['titles'] = $this->title;
-		$result = Globals::$Sites->getSite($this->siteHandel)->doRequest($q);
+		$result = Globals::$Sites->getSite($this->siteUrl)->doRequest($q);
 		foreach($result['query']['pages'] as $page){
 			if( isset( $page['pageprops']['wikibase_item'] ) ){
-				return  new WikibaseEntity(Globals::$Sites->getSite($this->siteHandel)->wikibase,$page['pageprops']['wikibase_item']);
+				return  new WikibaseEntity(Globals::$Sites->getSite($this->siteUrl)->wikibase,$page['pageprops']['wikibase_item']);
 			}
 		}
 		return null;
@@ -134,7 +134,7 @@ class Page {
 		if($hidden === true){ $param['clshow'] = 'hidden';}
 		elseif($hidden === false){ $param['clshow'] = '!hidden';}
 
-		$result = Globals::$Sites->getSite($this->siteHandel)->doPropCategories($param);
+		$result = Globals::$Sites->getSite($this->siteUrl)->doPropCategories($param);
 
 		foreach($result->value['query']['pages'] as $x){
 			$this->pageid = $x['pageid'];
@@ -149,7 +149,7 @@ class Page {
 	 * @param bool $minor should be minor?
 	 */
 	function save($summary = null, $minor = false){
-		Globals::$Sites->getSite($this->siteHandel)->doEdit($this->title,$this->text,$summary,$minor);
+		Globals::$Sites->getSite($this->siteUrl)->doEdit($this->title,$this->text,$summary,$minor);
 	}
 
 	/**

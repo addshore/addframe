@@ -6,7 +6,7 @@
  **/
 class WikibaseEntity extends Page{
 
-	public $siteHandel;
+	public $siteUrl;
 	public $id;
 	public $lastrevid;
 	public $entityType;
@@ -14,11 +14,11 @@ class WikibaseEntity extends Page{
 
 	//@todo we should keep a changed status, if we call save without changing just dont bother..?
 
-	function __construct( $siteHandel, $id = null ) {
+	function __construct( $siteUrl, $id = null ) {
 		if( isset ( $id ) ){
 			$this->id = $id;//@todo validate  and correct the id (lower case)
 		}
-		$this->siteHandel = $siteHandel;
+		$this->siteUrl = $siteUrl;
 	}
 
 	//@todo this should use the stored side db name rather than being passed one
@@ -26,7 +26,7 @@ class WikibaseEntity extends Page{
 		$param['sites'] = $site;
 		$param['titles'] = $title;
 		$param['props'] = 'info';
-		$result = Globals::$Sites->getSite($this->siteHandel)->doWbGetEntities($param);
+		$result = Globals::$Sites->getSite($this->siteUrl)->doWbGetEntities($param);
 		if(!isset($result['entities'])){return false;}
 		foreach($result['entities'] as $entity){
 			$this->id = $entity['id'];
@@ -41,7 +41,7 @@ class WikibaseEntity extends Page{
 	 */
 	function load(){
 		$param['ids'] = $this->id;
-		$result = Globals::$Sites->getSite($this->siteHandel)->doWbGetEntities($param);
+		$result = Globals::$Sites->getSite($this->siteUrl)->doWbGetEntities($param);
 		foreach($result->value['entities'] as $x){
 			$this->pageid = $x['pageid'];
 			$this->ns = $x['ns'];
@@ -68,7 +68,8 @@ class WikibaseEntity extends Page{
 		$param['id'] = $this->id;
 		$param['data'] = $this->serializaData();
 		if(isset($summary)){ $param['summary'] = $summary;}
-		return Globals::$Sites->getSite($this->siteHandel)->doWbEditEntity($param);
+		echo $this->siteUrl;
+		return Globals::$Sites->getSite($this->siteUrl)->doWbEditEntity($param);
 	}
 
 	/**

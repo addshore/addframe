@@ -45,15 +45,15 @@ class Mediawiki {
 	}
 
 	function getPage ($page) {
-		return new Page($this->wikiid,$page);
+		return new Page($this->url,$page);
 	}
 
 	function getUser ($username) {
-		return new User($this->wikiid,$username);
+		return new User($this->url,$username);
 	}
 
 	function getEntityFromId ($id) {
-		return new WikibaseEntity($this->wikiid,$id);
+		return new WikibaseEntity($this->url,$id);
 	}
 
 	function setLogin($userLogin){
@@ -61,7 +61,7 @@ class Mediawiki {
 	}
 
 	function newLogin($username, $password, $doLogin = false) {
-		$this->setLogin( new UserLogin($this->wikiid,$username,$password) );
+		$this->setLogin( new UserLogin($this->url,$username,$password) );
 		if($doLogin === true){
 			$this->doLogin();
 		}
@@ -159,7 +159,7 @@ class Mediawiki {
 		if($id == '0'){
 			return '';
 		}
-		throw new Exception("Could not return a namespace for id $id in ".$this->wikiid);
+		throw new Exception("Could not return a namespace for id $id in ".$this->url);
 	}
 
 	function getSiteinfo () {
@@ -191,7 +191,7 @@ class Mediawiki {
 	 */
 	function doLogin () {
 		if($this->loggedIn !== true){
-			echo "Loging in to ".$this->wikiid."\n";
+			echo "Loging in to ".$this->url."\n";
 			$post['action'] = 'login';
 			$post['lgname'] = $this->userlogin->username;
 			$post['lgpassword'] = $this->userlogin->getPassword();

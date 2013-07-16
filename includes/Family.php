@@ -32,33 +32,37 @@ class Family {
 	}
 
 	/**
-	 * @param $dbname string of the dbname for the site
+	 * @param $siteid string of the siteid for the site
 	 * @return Mediawiki
 	 */
-	function getFromMatrix($dbname){
-		if( isset($this->sitematrix[$dbname]) && !isset(Globals::$Sites->objects[$dbname]) ){
-			//@todo need a better way to know where the api is
-			echo "Adding $dbname to registry of sites\n";
-			$this->addSite($this->sitematrix[$dbname]['url']);
+	function getFromSiteid($siteid){
+		if( isset($this->sitematrix[$siteid]) ){
+			$url = parse_url ( $this->sitematrix[$siteid]['url'] );
+			$url = $url['host'];
+
+			if( !isset(Globals::$Sites->objects[$url]) ){
+				echo "Adding $url to registry of sites\n";
+				$this->addSite($url);
+			}
+			return $this->getSite($url);
 		}
-		return $this->getSite($dbname);
 	}
 
 	function addSite($url){
 		$site = Globals::$Sites->addSite($url);
 		if(isset($this->login)){
-			Globals::$Sites->getSite($site->wikiid)->setLogin($this->login);
+			Globals::$Sites->getSite($url)->setLogin($this->login);
 		}
 		return $site;
 	}
 
 	/**
-	 * @param $handle
+	 * @param $url
 	 * @return Mediawiki
 	 */
-	function getSite($handle){
+	function getSite($url){
 
-		return Globals::$Sites->getSite($handle);
+		return Globals::$Sites->getSite($url);
 	}
 
 }

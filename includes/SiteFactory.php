@@ -11,17 +11,15 @@ class SiteFactory extends Registry{
 	 * @return Mediawiki
 	 */
 	function addSite( $url ){
-		$site = new Mediawiki($url);
-		$wikiid = $site->wikiid;
-		$this->$wikiid = $site;
-		return $this->$wikiid;
+		$this->$url = new Mediawiki($url);;
+		return $this->$url;
 	}
 
 	/**
-	 * @param $wikiid
+	 * @param $url
 	 * @return Mediawiki
 	 */
-	function getSite( $wikiid ){
-		return $this->$wikiid;
+	function getSite( $url ){
+		return $this->$url;
 	}
 }

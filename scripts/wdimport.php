@@ -10,7 +10,7 @@ require_once( dirname(__FILE__).'/../init.php' );
 
 //Create a site
 $wm = new Family('wikimedia',new UserLogin('addbot','password'),'meta.wikimedia.org');
-$wikidata = $wm->getFromMatrix('wikidatawiki');
+$wikidata = $wm->getFromSiteid('wikidatawiki');
 $wikidata->doLogin();
 
 //$dbConfig = parse_ini_file('~/replica.my.cnf');
@@ -26,7 +26,7 @@ $rows = array(
 );
 foreach($rows as $row){
 	// Load our site
-	$baseSite = $wm->getFromMatrix($row['lang'].$row['site']);
+	$baseSite = $wm->getFromSiteid($row['lang'].$row['site']);
 	$baseSite->doLogin();
 
 	// Find the entity we want to work with. First try the page we have, then interwiki links.
@@ -37,8 +37,8 @@ foreach($rows as $row){
 	if( !isset($baseEntity->id) ){
 		echo "Failed to get entity from page, Looking at interwiki links..\n";
 		foreach($pageInterwikis as $interwikiData){
-			$remoteSite = $wm->getFromMatrix($interwikiData['site'].$baseSite->code);
-			if($remoteSite !== null){
+			$remoteSite = $wm->getFromSiteid($interwikiData['site'].$baseSite->code);
+			if($remoteSite instanceof Mediawiki){
 				$remotePage = $remoteSite->getPage($interwikiData['link']);
 				$remoteEntity = $remotePage->getEntity();
 				if( isset($remoteEntity->id) ){
@@ -67,7 +67,7 @@ foreach($rows as $row){
 	foreach($pageInterwikis as $interwikiData){
 		echo "Adding sitelink ".$interwikiData['site'].$baseSite->code.":".$interwikiData['link']."\n";
 		$baseEntity->addSitelink($interwikiData['site'].$baseSite->code,$interwikiData['link']);
-		if($wm->getFromMatrix($interwikiData['site'].$baseSite->code)->code == 'wiki'){
+		if($wm->getFromSiteid($interwikiData['site'].$baseSite->code)->code == 'wiki'){
 			//add label
 			//add aliases from redirects
 		}
