@@ -61,7 +61,7 @@ class Mediawiki {
 	}
 
 	function newLogin($username, $password, $doLogin = false) {
-		$this->setLogin( new UserLogin($this,$username,$password) );
+		$this->setLogin( new UserLogin($username,$password) );
 		if($doLogin === true){
 			$this->doLogin();
 		}
@@ -190,7 +190,7 @@ class Mediawiki {
 	 * @throws Exception
 	 */
 	function doLogin () {
-		if($this->loggedIn !== true){
+		if(!($this->loggedIn == true)){
 			echo "Loging in to ".$this->url."\n";
 			$post['action'] = 'login';
 			$post['lgname'] = $this->userlogin->username;

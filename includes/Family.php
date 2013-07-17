@@ -43,7 +43,7 @@ class Family extends Registry {
 			$url = parse_url ( $this->sitematrix[$siteid]['url'] );
 			$url = $url['host'];
 
-			if( !isset( $this->$url ) ){
+			if( !isset( $this->sites[$url] ) ){
 				echo "Loading $url\n";
 				$this->addSite( $url );
 			}

@@ -80,7 +80,7 @@ foreach($rows as $row){
 
 	foreach( $usedPages as $page ){
 		if ($page->removeEntityLinksFromText() == true){
-			echo "Saved entity ".$baseEntity->id."\n";
+			echo "Saved page ".$page->title."\n";
 			//$page->save(); //@todo remove the comment out from save...
 		}
 	}
