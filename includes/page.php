@@ -7,9 +7,9 @@
 class Page {
 
 	/**
-	 * @var string siteUrl for associated site
+	 * @var Mediawiki siteUrl for associated site
 	 */
-	public $siteUrl;
+	public $site;
 	/**
 	 * @var string title of Page
 	 */
@@ -40,11 +40,16 @@ class Page {
 	public $protection;
 
 	/**
-	 * @param $siteUrl
+	 * @var WikibaseEntity entity that is associated with the page
+	 */
+	public $entity;
+
+	/**
+	 * @param $site
 	 * @param $title
 	 */
-	function __construct( $siteUrl , $title ) {
-		$this->siteUrl = $siteUrl;
+	function __construct( $site , $title ) {
+		$this->site = $site;
 		$this->title = $title;
 	}
 
@@ -57,10 +62,10 @@ class Page {
 	 * @return string Load page from the api
 	 */
 	function load(){
-		echo "Loading page ".$this->siteUrl." ".$this->title."\n";
+		echo "Loading page ".$this->site->url." ".$this->title."\n";
 		$param['titles'] = $this->title;
 
-		$result = Globals::$Sites->getSite($this->siteUrl)->doPropRevsions($param);
+		$result = $this->site->doPropRevsions($param);
 
 		foreach($result['query']['pages'] as $x){
 			$this->ns = $x['ns'];
@@ -81,10 +86,11 @@ class Page {
 		$q['action'] = 'query';
 		$q['prop'] = 'pageprops';
 		$q['titles'] = $this->title;
-		$result = Globals::$Sites->getSite($this->siteUrl)->doRequest($q);
+		$result = $this->site->doRequest($q);
 		foreach($result['query']['pages'] as $page){
 			if( isset( $page['pageprops']['wikibase_item'] ) ){
-				return  new WikibaseEntity(Globals::$Sites->getSite($this->siteUrl)->wikibase,$page['pageprops']['wikibase_item']);
+				$this->entity = new WikibaseEntity(Globals::$Sites->getSite($this->site->wikibase),$page['pageprops']['wikibase_item']);
+				return  $this->entity;
 			}
 		}
 		return null;
@@ -134,7 +140,7 @@ class Page {
 		if($hidden === true){ $param['clshow'] = 'hidden';}
 		elseif($hidden === false){ $param['clshow'] = '!hidden';}
 
-		$result = Globals::$Sites->getSite($this->siteUrl)->doPropCategories($param);
+		$result = $this->site->doPropCategories($param);
 
 		foreach($result->value['query']['pages'] as $x){
 			$this->pageid = $x['pageid'];
@@ -149,7 +155,7 @@ class Page {
 	 * @param bool $minor should be minor?
 	 */
 	function save($summary = null, $minor = false){
-		Globals::$Sites->getSite($this->siteUrl)->doEdit($this->title,$this->text,$summary,$minor);
+		$this->site->doEdit($this->title,$this->text,$summary,$minor);
 	}
 
 	/**
@@ -207,5 +213,19 @@ class Page {
 
 	function removeRegexMatched($patern){
 		return $this->pregReplace($patern,'');
+	}
+
+	/**
+	 * Gets the entity for the article and removes all possible interwiki links
+	 * from the page text.
+	 */
+	function removeEntityLinksFromText(){
+		$baseEntity = $this->getEntity();
+		if( !isset($baseEntity->id) ){
+			return false;
+		}
+		//@todo remove all possible stuff here
+
+		return true;
 	}
 }

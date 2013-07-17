@@ -13,7 +13,7 @@ class UserLogin extends User {
 	 * @param $username string Username for login
 	 * @param $password string Password for login
 	 */
-	function __construct($username, $password ) {
+	function __construct( $username, $password ) {
 		$this->username = $username;
 		$this->password = $password;
 	}
@@ -29,7 +29,7 @@ class UserLogin extends User {
 	 * @return Page a sandbox that can be used during testing
 	 */
 	function getSandbox(){
-		return new Page($this->siteUrl,"User:$this->username/Sandbox");
+		return new Page($this->site,"User:$this->username/Sandbox");
 	}
 
 }

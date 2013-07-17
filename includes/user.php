@@ -8,9 +8,9 @@
 class User {
 
 	/**
-	 * @var string siteUrl for associated site
+	 * @var Mediawiki
 	 */
-	public $siteUrl;
+	public $site;
 	/**
 	 * @var string username
 	 */
@@ -33,11 +33,11 @@ class User {
 	public $editcounttime;
 
 	/**
-	 * @param $siteUrl
+	 * @param $site
 	 * @param $username
 	 */
-	function __construct( $siteUrl, $username ) {
-		$this->siteUrl = $siteUrl;
+	function __construct( $site, $username ) {
+		$this->site = $site;
 		$this->username = $username;
 	}
 
@@ -45,14 +45,14 @@ class User {
 	 * @return Page object for this users page
 	 */
 	function getUserPage(){
-		return new Page($this->siteUrl,"User:$this->username");
+		return new Page($this->site,"User:$this->username");
 	}
 
 	/**
 	 * @return Page object for this users talk pages
 	 */
 	function getUserTalkPage(){
-		return new Page($this->siteUrl,"User talk:$this->username");
+		return new Page($this->site,"User talk:$this->username");
 	}
 
 	/**
@@ -63,7 +63,7 @@ class User {
 		$param['auprop'] = 'rights';
 		$param['aufrom'] = $this->username;
 		$param['aulimit'] = '1';
-		$result = Globals::$Sites->getSite($this->siteUrl)->api->doListAllusers($param);
+		$result = $this->site->doListAllusers($param);
 		$this->rights = $result->value['query']['allusers']['0']['rights'];
 		$this->userid = $result->value['query']['allusers']['0']['userid'];
 		return $this->rights;
@@ -77,7 +77,7 @@ class User {
 		$param['auprop'] = 'editcount';
 		$param['aufrom'] = $this->username;
 		$param['aulimit'] = '1';
-		$result = Globals::$Sites->getSite($this->siteUrl)->api->doListAllusers($param);
+		$result = $this->site->doListAllusers($param);
 		$this->editcount = $result->value['query']['allusers']['0']['editcount'];
 		$this->userid = $result->value['query']['allusers']['0']['userid'];
 		$this->editcounttime = time();

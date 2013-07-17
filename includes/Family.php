@@ -2,10 +2,9 @@
 /**
  * Class Family for a collection of  mediawiki sites
  */
-class Family {
+class Family extends Registry {
 
 	public $login;
-	private $siteFactory;
 	/**
 	 * @var array of sites with the following keys
 	 * [url][wikiid][code][sitename][closed][private]
@@ -13,20 +12,24 @@ class Family {
 	private $sitematrix;
 
 	/**
+	 * @var Mediawiki[]
+	 */
+	private $sites;
+
+	/**
 	 * Create an object to hold a family of sites
 	 * If a home site is listed try to get the sitematrix
 	 *
 	 * @param $familyName
 	 * @param null $globalLogin
-	 * @param null $homrUrl
+	 * @param null $homeUrl
 	 */
-	function __construct( $familyName, $globalLogin = null, $homrUrl = null ) {
-		$this->siteFactory = new SiteFactory();
-		if(isset($homrUrl)){
-			$homeSite = Globals::$Sites->addSite($homrUrl);
-			$this->sitematrix = $homeSite->getSitematrix();
+	function __construct( $familyName, $globalLogin = null, $homeUrl = null ) {
+		if( isset( $homeUrl ) ){
+			$this->addSite( $homeUrl );
+			$this->sitematrix = $this->sites[$homeUrl]->getSitematrix();
 		}
-		if(isset($globalLogin)){
+		if( isset( $globalLogin ) ){
 			$this->login = $globalLogin;
 		}
 	}
@@ -35,34 +38,37 @@ class Family {
 	 * @param $siteid string of the siteid for the site
 	 * @return Mediawiki
 	 */
-	function getFromSiteid($siteid){
-		if( isset($this->sitematrix[$siteid]) ){
+	function getFromSiteid( $siteid ){
+		if( isset( $this->sitematrix[$siteid] ) ){
 			$url = parse_url ( $this->sitematrix[$siteid]['url'] );
 			$url = $url['host'];
 
-			if( !isset(Globals::$Sites->objects[$url]) ){
-				echo "Adding $url to registry of sites\n";
-				$this->addSite($url);
+			if( !isset( $this->$url ) ){
+				echo "Loading $url\n";
+				$this->addSite( $url );
 			}
-			return $this->getSite($url);
+			return $this->getSite( $url );
 		}
 	}
 
-	function addSite($url){
-		$site = Globals::$Sites->addSite($url);
-		if(isset($this->login)){
-			Globals::$Sites->getSite($url)->setLogin($this->login);
+	function getFromUrl(){
+
+	}
+
+	function addSite( $url ){
+		$this->sites[$url] = new Mediawiki( $url );
+		if( isset( $this->login ) ) {
+			$this->sites[$url]->setLogin( $this->login );
 		}
-		return $site;
+		return $this->sites[$url];
 	}
 
 	/**
 	 * @param $url
 	 * @return Mediawiki
 	 */
-	function getSite($url){
-
-		return Globals::$Sites->getSite($url);
+	function getSite( $url ){
+		return $this->sites[$url];
 	}
 
 }

@@ -20,7 +20,7 @@ $wikidata->doLogin();
 //$rows = $db->mysql2array($dbQuery);
 $rows = array(
 	//array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'À Beira do Caminho'),
-	array('lang' => 'en','site' => 'wikivoyage','namespace' => '0','title' => 'Berlin'),
+	//array('lang' => 'en','site' => 'wikivoyage','namespace' => '0','title' => 'Berlin'),
 	array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Pear'),
 	array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Banana'),
 );
@@ -29,74 +29,59 @@ foreach($rows as $row){
 	$baseSite = $wm->getFromSiteid($row['lang'].$row['site']);
 	$baseSite->doLogin();
 
-	// Find the entity we want to work with. First try the page we have, then interwiki links.
-	$basePage = $baseSite->getPage($baseSite->getNamespace($row['namespace']).$row['title']);
-	$basePage->load();
-	$pageInterwikis = $basePage->getInterwikisFromtext();
-	$baseEntity = $basePage->getEntity();
-	if( !isset($baseEntity->id) ){
-		echo "Failed to get entity from page, Looking at interwiki links..\n";
-		foreach($pageInterwikis as $interwikiData){
-			$remoteSite = $wm->getFromSiteid($interwikiData['site'].$baseSite->code);
-			if($remoteSite instanceof Mediawiki){
-				$remotePage = $remoteSite->getPage($interwikiData['link']);
-				$remoteEntity = $remotePage->getEntity();
-				if( isset($remoteEntity->id) ){
-					echo "Found baseEntity from ".$remoteSite->wikiid." ".$remotePage->title." ".$remoteEntity->id."\n";
-					$baseEntity = $remoteEntity;
-					break 1;
-				}
-			}
+	// Get an array of all pages involved
+	/* @var $usedPages Page[] */
+	$usedPages = array();
+	$usedPages[] = $baseSite->getPage($baseSite->getNamespace($row['namespace']).$row['title']);
+	$usedPages[0]->load();
+	$pageInterwikis = $usedPages[0]->getInterwikisFromtext();
+	foreach( $pageInterwikis as $interwikiData ){
+		$site = $wm->getFromSiteid($interwikiData['site'].$baseSite->code);
+		if($site instanceof Mediawiki){
+			$usedPages[] = $site->getPage($interwikiData['link']);
 		}
 	}
-	if( !isset($baseEntity->id) ){
-		echo "Failed to get entiy from iwlinks, Looking at possible templates\n";
-		//look for entities for links to other sites! wikipedia {{wikipedia}}, [[wikipedia:en:target]] wikivoyage
-		///\n\[\[(WikiPedia):LANG:([^\]]+)\]\]/i
-		///\n\{\{(WikiPedia)\|([^\]]+)\}\}/i
-		//first do this for this page, if we still havn't found it look through the iw links
+
+	//@todo parse other links to pages and add them to the userPages list such as [[WikiPedia:berlin]] ..
+	//look for entities for links to other sites! wikipedia {{wikipedia}}, [[wikipedia:en:target]] wikivoyage
+	///\n\[\[(WikiPedia):LANG:([^\]]+)\]\]/i
+	///\n\{\{(WikiPedia)\|([^\]]+)\}\}/i
+
+	// Try to find an entity to work on
+	/* @var $page Page */
+	foreach( $usedPages as $page ){
+		if( isset( $page->getEntity()->id ) ){
+			$baseEntity = $page->entity;
+			break;
+		}
 	}
-	if( !isset($baseEntity->id) ){
-		echo "We could not link the page to an entity\n";
-		//for now we will move on, at some point we can start creating new entities
+
+	// Are we still missing an entity?
+	if( !isset($baseEntity) ){
+		echo "Failed to find an entiy to work from\n";
+		//@todo we could create an entity to work on here... Instead we will continue;
 		continue;
 	}
+
 	echo "Found entity ".$baseEntity->id."\n";
 
-	// Add everything we can to the entity and save
-	foreach($pageInterwikis as $interwikiData){
-		echo "Adding sitelink ".$interwikiData['site'].$baseSite->code.":".$interwikiData['link']."\n";
-		$baseEntity->addSitelink($interwikiData['site'].$baseSite->code,$interwikiData['link']);
-		if($wm->getFromSiteid($interwikiData['site'].$baseSite->code)->code == 'wiki'){
-			//add label
-			//add aliases from redirects
+	// Add everything to the entity
+	foreach( $usedPages as $page ){
+		$baseEntity->addSitelink($page->site->wikiid,$page->title);
+		if($page->site->code == 'wiki'){
+			$baseEntity->addLabel($page->site->lang,$page->title);
+			//@todo add aliases from redirects
 		}
 	}
 
-	if ($baseSite->code == 'wikivoyage'){
-		//look for links to wikipedia via {{wikipedia}} and [[wikipedia:en:target]] [[WikiPedia:Berlin]]
-		//if found add them
-			//as we are now looking at a wikipedia article, try to add labels and aliases etc
-	} else if ($baseSite->code == 'wiki'){
-		//look for links to wikivoyage and add thme (no idea how these are formatted
+	echo "Saved entity ".$baseEntity->id."\n";
+	//$baseEntity->save(); //@todo remove the comment out from save...
+	$baseEntity->load();
+
+	foreach( $usedPages as $page ){
+		if ($page->removeEntityLinksFromText() == true){
+			echo "Saved entity ".$baseEntity->id."\n";
+			//$page->save(); //@todo remove the comment out from save...
+		}
 	}
-
-	//@todo only save if there is a change?
-	$baseEntity->save();
-
-	//Now see if we can update the pages
-
-	//reload item from wikidata
-	//foreach sitelink
-		//if the sitelink also exists in the db as a page
-		//load the page
-		//page = cleanwikipage($page, $item)
-		//save
-	//match remaining links
-	//if 0 remove from db, if > 0 update db
 }
-
-//cleanwikipage() is...
-	//try to remove every sitelink in item from page
-	//match interwikis
-		//if 0 interwikis remove the iw comment

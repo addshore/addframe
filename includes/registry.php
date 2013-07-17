@@ -29,17 +29,10 @@ class Registry {
 	 */
 	public function __get( $index ) {
 		if (!isset($this->objects[$index])){
-			//throw new Exception("Undefined index '$index' in registry");
+			throw new Exception("Undefined index '$index' in registry");
 			return null;
 		}
 		return $this->objects[$index];
-	}
-
-	/**
-	 * @return array of keys currently stored
-	 */
-	public function getKeys() {
-		return array_keys($this->objects);
 	}
 
 	/*
@@ -50,6 +43,6 @@ class Registry {
 	}
 
 	function __wake() { /*un serialize on wake*/
-		$this->$objects = unserialize( $this->objects );
+		$this->objects = unserialize( $this->objects );
 	}
 }

@@ -45,15 +45,15 @@ class Mediawiki {
 	}
 
 	function getPage ($page) {
-		return new Page($this->url,$page);
+		return new Page($this,$page);
 	}
 
 	function getUser ($username) {
-		return new User($this->url,$username);
+		return new User($this,$username);
 	}
 
 	function getEntityFromId ($id) {
-		return new WikibaseEntity($this->url,$id);
+		return new WikibaseEntity($this,$id);
 	}
 
 	function setLogin($userLogin){
@@ -61,7 +61,7 @@ class Mediawiki {
 	}
 
 	function newLogin($username, $password, $doLogin = false) {
-		$this->setLogin( new UserLogin($this->url,$username,$password) );
+		$this->setLogin( new UserLogin($this,$username,$password) );
 		if($doLogin === true){
 			$this->doLogin();
 		}
