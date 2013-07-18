@@ -32,11 +32,11 @@ foreach($rows as $row){
 	// Get an array of all pages involved
 	/* @var $usedPages Page[] */
 	$usedPages = array();
-	$usedPages[] = $baseSite->getPage($baseSite->getNamespace($row['namespace']).$row['title']);
+	$usedPages[] = $baseSite->getPage($baseSite->getNamespaceFromId($row['namespace']).$row['title']);
 	//$usedPages[] = $usedPages[0]->getPagesFromInterwikiLinks(); //@todo uncomment for deploy
 	$usedPages = array_merge( $usedPages,$usedPages[0]->getPagesFromInterprojectLinks() );
 	$usedPages = array_merge( $usedPages,$usedPages[0]->getPagesFromInterprojectTemplates() );
-	$usedPages = array_unique( $usedPages );
+	//@todo remove duplicate pages
 
 	// Try to find an entity to work on
 	/* @var $page Page */

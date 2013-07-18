@@ -159,7 +159,7 @@ class Mediawiki {
 		return $this->namespaces;
 	}
 
-	function getNamespace ($id){
+	function getNamespaceFromId ($id){
 		if(!isset($this->namespaces)){
 			$this->getNamespaces();
 		}
@@ -170,6 +170,15 @@ class Mediawiki {
 			return '';
 		}
 		throw new Exception("Could not return a namespace for id $id in ".$this->url);
+	}
+
+	//find the ns id from the title
+	function getNamespaceIDFromTitle ( $title ){
+		$explosion = explode(':',$title);
+		foreach($explosion as $part){
+			//@todo search for the first part in the ns array
+			//if we find it somewhere return the id of the namespace
+		}
 	}
 
 	function getSiteinfo () {

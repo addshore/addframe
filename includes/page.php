@@ -291,11 +291,25 @@ class Page {
 	 */
 	function removeEntityLinksFromText(){
 		$baseEntity = $this->getEntity();
-		if( !isset($baseEntity->id) ){
-			return false;
-		}
-		//@todo remove all possible stuff here
+		if($baseEntity instanceof WikibaseEntity){
+			$baseEntity->load();
+			if( !isset($baseEntity->id) ){
+				return false;
+			}
 
-		return true;
+			foreach($baseEntity->languageData['sitelinks'] as $sitelink){
+				$site = $this->site->family->getFromSiteid($sitelink['site']);
+				$site->getSiteinfo();
+				$lang = $site->lang;
+
+
+				//['site'] => 'abwiki', ['title'] => 'title'
+				print_r($sitelink);
+				die();
+			}
+
+			return true;
+		}
+		return false;
 	}
 }
