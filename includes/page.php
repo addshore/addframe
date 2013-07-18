@@ -6,43 +6,26 @@
  **/
 class Page {
 
-	/**
-	 * @var Mediawiki siteUrl for associated site
-	 */
+	/** @var Mediawiki siteUrl for associated site	 */
 	public $site;
-	/**
-	 * @var string title of Page
-	 */
+	/** @var string title of Page	 */
 	public $title;
-	/**
-	 * @var string text of Page
-	 */
+	/** @var string text of Page	 */
 	public $text;
-	/**
-	 * @var string pageid for Page
-	 */
+	/** @var string pageid for Page	 */
 	public $pageid;
-	/**
-	 * @var string namespace id number eg. 2
-	 */
+	/** @var string namespace id number eg. 2	 */
 	public $ns;
-	/**
-	 * @var string timestamp for the particular revision text we have got
-	 */
+	/** @var string timestamp for the particular revision text we have got	 */
 	public $timestamp;
-	/**
-	 * @var array of categories the page is in
-	 */
+	/** @var array of categories the page is in	 */
 	public $categories;
-	/**
-	 * @var string current protection status
-	 */
+	/** @var string current protection status	 */
 	public $protection;
-
-	/**
-	 * @var WikibaseEntity entity that is associated with the page
-	 */
+	/** @var WikibaseEntity entity that is associated with the page	 */
 	public $entity;
+	/** @var parser entity that is associated with the page	 */
+	public $parsed;
 
 	/**
 	 * @param $site
@@ -82,6 +65,18 @@ class Page {
 		return $this->text;
 	}
 
+	/**
+	 * Parsers the current text. Sets and returns the parser object.
+	 *
+	 * @return parser
+	 */
+	function parse(){
+		$parser = new parser($this->title,$this->text);
+		$parser->parse();
+		$this->parsed = $parser;
+		return $this->parsed;
+	}
+
 	function getEntity(){
 		$q['action'] = 'query';
 		$q['prop'] = 'pageprops';
@@ -101,23 +96,98 @@ class Page {
 	 */
 	//@todo add data about site type here i.e. wiki or wikivoyage?
 	function getInterwikisFromtext(){
+		if(!isset($this->text)){
+			$this->load();
+		}
+
 		$toReturn = array();
 		//@todo this list of langs should definatly come from a better place...
-		preg_match_all('/\n\[\[(nostalgia|ten|aa|ab|ace|af|ak|als|am|an|ang|ar|arc|arz|as|ast|av|ay|az|ba|bar|'.
-			'bat-smg|bcl|be|be-x-old|bg|bh|bi|bjn|bm|bn|bo|bpy|br|bs|bug|bxr|ca|cbk-zam|cdo|ce|ceb|ch|cho|chr|chy|ckb|'.
-			'co|cr|crh|cs|csb|cu|cv|cy|da|de|diq|dsb|dv|dz|ee|el|eml|en|eo|es|et|eu|ext|fa|ff|fi|fiu-vro|fj|fo|fr|frp|frr'.
-			'|fur|fy|ga|gag|gan|gd|gl|glk|gn|got|gu|gv|ha|hak|haw|he|hi|hif|ho|hr|hsb|ht|hu|hy|hz|ia|id|ie|ig|ii|ik|ilo|'.
-			'io|is|it|iu|ja|jbo|jv|ka|kaa|kab|kbd|kg|ki|kj|kk|kl|km|kn|ko|koi|kr|krc|ks|ksh|ku|kv|kw|ky|la|lad|lb|lbe|lez'.
-			'|lg|li|lij|lmo|ln|lo|lt|ltg|lv|map-bms|mdf|mg|mh|mhr|mi|min|mk|ml|mn|mo|mr|mrj|ms|mt|mus|mwl|my|myv|mzn|na|nah'.
-			'|nap|nds|nds-nl|ne|new|ng|nl|nn|no|nov|nrm|nso|nv|ny|oc|om|or|os|pa|pag|pam|pap|pcd|pdc|pfl|pi|pih|pl|pms|pnb'.
-			'|pnt|ps|pt|qu|rm|rmy|rn|ro|roa-rup|roa-tara|ru|rue|rw|sa|sah|sc|scn|sco|sd|se|sg|sh|si|simple|sk|sl|sm|sn|so|'.
-			'sq|sr|srn|ss|st|stq|su|sv|sw|szl|ta|te|tet|tg|th|ti|tk|tl|tn|to|tpi|tr|ts|tt|tum|tw|ty|udm|ug|uk|ur|ve|vec|vep'.
-			'|vi|vls|vo|wa|war|wo|wuu|xal|xh|xmf|yi|yo|za|zea|zh|zh-classical|zh-min-nan|zh-yue|zu):([^\]]+)\]\]/'
+		preg_match_all('/\n\[\['.Globals::$regex['langs'].':([^\]]+)\]\]/'
 			,$this->text,$matches);
 		foreach($matches[0] as $key => $match){
 			$toReturn[] = Array('site' => $matches[1][$key], 'link' => $matches[2][$key]);
 		}
 		return $toReturn;
+	}
+
+	/**
+	 * Finds interwikis on the page and returns an array of pages for them
+	 *
+	 * @return array
+	 */
+	function getPagesFromInterwikiLinks(){
+		$pages = array();
+
+		$interwikis = $this->getInterwikisFromtext();
+		foreach( $interwikis as $interwikiData ){
+			$site = $this->site->family->getFromSiteid($interwikiData['site'].$this->site->code);
+			if($site instanceof Mediawiki){
+				$pages[] = $site->getPage($interwikiData['link']);
+			}
+		}
+
+		return $pages;
+	}
+
+	function getPagesFromInterprojectLinks(){
+		if(!isset($this->text)){
+			$this->load();
+		}
+		$pages = array();
+
+		preg_match_all('/\[\['.Globals::$regex['sites'].':('.Globals::$regex['langs'].':)?([^\]]+?)\]\]/i',$this->text,$matches);
+		foreach($matches[0] as $key => $match){
+			$parts = array();
+
+			//set the site
+			if( stristr($matches[1][$key], 'wikipedia') ){
+				$parts['site'] = 'wiki';
+			} else {
+				$parts['site'] = strtolower( $matches[1][$key] );
+			}
+			//set the language
+			if( $matches[3][$key] == '') {
+				$parts['lang'] = $this->site->lang;
+			} else {
+				$parts['lang'] = $matches[3][$key];
+			}
+			$parts['title'] = $matches[4][$key];
+
+			$site = $this->site->family->getFromSiteid( $parts['lang'].$parts['site'] );
+			if($site instanceof Mediawiki){
+				$pages[] = $site->getPage( $parts['title'] );
+			}
+		}
+
+		return $pages;
+	}
+
+	function getPagesFromInterprojectTemplates(){
+		if(!isset($this->text)){
+			$this->load();
+		}
+		$pages = array();
+
+		preg_match_all('/\{\{(wikipedia|wikivoyage)(\|([^\]]+?))\}\}/i',$this->text,$matches);
+		foreach($matches[0] as $key => $match){
+			$parts = array();
+			//set the site
+			if( stristr($matches[1][$key], 'wikipedia') ){
+				$parts['site'] = 'wiki';
+			} else {
+				$parts['site'] = strtolower( $matches[1][$key] );
+			}
+			$parts['lang'] = $this->site->lang;
+			$parts['title'] = $matches[3][$key];
+
+			$site = $this->site->family->getFromSiteid( $parts['lang'].$parts['site'] );
+			if($site instanceof Mediawiki){
+				$pages[] = $site->getPage( $parts['title'] );
+			}
+
+		}
+
+		return $pages;
 	}
 
 	/**

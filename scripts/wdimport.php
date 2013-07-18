@@ -20,9 +20,9 @@ $wikidata->doLogin();
 //$rows = $db->mysql2array($dbQuery);
 $rows = array(
 	//array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'À Beira do Caminho'),
-	//array('lang' => 'en','site' => 'wikivoyage','namespace' => '0','title' => 'Berlin'),
-	array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Pear'),
-	array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Banana'),
+	array('lang' => 'en','site' => 'wikivoyage','namespace' => '0','title' => 'Berlin'),
+	//array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Pear'),
+	//array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Banana'),
 );
 foreach($rows as $row){
 	// Load our site
@@ -33,19 +33,10 @@ foreach($rows as $row){
 	/* @var $usedPages Page[] */
 	$usedPages = array();
 	$usedPages[] = $baseSite->getPage($baseSite->getNamespace($row['namespace']).$row['title']);
-	$usedPages[0]->load();
-	$pageInterwikis = $usedPages[0]->getInterwikisFromtext();
-	foreach( $pageInterwikis as $interwikiData ){
-		$site = $wm->getFromSiteid($interwikiData['site'].$baseSite->code);
-		if($site instanceof Mediawiki){
-			$usedPages[] = $site->getPage($interwikiData['link']);
-		}
-	}
-
-	//@todo parse other links to pages and add them to the userPages list such as [[WikiPedia:berlin]] ..
-	//look for entities for links to other sites! wikipedia {{wikipedia}}, [[wikipedia:en:target]] wikivoyage
-	///\n\[\[(WikiPedia):LANG:([^\]]+)\]\]/i
-	///\n\{\{(WikiPedia)\|([^\]]+)\}\}/i
+	//$usedPages[] = $usedPages[0]->getPagesFromInterwikiLinks(); //@todo uncomment for deploy
+	$usedPages = array_merge( $usedPages,$usedPages[0]->getPagesFromInterprojectLinks() );
+	$usedPages = array_merge( $usedPages,$usedPages[0]->getPagesFromInterprojectTemplates() );
+	$usedPages = array_unique( $usedPages );
 
 	// Try to find an entity to work on
 	/* @var $page Page */
@@ -75,13 +66,13 @@ foreach($rows as $row){
 	}
 
 	echo "Saved entity ".$baseEntity->id."\n";
-	//$baseEntity->save(); //@todo remove the comment out from save...
+	//$baseEntity->save(); //@todo remove the comment out from save... uncomment for deploy
 	$baseEntity->load();
 
 	foreach( $usedPages as $page ){
 		if ($page->removeEntityLinksFromText() == true){
 			echo "Saved page ".$page->title."\n";
-			//$page->save(); //@todo remove the comment out from save...
+			//$page->save(); //@todo remove the comment out from save... uncomment for deploy
 		}
 	}
 }

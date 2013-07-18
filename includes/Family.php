@@ -56,7 +56,7 @@ class Family extends Registry {
 	}
 
 	function addSite( $url ){
-		$this->sites[$url] = new Mediawiki( $url );
+		$this->sites[$url] = new Mediawiki( $url, $this );
 		if( isset( $this->login ) ) {
 			$this->sites[$url]->setLogin( $this->login );
 		}
