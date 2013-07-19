@@ -65,13 +65,13 @@ foreach($rows as $row){
 		}
 	}
 
-	echo "Saved entity ".$baseEntity->id."\n";
 	//$baseEntity->save(); //@todo remove the comment out from save... uncomment for deploy
 	$baseEntity->load();
 
 	foreach( $usedPages as $page ){
+		//@todo see if this page is in the db, no point in all of this if we already know it has no links...
+		$page->load();
 		if ($page->removeEntityLinksFromText() == true){
-			echo "Saved page ".$page->title."\n";
 			//$page->save(); //@todo remove the comment out from save... uncomment for deploy
 		}
 	}

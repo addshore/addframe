@@ -147,6 +147,7 @@ class Mediawiki {
 	function getNamespaces () {
 		if(!isset($this->namespaces)){
 			$returned = $this->doRequest(array('action' => 'query', 'meta' => 'siteinfo', 'siprop' => 'namespaces|namespacealiases'));
+			$this->namespaces[0] = Array('');
 			foreach( $returned['query']['namespaces'] as $key => $nsArray){
 				if($nsArray['id'] != '0'){
 					$this->namespaces[$key][] = $nsArray['*'];
@@ -156,7 +157,6 @@ class Mediawiki {
 			foreach( $returned['query']['namespacealiases'] as $nsArray){
 				$this->namespaces[$nsArray['id']][] = $nsArray['*'];
 			}
-			$this->namespaces[0] = Array('');
 		}
 		return $this->namespaces;
 	}
@@ -178,8 +178,9 @@ class Mediawiki {
 	function getNamespaceIdFromTitle ( $title ){
 		$explosion = explode(':',$title);
 		if(isset($explosion[0])){
-			foreach($this->namespaces as $nsid => $namespaceList){
-				foreach($namespaceList as $namespace){
+			$this->getNamespaces();
+			foreach($this->namespaces as $nsid => $namespaceArray){
+				foreach($namespaceArray as $namespace){
 					if($explosion[0] == $namespace){
 						return $nsid;
 					}

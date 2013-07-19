@@ -246,6 +246,7 @@ class Page {
 	 */
 	function save($summary = null, $minor = false){
 		$this->site->doEdit($this->title,$this->text,$summary,$minor);
+		echo "Saved page ".$this->title."\n";
 	}
 
 	/**
@@ -322,7 +323,6 @@ class Page {
 				$site->getSiteinfo();
 				$lang = $site->lang;
 				$titleEnd = $this->getTitleWithoutNamespace();
-				if($this->nsid != '0')
 				$possibleNamespaces = $this->site->getNamespaces();
 				$possibleNamespaces = $possibleNamespaces[$this->nsid];
 
@@ -334,8 +334,12 @@ class Page {
 						$titleVarient = $titleEnd;
 					}
 					//@todo remember (zh-min-nan|nan) and (nb|no) (they are the same site)
+					$lengthBefore = strlen($this->text);
 					$removeLink = '/\n ?\[\['.$lang.' ?: ?'.str_replace(' ','( |_)',preg_quote($titleVarient,'/')).' ?\]\] ?/';
 					$this->removeRegexMatched($removeLink);
+					if($lengthBefore < strlen($this->text)){
+						echo "Removed link! $lang:$title\n";
+					}
 				}
 
 			}

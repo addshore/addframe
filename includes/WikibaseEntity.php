@@ -74,6 +74,7 @@ class WikibaseEntity extends Page{
 		}
 		$param['data'] = $this->serializaData();
 		if(isset($summary)){ $param['summary'] = $summary;}
+		echo "Saved entity ".$this->id."\n";
 		return $this->site->doWbEditEntity($param);
 	}
 
