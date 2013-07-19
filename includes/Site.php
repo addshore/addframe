@@ -143,6 +143,7 @@ class Mediawiki {
 	 *
 	 * @return array of namespaces
 	 */
+	//@todo specify a single nsid to return
 	function getNamespaces () {
 		if(!isset($this->namespaces)){
 			$returned = $this->doRequest(array('action' => 'query', 'meta' => 'siteinfo', 'siprop' => 'namespaces|namespacealiases'));
@@ -155,6 +156,7 @@ class Mediawiki {
 			foreach( $returned['query']['namespacealiases'] as $nsArray){
 				$this->namespaces[$nsArray['id']][] = $nsArray['*'];
 			}
+			$this->namespaces[0] = Array('');
 		}
 		return $this->namespaces;
 	}

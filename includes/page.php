@@ -36,10 +36,13 @@ class Page {
 		$this->title = $title;
 	}
 
-	//@todo load as much stuff as we can here
-	//function loadPage(){
-
-	//}
+	function getTitleWithoutNamespace(){
+		if($this->nsid != null && $this->nsid != '0'){
+			$explode = explode(':', $this->title, '2');
+			return $explode[1];
+		}
+		return $this->title;
+	}
 
 	/**
 	 * @return string Load page from the api
@@ -318,25 +321,28 @@ class Page {
 				$site = $this->site->family->getSiteFromSiteid($sitelink['site']);
 				$site->getSiteinfo();
 				$lang = $site->lang;
+				$titleEnd = $this->getTitleWithoutNamespace();
+				if($this->nsid != '0')
+				$possibleNamespaces = $this->site->getNamespaces();
+				$possibleNamespaces = $possibleNamespaces[$this->nsid];
 
+				//@todo this could all be improved with something like getRegexForTitle or  getRegexForInterwikiLink
+				foreach($possibleNamespaces as $namespace){
+					if($namespace != ""){
+						$titleVarient = $namespace.':'.$titleEnd;
+					} else {
+						$titleVarient = $titleEnd;
+					}
+					//@todo remember (zh-min-nan|nan) and (nb|no) (they are the same site)
+					$removeLink = '/\n ?\[\['.$lang.' ?: ?'.str_replace(' ','( |_)',preg_quote($titleVarient,'/')).' ?\]\] ?/';
+					$this->removeRegexMatched($removeLink);
+				}
 
-				//foreach possible link
-				//$link = "\n ?\[\[".$lang." ?: ?".str_replace(" ","( |_)",preg_quote($title,'/'))." ?\]\] ?";
-				//if we can find said link
-				//replace it with nothing!!!
-
-				//Remove any extra space at the end of the article
-//				$return = preg_replace('/(\n\n)\n+$/', "$1", $return);
-//				$return = preg_replace('/^(\n|\r){0,5}$/', "", $return);
-
-
-				//['site'] => 'abwiki', ['title'] => 'title'
-
-				//remameber (zh-min-nan|nan) and (nb|no) (they are the same site)
-
-				print_r($sitelink);
-				die();
 			}
+
+			//Remove extra space we might have left at the end
+			$this->pregReplace('/(\n\n)\n+$/',"$1");
+			$this->pregReplace('/^(\n|\r){0,5}$/',"");
 
 			return true;
 		}
