@@ -47,7 +47,7 @@ class WikibaseEntity extends Page{
 		$result = $this->site->doWbGetEntities($param);
 		foreach($result['entities'] as $x){
 			$this->pageid = $x['pageid'];
-			$this->ns = $x['ns'];
+			$this->nsid = $x['ns'];
 			$this->title = $x['title'];
 			$this->lastrevid = $x['lastrevid'];
 			$this->timestamp = $x['modified'];
@@ -67,8 +67,11 @@ class WikibaseEntity extends Page{
 	 * Get the entity from the api
 	 */
 	function save($summary = null, $minor = null){
-		//@todo if there is no id we want a new entity!
-		$param['id'] = $this->id;
+		if( !isset($this->id) ){
+			$param['new'] = $this->entityType;
+		} else {
+			$param['id'] = $this->id;
+		}
 		$param['data'] = $this->serializaData();
 		if(isset($summary)){ $param['summary'] = $summary;}
 		return $this->site->doWbEditEntity($param);

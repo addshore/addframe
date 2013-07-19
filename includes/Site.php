@@ -172,13 +172,20 @@ class Mediawiki {
 		throw new Exception("Could not return a namespace for id $id in ".$this->url);
 	}
 
-	//find the ns id from the title
-	function getNamespaceIDFromTitle ( $title ){
+	//find the nsid id from the title
+	function getNamespaceIdFromTitle ( $title ){
 		$explosion = explode(':',$title);
-		foreach($explosion as $part){
-			//@todo search for the first part in the ns array
-			//if we find it somewhere return the id of the namespace
+		if(isset($explosion[0])){
+			foreach($this->namespaces as $nsid => $namespaceList){
+				foreach($namespaceList as $namespace){
+					if($explosion[0] == $namespace){
+						return $nsid;
+					}
+				}
+
+			}
 		}
+		return '0';
 	}
 
 	function getSiteinfo () {

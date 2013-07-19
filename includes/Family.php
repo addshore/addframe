@@ -38,7 +38,7 @@ class Family extends Registry {
 	 * @param $siteid string of the siteid for the site
 	 * @return Mediawiki
 	 */
-	function getFromSiteid( $siteid ){
+	function getSiteFromSiteid( $siteid ){
 		if( isset( $this->sitematrix[$siteid] ) ){
 			$url = parse_url ( $this->sitematrix[$siteid]['url'] );
 			$url = $url['host'];
@@ -51,8 +51,11 @@ class Family extends Registry {
 		}
 	}
 
-	function getFromUrl(){
-
+	function getSiteFromUrl( $url ){
+		if( !isset( $this->sites[$url] ) ){
+			$this->addSite( $url );
+		}
+		return $this->getSite( $url );
 	}
 
 	function addSite( $url ){

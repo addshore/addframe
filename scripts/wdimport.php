@@ -10,7 +10,7 @@ require_once( dirname(__FILE__).'/../init.php' );
 
 //Create a site
 $wm = new Family('wikimedia',new UserLogin('addbot','password'),'meta.wikimedia.org');
-$wikidata = $wm->getFromSiteid('wikidatawiki');
+$wikidata = $wm->getSiteFromSiteid('wikidatawiki');
 $wikidata->doLogin();
 
 //$dbConfig = parse_ini_file('~/replica.my.cnf');
@@ -26,7 +26,7 @@ $rows = array(
 );
 foreach($rows as $row){
 	// Load our site
-	$baseSite = $wm->getFromSiteid($row['lang'].$row['site']);
+	$baseSite = $wm->getSiteFromSiteid($row['lang'].$row['site']);
 	$baseSite->doLogin();
 
 	// Get an array of all pages involved

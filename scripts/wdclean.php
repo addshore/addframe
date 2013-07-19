@@ -9,14 +9,14 @@ require_once( dirname(__FILE__).'/../init.php' );
 
 //Create a site
 $wm = new Family('wikimedia',new UserLogin('localhost','Bot','botp123'),'meta.wikimedia.org/w/api.php');
-$wikidata = $wm->getFromSiteid('wikidatawiki');
+$wikidata = $wm->getSiteFromSiteid('wikidatawiki');
 $wikidata->doLogin();
 
 for($i = 1; $i < 14000000; $i ++){
 	$entity = $wikidata->getEntityFromId('q'.$i);
 	$entity->load();
 	foreach($entity->languageData as $site => $link){
-		$site = $wm->getFromSiteid($site);
+		$site = $wm->getSiteFromSiteid($site);
 		//if the article does not exist
 			//if we have been moved update the sitelink
 			//if not then remove the sitelink

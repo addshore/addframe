@@ -8,14 +8,14 @@ class Page {
 
 	/** @var Mediawiki siteUrl for associated site	 */
 	public $site;
-	/** @var string title of Page	 */
+	/** @var string title of Page including namespace	 */
 	public $title;
 	/** @var string text of Page	 */
 	public $text;
 	/** @var string pageid for Page	 */
 	public $pageid;
 	/** @var string namespace id number eg. 2	 */
-	public $ns;
+	public $nsid;
 	/** @var string timestamp for the particular revision text we have got	 */
 	public $timestamp;
 	/** @var array of categories the page is in	 */
@@ -51,7 +51,7 @@ class Page {
 		$result = $this->site->doPropRevsions($param);
 
 		foreach($result['query']['pages'] as $x){
-			$this->ns = $x['ns'];
+			$this->nsid = $x['ns'];
 			if( !isset( $x['missing'] ) ){
 				$this->pageid = $x['pageid'];
 				$this->text = $x['revisions']['0']['*'];
@@ -62,6 +62,7 @@ class Page {
 				//MSG page doesn't exist
 			}
 		}
+		$this->normaliseTitleNamespace();
 		return $this->text;
 	}
 
@@ -77,6 +78,21 @@ class Page {
 		return $this->parsed;
 	}
 
+	function normaliseTitleNamespace(){
+		$this->nsid = $this->site->getNamespaceIdFromTitle($this->title);
+
+		if($this->nsid != '0'){
+			$siteNamespaces = $this->site->getNamespaces();
+			$normalisedNamespace = $siteNamespaces[$this->nsid][0];
+
+			$explosion = explode(':',$this->title ,2);
+			$explosion[0] = $normalisedNamespace;
+			$this->title = implode(':', $explosion);
+		}
+		return $this->title;
+
+	}
+
 	function getEntity(){
 		$q['action'] = 'query';
 		$q['prop'] = 'pageprops';
@@ -84,7 +100,8 @@ class Page {
 		$result = $this->site->doRequest($q);
 		foreach($result['query']['pages'] as $page){
 			if( isset( $page['pageprops']['wikibase_item'] ) ){
-				$this->entity = new WikibaseEntity(Globals::$Sites->getSite($this->site->wikibase),$page['pageprops']['wikibase_item']);
+				//$this->entity = new WikibaseEntity($this->site->family->getSiteFromUrl('test.wikidata.org'),$page['pageprops']['wikibase_item']); //@todo, remove before deploy
+				$this->entity = new WikibaseEntity($this->site->family->getSiteFromUrl($this->site->wikibase),$page['pageprops']['wikibase_item']);
 				return  $this->entity;
 			}
 		}
@@ -120,7 +137,7 @@ class Page {
 
 		$interwikis = $this->getInterwikisFromtext();
 		foreach( $interwikis as $interwikiData ){
-			$site = $this->site->family->getFromSiteid($interwikiData['site'].$this->site->code);
+			$site = $this->site->family->getSiteFromSiteid($interwikiData['site'].$this->site->code);
 			if($site instanceof Mediawiki){
 				$pages[] = $site->getPage($interwikiData['link']);
 			}
@@ -153,7 +170,7 @@ class Page {
 			}
 			$parts['title'] = $matches[4][$key];
 
-			$site = $this->site->family->getFromSiteid( $parts['lang'].$parts['site'] );
+			$site = $this->site->family->getSiteFromSiteid( $parts['lang'].$parts['site'] );
 			if($site instanceof Mediawiki){
 				$pages[] = $site->getPage( $parts['title'] );
 			}
@@ -180,7 +197,7 @@ class Page {
 			$parts['lang'] = $this->site->lang;
 			$parts['title'] = $matches[3][$key];
 
-			$site = $this->site->family->getFromSiteid( $parts['lang'].$parts['site'] );
+			$site = $this->site->family->getSiteFromSiteid( $parts['lang'].$parts['site'] );
 			if($site instanceof Mediawiki){
 				$pages[] = $site->getPage( $parts['title'] );
 			}
@@ -214,7 +231,7 @@ class Page {
 
 		foreach($result->value['query']['pages'] as $x){
 			$this->pageid = $x['pageid'];
-			$this->ns = $x['ns'];
+			$this->nsid = $x['nsid'];
 			$this->categories = $x['categories'];
 		}
 		return $this->categories;
@@ -298,12 +315,25 @@ class Page {
 			}
 
 			foreach($baseEntity->languageData['sitelinks'] as $sitelink){
-				$site = $this->site->family->getFromSiteid($sitelink['site']);
+				$site = $this->site->family->getSiteFromSiteid($sitelink['site']);
 				$site->getSiteinfo();
 				$lang = $site->lang;
 
 
+				//foreach possible link
+				//$link = "\n ?\[\[".$lang." ?: ?".str_replace(" ","( |_)",preg_quote($title,'/'))." ?\]\] ?";
+				//if we can find said link
+				//replace it with nothing!!!
+
+				//Remove any extra space at the end of the article
+//				$return = preg_replace('/(\n\n)\n+$/', "$1", $return);
+//				$return = preg_replace('/^(\n|\r){0,5}$/', "", $return);
+
+
 				//['site'] => 'abwiki', ['title'] => 'title'
+
+				//remameber (zh-min-nan|nan) and (nb|no) (they are the same site)
+
 				print_r($sitelink);
 				die();
 			}
