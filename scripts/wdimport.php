@@ -20,7 +20,7 @@ $wikidata->doLogin();
 //$rows = $db->mysql2array($dbQuery);
 $rows = array(
 	//array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'À Beira do Caminho'),
-	array('lang' => 'en','site' => 'wikivoyage','namespace' => '0','title' => 'Berlin'),
+	array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Mechanical system'),
 	//array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Pear'),
 	//array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Banana'),
 );
@@ -33,7 +33,7 @@ foreach($rows as $row){
 	/* @var $usedPages Page[] */
 	$usedPages = array();
 	$usedPages[] = $baseSite->getPage($baseSite->getNamespaceFromId($row['namespace']).$row['title']);
-	//$usedPages[] = $usedPages[0]->getPagesFromInterwikiLinks(); //@todo uncomment for deploy
+	$usedPages = array_merge( $usedPages,$usedPages[0]->getPagesFromInterwikiLinks() );
 	$usedPages = array_merge( $usedPages,$usedPages[0]->getPagesFromInterprojectLinks() );
 	$usedPages = array_merge( $usedPages,$usedPages[0]->getPagesFromInterprojectTemplates() );
 	//@todo remove duplicate pages
@@ -41,8 +41,8 @@ foreach($rows as $row){
 	// Try to find an entity to work on
 	/* @var $page Page */
 	foreach( $usedPages as $page ){
-		if( isset( $page->getEntity()->id ) ){
-			$baseEntity = $page->entity;
+		if( $page->getEntity() instanceof WikibaseEntity ){
+			//$baseEntity = $page->entity;
 			break;
 		}
 	}
@@ -51,7 +51,8 @@ foreach($rows as $row){
 	if( !isset($baseEntity) ){
 		echo "Failed to find an entiy to work from\n";
 		//@todo we could create an entity to work on here... Instead we will continue;
-		continue;
+		//continue;
+		$baseEntity = new WikibaseEntity($wikidata, null, 'item');
 	}
 
 	echo "Found entity ".$baseEntity->id."\n";
@@ -65,7 +66,8 @@ foreach($rows as $row){
 		}
 	}
 
-	//$baseEntity->save(); //@todo remove the comment out from save... uncomment for deploy
+	echo $baseEntity->serializaData().'\n';
+	print_r( $baseEntity->save() ); //@todo remove the comment out from save... uncomment for deploy
 	$baseEntity->load();
 
 //	foreach( $usedPages as $page ){
@@ -77,7 +79,7 @@ foreach($rows as $row){
 //	}
 	$usedPages[0]->load();
 	if ($usedPages[0]->removeEntityLinksFromText() == true){
-		//$usedPages[0]->save();
+		print_r( $usedPages[0]->save() );
 	}
 
 }

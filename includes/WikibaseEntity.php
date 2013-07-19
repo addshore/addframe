@@ -11,15 +11,20 @@ class WikibaseEntity extends Page{
 	 */
 	public $site;
 	public $id;
+	public $new = null;
 	public $lastrevid;
 	public $entityType;
 	public $languageData;
 
 	//@todo we should keep a changed status, if we call save without changing just dont bother..?
 
-	function __construct( $site, $id = null ) {
+	function __construct( $site, $id = null , $new = null) {
 		if( isset ( $id ) ){
 			$this->id = $id;//@todo validate  and correct the id (lower case)
+		}
+		if( isset( $new ) ){
+			$this->new = true;
+			$this->entityType = $new;
 		}
 		$this->site = $site;
 	}
@@ -43,24 +48,27 @@ class WikibaseEntity extends Page{
 	 * @return array of entity languageData
 	 */
 	function load(){
-		$param['ids'] = $this->id;
-		$result = $this->site->doWbGetEntities($param);
-		foreach($result['entities'] as $x){
-			$this->pageid = $x['pageid'];
-			$this->nsid = $x['ns'];
-			$this->title = $x['title'];
-			$this->lastrevid = $x['lastrevid'];
-			$this->timestamp = $x['modified'];
-			$this->entityType = $x['type'];
-			//@todo this list of returns should probably be somewhere else
-			$canGet = Array('labels', 'descriptions', 'aliases', 'sitelinks');
-			foreach ( $canGet as $returnType){
-				if ( isset( $x[$returnType]) ) {
-					$this->languageData[$returnType] = $x[$returnType];
+		if( $this->new != true){
+			$param['ids'] = $this->id;
+			$result = $this->site->doWbGetEntities($param);
+			foreach($result['entities'] as $x){
+				$this->pageid = $x['pageid'];
+				$this->nsid = $x['ns'];
+				$this->title = $x['title'];
+				$this->lastrevid = $x['lastrevid'];
+				$this->timestamp = $x['modified'];
+				$this->entityType = $x['type'];
+				//@todo this list of returns should probably be somewhere else
+				$canGet = Array('labels', 'descriptions', 'aliases', 'sitelinks');
+				foreach ( $canGet as $returnType){
+					if ( isset( $x[$returnType]) ) {
+						$this->languageData[$returnType] = $x[$returnType];
+					}
 				}
 			}
+			return $this->languageData;
 		}
-		return $this->languageData;
+		return null;
 	}
 
 	/**
@@ -93,10 +101,11 @@ class WikibaseEntity extends Page{
 	 * @param $value string value to set the data to to the identifier
 	 */
 	function modifyLanguageData($type, $identifier, $value){
-		$idkey = 'language'; //default
-		if( $type == 'sitelinks' ){ $idkey = 'sites'; }
-		$this->languageData[$type][$identifier][$idkey] = $identifier;
-		$this->languageData[$type][$identifier]['value'] = $value;
+		$idkey1 = 'language'; //default
+		$idkey2 = 'value';
+		if( $type == 'sitelinks' ){ $idkey1 = 'site'; $idkey2 = 'title'; }
+		$this->languageData[$type][$identifier][$idkey1] = $identifier;
+		$this->languageData[$type][$identifier][$idkey2] = $value;
 	}
 
 	function addLanguageData($type, $identifier, $value){
@@ -122,7 +131,7 @@ class WikibaseEntity extends Page{
 	function removeSitelink($siteid){ $this->removeLanguageData('sitelinks',$siteid); }
 
 	function modifyAliases($language, $value){
-		$this->languageData['aliases'][$language]['site'] = $language;
+		$this->languageData['aliases'][$language]['language'] = $language;
 		$this->languageData['aliases'][$language]['value'] = $value;
 	}
 

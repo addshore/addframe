@@ -243,10 +243,11 @@ class Page {
 	/**
 	 * @param null $summary string to save the Page with
 	 * @param bool $minor should be minor?
+	 * @return string
 	 */
 	function save($summary = null, $minor = false){
-		$this->site->doEdit($this->title,$this->text,$summary,$minor);
 		echo "Saved page ".$this->title."\n";
+		return $this->site->doEdit($this->title,$this->text,$summary,$minor);
 	}
 
 	/**

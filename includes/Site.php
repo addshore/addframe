@@ -54,8 +54,8 @@ class Mediawiki {
 		}
 	}
 
-	function getPage ($page) {
-		return new Page($this,$page);
+	function getPage ($title) {
+		return new Page($this,$title);
 	}
 
 	function getUser ($username) {
@@ -292,6 +292,7 @@ class Mediawiki {
 	function doWbEditEntity ($parameters){
 		$parameters['action'] = 'wbeditentity';
 		$parameters['token'] = $this->getEditToken();
+		print_r($parameters);
 		return $this->doRequest(null, $parameters );
 	}
 
