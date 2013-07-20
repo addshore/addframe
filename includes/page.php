@@ -36,7 +36,11 @@ class Page {
 		$this->title = $title;
 	}
 
+	/**
+	 * @return string The title with the namespace removed if possible
+	 */
 	function getTitleWithoutNamespace(){
+		$this->nsid = $this->site->getNamespaceIdFromTitle($this->title);
 		if($this->nsid != null && $this->nsid != '0'){
 			$explode = explode(':', $this->title, '2');
 			return $explode[1];
@@ -81,6 +85,9 @@ class Page {
 		return $this->parsed;
 	}
 
+	/**
+	 * @return string Normalise the namespace of the title if possible.
+	 */
 	function normaliseTitleNamespace(){
 		$this->nsid = $this->site->getNamespaceIdFromTitle($this->title);
 
@@ -96,6 +103,9 @@ class Page {
 
 	}
 
+	/**
+	 * @return null|WikibaseEntity The entity that this page is included on
+	 */
 	function getEntity(){
 		$q['action'] = 'query';
 		$q['prop'] = 'pageprops';
@@ -103,7 +113,6 @@ class Page {
 		$result = $this->site->doRequest($q);
 		foreach($result['query']['pages'] as $page){
 			if( isset( $page['pageprops']['wikibase_item'] ) ){
-				//$this->entity = new WikibaseEntity($this->site->family->getSiteFromUrl('test.wikidata.org'),$page['pageprops']['wikibase_item']); //@todo, remove before deploy
 				$this->entity = new WikibaseEntity($this->site->family->getSiteFromUrl($this->site->wikibase),$page['pageprops']['wikibase_item']);
 				return  $this->entity;
 			}
@@ -149,6 +158,9 @@ class Page {
 		return $pages;
 	}
 
+	/**
+	 * @return array of Pages linked to using inter project links
+	 */
 	function getPagesFromInterprojectLinks(){
 		if(!isset($this->text)){
 			$this->load();
@@ -182,6 +194,9 @@ class Page {
 		return $pages;
 	}
 
+	/**
+	 * @return array of Pages linked to using inter project / page templates
+	 */
 	function getPagesFromInterprojectTemplates(){
 		if(!isset($this->text)){
 			$this->load();
@@ -339,7 +354,7 @@ class Page {
 					$removeLink = '/\n ?\[\['.$lang.' ?: ?'.str_replace(' ','( |_)',preg_quote($titleVarient,'/')).' ?\]\] ?/';
 					$this->removeRegexMatched($removeLink);
 					if($lengthBefore < strlen($this->text)){
-						echo "Removed link! $lang:$title\n";
+						echo "Removed link! $lang:$titleVarient\n";
 					}
 				}
 

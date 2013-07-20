@@ -6,17 +6,22 @@
  **/
 class WikibaseEntity extends Page{
 
-	/**
-	 * @var Mediawiki
-	 */
+	/** @var Mediawiki site of entity*/
 	public $site;
+	/** @var string id of entity*/
 	public $id;
+	/** @var boolean is this a new entity? Does it need to be created?*/
 	public $new = null;
 	public $lastrevid;
+	/** @var string type of entity (property|item)*/
 	public $entityType;
+	/** @var array languagedata for the item (alliases|labels|sitelinks)*/
 	public $languageData;
+	/** @var boolean has the item been changed since it was loaded?*/
+	public $changed = false;
 
-	//@todo we should keep a changed status, if we call save without changing just dont bother..?
+
+	//@todo manipulate statements
 
 	function __construct( $site, $id = null , $new = null) {
 		if( isset ( $id ) ){
@@ -29,7 +34,11 @@ class WikibaseEntity extends Page{
 		$this->site = $site;
 	}
 
-	//@todo this should use the stored side db name rather than being passed one
+	/**
+	 * @param $site string of page
+	 * @param $title string of page
+	 * @return bool|string false or the id
+	 */
 	function getIdFromPage ($site,$title){
 		$param['sites'] = $site;
 		$param['titles'] = $title;
@@ -58,13 +67,7 @@ class WikibaseEntity extends Page{
 				$this->lastrevid = $x['lastrevid'];
 				$this->timestamp = $x['modified'];
 				$this->entityType = $x['type'];
-				//@todo this list of returns should probably be somewhere else
-				$canGet = Array('labels', 'descriptions', 'aliases', 'sitelinks');
-				foreach ( $canGet as $returnType){
-					if ( isset( $x[$returnType]) ) {
-						$this->languageData[$returnType] = $x[$returnType];
-					}
-				}
+				$this->languageData = $this->unserializeLanguageData($x);
 			}
 			return $this->languageData;
 		}
@@ -72,7 +75,7 @@ class WikibaseEntity extends Page{
 	}
 
 	/**
-	 * Get the entity from the api
+	 * Save the entity through the api
 	 */
 	function save($summary = null, $minor = null){
 		if( !isset($this->id) ){
@@ -80,7 +83,7 @@ class WikibaseEntity extends Page{
 		} else {
 			$param['id'] = $this->id;
 		}
-		$param['data'] = $this->serializaData();
+		$param['data'] = $this->serializeLanguageData();
 		if(isset($summary)){ $param['summary'] = $summary;}
 		echo "Saved entity ".$this->id."\n";
 		return $this->site->doWbEditEntity($param);
@@ -90,9 +93,24 @@ class WikibaseEntity extends Page{
 	 * Builds an entity out of the languageData specified
 	 * @return string of json encoded languageData
 	 */
-	function serializaData(){
+	function serializeLanguageData(){
 		//@todo remove empty languageData and normalise stuff
 		return json_encode($this->languageData);
+	}
+
+	/**
+	 * unserializes the data returned from the api into an array we can use
+	 * @param $json string of json data which includes language data
+	 * @return array of LanguageData
+	 */
+	function unserializeLanguageData($json){
+		$canGet = Array('labels', 'descriptions', 'aliases', 'sitelinks');
+		foreach ( $canGet as $returnType){
+			if ( isset( $json[$returnType]) ) {
+				$this->languageData[$returnType] = $json[$returnType];
+			}
+		}
+		return $this->languageData;
 	}
 
 	/**
@@ -106,6 +124,7 @@ class WikibaseEntity extends Page{
 		if( $type == 'sitelinks' ){ $idkey1 = 'site'; $idkey2 = 'title'; }
 		$this->languageData[$type][$identifier][$idkey1] = $identifier;
 		$this->languageData[$type][$identifier][$idkey2] = $value;
+		$this->changed = true;
 	}
 
 	function addLanguageData($type, $identifier, $value){
@@ -117,6 +136,7 @@ class WikibaseEntity extends Page{
 	function removeLanguageData($type, $identifier){
 		if( isset($this->languageData[$type][$identifier]) ){
 			unset($this->languageData[$type][$identifier]);
+			$this->changed = true;
 		}
 	}
 
@@ -133,6 +153,7 @@ class WikibaseEntity extends Page{
 	function modifyAliases($language, $value){
 		$this->languageData['aliases'][$language]['language'] = $language;
 		$this->languageData['aliases'][$language]['value'] = $value;
+		$this->changed = true;
 	}
 
 	function addAliases($language, $value){
@@ -144,26 +165,27 @@ class WikibaseEntity extends Page{
 	function removeAliases($language){
 		if( isset($this->languageData['aliases'][$language]) ){
 			unset($this->languageData['aliases'][$language]);
+			$this->changed = true;
 		}
 	}
 
 	function addAlias($language, $string){
 		$this->languageData['aliases'][$language][] = Array('language' => $language, 'value' => $string);
+		$this->changed = true;
 	}
 	function removeAlias($language, $string){
 		if( isset($this->languageData['aliases'][$language]) ){
 			foreach($this->languageData['aliases'][$language] as $key => $alias){
 				if( $alias['value'] == $string ){
 					unset($this->languageData['aliases'][$language][$key]);
+					$this->changed = true;
 					$this->languageData['aliases'][$language] = array_values( $this->languageData['aliases'][$language] );
 				}
 			}
 		}
 		else{
-			//MSG: no aliases to remove for this language...
+			echo "No alises to remove for language '$language'\n";
 		}
 	}
-
-	//@todo statements
 
 }

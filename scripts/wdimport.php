@@ -66,7 +66,7 @@ foreach($rows as $row){
 		}
 	}
 
-	echo $baseEntity->serializaData().'\n';
+	echo $baseEntity->serializeLanguageData().'\n';
 	print_r( $baseEntity->save() ); //@todo remove the comment out from save... uncomment for deploy
 	$baseEntity->load();
 
