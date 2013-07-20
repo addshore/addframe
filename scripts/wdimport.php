@@ -8,6 +8,9 @@
 //Initiate the script
 require_once( dirname(__FILE__).'/../init.php' );
 
+//This is an array that we can keep our summaries in...
+$summaries = array();
+
 //Create a site
 $wm = new Family('wikimedia',new UserLogin('addbot','password'),'meta.wikimedia.org');
 $wikidata = $wm->getSiteFromSiteid('wikidatawiki');
@@ -69,7 +72,7 @@ foreach($rows as $row){
 
 	$usedPages[0]->load();
 	if ($usedPages[0]->removeEntityLinksFromText() == true){
-		$usedPages[0]->save();
+		$usedPages[0]->save(); //@todo localised edit summaries
 	}
 
 }
