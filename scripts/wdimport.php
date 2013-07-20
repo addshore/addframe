@@ -42,7 +42,8 @@ foreach($rows as $row){
 	/* @var $page Page */
 	foreach( $usedPages as $page ){
 		if( $page->getEntity() instanceof WikibaseEntity ){
-			//$baseEntity = $page->entity;
+			$baseEntity = $page->entity;
+			echo "Found entity ".$baseEntity->id."\n";
 			break;
 		}
 	}
@@ -50,36 +51,25 @@ foreach($rows as $row){
 	// Are we still missing an entity?
 	if( !isset($baseEntity) ){
 		echo "Failed to find an entiy to work from\n";
-		//@todo we could create an entity to work on here... Instead we will continue;
-		//continue;
-		$baseEntity = new WikibaseEntity($wikidata, null, 'item');
+		//We could create an entity to work on here... Instead we will continue;
+		//We could also try 'linking titles' here?
+		continue;
 	}
-
-	echo "Found entity ".$baseEntity->id."\n";
 
 	// Add everything to the entity
 	foreach( $usedPages as $page ){
 		$baseEntity->addSitelink($page->site->wikiid,$page->title);
 		if($page->site->code == 'wiki'){
 			$baseEntity->addLabel($page->site->lang,$page->title);
-			//@todo add aliases from redirects
 		}
 	}
 
-	echo $baseEntity->serializeLanguageData().'\n';
-	print_r( $baseEntity->save() ); //@todo remove the comment out from save... uncomment for deploy
+	$baseEntity->save();
 	$baseEntity->load();
 
-//	foreach( $usedPages as $page ){
-//		//@todo see if this page is in the db, no point in all of this if we already know it has no links...
-//		$page->load();
-//		if ($page->removeEntityLinksFromText() == true){
-//			//$page->save(); //@todo remove the comment out from save... uncomment for deploy
-//		}
-//	}
 	$usedPages[0]->load();
 	if ($usedPages[0]->removeEntityLinksFromText() == true){
-		print_r( $usedPages[0]->save() );
+		$usedPages[0]->save();
 	}
 
 }
