@@ -38,20 +38,32 @@ class Mediawiki {
 		$this->http = new Http();
 		$this->loggedIn = false;
 
-		//todo this in its own function findapi()
+		if( isset($family) ){
+			$this->family = $family;
+		}
+	}
+
+	/**
+	 * Initialises the site if it is not already done so! Gets apiurl, siteinfo, wikibaseinfo
+	 */
+	function initSite() {
+		if($this->apiurl == null){
+			$this->getApiUrl();
+			$this->getSiteinfo();
+			$this->getWikibaseinfo();
+		}
+	}
+
+	/**
+	 * Gets the api url from the main entry point
+	 */
+	function getApiUrl() {
 		$pageData = $this->http->get($this->url);
 		//@todo should die if cant contact site!
 		preg_match('/\<link rel=\"EditURI.*?$/im', $pageData, $pageData);
 		preg_match('/href=\"([^\"]+)\"/i', $pageData[0], $pageData);
 		$parsedApiUrl = parse_url($pageData[1]);
 		$this->apiurl = $parsedApiUrl['host'].$parsedApiUrl['path'];
-
-		$this->getSiteinfo();
-		$this->getWikibaseinfo();
-
-		if( isset($family) ){
-			$this->family = $family;
-		}
 	}
 
 	function getPage ($title) {
@@ -84,12 +96,14 @@ class Mediawiki {
 	* @return Array of the returning data
 	**/
 	function doRequest ($query,$post=null){
+		$this->initSite();
 		$query['format'] = 'php';
 
 		if ($post==null){
 			$query = "?".http_build_query($query);
 			$returned = $this->http->get($this->apiurl.$query);
 		} else {
+			$this->doLogin();
 			$query = "?".http_build_query($query);
 			$returned = $this->http->post($this->apiurl.$query,$post);
 		}
