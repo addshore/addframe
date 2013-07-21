@@ -65,7 +65,7 @@ foreach($rows as $row){
 		}
 	}
 
-	$baseEntity->save();
+	print_r($baseEntity->save());
 	$baseEntity->load();
 
 	$usedPages[0]->load();

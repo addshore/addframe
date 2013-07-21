@@ -11,7 +11,7 @@ class http {
 	public $cookie_jar;
 	public $postfollowredirs;
 	public $getfollowredirs;
-	public $quiet = true;
+	public $quiet = false;
 
 	function data_encode( $data, $keyprefix = "", $keypostfix = "" ) {
 		assert( is_array( $data ) );

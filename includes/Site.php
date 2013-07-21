@@ -61,7 +61,9 @@ class Mediawiki {
 		$pageData = $this->http->get($this->url);
 		//@todo should die if cant contact site!
 		preg_match('/\<link rel=\"EditURI.*?$/im', $pageData, $pageData);
+		if( isset($pageData[0]) ){ throw new Exception("Undefined offset when getting EditURL (api url)"); }
 		preg_match('/href=\"([^\"]+)\"/i', $pageData[0], $pageData);
+		if( isset($pageData[1]) ){ throw new Exception("Undefined offset when getting EditURL (api url)"); }
 		$parsedApiUrl = parse_url($pageData[1]);
 		$this->apiurl = $parsedApiUrl['host'].$parsedApiUrl['path'];
 	}
@@ -103,7 +105,7 @@ class Mediawiki {
 			$query = "?".http_build_query($query);
 			$returned = $this->http->get($this->apiurl.$query);
 		} else {
-			$this->doLogin();
+			if($post['action'] != 'login'){ $this->doLogin(); }
 			$query = "?".http_build_query($query);
 			$returned = $this->http->post($this->apiurl.$query,$post);
 		}
@@ -118,6 +120,7 @@ class Mediawiki {
 		if( isset( $this->token ) ){
 			return $this->token;
 		}
+		$this->doLogin();
 		$apiresult = $this->doRequest( array('action' => 'query', 'prop' => 'info','intoken' => 'edit', 'titles' => 'Main Page') );
 		return $apiresult['query']['pages']['-1']['edittoken'];
 	}
@@ -306,7 +309,6 @@ class Mediawiki {
 	function doWbEditEntity ($parameters){
 		$parameters['action'] = 'wbeditentity';
 		$parameters['token'] = $this->getEditToken();
-		print_r($parameters);
 		return $this->doRequest(null, $parameters );
 	}
 
