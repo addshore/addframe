@@ -84,8 +84,11 @@ class WikibaseEntity extends Page{
 			$param['id'] = $this->id;
 		}
 		$param['data'] = $this->serializeLanguageData();
+		if( $param['data']  == json_encode( array() ) ){
+			$param['clear'] = 'true';
+		}
 		if(isset($summary)){ $param['summary'] = $summary;}
-		echo "Saved entity ".$this->id."\n";
+		echo "Saving entity ".$this->id."\n";
 		return $this->site->doWbEditEntity($param);
 	}
 
@@ -94,7 +97,13 @@ class WikibaseEntity extends Page{
 	 * @return string of json encoded languageData
 	 */
 	function serializeLanguageData(){
-		//@todo remove empty languageData and normalise stuff
+		foreach( $this->languageData as $key => $data ){
+			if( $data === array() ){
+				unset( $this->languageData[$key] );
+			}
+		}
+
+		//@todo normalise stuff before returning
 		return json_encode($this->languageData);
 	}
 
