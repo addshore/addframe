@@ -49,8 +49,8 @@ foreach($items as $item){
 	}
 
 	if($itemOne->changed && $itemTwo->changed ){
-		$itemOne->save();
-		$itemTwo->save();
+		$itemOne->save( 'Merging to '.$itemTwo->id );
+		$itemTwo->save( 'Adding sitelinks from '.$itemTwo->id );
 	}
 
 }
