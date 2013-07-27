@@ -6,7 +6,7 @@ use Addframe\Globals;
  * @author Addshore
  **/
 
-include_once(dirname( __FILE__ ) . '/includes/AutoLoader.php');
+require_once(dirname( __FILE__ ) . '/includes/AutoLoader.php');
 
 Globals::$regex['langs'] = '(nostalgia|ten|aa|ab|ace|af|ak|als|am|an|ang|ar|arc|arz|as|ast|av|ay|az|ba|bar|' .
 	'bat-smg|bcl|be|be-x-old|bg|bh|bi|bjn|bm|bn|bo|bpy|br|bs|bug|bxr|ca|cbk-zam|cdo|ce|ceb|ch|cho|chr|chy|ckb|' .
