@@ -6,34 +6,7 @@ use Addframe\Globals;
  * @author Addshore
  **/
 
-function __autoload($class_name) {
-	$classes = array(
-		'Addframe\Category' => 'includes/Category.php',
-		'Addframe\Entity' => 'includes/Entity.php',
-		'Addframe\Family' => 'includes/Family.php',
-		'Addframe\Globals' => 'includes/Globals.php',
-		'Addframe\Http' => 'includes/Http.php',
-		'Addframe\Mysql' => 'includes/Mysql.php',
-		'Addframe\Page' => 'includes/Page.php',
-		'Addframe\Registry' => 'includes/Registry.php',
-		'Addframe\Site' => 'includes/Site.php',
-		'Addframe\Stathat' => 'includes/Stathat.php',
-		'Addframe\User' => 'includes/User.php',
-		'Addframe\UserLogin' => 'includes/UserLogin.php',
-		'Addframe\WikitextParser' => 'includes/WikitextParser.php',
-	);
-
-	if( array_key_exists( $class_name , $classes ) ) {
-		$class_path = dirname( __FILE__ ) . '/' . $classes[$class_name];
-		if(file_exists( $class_path )) {
-			require_once( $class_path );
-		} else {
-			throw new Exception( "Unable to load $class_name from $class_path" );
-		}
-	} else {
-		throw new Exception( "No such class name '$class_name' registered'" );
-	}
-}
+include_once(dirname( __FILE__ ) . '/includes/AutoLoader.php');
 
 Globals::$regex['langs'] = '(nostalgia|ten|aa|ab|ace|af|ak|als|am|an|ang|ar|arc|arz|as|ast|av|ay|az|ba|bar|' .
 	'bat-smg|bcl|be|be-x-old|bg|bh|bi|bjn|bm|bn|bo|bpy|br|bs|bug|bxr|ca|cbk-zam|cdo|ce|ceb|ch|cho|chr|chy|ckb|' .
