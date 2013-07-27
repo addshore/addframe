@@ -1,4 +1,5 @@
-addwiki
+Addwiki Mediawiki Framework
 =======
 
-addbot wikipedia bot
+This is the framework that [[User:Addbot]] uses.
+The framework is new and is currently very Wikimedia specific.
