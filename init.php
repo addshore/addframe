@@ -15,7 +15,6 @@ include $IP . 'includes/Registry.php';
 include $IP . 'includes/Http.php';
 include $IP . 'includes/Family.php';
 include $IP . 'includes/Site.php';
-include $IP . 'includes/ApiResult.php';
 include $IP . 'includes/SiteFactory.php';
 include $IP . 'includes/User.php';
 include $IP . 'includes/UserLogin.php';
