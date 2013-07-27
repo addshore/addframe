@@ -12,7 +12,7 @@ class SiteFactory extends Registry {
 	 * @return Site
 	 * @deprecated
 	 */
-	function addSite( $url ) {
+	public function addSite( $url ) {
 		$this->$url = new Site( $url );;
 		return $this->$url;
 	}
@@ -22,7 +22,7 @@ class SiteFactory extends Registry {
 	 * @return Site
 	 * @deprecated
 	 */
-	function getSite( $url ) {
+	public function getSite( $url ) {
 		if ( ! isset( $this->$url ) ) {
 			return $this->addSite( $url );
 		}

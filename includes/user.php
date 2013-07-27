@@ -36,7 +36,7 @@ class User {
 	 * @param $site
 	 * @param $username
 	 */
-	function __construct( $site, $username ) {
+	public function __construct( $site, $username ) {
 		$this->site = $site;
 		$this->username = $username;
 	}
@@ -44,14 +44,14 @@ class User {
 	/**
 	 * @return Page object for this users page
 	 */
-	function getUserPage() {
+	public function getUserPage() {
 		return new Page( $this->site, "User:$this->username" );
 	}
 
 	/**
 	 * @return Page object for this users talk pages
 	 */
-	function getUserTalkPage() {
+	public function getUserTalkPage() {
 		return new Page( $this->site, "User talk:$this->username" );
 	}
 
@@ -59,7 +59,7 @@ class User {
 	 * Gets a users rights
 	 * @return mixed
 	 */
-	function getRights() {
+	public function requestRights() {
 		$param['auprop'] = 'rights';
 		$param['aufrom'] = $this->username;
 		$param['aulimit'] = '1';
@@ -73,7 +73,7 @@ class User {
 	 * gets a users edit count
 	 * @return mixed
 	 */
-	function getEditcount() {
+	public function requestEditcount() {
 		$param['auprop'] = 'editcount';
 		$param['aufrom'] = $this->username;
 		$param['aulimit'] = '1';
