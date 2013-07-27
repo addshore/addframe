@@ -69,7 +69,6 @@ class Entity extends Page {
 				$this->nsid = $x['ns'];
 				$this->title = $x['title'];
 				$this->lastrevid = $x['lastrevid'];
-				$this->timestamp = $x['modified'];
 				$this->entityType = $x['type'];
 				$this->languageData = $this->unserializeLanguageData( $x );
 			}

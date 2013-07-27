@@ -18,16 +18,12 @@ class Page {
 	protected $pageid;
 	/** @var string namespace id number eg. 2 */
 	protected $nsid;
-	/** @var string timestamp for the particular revision text we have got */
-	public $timestamp;
 	/** @var array of categories the page is in */
 	public $categories;
-	/** @var string current protection status */
-	public $protection;
 	/** @var Entity entity that is associated with the page */
 	public $entity;
 	/** @var parser entity that is associated with the page */
-	public $parser;
+	protected $parser;
 
 	/**
 	 * @return string
@@ -47,13 +43,6 @@ class Page {
 	}
 
 	/**
-	 * @return string
-	 */
-	public function getProtection() {
-		return $this->protection;
-	}
-
-	/**
 	 * @return Site
 	 */
 	public function getSite() {
@@ -68,13 +57,6 @@ class Page {
 			$this->text = $this->getSite()->getPageTextFromPageTitle( $this->title );
 		}
 		return $this->text;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getTimestamp() {
-		return $this->timestamp;
 	}
 
 	/**
@@ -252,19 +234,10 @@ class Page {
 	}
 
 	/**
-	 * Gets the current protection status of the page
-	 */
-	private function getProtectionStatus() {
-		//@todo write this , set to public once complete
-		////http://en.wikipedia.org/w/api.php?action=query&titles=Cyprus&prop=info&inprop=protection
-		//checkout https://github.com/addshore/addwiki/blob/b8db6c00049d6ff2cefe92187e744c4c6693f815/classes/botclasses.php ln1083
-		//return $this->protection;
-	}
-
-	/**
 	 * @param null $hidden
 	 * @return mixed
 	 * @todo return an array of category objects which would extend Page
+	 * @todo refactor into site->getCategoriesFromPageTitle
 	 */
 	public function getCategories( $hidden = null ) {
 		$param['titles'] = $this->title;
