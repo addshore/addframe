@@ -30,7 +30,6 @@ class Registry {
 	public function __get( $index ) {
 		if ( ! isset( $this->objects[$index] ) ) {
 			throw new Exception( "Undefined index '$index' in registry" );
-			return null;
 		}
 		return $this->objects[$index];
 	}
