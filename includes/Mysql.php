@@ -6,7 +6,7 @@
 class Mysql {
 	/**
 	 * MySQL object
-	 * @var object
+	 * @var resource
 	 */
 	private $mConn;
 
@@ -46,6 +46,7 @@ class Mysql {
 	 */
 	private function connectToServer( $force = false ) {
 		$this->mConn = mysql_connect( $this->mHost.':'.$this->mPort, $this->mUser, $this->mPass, $force );
+		//@todo make sure we always read in utf8!
 		mysql_select_db( $this->mDb, $this->mConn );
 	}
 
@@ -220,7 +221,7 @@ class Mysql {
 	 * UPDATE frontend
 	 * @param $table string Table to update.
 	 * @param $values array Values to set.
-	 * @param $conds string Conditions to update. Default *, updates every entry.
+	 * @param $conds string|array Conditions to update. Default *, updates every entry.
 	 * @return object MySQL object
 	 * @throws Exception Write query called while under read-only mode
 	 */
