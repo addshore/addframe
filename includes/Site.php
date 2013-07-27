@@ -302,7 +302,7 @@ class Site {
 			
 			//Note: The below is back compatability check for the parse_url function
 			if( array_key_exists('host', $parsedApiUrl) ){
-				$this->wikibase = $this->family->getSite( $parsedApiUrl['host'] . $parsedApiUrl['path'] );
+				$this->wikibase = $this->family->getSite( $parsedApiUrl['host'] );
 			} else {
 				//pre 5.4.7
 				$this->wikibase = $this->family->getSite( trim($parsedApiUrl['path'] ,'/') );

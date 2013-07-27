@@ -7,6 +7,7 @@
 
 use Addframe\Entity;
 use Addframe\Family;
+use Addframe\Globals;
 use Addframe\Page;
 use Addframe\UserLogin;
 
@@ -15,10 +16,10 @@ require_once( dirname( __FILE__ ) . '/../init.php' );
 //This is an array that we can keep our summaries in...
 $summaries = array();
 
-//Create a site
-$wmConfig = parse_ini_file($_SERVER['HOME'].'/addbot.wm.cnf');
-$wm = new Family( new UserLogin( $wmConfig['user'], $wmConfig['password'] ), 'meta.wikimedia.org' );
-unset ( $wmConfig );
+$wm = new Family(
+	new UserLogin( Globals::$config['user.addbot']['user'],
+		Globals::$config['user.addbot']['password'] ), 'meta.wikimedia.org' );
+
 $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 
 //$dbConfig = parse_ini_file($_SERVER['HOME'].'~/replica.my.cnf');

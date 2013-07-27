@@ -8,6 +8,8 @@ use Addframe\Globals;
 
 require_once(dirname( __FILE__ ) . '/includes/AutoLoader.php');
 
+loadConfigs();
+
 Globals::$regex['langs'] = '(nostalgia|ten|aa|ab|ace|af|ak|als|am|an|ang|ar|arc|arz|as|ast|av|ay|az|ba|bar|' .
 	'bat-smg|bcl|be|be-x-old|bg|bh|bi|bjn|bm|bn|bo|bpy|br|bs|bug|bxr|ca|cbk-zam|cdo|ce|ceb|ch|cho|chr|chy|ckb|' .
 	'co|cr|crh|cs|csb|cu|cv|cy|da|de|diq|dsb|dv|dz|ee|el|eml|en|eo|es|et|eu|ext|fa|ff|fi|fiu-vro|fj|fo|fr|frp|frr' .
@@ -19,3 +21,17 @@ Globals::$regex['langs'] = '(nostalgia|ten|aa|ab|ace|af|ak|als|am|an|ang|ar|arc|
 	'sq|sr|srn|ss|st|stq|su|sv|sw|szl|ta|te|tet|tg|th|ti|tk|tl|tn|to|tpi|tr|ts|tt|tum|tw|ty|udm|ug|uk|ur|ve|vec|vep' .
 	'|vi|vls|vo|wa|war|wo|wuu|xal|xh|xmf|yi|yo|za|zea|zh|zh-classical|zh-min-nan|zh-yue|zu)';
 Globals::$regex['sites'] = '(wikipedia|wiki|wikivoyage)';
+
+function loadConfigs(){
+	$configPath = dirname( __FILE__ ).'/configs';
+	$di = new DirectoryIterator($configPath);
+	foreach ($di as $file) {
+
+		if ($file->isDir() && !$file->isLink() && !$file->isDot()) {
+			//do nothing
+		} elseif (substr($file->getFilename(), -4) === '.cnf') {
+			$configName = substr($file->getFilename(), 0, -4);
+			Globals::$config[$configName] = parse_ini_file( $configPath.'/'.$file->getFilename() );
+		}
+	}
+}

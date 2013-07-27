@@ -9,4 +9,6 @@ class Globals {
 
 	public static $regex;
 
+	public static $config;
+
 }
