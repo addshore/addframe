@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe;
+
 /**
  * This class is designed to represet a User with login details
  * @author Addshore

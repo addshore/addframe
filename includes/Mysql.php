@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe;
+
 /**
  * Class Mysql
  */

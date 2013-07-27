@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe;
+
 /**
  * This class is designed to represent a mediawiki installation
  * @author Addshore

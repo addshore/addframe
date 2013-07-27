@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe;
+
 class Stathat {
 
 	private function do_post_request( $url, $data, $optional_headers = null ) {

@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe;
+
 /**
  * This class is designed to represent a Site Wikibase entity
  * @author Addshore

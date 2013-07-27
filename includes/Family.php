@@ -1,4 +1,7 @@
 <?php
+
+namespace Addframe;
+
 /**
  * Class Family for a collection of  mediawiki sites
  */

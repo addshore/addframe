@@ -4,7 +4,9 @@
  * @author Addshore
  **/
 
-//Initiate the script
+use Addframe\Family;
+use Addframe\UserLogin;
+
 require_once( dirname( __FILE__ ) . '/../init.php' );
 
 //Create a site

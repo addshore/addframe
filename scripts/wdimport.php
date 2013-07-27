@@ -5,7 +5,11 @@
  * @author Addshore
  **/
 
-//Initiate the script
+use Addframe\Entity;
+use Addframe\Family;
+use Addframe\Page;
+use Addframe\UserLogin;
+
 require_once( dirname( __FILE__ ) . '/../init.php' );
 
 //This is an array that we can keep our summaries in...

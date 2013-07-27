@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe;
+
 /**
  * This class is designed to provide a simplified interface to cURL which maintains cookies.
  * @author Cobi

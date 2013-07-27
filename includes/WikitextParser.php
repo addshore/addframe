@@ -1,4 +1,7 @@
 <?php
+
+namespace Addframe;
+
 /*
 * Whole wikObject_file sourced from http://pastebin.com/0bNNPy0p
 * Created by User:Chris_G
