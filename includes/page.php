@@ -247,7 +247,7 @@ class Page {
 		foreach ( $interwikis as $interwikiData ) {
 			$site = $this->site->family->getSiteFromSiteid( $interwikiData['site'] . $this->site->code );
 			if ( $site instanceof Site ) {
-				$pages[] = $site->getPage( $interwikiData['link'] );
+				$pages[] = $site->newPageFromTitle( $interwikiData['link'] );
 			}
 		}
 
@@ -281,7 +281,7 @@ class Page {
 
 			$site = $this->site->family->getSiteFromSiteid( $parts['lang'] . $parts['site'] );
 			if ( $site instanceof Site ) {
-				$pages[] = $site->getPage( $parts['title'] );
+				$pages[] = $site->newPageFromTitle( $parts['title'] );
 			}
 		}
 
@@ -309,7 +309,7 @@ class Page {
 
 			$site = $this->site->family->getSiteFromSiteid( $parts['lang'] . $parts['site'] );
 			if ( $site instanceof Site ) {
-				$pages[] = $site->getPage( $parts['title'] );
+				$pages[] = $site->newPageFromTitle( $parts['title'] );
 			}
 
 		}

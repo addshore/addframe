@@ -19,7 +19,7 @@ $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 $items = array( 'q14208163' );
 foreach ( $items as $item ) {
 
-	$itemOne = $wikidata->getEntityFromId( $item );
+	$itemOne = $wikidata->newEntityFromEntityId( $item );
 	$itemOne->load();
 	$itemTwo = null;
 
@@ -27,10 +27,10 @@ foreach ( $items as $item ) {
 	$guessedPages = array();
 	foreach ( $itemOne->languageData['sitelinks'] as $siteid => $value ) {
 		$site = $wm->getSiteFromSiteid( $siteid );
-		$page = $site->getPage( $value['title'] );
+		$page = $site->newPageFromTitle( $value['title'] );
 		$linkedPages = array_merge( $linkedPages, $page->getPagesFromInterprojectLinks() );
 		$linkedPages = array_merge( $linkedPages, $page->getPagesFromInterprojectTemplates() );
-		$guessedPages[] = $wm->getSiteFromSiteid( $page->site->lang . 'wiki' )->getPage( $page->title );
+		$guessedPages[] = $wm->getSiteFromSiteid( $page->site->lang . 'wiki' )->newPageFromTitle( $page->title );
 	}
 
 	/* @var $page Page */

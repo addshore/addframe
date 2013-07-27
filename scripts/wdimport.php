@@ -31,7 +31,7 @@ foreach ( $rows as $row ) {
 	// Get an array of all pages involved
 	/* @var $usedPages Page[] */
 	$usedPages = array();
-	$usedPages[] = $baseSite->getPage( $baseSite->getNamespaceFromId( $row['namespace'] ) . $row['title'] );
+	$usedPages[] = $baseSite->newPageFromTitle( $baseSite->getNamespaceFromId( $row['namespace'] ) . $row['title'] );
 	$usedPages = array_merge( $usedPages, $usedPages[0]->getPagesFromInterwikiLinks() );
 	$usedPages = array_merge( $usedPages, $usedPages[0]->getPagesFromInterprojectLinks() );
 	$usedPages = array_merge( $usedPages, $usedPages[0]->getPagesFromInterprojectTemplates() );

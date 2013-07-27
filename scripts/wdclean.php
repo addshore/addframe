@@ -13,7 +13,7 @@ $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 $wikidata->doLogin();
 
 for ( $i = 1; $i < 14000000; $i ++ ) {
-	$entity = $wikidata->getEntityFromId( 'q' . $i );
+	$entity = $wikidata->newEntityFromEntityId( 'q' . $i );
 	$entity->load();
 	foreach ( $entity->languageData as $site => $link ) {
 		$site = $wm->getSiteFromSiteid( $site );

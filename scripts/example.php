@@ -12,7 +12,7 @@ $testsite = Globals::$Sites->addSite( "localhost", "127.0.0.1/Mediawiki/api.php"
 $testsite->newLogin( 'Bot', 'botp123', true );
 
 //Play with a regular page
-$playpage = $testsite->getPage( "PageTitle" );
+$playpage = $testsite->newPageFromTitle( "PageTitle" );
 $playpage->load();
 $playpage->emptyText();
 $playpage->text = "This is some starting text with a random number >> " . rand( 0, 100 );

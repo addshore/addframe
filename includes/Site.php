@@ -72,15 +72,27 @@ class Site {
 		$this->apiurl = $parsedApiUrl['host'] . $parsedApiUrl['path'];
 	}
 
-	function getPage( $title ) {
+	/**
+	 * @param $title string
+	 * @return Page
+	 */
+	function newPageFromTitle( $title ) {
 		return new Page( $this, $title );
 	}
 
-	function getUser( $username ) {
+	/**
+	 * @param $username string
+	 * @return User
+	 */
+	function newUserFromUsername( $username ) {
 		return new User( $this, $username );
 	}
 
-	function getEntityFromId( $id ) {
+	/**
+	 * @param $id string
+	 * @return Entity
+	 */
+	function newEntityFromEntityId( $id ) {
 		return new Entity( $this, $id );
 	}
 
