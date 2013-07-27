@@ -4,6 +4,9 @@
  */
 class Family extends Registry {
 
+	/**
+	 * @var null
+	 */
 	public $login;
 	/**
 	 * @var array of sites with the following keys
@@ -12,7 +15,7 @@ class Family extends Registry {
 	private $sitematrix;
 
 	/**
-	 * @var Mediawiki[]
+	 * @var Site[]
 	 */
 	private $sites;
 
@@ -36,7 +39,7 @@ class Family extends Registry {
 
 	/**
 	 * @param $siteid string of the siteid for the site
-	 * @return Mediawiki
+	 * @return Site
 	 */
 	function getSiteFromSiteid( $siteid ){
 		if( isset( $this->sitematrix[$siteid] ) ){
@@ -51,6 +54,10 @@ class Family extends Registry {
 		}
 	}
 
+	/**
+	 * @param $url
+	 * @return Site
+	 */
 	function getSiteFromUrl( $url ){
 		if( !isset( $this->sites[$url] ) ){
 			$this->addSite( $url );
@@ -58,8 +65,12 @@ class Family extends Registry {
 		return $this->getSite( $url );
 	}
 
+	/**
+	 * @param $url string of the site that we want to add to the family
+	 * @return Site
+	 */
 	function addSite( $url ){
-		$this->sites[$url] = new Mediawiki( $url, $this );
+		$this->sites[$url] = new Site( $url, $this );
 		if( isset( $this->login ) ) {
 			$this->sites[$url]->setLogin( $this->login );
 		}
@@ -68,7 +79,7 @@ class Family extends Registry {
 
 	/**
 	 * @param $url
-	 * @return Mediawiki
+	 * @return Site
 	 */
 	function getSite( $url ){
 		return $this->sites[$url];

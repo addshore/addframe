@@ -1,14 +1,14 @@
 <?php
 
 /**
- * This class is designed to represet a Mediawiki User
+ * This class is designed to represet a Site User
  * @author Addshore
  **/
 
 class User {
 
 	/**
-	 * @var Mediawiki
+	 * @var Site
 	 */
 	public $site;
 	/**

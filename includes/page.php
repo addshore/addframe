@@ -1,12 +1,12 @@
 <?php
 
 /**
- * This class is designed to represent a Mediawiki Page
+ * This class is designed to represent a Site Page
  * @author Addshore
  **/
 class Page {
 
-	/** @var Mediawiki siteUrl for associated site	 */
+	/** @var Site siteUrl for associated site	 */
 	public $site;
 	/** @var string title of Page including namespace	 */
 	public $title;
@@ -150,7 +150,7 @@ class Page {
 		$interwikis = $this->getInterwikisFromtext();
 		foreach( $interwikis as $interwikiData ){
 			$site = $this->site->family->getSiteFromSiteid($interwikiData['site'].$this->site->code);
-			if($site instanceof Mediawiki){
+			if($site instanceof Site){
 				$pages[] = $site->getPage($interwikiData['link']);
 			}
 		}
@@ -186,7 +186,7 @@ class Page {
 			$parts['title'] = $matches[4][$key];
 
 			$site = $this->site->family->getSiteFromSiteid( $parts['lang'].$parts['site'] );
-			if($site instanceof Mediawiki){
+			if($site instanceof Site){
 				$pages[] = $site->getPage( $parts['title'] );
 			}
 		}
@@ -216,7 +216,7 @@ class Page {
 			$parts['title'] = $matches[3][$key];
 
 			$site = $this->site->family->getSiteFromSiteid( $parts['lang'].$parts['site'] );
-			if($site instanceof Mediawiki){
+			if($site instanceof Site){
 				$pages[] = $site->getPage( $parts['title'] );
 			}
 

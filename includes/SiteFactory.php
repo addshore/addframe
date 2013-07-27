@@ -9,17 +9,17 @@ class SiteFactory extends Registry{
 
 	/**
 	 * @param $url string url pointing to the site
-	 * @return Mediawiki
+	 * @return Site
 	 * @deprecated
 	 */
 	function addSite( $url ){
-		$this->$url = new Mediawiki($url);;
+		$this->$url = new Site($url);;
 		return $this->$url;
 	}
 
 	/**
 	 * @param $url
-	 * @return Mediawiki
+	 * @return Site
 	 * @deprecated
 	 */
 	function getSite( $url ){

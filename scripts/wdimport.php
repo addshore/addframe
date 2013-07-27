@@ -37,7 +37,7 @@ foreach($rows as $row){
 	$usedPages = array_merge( $usedPages,$usedPages[0]->getPagesFromInterwikiLinks() );
 	$usedPages = array_merge( $usedPages,$usedPages[0]->getPagesFromInterprojectLinks() );
 	$usedPages = array_merge( $usedPages,$usedPages[0]->getPagesFromInterprojectTemplates() );
-	//@todo remove duplicate pages
+	//@todo remove duplicate pages (maybe use an PageList?)
 
 	// Try to find an entity to work on
 	/* @var $page Page */
@@ -72,5 +72,8 @@ foreach($rows as $row){
 	if ($usedPages[0]->removeEntityLinksFromText() == true){
 		$usedPages[0]->save(); //@todo localised edit summaries
 	}
+
+	//Count how many iwlinks are left on a page
+	//Update the database
 
 }

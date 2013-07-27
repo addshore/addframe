@@ -5,7 +5,7 @@
  * @author Addshore
  **/
 
-class Mediawiki {
+class Site {
 	/**
 	 * @var Family
 	 */

@@ -1,12 +1,12 @@
 <?php
 
 /**
- * This class is designed to represent a Mediawiki Wikibase entity
+ * This class is designed to represent a Site Wikibase entity
  * @author Addshore
  **/
 class WikibaseEntity extends Page{
 
-	/** @var Mediawiki site of entity*/
+	/** @var Site site of entity*/
 	public $site;
 	/** @var string id of entity*/
 	public $id;
