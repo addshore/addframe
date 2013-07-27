@@ -3,6 +3,7 @@
 /**
  * This class is designed to provide a simplified interface to cURL which maintains cookies.
  * @author Cobi
+ * @author Addshore
  **/
 
 class http {
@@ -11,9 +12,21 @@ class http {
 	public $cookie_jar;
 	public $postfollowredirs;
 	public $getfollowredirs;
+
+	/**
+	 * Do you want to echo each request? (good for debuging)
+	 * @todo this should be included is a global setting of some kind
+	 * @var bool
+	 */
 	public $quiet = false;
 
-	function data_encode( $data, $keyprefix = "", $keypostfix = "" ) {
+	/**
+	 * @param $data array of data to be encoded
+	 * @param string $keyprefix
+	 * @param string $keypostfix
+	 * @return null|string
+	 */
+	public function data_encode( $data, $keyprefix = "", $keypostfix = "" ) {
 		assert( is_array( $data ) );
 		$vars = null;
 		foreach ( $data as $key => $value ) {
@@ -36,6 +49,11 @@ class http {
 		$this->cookie_jar = array();
 	}
 
+	/**
+	 * @param $url string url of request
+	 * @param $data array of data to post key => value
+	 * @return string result of request
+	 */
 	function post( $url, $data ) {
 		$time = microtime( 1 );
 		curl_setopt( $this->ch, CURLOPT_URL, $url );
@@ -64,6 +82,10 @@ class http {
 		return $data;
 	}
 
+	/**
+	 * @param $url string url to get
+	 * @return string result of request
+	 */
 	function get( $url ) {
 		$time = microtime( 1 );
 		curl_setopt( $this->ch, CURLOPT_URL, $url );
@@ -88,10 +110,14 @@ class http {
 		$data = curl_exec( $this->ch );
 		if ( ! $this->quiet )
 			echo 'GET: ' . $url . ' (' . ( microtime( 1 ) - $time ) . ' s) (' . strlen( $data ) . " b)\n";
-//}
+
 		return $data;
 	}
 
+	/**
+	 * @param $uname string
+	 * @param $pwd string
+	 */
 	function setHTTPcreds( $uname, $pwd ) {
 		curl_setopt( $this->ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC );
 		curl_setopt( $this->ch, CURLOPT_USERPWD, $uname . ":" . $pwd );
