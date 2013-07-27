@@ -39,6 +39,7 @@ class Site {
 	/**
 	 * @param $url string URL of the api
 	 * @param null $family Family
+	 * @throws \Exception
 	 */
 	public function __construct( $url, $family = null ) {
 		if( empty ( $url ) ){
@@ -50,6 +51,13 @@ class Site {
 		if ( isset( $family ) ) {
 			$this->family = $family;
 		}
+
+		//terrible hack to try and get the language code from the url (works for wikimedia stuff)..
+		$attemptedLanguage =  substr( $url, 0, strpos( $url, '.' ) );
+		if( strstr( Globals::$regex['langs'],$attemptedLanguage ) ){
+			$this->language = $attemptedLanguage;
+		}
+
 	}
 
 	public function getApiUrl(){
@@ -198,19 +206,21 @@ class Site {
 
 	/**
 	 * Gets the api url from the main entry point
+	 * Hacky html screen scrape..
+	 * @todo this should probably be renamed
 	 */
 	public function requestApiUrl() {
 		$pageData = $this->http->get( $this->url );
 		//@todo should die if cant contact site!
-		preg_match( '/\<link rel=\"EditURI.*?$/im', $pageData, $pageData );
-		if ( ! isset( $pageData[0] ) ) {
+		preg_match( '/\<link rel=\"EditURI.*?$/im', $pageData, $apiData );
+		if ( ! isset( $apiData[0] ) ) {
 			throw new \Exception( "Undefined offset when getting EditURL (api url)" );
 		}
-		preg_match( '/href=\"([^\"]+)\"/i', $pageData[0], $pageData );
-		if ( ! isset( $pageData[1] ) ) {
+		preg_match( '/href=\"([^\"]+)\"/i', $apiData[0], $apiData );
+		if ( ! isset( $apiData[1] ) ) {
 			throw new \Exception( "Undefined offset when getting EditURL (api url)" );
 		}
-		$parsedApiUrl = parse_url( $pageData[1] );
+		$parsedApiUrl = parse_url( $apiData[1] );
 		
 		//Note: The below is back compatability check for the parse_url function
 		if( array_key_exists('host', $parsedApiUrl) ){
@@ -218,6 +228,12 @@ class Site {
 		} else {
 			//pre 5.4.7
 			$this->api = trim($parsedApiUrl['path'] ,'/');
+		}
+
+		//Now hackily try and parse the lang
+		preg_match( '/\<html lang=\"([^\"]+)\"/im', $pageData, $langData );
+		if( ! empty($langData[1]) ){
+			$this->language = $langData[1];
 		}
 	}
 
@@ -241,7 +257,7 @@ class Site {
 		$siteArray = array();
 		$returned = $this->doRequest( array( 'action' => 'sitematrix', 'smlangprop' => 'site' ) );
 		if ( $returned == null ) {
-			die( "Sitematrix failed... Maybe you are offline." );
+			throw new \Exception( "Sitematrix failed... Maybe you are offline." );
 		}
 		foreach ( $returned['sitematrix'] as $key => $langmatrix ) {
 			if ( $key == 'count' ) {

@@ -10,6 +10,7 @@ require_once(dirname( __FILE__ ) . '/includes/AutoLoader.php');
 
 loadConfigs();
 
+//@todo these should be define as an arry and regex class should then generate the regex from the array...
 Globals::$regex['langs'] = '(nostalgia|ten|aa|ab|ace|af|ak|als|am|an|ang|ar|arc|arz|as|ast|av|ay|az|ba|bar|' .
 	'bat-smg|bcl|be|be-x-old|bg|bh|bi|bjn|bm|bn|bo|bpy|br|bs|bug|bxr|ca|cbk-zam|cdo|ce|ceb|ch|cho|chr|chy|ckb|' .
 	'co|cr|crh|cs|csb|cu|cv|cy|da|de|diq|dsb|dv|dz|ee|el|eml|en|eo|es|et|eu|ext|fa|ff|fi|fiu-vro|fj|fo|fr|frp|frr' .

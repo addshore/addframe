@@ -333,7 +333,6 @@ class Page {
 
 			foreach ( $baseEntity->languageData['sitelinks'] as $sitelink ) {
 				$site = $this->site->family->getSiteFromSiteid( $sitelink['site'] );
-				$site->requestSiteinfo();
 				$lang = $site->getLanguage();
 				$titleEnd = $this->getTitleWithoutNamespace();
 				$possibleNamespaces = $this->site->requestNamespaces();

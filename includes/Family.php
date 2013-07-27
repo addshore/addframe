@@ -89,6 +89,7 @@ class Family extends Registry {
 		if ( isset( $this->login ) ) {
 			$this->sites[$url]->setLogin( $this->login );
 		}
+
 		return $this->sites[$url];
 	}
 
