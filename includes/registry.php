@@ -6,6 +6,8 @@ namespace Addframe;
 *** The registry class
 */
 
+use Exception;
+
 class Registry {
 
 	/*
