@@ -214,7 +214,7 @@ class Page {
 		$result = $this->site->doRequest( $q );
 		foreach ( $result['query']['pages'] as $page ) {
 			if ( isset( $page['pageprops']['wikibase_item'] ) ) {
-				$this->entity = new Entity( $this->site->family->getSiteFromUrl( $this->site->wikibase ), $page['pageprops']['wikibase_item'] );
+				$this->entity = new Entity( $this->site->family->getSite( $this->site->wikibase ), $page['pageprops']['wikibase_item'] );
 				return $this->entity;
 			}
 		}

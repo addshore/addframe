@@ -13,20 +13,6 @@ class Family extends Registry {
 	private $login;
 
 	/**
-	 * @param UserLogin $login
-	 */
-	public function setLogin( $login ) {
-		$this->login = $login;
-	}
-
-	/**
-	 * @return UserLogin
-	 */
-	public function getLogin() {
-		return $this->login;
-	}
-
-	/**
 	 * @var array of sites with the following keys
 	 * [url][wikiid][code][sitename][closed][private]
 	 */
@@ -38,8 +24,12 @@ class Family extends Registry {
 	private $sites;
 
 	/**
+	 * @var Site the home site for the family
+	 */
+	private $homeSite;
+
+	/**
 	 * Create an object to hold a family of sites
-	 * If a home site is listed try to get the sitematrix
 	 *
 	 * @param null $globalLogin
 	 * @param null $homeUrl
@@ -47,20 +37,50 @@ class Family extends Registry {
 	function __construct($globalLogin = null, $homeUrl = null ) {
 		if ( isset( $homeUrl ) ) {
 			$this->addSite( $homeUrl );
-			$this->sitematrix = $this->sites[$homeUrl]->requestSitematrix();
+			$this->homeSite = $this->getSite( $homeUrl );
 		}
 		if ( isset( $globalLogin ) ) {
 			$this->login = $globalLogin;
+			$this->homeSite->setLogin( $globalLogin );
 		}
+	}
+
+	/**
+	 * @return UserLogin
+	 */
+	public function getLogin() {
+		return $this->login;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getSitematrix() {
+		if ( $this->sitematrix == null ){
+			$this->sitematrix = $this->homeSite->requestSitematrix();
+		}
+		return $this->sitematrix;
+	}
+
+	/**
+	 * @param $url
+	 * @return Site
+	 */
+	public function getSite( $url ) {
+		if ( ! isset( $this->sites[$url] ) ) {
+			$this->addSite( $url );
+		}
+		return $this->sites[$url];
 	}
 
 	/**
 	 * @param $siteid string of the siteid for the site
 	 * @return Site
 	 */
-	function getSiteFromSiteid( $siteid ) {
-		if ( isset( $this->sitematrix[$siteid] ) ) {
-			$url = parse_url( $this->sitematrix[$siteid]['url'] );
+	public function getSiteFromSiteid( $siteid ) {
+		$sitematrix = $this->getSitematrix();
+		if ( isset( $sitematrix[$siteid] ) ) {
+			$url = parse_url( $sitematrix[$siteid]['url'] );
 			$url = $url['host'];
 
 			if ( ! isset( $this->sites[$url] ) ) {
@@ -72,33 +92,14 @@ class Family extends Registry {
 	}
 
 	/**
-	 * @param $url
-	 * @return Site
-	 */
-	function getSiteFromUrl( $url ) {
-		if ( ! isset( $this->sites[$url] ) ) {
-			$this->addSite( $url );
-		}
-		return $this->getSite( $url );
-	}
-
-	/**
 	 * @param $url string of the site that we want to add to the family
 	 * @return Site
 	 */
-	function addSite( $url ) {
+	public function addSite( $url ) {
 		$this->sites[$url] = new Site( $url, $this );
 		if ( isset( $this->login ) ) {
 			$this->sites[$url]->setLogin( $this->login );
 		}
-		return $this->sites[$url];
-	}
-
-	/**
-	 * @param $url
-	 * @return Site
-	 */
-	function getSite( $url ) {
 		return $this->sites[$url];
 	}
 
