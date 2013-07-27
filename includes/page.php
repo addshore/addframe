@@ -6,26 +6,26 @@
  **/
 class Page {
 
-	/** @var Site siteUrl for associated site	 */
+	/** @var Site siteUrl for associated site */
 	public $site;
-	/** @var string title of Page including namespace	 */
+	/** @var string title of Page including namespace */
 	public $title;
-	/** @var string text of Page	 */
+	/** @var string text of Page */
 	public $text;
-	/** @var string pageid for Page	 */
+	/** @var string pageid for Page */
 	public $pageid;
-	/** @var string namespace id number eg. 2	 */
+	/** @var string namespace id number eg. 2 */
 	public $nsid;
-	/** @var string timestamp for the particular revision text we have got	 */
+	/** @var string timestamp for the particular revision text we have got */
 	public $timestamp;
-	/** @var array of categories the page is in	 */
+	/** @var array of categories the page is in */
 	public $categories;
-	/** @var string current protection status	 */
+	/** @var string current protection status */
 	public $protection;
-	/** @var Entity entity that is associated with the page	 */
+	/** @var Entity entity that is associated with the page	*/
 	public $entity;
-	/** @var parser entity that is associated with the page	 */
-	public $parsed;
+	/** @var parser entity that is associated with the page	*/
+	public $parser;
 
 	/**
 	 * @param string $nsid
@@ -94,6 +94,9 @@ class Page {
 	 * @return string
 	 */
 	public function getText() {
+		if($this->text == null){
+			$this->load();
+		}
 		return $this->text;
 	}
 
@@ -130,8 +133,8 @@ class Page {
 	 * @param $title
 	 */
 	public function __construct( $site , $title ) {
-		$this->site = $site;
-		$this->title = $title;
+		$this->setSite( $site );
+		$this->setTitle( $title );
 	}
 
 	/**
@@ -179,15 +182,15 @@ class Page {
 	public function parse(){
 		$parser = new parser($this->title,$this->text);
 		$parser->parse();
-		$this->parsed = $parser;
-		return $this->parsed;
+		$this->parser = $parser;
+		return $this->parser;
 	}
 
 	/**
 	 * @return string Normalise the namespace of the title if possible.
 	 */
 	public function normaliseTitleNamespace(){
-		$this->nsid = $this->site->getNamespaceIdFromTitle($this->title);
+		$this->setNsid( $this->site->getNamespaceIdFromTitle($this->title) );
 
 		if($this->nsid != '0'){
 			$siteNamespaces = $this->site->getNamespaces();
@@ -195,7 +198,7 @@ class Page {
 
 			$explosion = explode(':',$this->title ,2);
 			$explosion[0] = $normalisedNamespace;
-			$this->title = implode(':', $explosion);
+			$this->setTitle( implode(':', $explosion) );
 		}
 		return $this->title;
 
@@ -223,16 +226,13 @@ class Page {
 	 */
 	//@todo add data about site type here i.e. wiki or wikivoyage?
 	public function getInterwikisFromtext(){
-		if(!isset($this->text)){
-			$this->load();
-		}
+		$text = $this->getText();
 
 		$toReturn = array();
 		//@todo this list of langs should definatly come from a better place...
-		preg_match_all('/\n\[\['.Globals::$regex['langs'].':([^\]]+)\]\]/'
-			,$this->text,$matches);
+		preg_match_all( '/\n\[\['.Globals::$regex['langs'].':([^\]]+)\]\]/', $text, $matches );
 		foreach($matches[0] as $key => $match){
-			$toReturn[] = Array('site' => $matches[1][$key], 'link' => $matches[2][$key]);
+			$toReturn[] = Array( 'site' => $matches[1][$key], 'link' => $matches[2][$key] );
 		}
 		return $toReturn;
 	}
@@ -260,23 +260,21 @@ class Page {
 	 * @return array of Pages linked to using inter project links
 	 */
 	public function getPagesFromInterprojectLinks(){
-		if(!isset($this->text)){
-			$this->load();
-		}
+		$text = $this->getText();
 		$pages = array();
 
-		preg_match_all('/\[\['.Globals::$regex['sites'].':('.Globals::$regex['langs'].':)?([^\]]+?)\]\]/i',$this->text,$matches);
-		foreach($matches[0] as $key => $match){
+		preg_match_all( '/\[\['.Globals::$regex['sites'].':('.Globals::$regex['langs'].':)?([^\]]+?)\]\]/i',$text,$matches );
+		foreach( $matches[0] as $key => $match ){
 			$parts = array();
 
 			//set the site
-			if( stristr($matches[1][$key], 'wikipedia') ){
+			if( stristr( $matches[1][$key], 'wikipedia' ) ){
 				$parts['site'] = 'wiki';
 			} else {
 				$parts['site'] = strtolower( $matches[1][$key] );
 			}
 			//set the language
-			if( $matches[3][$key] == '') {
+			if( $matches[3][$key] == '' ) {
 				$parts['lang'] = $this->site->lang;
 			} else {
 				$parts['lang'] = $matches[3][$key];
@@ -296,12 +294,10 @@ class Page {
 	 * @return array of Pages linked to using inter project / page templates
 	 */
 	public function getPagesFromInterprojectTemplates(){
-		if(!isset($this->text)){
-			$this->load();
-		}
+		$text = $this->getText();
 		$pages = array();
 
-		preg_match_all('/\{\{(wikipedia|wikivoyage)(\|([^\]]+?))\}\}/i',$this->text,$matches);
+		preg_match_all('/\{\{(wikipedia|wikivoyage)(\|([^\]]+?))\}\}/i',$text,$matches);
 		foreach($matches[0] as $key => $match){
 			$parts = array();
 			//set the site
