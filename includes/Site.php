@@ -29,6 +29,10 @@ class Site {
 	 */
 	public $userlogin;
 
+	function setLogin( $userLogin ) {
+		$this->userlogin = $userLogin;
+	}
+
 	/**
 	 * @param $url string URL of the api
 	 * @param null $family Family
@@ -48,16 +52,16 @@ class Site {
 	 */
 	function initSite() {
 		if ( $this->apiurl == null ) {
-			$this->getApiUrl();
-			$this->getSiteinfo();
-			$this->getWikibaseinfo();
+			$this->requestApiUrl();
+			$this->requestSiteinfo();
+			$this->requestWikibaseinfo();
 		}
 	}
 
 	/**
 	 * Gets the api url from the main entry point
 	 */
-	function getApiUrl() {
+	function requestApiUrl() {
 		$pageData = $this->http->get( $this->url );
 		//@todo should die if cant contact site!
 		preg_match( '/\<link rel=\"EditURI.*?$/im', $pageData, $pageData );
@@ -96,14 +100,10 @@ class Site {
 		return new Entity( $this, $id );
 	}
 
-	function setLogin( $userLogin ) {
-		$this->userlogin = $userLogin;
-	}
-
 	function newLogin( $username, $password, $doLogin = false ) {
 		$this->setLogin( new UserLogin( $username, $password ) );
 		if ( $doLogin === true ) {
-			$this->doLogin();
+			$this->requestLogin();
 		}
 	}
 
@@ -122,7 +122,7 @@ class Site {
 			$returned = $this->http->get( $this->apiurl . $query );
 		} else {
 			if ( $post['action'] != 'login' ) {
-				$this->doLogin();
+				$this->requestLogin();
 			}
 			$query = "?" . http_build_query( $query );
 			$returned = $this->http->post( $this->apiurl . $query, $post );
@@ -134,11 +134,11 @@ class Site {
 	 * This function returns and edit token from the api
 	 * @return string Edit token.
 	 **/
-	function getEditToken() {
+	function requestEditToken() {
 		if ( isset( $this->token ) ) {
 			return $this->token;
 		}
-		$this->doLogin();
+		$this->requestLogin();
 		$apiresult = $this->doRequest( array( 'action' => 'query', 'prop' => 'info', 'intoken' => 'edit', 'titles' => 'Main Page' ) );
 		return $apiresult['query']['pages']['-1']['edittoken'];
 	}
@@ -149,10 +149,10 @@ class Site {
 	 */
 	function resetEditToken() {
 		unset( $this->token );
-		return $this->getEditToken();
+		return $this->requestEditToken();
 	}
 
-	function getSitematrix() {
+	function requestSitematrix() {
 		//@todo catch if sitematrix isnt recognised by the api
 		$siteArray = array();
 		$returned = $this->doRequest( array( 'action' => 'sitematrix', 'smlangprop' => 'site' ) );
@@ -183,7 +183,7 @@ class Site {
 	 * @return array of namespaces
 	 */
 	//@todo specify a single nsid to return
-	function getNamespaces() {
+	function requestNamespaces() {
 		if ( ! isset( $this->namespaces ) ) {
 			$returned = $this->doRequest( array( 'action' => 'query', 'meta' => 'siteinfo', 'siprop' => 'namespaces|namespacealiases' ) );
 			$this->namespaces[0] = Array( '' );
@@ -202,7 +202,7 @@ class Site {
 
 	function getNamespaceFromId( $id ) {
 		if ( ! isset( $this->namespaces ) ) {
-			$this->getNamespaces();
+			$this->requestNamespaces();
 		}
 		if ( isset( $this->namespaces[$id] ) ) {
 			return $this->namespaces[$id][0];
@@ -217,7 +217,7 @@ class Site {
 	function getNamespaceIdFromTitle( $title ) {
 		$explosion = explode( ':', $title );
 		if ( isset( $explosion[0] ) ) {
-			$this->getNamespaces();
+			$this->requestNamespaces();
 			foreach ( $this->namespaces as $nsid => $namespaceArray ) {
 				foreach ( $namespaceArray as $namespace ) {
 					if ( $explosion[0] == $namespace ) {
@@ -230,7 +230,7 @@ class Site {
 		return '0';
 	}
 
-	function getSiteinfo() {
+	function requestSiteinfo() {
 		$q['action'] = 'query';
 		$q['meta'] = 'siteinfo';
 		$result = $this->doRequest( $q );
@@ -240,7 +240,7 @@ class Site {
 		$this->code = preg_replace( '/^' . $this->lang . '/i', '', $this->wikiid );
 	}
 
-	function getWikibaseinfo() {
+	function requestWikibaseinfo() {
 		$q['action'] = 'query';
 		$q['meta'] = 'wikibase';
 		$result = $this->doRequest( $q );
@@ -257,7 +257,7 @@ class Site {
 	 * @return bool
 	 * @throws Exception
 	 */
-	function doLogin() {
+	function requestLogin() {
 		if ( ! ( $this->loggedIn == true ) ) {
 			echo "Loging in to " . $this->url . "\n";
 			$post['action'] = 'login';
@@ -276,7 +276,7 @@ class Site {
 			} else if ( $result['login']['result'] == "Throttled" ) {
 				echo "Throttled! Waiting for " . $result['login']['wait'] . "\n";
 				sleep( $result['login']['wait'] );
-				return $this->doLogin();
+				return $this->requestLogin();
 			} else {
 				throw new Exception( 'Failed login, with result ' . $result['login']['result'] );
 			}
@@ -291,7 +291,7 @@ class Site {
 	 * @param bool $minor Do we want to mark the edit as minor?
 	 * @return string
 	 */
-	function doEdit( $title, $text, $summary = null, $minor = false ) {
+	function requestEdit( $title, $text, $summary = null, $minor = false ) {
 		$parameters['action'] = 'edit';
 		$parameters['title'] = $title;
 		$parameters['text'] = $text;
@@ -301,18 +301,18 @@ class Site {
 		if ( $minor == true ) {
 			$parameters['minor'] = '1';
 		}
-		$parameters['token'] = $this->getEditToken();
+		$parameters['token'] = $this->requestEditToken();
 		return $this->doRequest( null, $parameters );
 	}
 
-	function doPropRevsions( $parameters ) {
+	function requestPropRevsions( $parameters ) {
 		$parameters['action'] = 'query';
 		$parameters['prop'] = 'revisions';
 		$parameters['rvprop'] = 'timestamp|content';
 		return $this->doRequest( $parameters );
 	}
 
-	function doPropCategories( $parameters ) {
+	function requestPropCategories( $parameters ) {
 		$parameters['action'] = 'query';
 		$parameters['prop'] = 'categories';
 		$parameters['clprop'] = 'hidden';
@@ -320,20 +320,20 @@ class Site {
 		return $this->doRequest( $parameters );
 	}
 
-	function doListAllusers( $parameters ) {
+	function requestListAllusers( $parameters ) {
 		$parameters['action'] = 'query';
 		$parameters['list'] = 'allusers';
 		return $this->doRequest( $parameters );
 	}
 
-	function doWbGetEntities( $parameters ) {
+	function requestWbGetEntities( $parameters ) {
 		$parameters['action'] = 'wbgetentities';
 		return $this->doRequest( $parameters );
 	}
 
-	function doWbEditEntity( $parameters ) {
+	function requestWbEditEntity( $parameters ) {
 		$parameters['action'] = 'wbeditentity';
-		$parameters['token'] = $this->getEditToken();
+		$parameters['token'] = $this->requestEditToken();
 		return $this->doRequest( null, $parameters );
 	}
 

@@ -63,7 +63,7 @@ class User {
 		$param['auprop'] = 'rights';
 		$param['aufrom'] = $this->username;
 		$param['aulimit'] = '1';
-		$result = $this->site->doListAllusers( $param );
+		$result = $this->site->requestListAllusers( $param );
 		$this->rights = $result->value['query']['allusers']['0']['rights'];
 		$this->userid = $result->value['query']['allusers']['0']['userid'];
 		return $this->rights;
@@ -77,7 +77,7 @@ class User {
 		$param['auprop'] = 'editcount';
 		$param['aufrom'] = $this->username;
 		$param['aulimit'] = '1';
-		$result = $this->site->doListAllusers( $param );
+		$result = $this->site->requestListAllusers( $param );
 		$this->editcount = $result->value['query']['allusers']['0']['editcount'];
 		$this->userid = $result->value['query']['allusers']['0']['userid'];
 		$this->editcounttime = time();

@@ -10,7 +10,7 @@ require_once( dirname( __FILE__ ) . '/../init.php' );
 //Create a site
 $wm = new Family( 'wikimedia', new UserLogin( 'localhost', 'Bot', 'botp123' ), 'meta.wikimedia.org/w/api.php' );
 $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
-$wikidata->doLogin();
+$wikidata->requestLogin();
 
 for ( $i = 1; $i < 14000000; $i ++ ) {
 	$entity = $wikidata->newEntityFromEntityId( 'q' . $i );

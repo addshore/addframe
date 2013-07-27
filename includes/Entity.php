@@ -43,7 +43,7 @@ class Entity extends Page {
 		$param['sites'] = $site;
 		$param['titles'] = $title;
 		$param['props'] = 'info';
-		$result = $this->site->doWbGetEntities( $param );
+		$result = $this->site->requestWbGetEntities( $param );
 		if ( ! isset( $result['entities'] ) ) {
 			return false;
 		}
@@ -61,7 +61,7 @@ class Entity extends Page {
 	function load() {
 		if ( $this->new != true ) {
 			$param['ids'] = $this->id;
-			$result = $this->site->doWbGetEntities( $param );
+			$result = $this->site->requestWbGetEntities( $param );
 			foreach ( $result['entities'] as $x ) {
 				$this->pageid = $x['pageid'];
 				$this->nsid = $x['ns'];
@@ -93,7 +93,7 @@ class Entity extends Page {
 			$param['summary'] = $summary;
 		}
 		echo "Saving entity " . $this->id . "\n";
-		return $this->site->doWbEditEntity( $param );
+		return $this->site->requestWbEditEntity( $param );
 	}
 
 	/**

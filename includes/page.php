@@ -156,7 +156,7 @@ class Page {
 		echo "Loading page " . $this->site->url . " " . $this->title . "\n";
 		$param['titles'] = $this->title;
 
-		$result = $this->site->doPropRevsions( $param );
+		$result = $this->site->requestPropRevsions( $param );
 
 		foreach ( $result['query']['pages'] as $x ) {
 			$this->setNsid( $x['ns'] );
@@ -191,7 +191,7 @@ class Page {
 		$this->setNsid( $this->site->getNamespaceIdFromTitle( $this->title ) );
 
 		if ( $this->nsid != '0' ) {
-			$siteNamespaces = $this->site->getNamespaces();
+			$siteNamespaces = $this->site->requestNamespaces();
 			$normalisedNamespace = $siteNamespaces[$this->nsid][0];
 
 			$explosion = explode( ':', $this->title, 2 );
@@ -340,7 +340,7 @@ class Page {
 			$param['clshow'] = '!hidden';
 		}
 
-		$result = $this->site->doPropCategories( $param );
+		$result = $this->site->requestPropCategories( $param );
 
 		foreach ( $result->value['query']['pages'] as $x ) {
 			$this->pageid = $x['pageid'];
@@ -357,7 +357,7 @@ class Page {
 	 */
 	public function save( $summary = null, $minor = false ) {
 		echo "Saved page " . $this->title . "\n";
-		return $this->site->doEdit( $this->title, $this->text, $summary, $minor );
+		return $this->site->requestEdit( $this->title, $this->text, $summary, $minor );
 	}
 
 	/**
@@ -430,10 +430,10 @@ class Page {
 
 			foreach ( $baseEntity->languageData['sitelinks'] as $sitelink ) {
 				$site = $this->site->family->getSiteFromSiteid( $sitelink['site'] );
-				$site->getSiteinfo();
+				$site->requestSiteinfo();
 				$lang = $site->lang;
 				$titleEnd = $this->getTitleWithoutNamespace();
-				$possibleNamespaces = $this->site->getNamespaces();
+				$possibleNamespaces = $this->site->requestNamespaces();
 				$possibleNamespaces = $possibleNamespaces[$this->nsid];
 
 				//@todo this could all be improved with something like getRegexForTitle or  getRegexForInterwikiLink

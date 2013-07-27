@@ -45,7 +45,7 @@ class Family extends Registry {
 	function __construct( $familyName, $globalLogin = null, $homeUrl = null ) {
 		if ( isset( $homeUrl ) ) {
 			$this->addSite( $homeUrl );
-			$this->sitematrix = $this->sites[$homeUrl]->getSitematrix();
+			$this->sitematrix = $this->sites[$homeUrl]->requestSitematrix();
 		}
 		if ( isset( $globalLogin ) ) {
 			$this->login = $globalLogin;
