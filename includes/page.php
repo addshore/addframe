@@ -28,10 +28,108 @@ class Page {
 	public $parsed;
 
 	/**
+	 * @param string $nsid
+	 */
+	public function setNsid( $nsid ) {
+		$this->nsid = $nsid;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getNsid() {
+		return $this->nsid;
+	}
+
+	/**
+	 * @param string $pageid
+	 */
+	public function setPageid( $pageid ) {
+		$this->pageid = $pageid;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPageid() {
+		return $this->pageid;
+	}
+
+	/**
+	 * @param string $protection
+	 */
+	public function setProtection( $protection ) {
+		$this->protection = $protection;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getProtection() {
+		return $this->protection;
+	}
+
+	/**
+	 * @param \Site $site
+	 */
+	public function setSite( $site ) {
+		$this->site = $site;
+	}
+
+	/**
+	 * @return \Site
+	 */
+	public function getSite() {
+		return $this->site;
+	}
+
+	/**
+	 * @param string $text
+	 */
+	public function setText( $text ) {
+		$this->text = $text;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getText() {
+		return $this->text;
+	}
+
+	/**
+	 * @param string $timestamp
+	 */
+	public function setTimestamp( $timestamp ) {
+		$this->timestamp = $timestamp;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTimestamp() {
+		return $this->timestamp;
+	}
+
+	/**
+	 * @param string $title
+	 */
+	public function setTitle( $title ) {
+		$this->title = $title;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTitle() {
+		return $this->title;
+	}
+
+	/**
 	 * @param $site
 	 * @param $title
 	 */
-	function __construct( $site , $title ) {
+	public function __construct( $site , $title ) {
 		$this->site = $site;
 		$this->title = $title;
 	}
@@ -39,8 +137,8 @@ class Page {
 	/**
 	 * @return string The title with the namespace removed if possible
 	 */
-	function getTitleWithoutNamespace(){
-		$this->nsid = $this->site->getNamespaceIdFromTitle($this->title);
+	public function getTitleWithoutNamespace(){
+		$this->setNsid( $this->getSite()->getNamespaceIdFromTitle( $this->title ) );
 		if($this->nsid != null && $this->nsid != '0'){
 			$explode = explode(':', $this->title, '2');
 			return $explode[1];
@@ -51,22 +149,22 @@ class Page {
 	/**
 	 * @return string Load page from the api
 	 */
-	function load(){
+	public function load(){
 		echo "Loading page ".$this->site->url." ".$this->title."\n";
 		$param['titles'] = $this->title;
 
 		$result = $this->site->doPropRevsions($param);
 
 		foreach($result['query']['pages'] as $x){
-			$this->nsid = $x['ns'];
+			$this->setNsid( $x['ns'] );
 			if( !isset( $x['missing'] ) ){
-				$this->pageid = $x['pageid'];
-				$this->text = $x['revisions']['0']['*'];
-				$this->timestamp = $x['revisions']['0']['timestamp'];
+				$this->setPageid( $x['pageid'] );
+				$this->setText( $x['revisions']['0']['*'] );
+				$this->setTimestamp( $x['revisions']['0']['timestamp'] );
 			}
 			else
 			{
-				//MSG page doesn't exist
+				//@todo MSG page doesn't exist
 			}
 		}
 		$this->normaliseTitleNamespace();
@@ -78,7 +176,7 @@ class Page {
 	 *
 	 * @return parser
 	 */
-	function parse(){
+	public function parse(){
 		$parser = new parser($this->title,$this->text);
 		$parser->parse();
 		$this->parsed = $parser;
@@ -88,7 +186,7 @@ class Page {
 	/**
 	 * @return string Normalise the namespace of the title if possible.
 	 */
-	function normaliseTitleNamespace(){
+	public function normaliseTitleNamespace(){
 		$this->nsid = $this->site->getNamespaceIdFromTitle($this->title);
 
 		if($this->nsid != '0'){
@@ -106,7 +204,7 @@ class Page {
 	/**
 	 * @return null|WikibaseEntity The entity that this page is included on
 	 */
-	function getEntity(){
+	public function getEntity(){
 		$q['action'] = 'query';
 		$q['prop'] = 'pageprops';
 		$q['titles'] = $this->title;
@@ -124,7 +222,7 @@ class Page {
 	 * @return array of interwikilinks [1] => array(site=>en,link=>Pagename) etc.
 	 */
 	//@todo add data about site type here i.e. wiki or wikivoyage?
-	function getInterwikisFromtext(){
+	public function getInterwikisFromtext(){
 		if(!isset($this->text)){
 			$this->load();
 		}
@@ -144,7 +242,7 @@ class Page {
 	 *
 	 * @return array
 	 */
-	function getPagesFromInterwikiLinks(){
+	public function getPagesFromInterwikiLinks(){
 		$pages = array();
 
 		$interwikis = $this->getInterwikisFromtext();
@@ -161,7 +259,7 @@ class Page {
 	/**
 	 * @return array of Pages linked to using inter project links
 	 */
-	function getPagesFromInterprojectLinks(){
+	public function getPagesFromInterprojectLinks(){
 		if(!isset($this->text)){
 			$this->load();
 		}
@@ -197,7 +295,7 @@ class Page {
 	/**
 	 * @return array of Pages linked to using inter project / page templates
 	 */
-	function getPagesFromInterprojectTemplates(){
+	public function getPagesFromInterprojectTemplates(){
 		if(!isset($this->text)){
 			$this->load();
 		}
@@ -228,8 +326,8 @@ class Page {
 	/**
 	 * Gets the current protection status of the page
 	 */
-	function getProtectionStatus(){
-		//@todo write this
+	private function getProtectionStatus(){
+		//@todo write this , set to public once complete
 		////http://en.wikipedia.org/w/api.php?action=query&titles=Cyprus&prop=info&inprop=protection
 		//checkout https://github.com/addshore/addwiki/blob/b8db6c00049d6ff2cefe92187e744c4c6693f815/classes/botclasses.php ln1083
 		//return $this->protection;
@@ -240,7 +338,7 @@ class Page {
 	 * @return mixed
 	 * @todo return an array of category objects which would extend Page
 	 */
-	function getCategories($hidden = null){
+	public function getCategories($hidden = null){
 		$param['titles'] = $this->title;
 		if($hidden === true){ $param['clshow'] = 'hidden';}
 		elseif($hidden === false){ $param['clshow'] = '!hidden';}
@@ -260,7 +358,7 @@ class Page {
 	 * @param bool $minor should be minor?
 	 * @return string
 	 */
-	function save($summary = null, $minor = false){
+	public function save($summary = null, $minor = false){
 		echo "Saved page ".$this->title."\n";
 		return $this->site->doEdit($this->title,$this->text,$summary,$minor);
 	}
@@ -268,7 +366,7 @@ class Page {
 	/**
 	 * @param $text string to append to $text
 	 */
-	function appendText($text){
+	public function appendText($text){
 		if ( ! empty( $this ) ) {
 			$this->text = $this->text.$text;
 		}
@@ -277,7 +375,7 @@ class Page {
 	/**
 	 * @param $text string to prepend to $text
 	 */
-	function prependText($text){
+	public function prependText($text){
 		if ( ! empty( $this ) ) {
 			$this->text = $text.$this->text;
 		}
@@ -286,7 +384,7 @@ class Page {
 	/**
 	 * Empties the text of the page
 	 */
-	function emptyText(){
+	public function emptyText(){
 		$this->text = "";
 	}
 
@@ -295,7 +393,7 @@ class Page {
 	 * @param $string string The string that you want to find.
 	 * @return bool value (1 found and 0 not-found)
 	 **/
-	function findString( $string ){
+	public function findString( $string ){
 		if( strstr( $this->text, $string ) )
 			return 1;
 		else
@@ -308,17 +406,17 @@ class Page {
 	 * @param $newstring string The string that will replace the present string.
 	 * @return string the new text of page
 	 **/
-	function replaceString( $string, $newstring ){
+	public function replaceString( $string, $newstring ){
 		$this->text = str_replace( $string, $newstring, $this->text );
 		return $this->text;
 	}
 
-	function pregReplace($patern, $replacment){
+	public function pregReplace($patern, $replacment){
 		$this->text = preg_replace($patern,$replacment,$this->text);
 		return $this->text;
 	}
 
-	function removeRegexMatched($patern){
+	public function removeRegexMatched($patern){
 		return $this->pregReplace($patern,'');
 	}
 
@@ -326,7 +424,7 @@ class Page {
 	 * Gets the entity for the article and removes all possible interwiki links
 	 * from the page text.
 	 */
-	function removeEntityLinksFromText(){
+	public function removeEntityLinksFromText(){
 		$baseEntity = $this->getEntity();
 		if($baseEntity instanceof WikibaseEntity){
 			$baseEntity->load();
