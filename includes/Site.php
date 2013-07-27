@@ -41,6 +41,9 @@ class Site {
 	 * @param null $family Family
 	 */
 	public function __construct( $url, $family = null ) {
+		if( empty ( $url ) ){
+			throw new \Exception('Can not construct a site without a url');
+		}
 		$this->url = $url;
 		$this->http = new Http();
 
@@ -208,7 +211,14 @@ class Site {
 			throw new \Exception( "Undefined offset when getting EditURL (api url)" );
 		}
 		$parsedApiUrl = parse_url( $pageData[1] );
-		$this->api = $parsedApiUrl['host'] . $parsedApiUrl['path'];
+		
+		//Note: The below is back compatability check for the parse_url function
+		if( array_key_exists('host', $parsedApiUrl) ){
+			$this->api = $parsedApiUrl['host'] . $parsedApiUrl['path'];
+		} else {
+			//pre 5.4.7
+			$this->api = trim($parsedApiUrl['path'] ,'/');
+		}
 	}
 
 	/**
@@ -221,7 +231,9 @@ class Site {
 		}
 		$this->requestLogin();
 		$apiresult = $this->doRequest( array( 'action' => 'query', 'prop' => 'info', 'intoken' => 'edit', 'titles' => 'Main Page' ) );
-		return $apiresult['query']['pages']['-1']['edittoken'];
+		foreach($apiresult['query']['pages'] as $value){
+			return $value['edittoken'];
+		}
 	}
 
 	public function requestSitematrix() {
@@ -287,7 +299,14 @@ class Site {
 		$result = $this->doRequest( $q );
 		if ( isset( $result['query']['wikibase']['repo']['url']['base'] ) ) {
 			$parsedApiUrl = parse_url( $result['query']['wikibase']['repo']['url']['base'] );
-			$this->wikibase = $this->family->getSite( $parsedApiUrl['host'] );
+			
+			//Note: The below is back compatability check for the parse_url function
+			if( array_key_exists('host', $parsedApiUrl) ){
+				$this->wikibase = $this->family->getSite( $parsedApiUrl['host'] . $parsedApiUrl['path'] );
+			} else {
+				//pre 5.4.7
+				$this->wikibase = $this->family->getSite( trim($parsedApiUrl['path'] ,'/') );
+			}
 		}
 	}
 

@@ -27,7 +27,7 @@ $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 //$dbQuery = $db->select( 'iwlink','*',null,array('ORDER BY' => 'updated ASC', 'LIMIT' => '100' ) );
 //$rows = $db->mysql2array( $dbQuery );
 $rows = array( //array('lang' => 'en', 'site' => 'wiki', 'namespace' => '0', 'title' => 'À Beira do Caminho'),
-	array( 'lang' => 'en', 'site' => 'wikivoyage', 'namespace' => '0', 'title' => 'Europe' ),
+	array( 'lang' => 'en', 'site' => 'wikivoyage', 'namespace' => '0', 'title' => 'Moon' ),
 	//array( 'lang' => 'en', 'site' => 'wiki', 'namespace' => '0', 'title' => 'Pear' ),
 	//array( 'lang' => 'en', 'site' => 'wiki', 'namespace' => '0', 'title' => 'Banana' ),
 );
