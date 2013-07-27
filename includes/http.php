@@ -20,7 +20,7 @@ class http {
 	 * @todo this should be included is a global setting of some kind
 	 * @var bool
 	 */
-	public $quiet = false;
+	public $quiet = true;
 
 	/**
 	 * @param $data array of data to be encoded
