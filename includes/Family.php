@@ -7,25 +7,14 @@ namespace Addframe;
  */
 class Family extends Registry {
 
-	/**
-	 * @var UserLogin
-	 */
+	/** @var UserLogin */
 	private $login;
-
-	/**
-	 * @var array of sites with the following keys
-	 * [url][wikiid][code][sitename][closed][private]
-	 */
+	/** * @var array of sites with the following keys
+	 * [url][wikiid][code][sitename][closed][private] */
 	private $sitematrix;
-
-	/**
-	 * @var Site[] List of sites in the family
-	 */
+	/** @var Site[] List of sites in the family */
 	private $sites;
-
-	/**
-	 * @var Site the home site for the family
-	 */
+	/** * @var Site the home site for the family */
 	private $homeSite;
 
 	/**
@@ -34,7 +23,7 @@ class Family extends Registry {
 	 * @param null $globalLogin
 	 * @param null $homeUrl
 	 */
-	function __construct($globalLogin = null, $homeUrl = null ) {
+	public function __construct( $globalLogin = null, $homeUrl = null ) {
 		if ( isset( $homeUrl ) ) {
 			$this->addSite( $homeUrl );
 			$this->homeSite = $this->getSite( $homeUrl );

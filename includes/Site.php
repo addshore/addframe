@@ -8,53 +8,28 @@ namespace Addframe;
  **/
 
 class Site {
-	/**
-	 * @var Family family the site is associated to
-	 */
+	/** @var Family family the site is associated to */
 	public $family;
-	/**
-	 * @var Site|bool wikibase the site is associated to
-	 */
+
+	/** @var Site|bool wikibase the site is associated to */
 	private $wikibase;
-	/**
-	 * @var string id of the site
-	 */
+	/** @var string id of the site */
 	private $id;
-	/**
-	 * @var string type of site eg.(wiki|wikivoyage)
-	 */
+	/** @var string type of site eg.(wiki|wikivoyage) */
 	private $type;
-	/**
-	 * @var string url of the site
-	 */
+	/** @var string url of the site */
 	public $url;
-	/**
-	 * @var string url of the api
-	 */
+	/** @var string url of the api */
 	private $api;
-	/**
-	 * @var string language eg. en
-	 */
+	/** @var string language eg. en */
 	private $language;
-	/**
-	 * @var string url of the wikibase for the site
-	 */
-	public $wikibaseurl;
-	/**
-	 * @var Http class
-	 */
+	/** @var Http class */
 	private $http;
-	/**
-	 * @var string cache of the token we are using
-	 */
+	/** @var string cache of the token we are using */
 	private $token;
-	/**
-	 * @var Array
-	 */
+	/** @var Array */
 	private $namespaces;
-	/**
-	 * @var UserLogin
-	 */
+	/** @var UserLogin */
 	private $userlogin;
 
 	public function setLogin( $userLogin ) {
@@ -189,7 +164,7 @@ class Site {
 	}
 
 	public function newLogin( $username, $password, $doLogin = false ) {
-		$this->setLogin( new UserLogin( $username, $password ) );
+		$this->userlogin = new UserLogin( $username, $password );
 		if ( $doLogin === true ) {
 			$this->requestLogin();
 		}

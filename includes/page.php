@@ -12,6 +12,7 @@ class Page {
 	public $site;
 	/** @var string title of Page including namespace */
 	public $title;
+
 	/** @var string text of Page */
 	protected $text;
 	/** @var string pageid for Page */
@@ -19,18 +20,27 @@ class Page {
 	/** @var string namespace id number eg. 2 */
 	protected $nsid;
 	/** @var array of categories the page is in */
-	public $categories;
+	protected $categories;
 	/** @var Entity entity that is associated with the page */
-	public $entity;
+	protected $entity;
 	/** @var parser entity that is associated with the page */
 	protected $parser;
+
+	/**
+	 * @param $site
+	 * @param $title
+	 */
+	public function __construct( $site, $title ) {
+		$this->site = $site;
+		$this->title =  $title;
+	}
 
 	/**
 	 * @return string
 	 */
 	public function getNsid() {
 		if( $this->nsid == null ){
-			$this->nsid = $this->getSite()->getNamespaceIdFromTitle( $this->title );
+			$this->nsid = $this->site->getNamespaceIdFromTitle( $this->title );
 		}
 		return $this->nsid;
 	}
@@ -64,15 +74,6 @@ class Page {
 	 */
 	public function getTitle() {
 		return $this->title;
-	}
-
-	/**
-	 * @param $site
-	 * @param $title
-	 */
-	public function __construct( $site, $title ) {
-		$this->site = $site;
-		$this->title =  $title;
 	}
 
 	/**

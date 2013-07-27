@@ -61,6 +61,7 @@ class Entity extends Page {
 	 * @return array of entity languageData
 	 */
 	function load() {
+		//@todo refactor into site->getentitydatafromid
 		if ( $this->new != true ) {
 			$param['ids'] = $this->id;
 			$result = $this->site->requestWbGetEntities( $param );

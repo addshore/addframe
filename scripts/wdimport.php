@@ -45,7 +45,7 @@ foreach ( $rows as $row ) {
 	/* @var $page Page */
 	foreach ( $usedPages as $page ) {
 		if ( $page->getEntity() instanceof Entity ) {
-			$baseEntity = $page->entity;
+			$baseEntity = $page->getEntity();
 			echo "Found entity " . $baseEntity->id . "\n";
 			break;
 		}
