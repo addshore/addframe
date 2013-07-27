@@ -29,10 +29,10 @@ class ReqistryTest extends \PHPUnit_Framework_TestCase {
 
 	function provideValidValues(){
 		return array(
-			array( 'anEmptyString' , '' ),
-			array( 'aString','aStringValue' ),
-			array( 'anArray', array('item1', 'item2') ),
-			array( 'anobject', new \Exception( 'Test object' ) ),
+			array( array('anEmptyString' , '') ),
+			array( array('aString','aStringValue' ) ),
+			array( array('anArray', array('item1', 'item2') ) ),
+			array( array('anobject', new \Exception( 'Test object' ) ) ),
 		);
 	}
 
