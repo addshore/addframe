@@ -6,18 +6,18 @@
  **/
 
 //Initiate the script
-require_once( dirname(__FILE__).'/../init.php' );
+require_once( dirname( __FILE__ ) . '/../init.php' );
 
 //This is an array that we can keep our summaries in...
 $summaries = array();
 
 //Create a site
-$wm = new Family('wikimedia',new UserLogin('addbot','password'),'meta.wikimedia.org');
-$wikidata = $wm->getSiteFromSiteid('wikidatawiki');
+$wm = new Family( 'wikimedia', new UserLogin( 'addbot', 'password' ), 'meta.wikimedia.org' );
+$wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 
 
-$items = array('q14208163');
-foreach($items as $item){
+$items = array( 'q14208163' );
+foreach ( $items as $item ) {
 
 	$itemOne = $wikidata->getEntityFromId( $item );
 	$itemOne->load();
@@ -25,21 +25,21 @@ foreach($items as $item){
 
 	$linkedPages = array();
 	$guessedPages = array();
-	foreach( $itemOne->languageData['sitelinks'] as $siteid => $value ){
+	foreach ( $itemOne->languageData['sitelinks'] as $siteid => $value ) {
 		$site = $wm->getSiteFromSiteid( $siteid );
 		$page = $site->getPage( $value['title'] );
 		$linkedPages = array_merge( $linkedPages, $page->getPagesFromInterprojectLinks() );
 		$linkedPages = array_merge( $linkedPages, $page->getPagesFromInterprojectTemplates() );
-		$guessedPages[] = $wm->getSiteFromSiteid( $page->site->lang.'wiki' )->getPage( $page->title );
+		$guessedPages[] = $wm->getSiteFromSiteid( $page->site->lang . 'wiki' )->getPage( $page->title );
 	}
 
 	/* @var $page Page */
-	foreach( array_merge( $linkedPages, $guessedPages ) as $page ){
+	foreach ( array_merge( $linkedPages, $guessedPages ) as $page ) {
 		$itemTwo = $page->getEntity();
-		if( $itemTwo instanceof Entity ){
+		if ( $itemTwo instanceof Entity ) {
 			$itemTwo->load();
 
-			foreach( $itemOne->languageData['sitelinks'] as $siteid => $value ){
+			foreach ( $itemOne->languageData['sitelinks'] as $siteid => $value ) {
 				$itemOne->removeSitelink( $siteid );
 				$itemTwo->addSitelink( $siteid, $value['title'] );
 			}
@@ -48,9 +48,9 @@ foreach($items as $item){
 		}
 	}
 
-	if($itemOne->changed && $itemTwo->changed ){
-		$itemOne->save( 'Merging to '.$itemTwo->id );
-		$itemTwo->save( 'Adding sitelinks from '.$itemTwo->id );
+	if ( $itemOne->changed && $itemTwo->changed ) {
+		$itemOne->save( 'Merging to ' . $itemTwo->id );
+		$itemTwo->save( 'Adding sitelinks from ' . $itemTwo->id );
 	}
 
 }

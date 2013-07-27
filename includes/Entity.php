@@ -4,30 +4,30 @@
  * This class is designed to represent a Site Wikibase entity
  * @author Addshore
  **/
-class Entity extends Page{
+class Entity extends Page {
 
-	/** @var Site site of entity*/
+	/** @var Site site of entity */
 	public $site;
-	/** @var string id of entity*/
+	/** @var string id of entity */
 	public $id;
-	/** @var boolean is this a new entity? Does it need to be created?*/
+	/** @var boolean is this a new entity? Does it need to be created? */
 	public $new = null;
 	public $lastrevid;
-	/** @var string type of entity (property|item)*/
+	/** @var string type of entity (property|item) */
 	public $entityType;
-	/** @var array languagedata for the item (alliases|labels|sitelinks)*/
+	/** @var array languagedata for the item (alliases|labels|sitelinks) */
 	public $languageData;
-	/** @var boolean has the item been changed since it was loaded?*/
+	/** @var boolean has the item been changed since it was loaded? */
 	public $changed = false;
 
 
 	//@todo manipulate statements
 
-	function __construct( $site, $id = null , $new = null) {
-		if( isset ( $id ) ){
-			$this->id = $id;//@todo validate  and correct the id (lower case)
+	function __construct( $site, $id = null, $new = null ) {
+		if ( isset ( $id ) ) {
+			$this->id = $id; //@todo validate  and correct the id (lower case)
 		}
-		if( isset( $new ) ){
+		if ( isset( $new ) ) {
 			$this->new = true;
 			$this->entityType = $new;
 		}
@@ -39,13 +39,15 @@ class Entity extends Page{
 	 * @param $title string of page
 	 * @return bool|string false or the id
 	 */
-	function getIdFromPage ($site,$title){
+	function getIdFromPage( $site, $title ) {
 		$param['sites'] = $site;
 		$param['titles'] = $title;
 		$param['props'] = 'info';
-		$result = $this->site->doWbGetEntities($param);
-		if(!isset($result['entities'])){return false;}
-		foreach($result['entities'] as $entity){
+		$result = $this->site->doWbGetEntities( $param );
+		if ( ! isset( $result['entities'] ) ) {
+			return false;
+		}
+		foreach ( $result['entities'] as $entity ) {
 			$this->id = $entity['id'];
 		}
 		return $this->id;
@@ -56,18 +58,18 @@ class Entity extends Page{
 	 * Get the entity from the api
 	 * @return array of entity languageData
 	 */
-	function load(){
-		if( $this->new != true){
+	function load() {
+		if ( $this->new != true ) {
 			$param['ids'] = $this->id;
-			$result = $this->site->doWbGetEntities($param);
-			foreach($result['entities'] as $x){
+			$result = $this->site->doWbGetEntities( $param );
+			foreach ( $result['entities'] as $x ) {
 				$this->pageid = $x['pageid'];
 				$this->nsid = $x['ns'];
 				$this->title = $x['title'];
 				$this->lastrevid = $x['lastrevid'];
 				$this->timestamp = $x['modified'];
 				$this->entityType = $x['type'];
-				$this->languageData = $this->unserializeLanguageData($x);
+				$this->languageData = $this->unserializeLanguageData( $x );
 			}
 			return $this->languageData;
 		}
@@ -77,34 +79,36 @@ class Entity extends Page{
 	/**
 	 * Save the entity through the api
 	 */
-	function save($summary = null, $minor = null){
-		if( !isset($this->id) ){
+	function save( $summary = null, $minor = null ) {
+		if ( ! isset( $this->id ) ) {
 			$param['new'] = $this->entityType;
 		} else {
 			$param['id'] = $this->id;
 		}
 		$param['data'] = $this->serializeLanguageData();
-		if( $param['data']  == json_encode( array() ) ){
+		if ( $param['data'] == json_encode( array() ) ) {
 			$param['clear'] = 'true';
 		}
-		if(isset($summary)){ $param['summary'] = $summary;}
-		echo "Saving entity ".$this->id."\n";
-		return $this->site->doWbEditEntity($param);
+		if ( isset( $summary ) ) {
+			$param['summary'] = $summary;
+		}
+		echo "Saving entity " . $this->id . "\n";
+		return $this->site->doWbEditEntity( $param );
 	}
 
 	/**
 	 * Builds an entity out of the languageData specified
 	 * @return string of json encoded languageData
 	 */
-	function serializeLanguageData(){
-		foreach( $this->languageData as $key => $data ){
-			if( $data === array() ){
+	function serializeLanguageData() {
+		foreach ( $this->languageData as $key => $data ) {
+			if ( $data === array() ) {
 				unset( $this->languageData[$key] );
 			}
 		}
 
 		//@todo normalise stuff before returning
-		return json_encode($this->languageData);
+		return json_encode( $this->languageData );
 	}
 
 	/**
@@ -112,10 +116,10 @@ class Entity extends Page{
 	 * @param $json string of json data which includes language data
 	 * @return array of LanguageData
 	 */
-	function unserializeLanguageData($json){
-		$canGet = Array('labels', 'descriptions', 'aliases', 'sitelinks');
-		foreach ( $canGet as $returnType){
-			if ( isset( $json[$returnType]) ) {
+	function unserializeLanguageData( $json ) {
+		$canGet = Array( 'labels', 'descriptions', 'aliases', 'sitelinks' );
+		foreach ( $canGet as $returnType ) {
+			if ( isset( $json[$returnType] ) ) {
 				$this->languageData[$returnType] = $json[$returnType];
 			}
 		}
@@ -127,72 +131,101 @@ class Entity extends Page{
 	 * @param $identifier string of the data such as language or site
 	 * @param $value string value to set the data to to the identifier
 	 */
-	function modifyLanguageData($type, $identifier, $value){
+	function modifyLanguageData( $type, $identifier, $value ) {
 		$idkey1 = 'language'; //default
 		$idkey2 = 'value';
-		if( $type == 'sitelinks' ){ $idkey1 = 'site'; $idkey2 = 'title'; }
+		if ( $type == 'sitelinks' ) {
+			$idkey1 = 'site';
+			$idkey2 = 'title';
+		}
 		$this->languageData[$type][$identifier][$idkey1] = $identifier;
 		$this->languageData[$type][$identifier][$idkey2] = $value;
 		$this->changed = true;
 	}
 
-	function addLanguageData($type, $identifier, $value){
-		if( !isset($this->languageData[$type][$identifier]) ){
-			$this->modifyLanguageData($type, $identifier, $value);
+	function addLanguageData( $type, $identifier, $value ) {
+		if ( ! isset( $this->languageData[$type][$identifier] ) ) {
+			$this->modifyLanguageData( $type, $identifier, $value );
 		}
 	}
 
-	function removeLanguageData($type, $identifier){
-		if( isset($this->languageData[$type][$identifier]) ){
-			unset($this->languageData[$type][$identifier]);
+	function removeLanguageData( $type, $identifier ) {
+		if ( isset( $this->languageData[$type][$identifier] ) ) {
+			unset( $this->languageData[$type][$identifier] );
 			$this->changed = true;
 		}
 	}
 
-	function modifyLabel($language, $value){ $this->modifyLanguageData('labels',$language,$value); }
-	function addLabel($language, $value){ $this->addLanguageData('labels', $language, $value); }
-	function removeLabel($language){ $this->removeLanguageData('labels',$language); }
-	function modifyDescription($language, $value){ $this->modifyLanguageData('descriptions',$language,$value); }
-	function addDescription($language, $value){ $this->addLanguageData('descriptions', $language, $value); }
-	function removeDescription($language){ $this->removeLanguageData('descriptions',$language); }
-	function modifySitelink($siteid, $value){ $this->modifyLanguageData('sitelinks',$siteid,$value); }
-	function addSitelink($siteid, $value){ $this->addLanguageData('sitelinks', $siteid, $value); }
-	function removeSitelink($siteid){ $this->removeLanguageData('sitelinks',$siteid); }
+	function modifyLabel( $language, $value ) {
+		$this->modifyLanguageData( 'labels', $language, $value );
+	}
 
-	function modifyAliases($language, $value){
+	function addLabel( $language, $value ) {
+		$this->addLanguageData( 'labels', $language, $value );
+	}
+
+	function removeLabel( $language ) {
+		$this->removeLanguageData( 'labels', $language );
+	}
+
+	function modifyDescription( $language, $value ) {
+		$this->modifyLanguageData( 'descriptions', $language, $value );
+	}
+
+	function addDescription( $language, $value ) {
+		$this->addLanguageData( 'descriptions', $language, $value );
+	}
+
+	function removeDescription( $language ) {
+		$this->removeLanguageData( 'descriptions', $language );
+	}
+
+	function modifySitelink( $siteid, $value ) {
+		$this->modifyLanguageData( 'sitelinks', $siteid, $value );
+	}
+
+	function addSitelink( $siteid, $value ) {
+		$this->addLanguageData( 'sitelinks', $siteid, $value );
+	}
+
+	function removeSitelink( $siteid ) {
+		$this->removeLanguageData( 'sitelinks', $siteid );
+	}
+
+	function modifyAliases( $language, $value ) {
 		$this->languageData['aliases'][$language]['language'] = $language;
 		$this->languageData['aliases'][$language]['value'] = $value;
 		$this->changed = true;
 	}
 
-	function addAliases($language, $value){
-		if( !isset($this->languageData['aliases'][$language]) ){
-			$this->modifyAliases($language, $value);
+	function addAliases( $language, $value ) {
+		if ( ! isset( $this->languageData['aliases'][$language] ) ) {
+			$this->modifyAliases( $language, $value );
 		}
 	}
 
-	function removeAliases($language){
-		if( isset($this->languageData['aliases'][$language]) ){
-			unset($this->languageData['aliases'][$language]);
+	function removeAliases( $language ) {
+		if ( isset( $this->languageData['aliases'][$language] ) ) {
+			unset( $this->languageData['aliases'][$language] );
 			$this->changed = true;
 		}
 	}
 
-	function addAlias($language, $string){
-		$this->languageData['aliases'][$language][] = Array('language' => $language, 'value' => $string);
+	function addAlias( $language, $string ) {
+		$this->languageData['aliases'][$language][] = Array( 'language' => $language, 'value' => $string );
 		$this->changed = true;
 	}
-	function removeAlias($language, $string){
-		if( isset($this->languageData['aliases'][$language]) ){
-			foreach($this->languageData['aliases'][$language] as $key => $alias){
-				if( $alias['value'] == $string ){
-					unset($this->languageData['aliases'][$language][$key]);
+
+	function removeAlias( $language, $string ) {
+		if ( isset( $this->languageData['aliases'][$language] ) ) {
+			foreach ( $this->languageData['aliases'][$language] as $key => $alias ) {
+				if ( $alias['value'] == $string ) {
+					unset( $this->languageData['aliases'][$language][$key] );
 					$this->changed = true;
 					$this->languageData['aliases'][$language] = array_values( $this->languageData['aliases'][$language] );
 				}
 			}
-		}
-		else{
+		} else {
 			echo "No alises to remove for language '$language'\n";
 		}
 	}

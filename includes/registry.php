@@ -28,8 +28,8 @@ class Registry {
 	 * The magic method __get will be used when were trying to pull objects from the storage variable
 	 */
 	public function __get( $index ) {
-		if (!isset($this->objects[$index])){
-			throw new Exception("Undefined index '$index' in registry");
+		if ( ! isset( $this->objects[$index] ) ) {
+			throw new Exception( "Undefined index '$index' in registry" );
 			return null;
 		}
 		return $this->objects[$index];

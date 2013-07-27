@@ -45,7 +45,7 @@ class Mysql {
 	 * @param bool $force
 	 */
 	private function connectToServer( $force = false ) {
-		$this->mConn = mysql_connect( $this->mHost.':'.$this->mPort, $this->mUser, $this->mPass, $force );
+		$this->mConn = mysql_connect( $this->mHost . ':' . $this->mPort, $this->mUser, $this->mPass, $force );
 		//@todo make sure we always read in utf8!
 		mysql_select_db( $this->mDb, $this->mConn );
 	}
@@ -65,16 +65,17 @@ class Mysql {
 	 * @return object|bool MySQL object, false if there's no result
 	 */
 	public function doQuery( $sql ) {
-		$sql = trim($sql);
+		$sql = trim( $sql );
 		//echo "MySQL: $sql;\n";
 		$result = mysql_query( $sql, $this->mConn );
 		//var_dump($result);
-		if( mysql_errno( $this->mConn ) == 2006 ) {
+		if ( mysql_errno( $this->mConn ) == 2006 ) {
 			$this->connectToServer( true );
 			$result = mysql_query( $sql, $this->mConn );
 		}
 
-		if( !$result ) return false;
+		if ( ! $result )
+			return false;
 		return $result;
 	}
 
@@ -84,7 +85,8 @@ class Mysql {
 	 */
 	public function errorStr() {
 		$result = mysql_error( $this->mConn );
-		if( !$result ) return false;
+		if ( ! $result )
+			return false;
 		return $result;
 	}
 
@@ -106,7 +108,7 @@ class Mysql {
 	public static function mysql2array( $data ) {
 
 		$return = array();
-		while( $row = mysql_fetch_assoc( $data ) ) {
+		while ( $row = mysql_fetch_assoc( $data ) ) {
 			$return[] = $row;
 		}
 
@@ -122,21 +124,20 @@ class Mysql {
 	 * @param array $join_on If selecting from more than one table, this adds an ON statement to the query. Defualt an empty array.
 	 * @return object MySQL object
 	 */
-	public function select ( $table, $fields, $where = null, $options = array(), $join_on = array() ) {
-		if( is_array( $fields ) ) {
+	public function select( $table, $fields, $where = null, $options = array(), $join_on = array() ) {
+		if ( is_array( $fields ) ) {
 			$fields = implode( ',', $fields );
 		}
 
-		if( !is_array( $options ) ) {
+		if ( ! is_array( $options ) ) {
 			$options = array( $options );
 		}
 
-		if( is_array( $table ) ) {
-			if( count( $join_on ) == 0 ) {
+		if ( is_array( $table ) ) {
+			if ( count( $join_on ) == 0 ) {
 				$from = 'FROM ' . implode( ',', $table );
 				$on = null;
-			}
-			else {
+			} else {
 				$tmp = array_shift( $table );
 				$from = 'FROM ' . $tmp;
 				$from .= ' JOIN ' . implode( ' JOIN ', $table );
@@ -144,38 +145,40 @@ class Mysql {
 				$tmp = array_keys( $join_on );
 				$on = 'ON ' . $tmp[0] . ' = ' . $join_on[$tmp[0]];
 			}
-		}
-		else {
+		} else {
 			$from = 'FROM ' . $table;
 			$on = null;
 		}
 
 		$newoptions = null;
-		if ( isset( $options['GROUP BY'] ) ) $newoptions .= "GROUP BY {$options['GROUP BY']}";
-		if ( isset( $options['HAVING'] ) ) $newoptions .= "HAVING {$options['HAVING']}";
-		if ( isset( $options['ORDER BY'] ) ) $newoptions .= "ORDER BY {$options['ORDER BY']}";
+		if ( isset( $options['GROUP BY'] ) )
+			$newoptions .= "GROUP BY {$options['GROUP BY']}";
+		if ( isset( $options['HAVING'] ) )
+			$newoptions .= "HAVING {$options['HAVING']}";
+		if ( isset( $options['ORDER BY'] ) )
+			$newoptions .= "ORDER BY {$options['ORDER BY']}";
 
-		if( !is_null( $where ) ) {
-			if( is_array( $where ) ) {
+		if ( ! is_null( $where ) ) {
+			if ( is_array( $where ) ) {
 				$where_tmp = array();
-				foreach( $where as $wopt ) {
+				foreach ( $where as $wopt ) {
 					$tmp = $this->mysqlEscape( $wopt[2] );
-					if( $wopt[1] == 'LIKE' ) $tmp = $wopt[2];
+					if ( $wopt[1] == 'LIKE' )
+						$tmp = $wopt[2];
 					$where_tmp[] = '`' . $wopt[0] . '` ' . $wopt[1] . ' \'' . $tmp . '\'';
 				}
 				$where = implode( ' AND ', $where_tmp );
 			}
 			$sql = "SELECT $fields $from $on WHERE $where $newoptions";
-		}
-		else {
+		} else {
 			$sql = "SELECT $fields $from $on $newoptions";
 		}
 
-		if (isset($options['LIMIT'])) {
+		if ( isset( $options['LIMIT'] ) ) {
 			$sql .= " LIMIT {$options['LIMIT']}";
 		}
 
-		if (isset($options['EXPLAIN'])) {
+		if ( isset( $options['EXPLAIN'] ) ) {
 			$sql = 'EXPLAIN ' . $sql;
 		}
 
@@ -193,18 +196,19 @@ class Mysql {
 	 */
 	public function insert( $table, $values, $options = array() ) {
 		//echo "Running insert.";
-		if( $this->mReadonly == true ) throw new Exception( "Write query called while under read-only mode" );
-		if ( !count( $values ) ) {
+		if ( $this->mReadonly == true )
+			throw new Exception( "Write query called while under read-only mode" );
+		if ( ! count( $values ) ) {
 			return true;
 		}
 
-		if ( !is_array( $options ) ) {
+		if ( ! is_array( $options ) ) {
 			$options = array( $options );
 		}
 
 		$cols = array();
 		$vals = array();
-		foreach( $values as $col => $value ) {
+		foreach ( $values as $col => $value ) {
 			$cols[] = "`$col`";
 			$vals[] = "'" . $this->mysqlEscape( $value ) . "'";
 		}
@@ -226,9 +230,10 @@ class Mysql {
 	 * @throws Exception Write query called while under read-only mode
 	 */
 	public function update( $table, $values, $conds = '*' ) {
-		if( $this->mReadonly == true ) throw new Exception( "Write query called while under read-only mode" );
+		if ( $this->mReadonly == true )
+			throw new Exception( "Write query called while under read-only mode" );
 		$vals = array();
-		foreach( $values as $col => $val ) {
+		foreach ( $values as $col => $val ) {
 			$vals[] = "`$col`" . "= '" . $this->mysqlEscape( $val ) . "'";
 		}
 		$vals = implode( ', ', $vals );
@@ -236,7 +241,7 @@ class Mysql {
 		$sql = "UPDATE $table SET " . $vals;
 		if ( $conds != '*' ) {
 			$cnds = array();
-			foreach( $conds as $col => $val ) {
+			foreach ( $conds as $col => $val ) {
 				$cnds[] = "`$col`" . "= '" . $this->mysqlEscape( $val ) . "'";
 			}
 			$cnds = implode( ', ', $cnds );
@@ -254,11 +259,12 @@ class Mysql {
 	 * @throws Exception Write query called while under read-only mode
 	 */
 	public function delete( $table, $conds ) {
-		if( $this->mReadonly == true ) throw new Exception( "Write query called while under read-only mode" );
+		if ( $this->mReadonly == true )
+			throw new Exception( "Write query called while under read-only mode" );
 		$sql = "DELETE FROM $table";
 		if ( $conds != '*' ) {
 			$cnds = array();
-			foreach( $conds as $col => $val ) {
+			foreach ( $conds as $col => $val ) {
 				$cnds[] = "`$col`" . "= '" . $this->mysqlEscape( $val ) . "'";
 			}
 			$cnds = implode( ' AND ', $cnds );

@@ -18,18 +18,18 @@ class mediawikiapiresult {
 	}
 
 	/** @deprecated */
-	private function getDetails(){
+	private function getDetails() {
 		//@todo this is a load of poo...
-		foreach ($this->value as $key => $returned){
+		foreach ( $this->value as $key => $returned ) {
 			$this->wrapper = $key;
-			if( isset($returned['result']) ){
+			if ( isset( $returned['result'] ) ) {
 				$this->statusCode = $returned['result'];
 				return true;
-			}else if( isset($returned['code']) ){
+			} else if ( isset( $returned['code'] ) ) {
 				$this->statusCode = $returned['code'];
 				return true;
-			}else if( isset($returned['success'])){
-				if($returned['success'] = '1'){
+			} else if ( isset( $returned['success'] ) ) {
+				if ( $returned['success'] = '1' ) {
 					$this->statusCode = "success";
 				}
 			}
@@ -38,7 +38,7 @@ class mediawikiapiresult {
 	}
 
 	/** @deprecated */
-	public function getInside(){
+	public function getInside() {
 		return $this->value[$this->wrapper];
 	}
 }

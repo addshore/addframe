@@ -28,8 +28,8 @@ class UserLogin extends User {
 	/**
 	 * @return Page a sandbox that can be used during testing
 	 */
-	function getSandbox(){
-		return new Page($this->site,"User:$this->username/Sandbox");
+	function getSandbox() {
+		return new Page( $this->site, "User:$this->username/Sandbox" );
 	}
 
 }

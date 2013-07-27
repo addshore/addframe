@@ -44,26 +44,26 @@ class User {
 	/**
 	 * @return Page object for this users page
 	 */
-	function getUserPage(){
-		return new Page($this->site,"User:$this->username");
+	function getUserPage() {
+		return new Page( $this->site, "User:$this->username" );
 	}
 
 	/**
 	 * @return Page object for this users talk pages
 	 */
-	function getUserTalkPage(){
-		return new Page($this->site,"User talk:$this->username");
+	function getUserTalkPage() {
+		return new Page( $this->site, "User talk:$this->username" );
 	}
 
 	/**
 	 * Gets a users rights
 	 * @return mixed
 	 */
-	function getRights(){
+	function getRights() {
 		$param['auprop'] = 'rights';
 		$param['aufrom'] = $this->username;
 		$param['aulimit'] = '1';
-		$result = $this->site->doListAllusers($param);
+		$result = $this->site->doListAllusers( $param );
 		$this->rights = $result->value['query']['allusers']['0']['rights'];
 		$this->userid = $result->value['query']['allusers']['0']['userid'];
 		return $this->rights;
@@ -73,11 +73,11 @@ class User {
 	 * gets a users edit count
 	 * @return mixed
 	 */
-	function getEditcount(){
+	function getEditcount() {
 		$param['auprop'] = 'editcount';
 		$param['aufrom'] = $this->username;
 		$param['aulimit'] = '1';
-		$result = $this->site->doListAllusers($param);
+		$result = $this->site->doListAllusers( $param );
 		$this->editcount = $result->value['query']['allusers']['0']['editcount'];
 		$this->userid = $result->value['query']['allusers']['0']['userid'];
 		$this->editcounttime = time();

@@ -43,11 +43,11 @@ class Family extends Registry {
 	 * @param null $homeUrl
 	 */
 	function __construct( $familyName, $globalLogin = null, $homeUrl = null ) {
-		if( isset( $homeUrl ) ){
+		if ( isset( $homeUrl ) ) {
 			$this->addSite( $homeUrl );
 			$this->sitematrix = $this->sites[$homeUrl]->getSitematrix();
 		}
-		if( isset( $globalLogin ) ){
+		if ( isset( $globalLogin ) ) {
 			$this->login = $globalLogin;
 		}
 	}
@@ -56,12 +56,12 @@ class Family extends Registry {
 	 * @param $siteid string of the siteid for the site
 	 * @return Site
 	 */
-	function getSiteFromSiteid( $siteid ){
-		if( isset( $this->sitematrix[$siteid] ) ){
-			$url = parse_url ( $this->sitematrix[$siteid]['url'] );
+	function getSiteFromSiteid( $siteid ) {
+		if ( isset( $this->sitematrix[$siteid] ) ) {
+			$url = parse_url( $this->sitematrix[$siteid]['url'] );
 			$url = $url['host'];
 
-			if( !isset( $this->sites[$url] ) ){
+			if ( ! isset( $this->sites[$url] ) ) {
 				echo "Loading $url\n";
 				$this->addSite( $url );
 			}
@@ -73,8 +73,8 @@ class Family extends Registry {
 	 * @param $url
 	 * @return Site
 	 */
-	function getSiteFromUrl( $url ){
-		if( !isset( $this->sites[$url] ) ){
+	function getSiteFromUrl( $url ) {
+		if ( ! isset( $this->sites[$url] ) ) {
 			$this->addSite( $url );
 		}
 		return $this->getSite( $url );
@@ -84,9 +84,9 @@ class Family extends Registry {
 	 * @param $url string of the site that we want to add to the family
 	 * @return Site
 	 */
-	function addSite( $url ){
+	function addSite( $url ) {
 		$this->sites[$url] = new Site( $url, $this );
-		if( isset( $this->login ) ) {
+		if ( isset( $this->login ) ) {
 			$this->sites[$url]->setLogin( $this->login );
 		}
 		return $this->sites[$url];
@@ -96,7 +96,7 @@ class Family extends Registry {
 	 * @param $url
 	 * @return Site
 	 */
-	function getSite( $url ){
+	function getSite( $url ) {
 		return $this->sites[$url];
 	}
 
