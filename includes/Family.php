@@ -41,11 +41,10 @@ class Family extends Registry {
 	 * Create an object to hold a family of sites
 	 * If a home site is listed try to get the sitematrix
 	 *
-	 * @param $familyName
 	 * @param null $globalLogin
 	 * @param null $homeUrl
 	 */
-	function __construct( $familyName, $globalLogin = null, $homeUrl = null ) {
+	function __construct($globalLogin = null, $homeUrl = null ) {
 		if ( isset( $homeUrl ) ) {
 			$this->addSite( $homeUrl );
 			$this->sitematrix = $this->sites[$homeUrl]->requestSitematrix();

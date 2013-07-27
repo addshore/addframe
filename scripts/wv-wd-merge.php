@@ -16,7 +16,7 @@ require_once( dirname( __FILE__ ) . '/../init.php' );
 $summaries = array();
 
 //Create a site
-$wm = new Family( 'wikimedia', new UserLogin( 'addbot', 'password' ), 'meta.wikimedia.org' );
+$wm = new Family( new UserLogin( 'addbot', 'password' ), 'meta.wikimedia.org' );
 $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 
 

@@ -10,7 +10,7 @@ use Addframe\UserLogin;
 require_once( dirname( __FILE__ ) . '/../init.php' );
 
 //Create a site
-$wm = new Family( 'wikimedia', new UserLogin( 'localhost', 'Bot', 'botp123' ), 'meta.wikimedia.org/w/api.php' );
+$wm = new Family( new UserLogin( 'localhost', 'Bot', 'botp123' ), 'meta.wikimedia.org/w/api.php' );
 $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 $wikidata->requestLogin();
 
