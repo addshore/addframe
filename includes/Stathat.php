@@ -2,7 +2,7 @@
 
 class Stathat {
 
-	function do_post_request( $url, $data, $optional_headers = null ) {
+	private function do_post_request( $url, $data, $optional_headers = null ) {
 		$params = array( 'http' => array( 'method' => 'POST', 'content' => $data ) );
 		if ( $optional_headers !== null ) {
 			$params['http']['header'] = $optional_headers;
@@ -19,7 +19,8 @@ class Stathat {
 		return $response;
 	}
 
-	function do_async_post_request( $url, $params ) {
+	private function do_async_post_request( $url, $params ) {
+		$post_params = array();
 		foreach ( $params as $key => &$val ) {
 			if ( is_array( $val ) )
 				$val = implode( ',', $val );
@@ -43,38 +44,38 @@ class Stathat {
 		fclose( $fp );
 	}
 
-	function stathat_count( $stat_key, $user_key, $count ) {
-		return do_async_post_request( "http://api.stathat.com/c", array( 'key' => $stat_key, 'ukey' => $user_key, 'count' => $count ) );
+	public function stathat_count( $stat_key, $user_key, $count ) {
+		$this->do_async_post_request( "http://api.stathat.com/c", array( 'key' => $stat_key, 'ukey' => $user_key, 'count' => $count ) );
 	}
 
-	function stathat_value( $stat_key, $user_key, $value ) {
-		do_async_post_request( "http://api.stathat.com/v", array( 'key' => $stat_key, 'ukey' => $user_key, 'value' => $value ) );
+	public function stathat_value( $stat_key, $user_key, $value ) {
+		$this->do_async_post_request( "http://api.stathat.com/v", array( 'key' => $stat_key, 'ukey' => $user_key, 'value' => $value ) );
 	}
 
-	function stathat_ez_count( $email, $stat_name, $count ) {
-		do_async_post_request( "http://api.stathat.com/ez", array( 'email' => $email, 'stat' => $stat_name, 'count' => $count ) );
+	public function stathat_ez_count( $email, $stat_name, $count ) {
+		$this->do_async_post_request( "http://api.stathat.com/ez", array( 'email' => $email, 'stat' => $stat_name, 'count' => $count ) );
 		//echo "StatHat - ".$stat_name." - Added count - '$count'\n";
 	}
 
-	function stathat_ez_value( $email, $stat_name, $value ) {
-		do_async_post_request( "http://api.stathat.com/ez", array( 'email' => $email, 'stat' => $stat_name, 'value' => $value ) );
+	public function stathat_ez_value( $email, $stat_name, $value ) {
+		$this->do_async_post_request( "http://api.stathat.com/ez", array( 'email' => $email, 'stat' => $stat_name, 'value' => $value ) );
 		//echo "StatHat - ".$stat_name." - Added value - '$value'\n";
 	}
 
-	function stathat_count_sync( $stat_key, $user_key, $count ) {
-		return do_post_request( "http://api.stathat.com/c", "key=$stat_key&ukey=$user_key&count=$count" );
+	public function stathat_count_sync( $stat_key, $user_key, $count ) {
+		return $this->do_post_request( "http://api.stathat.com/c", "key=$stat_key&ukey=$user_key&count=$count" );
 	}
 
-	function stathat_value_sync( $stat_key, $user_key, $value ) {
-		return do_post_request( "http://api.stathat.com/v", "key=$stat_key&ukey=$user_key&value=$value" );
+	public function stathat_value_sync( $stat_key, $user_key, $value ) {
+		return $this->do_post_request( "http://api.stathat.com/v", "key=$stat_key&ukey=$user_key&value=$value" );
 	}
 
-	function stathat_ez_count_sync( $email, $stat_name, $count ) {
-		return do_post_request( "http://api.stathat.com/ez", "email=$email&stat=$stat_name&count=$count" );
+	public function stathat_ez_count_sync( $email, $stat_name, $count ) {
+		return $this->do_post_request( "http://api.stathat.com/ez", "email=$email&stat=$stat_name&count=$count" );
 	}
 
-	function stathat_ez_value_sync( $email, $stat_name, $value ) {
-		return do_post_request( "http://api.stathat.com/ez", "email=$email&stat=$stat_name&value=$value" );
+	public function stathat_ez_value_sync( $email, $stat_name, $value ) {
+		return $this->do_post_request( "http://api.stathat.com/ez", "email=$email&stat=$stat_name&value=$value" );
 	}
 
 }
