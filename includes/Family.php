@@ -5,9 +5,24 @@
 class Family extends Registry {
 
 	/**
-	 * @var null
+	 * @var UserLogin
 	 */
-	public $login;
+	private $login;
+
+	/**
+	 * @param UserLogin $login
+	 */
+	public function setLogin( $login ) {
+		$this->login = $login;
+	}
+
+	/**
+	 * @return UserLogin
+	 */
+	public function getLogin() {
+		return $this->login;
+	}
+
 	/**
 	 * @var array of sites with the following keys
 	 * [url][wikiid][code][sitename][closed][private]
@@ -15,7 +30,7 @@ class Family extends Registry {
 	private $sitematrix;
 
 	/**
-	 * @var Site[]
+	 * @var Site[] List of sites in the family
 	 */
 	private $sites;
 
