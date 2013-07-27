@@ -72,14 +72,14 @@ class Page {
 	}
 
 	/**
-	 * @param \Site $site
+	 * @param Site $site
 	 */
 	public function setSite( $site ) {
 		$this->site = $site;
 	}
 
 	/**
-	 * @return \Site
+	 * @return Site
 	 */
 	public function getSite() {
 		return $this->site;
@@ -214,7 +214,7 @@ class Page {
 		$result = $this->site->doRequest( $q );
 		foreach ( $result['query']['pages'] as $page ) {
 			if ( isset( $page['pageprops']['wikibase_item'] ) ) {
-				$this->entity = new Entity( $this->site->family->getSite( $this->site->wikibase ), $page['pageprops']['wikibase_item'] );
+				$this->entity = new Entity( $this->site->getWikibase(), $page['pageprops']['wikibase_item'] );
 				return $this->entity;
 			}
 		}
@@ -247,7 +247,7 @@ class Page {
 
 		$interwikis = $this->getInterwikisFromtext();
 		foreach ( $interwikis as $interwikiData ) {
-			$site = $this->site->family->getSiteFromSiteid( $interwikiData['site'] . $this->site->code );
+			$site = $this->site->family->getSiteFromSiteid( $interwikiData['site'] . $this->site->getType() );
 			if ( $site instanceof Site ) {
 				$pages[] = $site->newPageFromTitle( $interwikiData['link'] );
 			}
@@ -275,7 +275,7 @@ class Page {
 			}
 			//set the language
 			if ( $matches[3][$key] == '' ) {
-				$parts['lang'] = $this->site->lang;
+				$parts['lang'] = $this->site->getLanguage();
 			} else {
 				$parts['lang'] = $matches[3][$key];
 			}
@@ -306,7 +306,7 @@ class Page {
 			} else {
 				$parts['site'] = strtolower( $matches[1][$key] );
 			}
-			$parts['lang'] = $this->site->lang;
+			$parts['lang'] = $this->site->getLanguage();
 			$parts['title'] = $matches[3][$key];
 
 			$site = $this->site->family->getSiteFromSiteid( $parts['lang'] . $parts['site'] );
@@ -433,7 +433,7 @@ class Page {
 			foreach ( $baseEntity->languageData['sitelinks'] as $sitelink ) {
 				$site = $this->site->family->getSiteFromSiteid( $sitelink['site'] );
 				$site->requestSiteinfo();
-				$lang = $site->lang;
+				$lang = $site->getLanguage();
 				$titleEnd = $this->getTitleWithoutNamespace();
 				$possibleNamespaces = $this->site->requestNamespaces();
 				$possibleNamespaces = $possibleNamespaces[$this->nsid];

@@ -34,7 +34,7 @@ foreach ( $items as $item ) {
 		$page = $site->newPageFromTitle( $value['title'] );
 		$linkedPages = array_merge( $linkedPages, $page->getPagesFromInterprojectLinks() );
 		$linkedPages = array_merge( $linkedPages, $page->getPagesFromInterprojectTemplates() );
-		$guessedPages[] = $wm->getSiteFromSiteid( $page->site->lang . 'wiki' )->newPageFromTitle( $page->title );
+		$guessedPages[] = $wm->getSiteFromSiteid( $page->site->getLanguage() . 'wiki' )->newPageFromTitle( $page->title );
 	}
 
 	/* @var $page Page */

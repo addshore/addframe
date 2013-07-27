@@ -61,9 +61,9 @@ foreach ( $rows as $row ) {
 
 	// Add everything to the entity
 	foreach ( $usedPages as $page ) {
-		$baseEntity->addSitelink( $page->site->wikiid, $page->title );
-		if ( $page->site->code == 'wiki' ) {
-			$baseEntity->addLabel( $page->site->lang, $page->title );
+		$baseEntity->addSitelink( $page->site->getId(), $page->title );
+		if ( $page->site->getType() == 'wiki' ) {
+			$baseEntity->addLabel( $page->site->getLanguage(), $page->title );
 		}
 	}
 

@@ -9,19 +9,45 @@ namespace Addframe;
 
 class Site {
 	/**
-	 * @var Family
+	 * @var Family family the site is associated to
 	 */
 	public $family;
-	public $wikiid;
-	public $code;
+	/**
+	 * @var Site|bool wikibase the site is associated to
+	 */
+	private $wikibase;
+	/**
+	 * @var string id of the site
+	 */
+	private $id;
+	/**
+	 * @var string type of site eg.(wiki|wikivoyage)
+	 */
+	private $type;
+	/**
+	 * @var string url of the site
+	 */
 	public $url;
-	public $apiurl;
-	public $name;
-	public $lang;
-	public $wikibase;
+	/**
+	 * @var string url of the api
+	 */
+	private $api;
+	/**
+	 * @var string language eg. en
+	 */
+	private $language;
+	/**
+	 * @var string url of the wikibase for the site
+	 */
+	public $wikibaseurl;
+	/**
+	 * @var Http class
+	 */
 	private $http;
+	/**
+	 * @var string cache of the token we are using
+	 */
 	private $token;
-	private $loggedIn;
 	/**
 	 * @var Array
 	 */
@@ -29,9 +55,9 @@ class Site {
 	/**
 	 * @var UserLogin
 	 */
-	public $userlogin;
+	private $userlogin;
 
-	function setLogin( $userLogin ) {
+	public function setLogin( $userLogin ) {
 		$this->userlogin = $userLogin;
 	}
 
@@ -42,40 +68,84 @@ class Site {
 	public function __construct( $url, $family = null ) {
 		$this->url = $url;
 		$this->http = new Http();
-		$this->loggedIn = false;
 
 		if ( isset( $family ) ) {
 			$this->family = $family;
 		}
 	}
 
-	/**
-	 * Initialises the site if it is not already done so! Gets apiurl, siteinfo, wikibaseinfo
-	 */
-	public function initSite() {
-		if ( $this->apiurl == null ) {
+	public function getApiUrl(){
+		if ( $this->api == null ){
 			$this->requestApiUrl();
+		}
+		return $this->api;
+	}
+
+	public function getType(){
+		if ( $this->type == null ){
 			$this->requestSiteinfo();
+		}
+		return $this->type;
+	}
+
+	public function getId(){
+		if ( $this->id == null ){
+			$this->requestSiteinfo();
+		}
+		return $this->id;
+	}
+
+	public function getLanguage(){
+		if ( $this->language == null ){
+			$this->requestSiteinfo();
+		}
+		return $this->language;
+	}
+
+	public function getWikibase(){
+		if ( $this->wikibase == null ){
 			$this->requestWikibaseinfo();
 		}
+		return $this->wikibase;
+	}
+
+	public function getNamespaceFromId( $id ) {
+		if ( ! isset( $this->namespaces ) ) {
+			$this->requestNamespaces();
+		}
+		if ( isset( $this->namespaces[$id] ) ) {
+			return $this->namespaces[$id][0];
+		}
+		if ( $id == '0' ) {
+			return '';
+		}
+		throw new \Exception( "Could not return a namespace for id $id in " . $this->url );
+	}
+
+	//find the nsid id from the title
+	public function getNamespaceIdFromTitle( $title ) {
+		$explosion = explode( ':', $title );
+		if ( isset( $explosion[0] ) ) {
+			$this->requestNamespaces();
+			foreach ( $this->namespaces as $nsid => $namespaceArray ) {
+				foreach ( $namespaceArray as $namespace ) {
+					if ( $explosion[0] == $namespace ) {
+						return $nsid;
+					}
+				}
+
+			}
+		}
+		return '0';
 	}
 
 	/**
-	 * Gets the api url from the main entry point
+	 * This function resets the edit token in case we need to get a new one
+	 * //@todo catch token errors and call this to reset the token
 	 */
-	public function requestApiUrl() {
-		$pageData = $this->http->get( $this->url );
-		//@todo should die if cant contact site!
-		preg_match( '/\<link rel=\"EditURI.*?$/im', $pageData, $pageData );
-		if ( ! isset( $pageData[0] ) ) {
-			throw new Exception( "Undefined offset when getting EditURL (api url)" );
-		}
-		preg_match( '/href=\"([^\"]+)\"/i', $pageData[0], $pageData );
-		if ( ! isset( $pageData[1] ) ) {
-			throw new Exception( "Undefined offset when getting EditURL (api url)" );
-		}
-		$parsedApiUrl = parse_url( $pageData[1] );
-		$this->apiurl = $parsedApiUrl['host'] . $parsedApiUrl['path'];
+	public function resetEditToken() {
+		unset( $this->token );
+		return $this->requestEditToken();
 	}
 
 	/**
@@ -116,20 +186,38 @@ class Site {
 	* @return Array of the returning data
 	**/
 	public function doRequest( $query, $post = null ) {
-		$this->initSite();
+		$apiurl = $this->getApiUrl();
 		$query['format'] = 'php';
 
 		if ( $post == null ) {
 			$query = "?" . http_build_query( $query );
-			$returned = $this->http->get( $this->apiurl . $query );
+			$returned = $this->http->get( $apiurl . $query );
 		} else {
 			if ( $post['action'] != 'login' ) {
 				$this->requestLogin();
 			}
 			$query = "?" . http_build_query( $query );
-			$returned = $this->http->post( $this->apiurl . $query, $post );
+			$returned = $this->http->post( $apiurl . $query, $post );
 		}
 		return unserialize( $returned );
+	}
+
+	/**
+	 * Gets the api url from the main entry point
+	 */
+	public function requestApiUrl() {
+		$pageData = $this->http->get( $this->url );
+		//@todo should die if cant contact site!
+		preg_match( '/\<link rel=\"EditURI.*?$/im', $pageData, $pageData );
+		if ( ! isset( $pageData[0] ) ) {
+			throw new \Exception( "Undefined offset when getting EditURL (api url)" );
+		}
+		preg_match( '/href=\"([^\"]+)\"/i', $pageData[0], $pageData );
+		if ( ! isset( $pageData[1] ) ) {
+			throw new \Exception( "Undefined offset when getting EditURL (api url)" );
+		}
+		$parsedApiUrl = parse_url( $pageData[1] );
+		$this->api = $parsedApiUrl['host'] . $parsedApiUrl['path'];
 	}
 
 	/**
@@ -143,15 +231,6 @@ class Site {
 		$this->requestLogin();
 		$apiresult = $this->doRequest( array( 'action' => 'query', 'prop' => 'info', 'intoken' => 'edit', 'titles' => 'Main Page' ) );
 		return $apiresult['query']['pages']['-1']['edittoken'];
-	}
-
-	/**
-	 * This function resets the edit token in case we need to get a new one
-	 * //@todo catch token errors and call this to reset the token
-	 */
-	public function resetEditToken() {
-		unset( $this->token );
-		return $this->requestEditToken();
 	}
 
 	public function requestSitematrix() {
@@ -202,44 +281,13 @@ class Site {
 		return $this->namespaces;
 	}
 
-	public function getNamespaceFromId( $id ) {
-		if ( ! isset( $this->namespaces ) ) {
-			$this->requestNamespaces();
-		}
-		if ( isset( $this->namespaces[$id] ) ) {
-			return $this->namespaces[$id][0];
-		}
-		if ( $id == '0' ) {
-			return '';
-		}
-		throw new Exception( "Could not return a namespace for id $id in " . $this->url );
-	}
-
-	//find the nsid id from the title
-	public function getNamespaceIdFromTitle( $title ) {
-		$explosion = explode( ':', $title );
-		if ( isset( $explosion[0] ) ) {
-			$this->requestNamespaces();
-			foreach ( $this->namespaces as $nsid => $namespaceArray ) {
-				foreach ( $namespaceArray as $namespace ) {
-					if ( $explosion[0] == $namespace ) {
-						return $nsid;
-					}
-				}
-
-			}
-		}
-		return '0';
-	}
-
 	public function requestSiteinfo() {
 		$q['action'] = 'query';
 		$q['meta'] = 'siteinfo';
 		$result = $this->doRequest( $q );
-		$this->wikiid = $result['query']['general']['wikiid'];
-		$this->name = $result['query']['general']['sitename'];
-		$this->lang = $result['query']['general']['lang'];
-		$this->code = preg_replace( '/^' . $this->lang . '/i', '', $this->wikiid );
+		$this->id = $result['query']['general']['wikiid'];
+		$this->language = $result['query']['general']['lang'];
+		$this->type = preg_replace( '/^' . $this->getLanguage() . '/i', '', $this->getId() );
 	}
 
 	public function requestWikibaseinfo() {
@@ -248,19 +296,17 @@ class Site {
 		$result = $this->doRequest( $q );
 		if ( isset( $result['query']['wikibase']['repo']['url']['base'] ) ) {
 			$parsedApiUrl = parse_url( $result['query']['wikibase']['repo']['url']['base'] );
-			$this->wikibase = $parsedApiUrl['host'];
-		} else {
-			$this->wikibase = false;
+			$this->wikibase = $this->family->getSite( $parsedApiUrl['host'] );
 		}
 	}
 
 	/**
 	 * Logs in to the UserLogin associated with the site if not already logged in
 	 * @return bool
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function requestLogin() {
-		if ( ! ( $this->loggedIn == true ) ) {
+		if ( !isset( $this->token ) ) {
 			echo "Loging in to " . $this->url . "\n";
 			$post['action'] = 'login';
 			$post['lgname'] = $this->userlogin->username;
@@ -274,16 +320,16 @@ class Site {
 			}
 
 			if ( $result['login']['result'] == "Success" ) {
-				$this->loggedIn = true;
+				return true;
 			} else if ( $result['login']['result'] == "Throttled" ) {
 				echo "Throttled! Waiting for " . $result['login']['wait'] . "\n";
 				sleep( $result['login']['wait'] );
 				return $this->requestLogin();
 			} else {
-				throw new Exception( 'Failed login, with result ' . $result['login']['result'] );
+				throw new \Exception( 'Failed login, with result ' . $result['login']['result'] );
 			}
 		}
-		return $this->loggedIn;
+		return null;
 	}
 
 	/**
