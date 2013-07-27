@@ -16,17 +16,20 @@ require_once( dirname( __FILE__ ) . '/../init.php' );
 $summaries = array();
 
 //Create a site
-$wm = new Family( new UserLogin( 'addbot', 'password' ), 'meta.wikimedia.org' );
+$wmConfig = parse_ini_file('~/addbot.wm.cnf');
+$wm = new Family( new UserLogin( $wmConfig['user'], $wmConfig['password'] ), 'meta.wikimedia.org' );
+unset ( $wmConfig );
 $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 
 //$dbConfig = parse_ini_file('~/replica.my.cnf');
-//$db = new Mysql('tools-db','3306',$dbConfig['user'],$dbConfig['password'],$dbConfig['user'].'wikidata_p');
-//unset($dbConfig);
-//$dbQuery = $db->select('iwlink','*',null,array('ORDER BY' => 'updated ASC', 'LIMIT' => '100'));
-//$rows = $db->mysql2array($dbQuery);
-$rows = array( //array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'À Beira do Caminho'),
-	array( 'lang' => 'en', 'site' => 'wikivoyage', 'namespace' => '0', 'title' => 'Europe' ), //array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Pear'),
-	//array('lang' => 'en','site' => 'wiki','namespace' => '0','title' => 'Banana'),
+//$db = new Mysql( 'tools-db', '3306', $dbConfig['user'], $dbConfig['password'], $dbConfig['user'].'wikidata_p' );
+//unset( $dbConfig );
+//$dbQuery = $db->select( 'iwlink','*',null,array('ORDER BY' => 'updated ASC', 'LIMIT' => '100' ) );
+//$rows = $db->mysql2array( $dbQuery );
+$rows = array( //array('lang' => 'en', 'site' => 'wiki', 'namespace' => '0', 'title' => 'À Beira do Caminho'),
+	array( 'lang' => 'en', 'site' => 'wikivoyage', 'namespace' => '0', 'title' => 'Europe' ),
+	//array( 'lang' => 'en', 'site' => 'wiki', 'namespace' => '0', 'title' => 'Pear' ),
+	//array( 'lang' => 'en', 'site' => 'wiki', 'namespace' => '0', 'title' => 'Banana' ),
 );
 foreach ( $rows as $row ) {
 	echo "* Next page!\n";
