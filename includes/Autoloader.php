@@ -6,8 +6,7 @@ class AutoLoader {
 	/**
 	 * Store the filename (sans extension) & full path of all ".php" files found
 	 */
-	public static function registerDirectory() {
-		$dirName = dirname( __FILE__ );
+	public static function registerDirectory($dirName) {
 
 		$di = new DirectoryIterator($dirName);
 		foreach ($di as $file) {
@@ -39,4 +38,4 @@ class AutoLoader {
 
 spl_autoload_register(array('AutoLoader', 'loadClass'));
 
-AutoLoader::registerDirectory();
+AutoLoader::registerDirectory( dirname( __FILE__ ) );
