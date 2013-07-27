@@ -122,7 +122,6 @@ class Site {
 		throw new \Exception( "Could not return a namespace for id $id in " . $this->url );
 	}
 
-	//find the nsid id from the title
 	public function getNamespaceIdFromTitle( $title ) {
 		$explosion = explode( ':', $title );
 		if ( isset( $explosion[0] ) ) {

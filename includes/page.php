@@ -15,9 +15,9 @@ class Page {
 	/** @var string text of Page */
 	public $text;
 	/** @var string pageid for Page */
-	public $pageid;
+	protected $pageid;
 	/** @var string namespace id number eg. 2 */
-	public $nsid;
+	protected $nsid;
 	/** @var string timestamp for the particular revision text we have got */
 	public $timestamp;
 	/** @var array of categories the page is in */
@@ -30,24 +30,13 @@ class Page {
 	public $parser;
 
 	/**
-	 * @param string $nsid
-	 */
-	public function setNsid( $nsid ) {
-		$this->nsid = $nsid;
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getNsid() {
+		if( $this->nsid == null ){
+			$this->nsid = $this->getSite()->getNamespaceIdFromTitle( $this->title );
+		}
 		return $this->nsid;
-	}
-
-	/**
-	 * @param string $pageid
-	 */
-	public function setPageid( $pageid ) {
-		$this->pageid = $pageid;
 	}
 
 	/**
@@ -58,13 +47,6 @@ class Page {
 	}
 
 	/**
-	 * @param string $protection
-	 */
-	public function setProtection( $protection ) {
-		$this->protection = $protection;
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getProtection() {
@@ -72,24 +54,10 @@ class Page {
 	}
 
 	/**
-	 * @param Site $site
-	 */
-	public function setSite( $site ) {
-		$this->site = $site;
-	}
-
-	/**
 	 * @return Site
 	 */
 	public function getSite() {
 		return $this->site;
-	}
-
-	/**
-	 * @param string $text
-	 */
-	public function setText( $text ) {
-		$this->text = $text;
 	}
 
 	/**
@@ -103,24 +71,10 @@ class Page {
 	}
 
 	/**
-	 * @param string $timestamp
-	 */
-	public function setTimestamp( $timestamp ) {
-		$this->timestamp = $timestamp;
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getTimestamp() {
 		return $this->timestamp;
-	}
-
-	/**
-	 * @param string $title
-	 */
-	public function setTitle( $title ) {
-		$this->title = $title;
 	}
 
 	/**
@@ -135,15 +89,16 @@ class Page {
 	 * @param $title
 	 */
 	public function __construct( $site, $title ) {
-		$this->setSite( $site );
-		$this->setTitle( $title );
+		$this->site = $site;
+		$this->title =  $title;
 	}
 
 	/**
 	 * @return string The title with the namespace removed if possible
 	 */
 	public function getTitleWithoutNamespace() {
-		$this->setNsid( $this->getSite()->getNamespaceIdFromTitle( $this->title ) );
+		$this->getNsid();
+
 		if ( $this->nsid != null && $this->nsid != '0' ) {
 			$explode = explode( ':', $this->title, '2' );
 			return $explode[1];
@@ -161,11 +116,11 @@ class Page {
 		$result = $this->site->requestPropRevsions( $param );
 
 		foreach ( $result['query']['pages'] as $x ) {
-			$this->setNsid( $x['ns'] );
+			$this->nsid=  $x['ns'];
 			if ( ! isset( $x['missing'] ) ) {
-				$this->setPageid( $x['pageid'] );
-				$this->setText( $x['revisions']['0']['*'] );
-				$this->setTimestamp( $x['revisions']['0']['timestamp'] );
+				$this->pageid = $x['pageid'];
+				$this->text = $x['revisions']['0']['*'];
+				$this->timestamp = $x['revisions']['0']['timestamp'];
 			} else {
 				//@todo MSG page doesn't exist
 			}
@@ -190,7 +145,7 @@ class Page {
 	 * @return string Normalise the namespace of the title if possible.
 	 */
 	public function normaliseTitleNamespace() {
-		$this->setNsid( $this->site->getNamespaceIdFromTitle( $this->title ) );
+		$this->getNsid();
 
 		if ( $this->nsid != '0' ) {
 			$siteNamespaces = $this->site->requestNamespaces();
@@ -198,7 +153,7 @@ class Page {
 
 			$explosion = explode( ':', $this->title, 2 );
 			$explosion[0] = $normalisedNamespace;
-			$this->setTitle( implode( ':', $explosion ) );
+			$this->title = implode( ':', $explosion );
 		}
 		return $this->title;
 
