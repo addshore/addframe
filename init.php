@@ -15,7 +15,6 @@ include $IP . 'includes/Registry.php';
 include $IP . 'includes/Http.php';
 include $IP . 'includes/Family.php';
 include $IP . 'includes/Site.php';
-include $IP . 'includes/SiteFactory.php';
 include $IP . 'includes/User.php';
 include $IP . 'includes/UserLogin.php';
 include $IP . 'includes/Page.php';
@@ -23,8 +22,6 @@ include $IP . 'includes/Category.php';
 include $IP . 'includes/Entity.php';
 include $IP . 'includes/Mysql.php';
 include $IP . 'includes/WikitextParser.php';
-
-Globals::$Sites = new SiteFactory();
 
 Globals::$regex['langs'] = '(nostalgia|ten|aa|ab|ace|af|ak|als|am|an|ang|ar|arc|arz|as|ast|av|ay|az|ba|bar|' .
 	'bat-smg|bcl|be|be-x-old|bg|bh|bi|bjn|bm|bn|bo|bpy|br|bs|bug|bxr|ca|cbk-zam|cdo|ce|ceb|ch|cho|chr|chy|ckb|' .
