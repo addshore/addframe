@@ -21,7 +21,7 @@ include $IP . 'includes/User.php';
 include $IP . 'includes/UserLogin.php';
 include $IP . 'includes/Page.php';
 include $IP . 'includes/Category.php';
-include $IP . 'includes/WikibaseEntity.php';
+include $IP . 'includes/Entity.php';
 include $IP . 'includes/Mysql.php';
 include $IP . 'includes/WikitextParser.php';
 

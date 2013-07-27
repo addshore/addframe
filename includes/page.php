@@ -22,7 +22,7 @@ class Page {
 	public $categories;
 	/** @var string current protection status	 */
 	public $protection;
-	/** @var WikibaseEntity entity that is associated with the page	 */
+	/** @var Entity entity that is associated with the page	 */
 	public $entity;
 	/** @var parser entity that is associated with the page	 */
 	public $parsed;
@@ -202,7 +202,7 @@ class Page {
 	}
 
 	/**
-	 * @return null|WikibaseEntity The entity that this page is included on
+	 * @return null|Entity The entity that this page is included on
 	 */
 	public function getEntity(){
 		$q['action'] = 'query';
@@ -211,7 +211,7 @@ class Page {
 		$result = $this->site->doRequest($q);
 		foreach($result['query']['pages'] as $page){
 			if( isset( $page['pageprops']['wikibase_item'] ) ){
-				$this->entity = new WikibaseEntity($this->site->family->getSiteFromUrl($this->site->wikibase),$page['pageprops']['wikibase_item']);
+				$this->entity = new Entity($this->site->family->getSiteFromUrl($this->site->wikibase),$page['pageprops']['wikibase_item']);
 				return  $this->entity;
 			}
 		}
@@ -426,7 +426,7 @@ class Page {
 	 */
 	public function removeEntityLinksFromText(){
 		$baseEntity = $this->getEntity();
-		if($baseEntity instanceof WikibaseEntity){
+		if($baseEntity instanceof Entity){
 			$baseEntity->load();
 			if( !isset($baseEntity->id) ){
 				return false;

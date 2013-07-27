@@ -77,7 +77,7 @@ class Site {
 	}
 
 	function getEntityFromId ($id) {
-		return new WikibaseEntity($this,$id);
+		return new Entity($this,$id);
 	}
 
 	function setLogin($userLogin){

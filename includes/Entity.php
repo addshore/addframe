@@ -4,7 +4,7 @@
  * This class is designed to represent a Site Wikibase entity
  * @author Addshore
  **/
-class WikibaseEntity extends Page{
+class Entity extends Page{
 
 	/** @var Site site of entity*/
 	public $site;

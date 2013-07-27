@@ -36,7 +36,7 @@ foreach($items as $item){
 	/* @var $page Page */
 	foreach( array_merge( $linkedPages, $guessedPages ) as $page ){
 		$itemTwo = $page->getEntity();
-		if( $itemTwo instanceof WikibaseEntity ){
+		if( $itemTwo instanceof Entity ){
 			$itemTwo->load();
 
 			foreach( $itemOne->languageData['sitelinks'] as $siteid => $value ){

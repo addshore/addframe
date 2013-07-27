@@ -42,7 +42,7 @@ foreach($rows as $row){
 	// Try to find an entity to work on
 	/* @var $page Page */
 	foreach( $usedPages as $page ){
-		if( $page->getEntity() instanceof WikibaseEntity ){
+		if( $page->getEntity() instanceof Entity ){
 			$baseEntity = $page->entity;
 			echo "Found entity ".$baseEntity->id."\n";
 			break;
