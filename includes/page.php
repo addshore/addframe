@@ -13,7 +13,7 @@ class Page {
 	/** @var string title of Page including namespace */
 	public $title;
 	/** @var string text of Page */
-	public $text;
+	protected $text;
 	/** @var string pageid for Page */
 	protected $pageid;
 	/** @var string namespace id number eg. 2 */
@@ -64,8 +64,8 @@ class Page {
 	 * @return string
 	 */
 	public function getText() {
-		if ( $this->text == null ) {
-			$this->load();
+		if( $this->text == null ){
+			$this->text = $this->getSite()->getPageTextFromPageTitle( $this->title );
 		}
 		return $this->text;
 	}
@@ -107,35 +107,12 @@ class Page {
 	}
 
 	/**
-	 * @return string Load page from the api
-	 */
-	public function load() {
-		echo "Loading page " . $this->site->url . " " . $this->title . "\n";
-		$param['titles'] = $this->title;
-
-		$result = $this->site->requestPropRevsions( $param );
-
-		foreach ( $result['query']['pages'] as $x ) {
-			$this->nsid=  $x['ns'];
-			if ( ! isset( $x['missing'] ) ) {
-				$this->pageid = $x['pageid'];
-				$this->text = $x['revisions']['0']['*'];
-				$this->timestamp = $x['revisions']['0']['timestamp'];
-			} else {
-				//@todo MSG page doesn't exist
-			}
-		}
-		$this->normaliseTitleNamespace();
-		return $this->text;
-	}
-
-	/**
 	 * Parsers the current text. Sets and returns the parser object.
 	 *
 	 * @return parser
 	 */
 	public function parse() {
-		$parser = new parser( $this->title, $this->text );
+		$parser = new parser( $this->title, $this->getText() );
 		$parser->parse();
 		$this->parser = $parser;
 		return $this->parser;
@@ -314,25 +291,21 @@ class Page {
 	 */
 	public function save( $summary = null, $minor = false ) {
 		echo "Saved page " . $this->title . "\n";
-		return $this->site->requestEdit( $this->title, $this->text, $summary, $minor );
+		return $this->site->requestEdit( $this->title, $this->getText(), $summary, $minor );
 	}
 
 	/**
 	 * @param $text string to append to $text
 	 */
 	public function appendText( $text ) {
-		if ( ! empty( $this ) ) {
-			$this->text = $this->text . $text;
-		}
+		$this->text = $this->getText() . $text;
 	}
 
 	/**
 	 * @param $text string to prepend to $text
 	 */
 	public function prependText( $text ) {
-		if ( ! empty( $this ) ) {
-			$this->text = $text . $this->text;
-		}
+		$this->text = $text . $this->getText();
 	}
 
 	/**
@@ -348,7 +321,7 @@ class Page {
 	 * @return bool value (1 found and 0 not-found)
 	 **/
 	public function findString( $string ) {
-		if ( strstr( $this->text, $string ) )
+		if ( strstr( $this->getText(), $string ) )
 			return 1; else
 			return 0;
 	}
@@ -357,20 +330,17 @@ class Page {
 	 * Replace a string
 	 * @param $string string The string that you want to replace.
 	 * @param $newstring string The string that will replace the present string.
-	 * @return string the new text of page
-	 **/
+	 */
 	public function replaceString( $string, $newstring ) {
-		$this->text = str_replace( $string, $newstring, $this->text );
-		return $this->text;
+		$this->text = str_replace( $string, $newstring, $this->getText() );
 	}
 
 	public function pregReplace( $patern, $replacment ) {
-		$this->text = preg_replace( $patern, $replacment, $this->text );
-		return $this->text;
+		$this->text = preg_replace( $patern, $replacment, $this->getText() );
 	}
 
 	public function removeRegexMatched( $patern ) {
-		return $this->pregReplace( $patern, '' );
+		$this->pregReplace( $patern, '' );
 	}
 
 	/**
@@ -378,6 +348,7 @@ class Page {
 	 * from the page text.
 	 */
 	public function removeEntityLinksFromText() {
+		$text = $this->getText();
 		$baseEntity = $this->getEntity();
 		if ( $baseEntity instanceof Entity ) {
 			$baseEntity->load();
@@ -401,10 +372,10 @@ class Page {
 						$titleVarient = $titleEnd;
 					}
 					//@todo remember (zh-min-nan|nan) and (nb|no) (they are the same site)
-					$lengthBefore = strlen( $this->text );
+					$lengthBefore = strlen( $text );
 					$removeLink = '/\n ?\[\[' . $lang . ' ?: ?' . str_replace( ' ', '( |_)', preg_quote( $titleVarient, '/' ) ) . ' ?\]\] ?/';
 					$this->removeRegexMatched( $removeLink );
-					if ( $lengthBefore < strlen( $this->text ) ) {
+					if ( $lengthBefore < strlen( $text ) ) {
 						echo "Removed link! $lang:$titleVarient\n";
 					}
 				}

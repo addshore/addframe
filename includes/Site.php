@@ -138,6 +138,23 @@ class Site {
 		return '0';
 	}
 
+	public function getPageTextFromPageTitle( $title ) {
+		echo "Loading page " . $this->url . " " . $title . "\n";
+		$param['titles'] = $title;
+
+		$result = $this->requestPropRevsions( $param );
+
+		foreach ( $result['query']['pages'] as $x ) {
+			$this->nsid=  $x['ns'];
+			if ( ! isset( $x['missing'] ) ) {
+				return $x['revisions']['0']['*'];
+			} else {
+				return '';
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * This function resets the edit token in case we need to get a new one
 	 * //@todo catch token errors and call this to reset the token
