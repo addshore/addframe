@@ -1,17 +1,23 @@
 <?php
 
+/**
+ * Either dont use this or make it better
+ * @deprecated
+ */
 class mediawikiapiresult {
 
 	public $statusCode;
 	public $value;
 	private $wrapper;
 
+	/** @deprecated */
 	function __construct( $value ) {
 		$this->value = $value;
 		$this->statusCode = null;
 		$this->getDetails();
 	}
 
+	/** @deprecated */
 	private function getDetails(){
 		//@todo this is a load of poo...
 		foreach ($this->value as $key => $returned){
@@ -31,6 +37,7 @@ class mediawikiapiresult {
 		return false;
 	}
 
+	/** @deprecated */
 	public function getInside(){
 		return $this->value[$this->wrapper];
 	}
