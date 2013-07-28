@@ -8,6 +8,7 @@
 use Addframe\Entity;
 use Addframe\Family;
 use Addframe\Globals;
+use Addframe\Mysql;
 use Addframe\Page;
 use Addframe\UserLogin;
 
@@ -22,16 +23,20 @@ $wm = new Family(
 
 $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 
-//$dbConfig = parse_ini_file($_SERVER['HOME'].'~/replica.my.cnf');
-//$db = new Mysql( 'tools-db', '3306', $dbConfig['user'], $dbConfig['password'], $dbConfig['user'].'wikidata_p' );
-//unset( $dbConfig );
-//$dbQuery = $db->select( 'iwlink','*',null,array('ORDER BY' => 'updated ASC', 'LIMIT' => '100' ) );
-//$rows = $db->mysql2array( $dbQuery );
-$rows = array( //array('lang' => 'en', 'site' => 'wiki', 'namespace' => '0', 'title' => 'À Beira do Caminho'),
-	array( 'lang' => 'en', 'site' => 'wikivoyage', 'namespace' => '4', 'title' => 'Hierarchy' ),
-	//array( 'lang' => 'en', 'site' => 'wiki', 'namespace' => '0', 'title' => 'Pear' ),
-	//array( 'lang' => 'en', 'site' => 'wiki', 'namespace' => '0', 'title' => 'Banana' ),
-);
+if( isset( $_SERVER['INSTANCEPROJECT'] ) && $_SERVER['INSTANCEPROJECT'] == 'tools' ){
+	$dbHost = 'tools-db';
+} else {
+	$dbHost = 'localhost';
+}
+$db = new Mysql(
+	$dbHost, '3306',
+	Globals::$config['replica.my']['user'],
+	Globals::$config['replica.my']['password'],
+	Globals::$config['replica.my']['user'].'wikidata_p' );
+
+$dbQuery = $db->select( 'iwlink','*', null, array('ORDER BY' => 'updated ASC', 'LIMIT' => '100' ) );
+$rows = $db->mysql2array( $dbQuery );
+
 foreach ( $rows as $row ) {
 	echo "* Next page!\n";
 	// Load our site
@@ -70,9 +75,9 @@ foreach ( $rows as $row ) {
 	$baseEntity->load();
 	foreach ( $usedPages as $page ) {
 		$baseEntity->addSitelink( $page->site->getId(), $page->title );
-//		if ( $page->site->getType() == 'wiki' ) {
-//			$baseEntity->addLabel( $page->site->getLanguage(), $page->title );
-//		}
+		if ( $page->site->getType() == 'wiki' ) {
+			$baseEntity->addLabel( $page->site->getLanguage(), $page->title );
+		}
 	}
 
 	if( $baseEntity->changed === true ){
