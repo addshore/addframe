@@ -89,6 +89,22 @@ class Page {
 		return $this->title;
 	}
 
+	public function isFullyEditProtected(){
+		$q['action'] = 'query';
+		$q['prop'] = 'info';
+		$q['titles'] = $this->title;
+		$q['inprop'] = 'protected';
+		$result = $this->site->doRequest( $q );
+		foreach( $result['query']['pages'] as $page ){
+			foreach( $page['protection'] as $protection ){
+				if( $protection['type'] == 'edit' && $protection['level'] == 'sysop'){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Parsers the current text. Sets and returns the parser object.
 	 *
