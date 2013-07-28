@@ -49,7 +49,10 @@ class Site {
 		$this->http = new Http();
 
 		if ( isset( $family ) ) {
-			//$siteDetails = $family->getSiteDetailsFromSiteIndex('url', $url);
+			$siteDetails = $family->getSiteDetailsFromSiteIndex('url', $url);
+			if( $siteDetails !== null ){
+				print_r($siteDetails);die();
+			}
 			$this->family = $family;
 		}
 
@@ -260,6 +263,14 @@ class Site {
 		if ( empty ( $returned ) ) {
 			//@todo also catch if the result is returned but with an error code (not recognised action)
 			throw new \Exception( "Sitematrix empty... Maybe you are offline." );
+		}
+
+		//add language to the site details
+		foreach( $returned['sitematrix'] as $groupKey => $group){
+			if( $groupKey == 'count' || $groupKey == 'specials' ) { continue; }
+			foreach( $group['site'] as $siteKey => $site ){
+				$returned['sitematrix'][$groupKey]['site'][$siteKey]['lang'] = $group['code'];
+			}
 		}
 
 		return $returned['sitematrix'];

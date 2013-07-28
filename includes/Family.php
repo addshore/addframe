@@ -77,6 +77,9 @@ class Family extends Registry {
 	 * @return array
 	 */
 	public function getSiteDetailsFromSiteIndex( $key, $value ){
+		if( !isset( $this->siteMatrixIndex[$key][$value] ) ){
+			return null;
+		}
 		$indexValue = $this->siteMatrixIndex[$key][$value];
 		return $this->siteMatrix[ $indexValue[0] ]['site'][ $indexValue[1] ];
 	}
