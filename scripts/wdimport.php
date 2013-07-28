@@ -83,9 +83,11 @@ foreach ( $rows as $row ) {
 	echo "* Removing links from the page!\n";
 	if ( $usedPages[0]->removeEntityLinksFromText() == true ) {
 		$usedPages[0]->save(); //@todo localised edit summaries
+
+		$remaining = count( $usedPages[0]->getInterwikisFromtext() );
+		echo "* $remaining interwiki links left on page\n";
 	}
 
-	//Count how many iwlinks are left on a page
 	//Update the database
 
 }
