@@ -32,7 +32,7 @@ $db = new Mysql(
 	Globals::$config['replica.my']['password'],
 	Globals::$config['replica.my']['user'].'_wikidata_p' );
 
-$dbQuery = $db->select( 'iwlink','*', null, array('ORDER BY' => 'updated ASC', 'LIMIT' => '100' ) );
+$dbQuery = $db->select( 'iwlink','*', null, array('ORDER BY' => 'updated ASC', 'LIMIT' => '1' ) );
 $rows = $db->mysql2array( $dbQuery );
 if( $rows === false ){
 	die('Empty database?');
@@ -123,7 +123,7 @@ function getLocalSummary( Site $site , $id){
 		$summary = Globals::$config['wbimport.summary'][ $language ];
 	}
 
-	$summary = str_replace('$who', $bot, $summary);
+	$summary = str_replace('$who', 'User:'.$bot, $summary);
 	$summary = str_replace('$id', $id, $summary);
 	return $summary;
 

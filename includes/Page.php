@@ -334,9 +334,10 @@ class Page {
 			$site = $this->site->family->getSiteFromSiteid( $sitelink['site'] );
 			if( $this->site->getType() == $site->getType() ){
 				$lang = $site->getLanguage();
-				$titleEnd = $this->getTitleWithoutNamespace();
-				$possibleNamespaces = $this->site->requestNamespaces();
-				$possibleNamespaces = $possibleNamespaces[$this->nsid];
+				$page = $site->newPageFromTitle( $sitelink['title'] );
+				$titleEnd = $page->getTitleWithoutNamespace();//@todo this should be the language data title...
+				$possibleNamespaces = $site->requestNamespaces();
+				$possibleNamespaces = $possibleNamespaces[$page->getNsid()];
 
 				//@todo this could all be improved with something like getRegexForTitle or  getRegexForInterwikiLink
 				foreach ( $possibleNamespaces as $namespace ) {
