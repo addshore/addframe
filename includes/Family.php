@@ -11,7 +11,9 @@ class Family extends Registry {
 	private $login;
 	/** * @var array of sites with the following keys
 	 * [url][wikiid][code][sitename][closed][private] */
-	private $sitematrix;
+	private $siteMatrix;
+	/** @var array Index of siteMatrix with keys (url|dbname) */
+	private $siteMatrixIndex;
 	/** @var Site[] List of sites in the family */
 	private $sites;
 	/** * @var Site the home site for the family */
@@ -25,8 +27,7 @@ class Family extends Registry {
 	 */
 	public function __construct( $globalLogin = null, $homeUrl = null ) {
 		if ( isset( $homeUrl ) ) {
-			$this->addSite( $homeUrl );
-			$this->homeSite = $this->getSite( $homeUrl );
+			$this->homeSite = $this->addSite( $homeUrl );
 		}
 		if ( isset( $globalLogin ) ) {
 			$this->login = $globalLogin;
@@ -44,11 +45,40 @@ class Family extends Registry {
 	/**
 	 * @return array
 	 */
-	public function getSitematrix() {
-		if ( $this->sitematrix == null ){
-			$this->sitematrix = $this->homeSite->requestSitematrix();
+	private function getSiteMatrix() {
+		if ( $this->siteMatrix == null ){
+			$this->siteMatrix = $this->homeSite->requestSitematrix();
+			$this->buildSiteIndex();
 		}
-		return $this->sitematrix;
+		return $this->siteMatrix;
+	}
+
+
+	/**
+	 * Builds the index used for looking up site details
+	 */
+	private function buildSiteIndex() {
+		$index = array();
+		foreach( $this->siteMatrix as $groupKey => $group){
+			if( $groupKey == 'count' || $groupKey == 'specials' ) { continue; }
+			foreach( $group['site'] as $siteKey => $site ){
+				$cleanUrl = str_replace( array('http://','https://','//'), '', $site['url'] );
+				$index['url'][$cleanUrl] = array( $groupKey, $siteKey );
+				$index['dbname'][$site['dbname']] = array( $groupKey, $siteKey );
+			}
+		}
+		$this->siteMatrixIndex = $index;
+	}
+
+	/**
+	 * Uses the key and value to find siteDetails in the SiteMatrix
+	 * @param $key string (url|dbname)
+	 * @param $value string value of dbname or url
+	 * @return array
+	 */
+	public function getSiteDetailsFromSiteIndex( $key, $value ){
+		$indexValue = $this->siteMatrixIndex[$key][$value];
+		return $this->siteMatrix[ $indexValue[0] ]['site'][ $indexValue[1] ];
 	}
 
 	/**
@@ -67,16 +97,16 @@ class Family extends Registry {
 	 * @return Site
 	 */
 	public function getSiteFromSiteid( $siteid ) {
-		$sitematrix = $this->getSitematrix();
-		if ( isset( $sitematrix[$siteid] ) ) {
-			$url = parse_url( $sitematrix[$siteid]['url'] );
-			$url = $url['host'];
+		$this->getSiteMatrix();
+		if ( isset( $this->siteMatrixIndex['dbname'][$siteid] ) ) {
+			$siteData = $this->getSiteDetailsFromSiteIndex( 'dbname', $siteid );
 
-			if ( ! isset( $this->sites[$url] ) ) {
+			if ( ! isset( $this->sites[ $siteData['url'] ] ) ) {
+				$url = $cleanUrl = str_replace( array('http://','https://','//'), '', $siteData['url'] );
 				echo "Loading $url\n";
 				$this->addSite( $url );
+				return $this->getSite( $url );
 			}
-			return $this->getSite( $url );
 		}
 	}
 

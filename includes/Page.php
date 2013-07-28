@@ -333,24 +333,26 @@ class Page {
 
 			foreach ( $baseEntity->languageData['sitelinks'] as $sitelink ) {
 				$site = $this->site->family->getSiteFromSiteid( $sitelink['site'] );
-				$lang = $site->getLanguage();
-				$titleEnd = $this->getTitleWithoutNamespace();
-				$possibleNamespaces = $this->site->requestNamespaces();
-				$possibleNamespaces = $possibleNamespaces[$this->nsid];
+				if( $this->site->getType() == $site->getType() ){
+					$lang = $site->getLanguage();
+					$titleEnd = $this->getTitleWithoutNamespace();
+					$possibleNamespaces = $this->site->requestNamespaces();
+					$possibleNamespaces = $possibleNamespaces[$this->nsid];
 
-				//@todo this could all be improved with something like getRegexForTitle or  getRegexForInterwikiLink
-				foreach ( $possibleNamespaces as $namespace ) {
-					if ( $namespace != "" ) {
-						$titleVarient = $namespace . ':' . $titleEnd;
-					} else {
-						$titleVarient = $titleEnd;
-					}
-					//@todo remember (zh-min-nan|nan) and (nb|no) (they are the same site)
-					$lengthBefore = strlen( $text );
-					$removeLink = '/\n ?\[\[' . $lang . ' ?: ?' . str_replace( ' ', '( |_)', preg_quote( $titleVarient, '/' ) ) . ' ?\]\] ?/';
-					$this->removeRegexMatched( $removeLink );
-					if ( $lengthBefore < strlen( $text ) ) {
-						echo "Removed link! $lang:$titleVarient\n";
+					//@todo this could all be improved with something like getRegexForTitle or  getRegexForInterwikiLink
+					foreach ( $possibleNamespaces as $namespace ) {
+						if ( $namespace != "" ) {
+							$titleVarient = $namespace . ':' . $titleEnd;
+						} else {
+							$titleVarient = $titleEnd;
+						}
+						//@todo remember (zh-min-nan|nan) and (nb|no) (they are the same site)
+						$lengthBefore = strlen( $text );
+						$removeLink = '/\n ?\[\[' . $lang . ' ?: ?' . str_replace( ' ', '( |_)', preg_quote( $titleVarient, '/' ) ) . ' ?\]\] ?/';
+						$this->removeRegexMatched( $removeLink );
+						if ( $lengthBefore < strlen( $text ) ) {
+							echo "Removed link! $lang:$titleVarient\n";
+						}
 					}
 				}
 

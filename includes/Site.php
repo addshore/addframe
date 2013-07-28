@@ -38,7 +38,7 @@ class Site {
 
 	/**
 	 * @param $url string URL of the api
-	 * @param null $family Family
+	 * @param Family $family Family
 	 * @throws \Exception
 	 */
 	public function __construct( $url, $family = null ) {
@@ -49,15 +49,17 @@ class Site {
 		$this->http = new Http();
 
 		if ( isset( $family ) ) {
+			//$siteDetails = $family->getSiteDetailsFromSiteIndex('url', $url);
 			$this->family = $family;
 		}
 
+
 		//terrible hack to try and get the language code from the url (works for wikimedia stuff)..
+		//@todo just remove this once everything works, lang will only be requested once per site anyway
 		$attemptedLanguage =  substr( $url, 0, strpos( $url, '.' ) );
 		if( strstr( Globals::$regex['langs'],$attemptedLanguage ) ){
 			$this->language = $attemptedLanguage;
 		}
-
 	}
 
 	public function getApiUrl(){
@@ -253,28 +255,14 @@ class Site {
 	}
 
 	public function requestSitematrix() {
-		//@todo catch if sitematrix isnt recognised by the api
-		$siteArray = array();
-		$returned = $this->doRequest( array( 'action' => 'sitematrix', 'smlangprop' => 'site' ) );
-		if ( $returned == null ) {
-			throw new \Exception( "Sitematrix failed... Maybe you are offline." );
+		$returned = $this->doRequest( array( 'action' => 'sitematrix') );
+
+		if ( empty ( $returned ) ) {
+			//@todo also catch if the result is returned but with an error code (not recognised action)
+			throw new \Exception( "Sitematrix empty... Maybe you are offline." );
 		}
-		foreach ( $returned['sitematrix'] as $key => $langmatrix ) {
-			if ( $key == 'count' ) {
-				continue;
-			} //skip the count of sites..
-			if ( $key == 'specials' ) {
-				foreach ( $langmatrix as $site ) {
-					$siteArray[$site['dbname']] = $site;
-				}
-			} else {
-				//this is the default
-				foreach ( $langmatrix['site'] as $site ) {
-					$siteArray[$site['dbname']] = $site;
-				}
-			}
-		}
-		return $siteArray;
+
+		return $returned['sitematrix'];
 	}
 
 	/**
@@ -333,7 +321,6 @@ class Site {
 	 */
 	public function requestLogin() {
 		if ( !isset( $this->token ) ) {
-			echo "Loging in to " . $this->url . "\n";
 			$post['action'] = 'login';
 			$post['lgname'] = $this->userlogin->username;
 			$post['lgpassword'] = $this->userlogin->getPassword();
@@ -346,6 +333,7 @@ class Site {
 			}
 
 			if ( $result['login']['result'] == "Success" ) {
+				echo "Logged in to " . $this->url . "\n";
 				return true;
 			} else if ( $result['login']['result'] == "Throttled" ) {
 				echo "Throttled! Waiting for " . $result['login']['wait'] . "\n";

@@ -69,14 +69,15 @@ foreach ( $rows as $row ) {
 	echo "* Adding everything to the entity!\n";
 	foreach ( $usedPages as $page ) {
 		$baseEntity->addSitelink( $page->site->getId(), $page->title );
-		if ( $page->site->getType() == 'wiki' ) {
-			$baseEntity->addLabel( $page->site->getLanguage(), $page->title );
-		}
+//		if ( $page->site->getType() == 'wiki' ) {
+//			$baseEntity->addLabel( $page->site->getLanguage(), $page->title );
+//		}
 	}
 
-	echo "* Saving the entity!\n";
-	$baseEntity->save();
-	$baseEntity->load();
+	if( $baseEntity->changed === true ){
+		echo "* Saving the entity!\n";
+		print_r( $baseEntity->save() );
+	}
 
 	echo "* Removing links from the page!\n";
 	if ( $usedPages[0]->removeEntityLinksFromText() == true ) {
