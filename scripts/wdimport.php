@@ -127,6 +127,9 @@ foreach ( $rows as $row ) {
 				'title' => $row['title'])
 			);
 		} else {
+			if( $usedPages[0]->isFullyEditProtected() ){
+				$log = "Protected()".$log;
+			}
 			$db->update('iwlink', array( 'links' => $remaining, 'log' => $log ), array(
 				'lang' => $row['lang'],
 				'site' => $row['site'],
