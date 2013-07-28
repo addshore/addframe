@@ -95,21 +95,23 @@ foreach ( $rows as $row ) {
 		$remaining = count( $usedPages[0]->getInterwikisFromtext() );
 		echo "* $remaining interwiki links left on page\n";
 		if( $remaining == 0 ){
-//			echo "* Deleting from database\n";
-//			$db->delete( 'iwlink', array(
-//				'lang' => $row['lang'],
-//				'site' => $row['site'],
-//				'namespace' => $row['namespace'],
-//				'title' => $row['title'])
-//			);
+			echo "* Deleting from database\n";
+			$db->delete( 'iwlink', array(
+				'lang' => $row['lang'],
+				'site' => $row['site'],
+				'namespace' => $row['namespace'],
+				'title' => $row['title'])
+			);
 		} else {
 			//update the db
-//			$db->update('iwlink', array( 'links' => $remaining), array(
-//				'lang' => $row['lang'],
-//				'site' => $row['site'],
-//				'namespace' => $row['namespace'],
-//				'title' => $row['title'])
-//			);)
+			$db->update('iwlink', array( 'links' => $remaining), array(
+				'lang' => $row['lang'],
+				'site' => $row['site'],
+				'namespace' => $row['namespace'],
+				'title' => $row['title'])
+			);
 		}
 	}
+
+	unset($baseEntity,$usedPages);
 }
