@@ -28,7 +28,7 @@ $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 //$dbQuery = $db->select( 'iwlink','*',null,array('ORDER BY' => 'updated ASC', 'LIMIT' => '100' ) );
 //$rows = $db->mysql2array( $dbQuery );
 $rows = array( //array('lang' => 'en', 'site' => 'wiki', 'namespace' => '0', 'title' => 'À Beira do Caminho'),
-	array( 'lang' => 'en', 'site' => 'wikivoyage', 'namespace' => '0', 'title' => 'Moon' ),
+	array( 'lang' => 'en', 'site' => 'wikivoyage', 'namespace' => '4', 'title' => 'Hierarchy' ),
 	//array( 'lang' => 'en', 'site' => 'wiki', 'namespace' => '0', 'title' => 'Pear' ),
 	//array( 'lang' => 'en', 'site' => 'wiki', 'namespace' => '0', 'title' => 'Banana' ),
 );
@@ -40,7 +40,7 @@ foreach ( $rows as $row ) {
 	// Get an array of all pages involved
 	/* @var $usedPages Page[] */
 	$usedPages = array();
-	$usedPages[] = $baseSite->newPageFromTitle( $baseSite->getNamespaceFromId( $row['namespace'] ) . $row['title'] );
+	$usedPages[] = $baseSite->newPageFromTitle( $baseSite->getNamespaceFromId( $row['namespace'] ) .':'. $row['title'] );
 	$usedPages = array_merge( $usedPages, $usedPages[0]->getPagesFromInterwikiLinks() );
 	$usedPages = array_merge( $usedPages, $usedPages[0]->getPagesFromInterprojectLinks() );
 	$usedPages = array_merge( $usedPages, $usedPages[0]->getPagesFromInterprojectTemplates() );
