@@ -83,7 +83,19 @@ foreach ( $rows as $row ) {
 
 	if( $baseEntity->changed === true ){
 		echo "* Saving the entity!\n";
-		print_r( $baseEntity->save() );
+		$saveResult = $baseEntity->save();
+		if( isset ( $saveResult['error']['code'] ) && $saveResult['error']['code'] == 'failed-save' ){
+			$conflicts = array();
+			$conflicts[] = $baseEntity->id;
+			foreach( $saveResult['error']['messages'] as $messageKey => $errorMessage ){
+				if( $messageKey == 'html' ){ continue; }
+				if( $errorMessage['name'] == 'wikibase-error-sitelink-already-used' ){
+					$conflicts[] = $errorMessage['parameters']['2'];
+				}
+			}
+				$story = "Conflicts when using http://{$baseSite->url} : [[{$usedPages[0]->title}]] with [[d:".implode(']], [[d:', $conflicts)."]]\n";
+			echo $story;
+		}
 	}
 
 	echo "* Removing links from the page!\n";
