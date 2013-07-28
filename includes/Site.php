@@ -51,7 +51,8 @@ class Site {
 		if ( isset( $family ) ) {
 			$siteDetails = $family->getSiteDetailsFromSiteIndex('url', $url);
 			if( $siteDetails !== null ){
-				print_r($siteDetails);die();
+				$this->language = $siteDetails['lang'];
+				$this->type = $siteDetails['code'];
 			}
 			$this->family = $family;
 		}
