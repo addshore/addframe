@@ -67,6 +67,7 @@ foreach ( $rows as $row ) {
 
 	// Add everything to the entity
 	echo "* Adding everything to the entity!\n";
+	$baseEntity->load();
 	foreach ( $usedPages as $page ) {
 		$baseEntity->addSitelink( $page->site->getId(), $page->title );
 //		if ( $page->site->getType() == 'wiki' ) {

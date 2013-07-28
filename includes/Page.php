@@ -325,45 +325,43 @@ class Page {
 	public function removeEntityLinksFromText() {
 		$text = $this->getText();
 		$baseEntity = $this->getEntity();
-		if ( $baseEntity instanceof Entity ) {
-			$baseEntity->load();
-			if ( ! isset( $baseEntity->id ) ) {
+
+		if ( ! $baseEntity instanceof Entity ) {
 				return false;
-			}
+		}
+		$baseEntity->load();
 
-			foreach ( $baseEntity->languageData['sitelinks'] as $sitelink ) {
-				$site = $this->site->family->getSiteFromSiteid( $sitelink['site'] );
-				if( $this->site->getType() == $site->getType() ){
-					$lang = $site->getLanguage();
-					$titleEnd = $this->getTitleWithoutNamespace();
-					$possibleNamespaces = $this->site->requestNamespaces();
-					$possibleNamespaces = $possibleNamespaces[$this->nsid];
+		foreach ( $baseEntity->languageData['sitelinks'] as $sitelink ) {
+			$site = $this->site->family->getSiteFromSiteid( $sitelink['site'] );
+			if( $this->site->getType() == $site->getType() ){
+				$lang = $site->getLanguage();
+				$titleEnd = $this->getTitleWithoutNamespace();
+				$possibleNamespaces = $this->site->requestNamespaces();
+				$possibleNamespaces = $possibleNamespaces[$this->nsid];
 
-					//@todo this could all be improved with something like getRegexForTitle or  getRegexForInterwikiLink
-					foreach ( $possibleNamespaces as $namespace ) {
-						if ( $namespace != "" ) {
-							$titleVarient = $namespace . ':' . $titleEnd;
-						} else {
-							$titleVarient = $titleEnd;
-						}
-						//@todo remember (zh-min-nan|nan) and (nb|no) (they are the same site)
-						$lengthBefore = strlen( $text );
-						$removeLink = '/\n ?\[\[' . $lang . ' ?: ?' . str_replace( ' ', '( |_)', preg_quote( $titleVarient, '/' ) ) . ' ?\]\] ?/';
-						$this->removeRegexMatched( $removeLink );
-						if ( $lengthBefore < strlen( $text ) ) {
-							echo "Removed link! $lang:$titleVarient\n";
-						}
+				//@todo this could all be improved with something like getRegexForTitle or  getRegexForInterwikiLink
+				foreach ( $possibleNamespaces as $namespace ) {
+					if ( $namespace != "" ) {
+						$titleVarient = $namespace . ':' . $titleEnd;
+					} else {
+						$titleVarient = $titleEnd;
+					}
+					//@todo remember (zh-min-nan|nan) and (nb|no) (they are the same site)
+					$lengthBefore = strlen( $text );
+					$removeLink = '/\n ?\[\[' . $lang . ' ?: ?' . str_replace( ' ', '( |_)', preg_quote( $titleVarient, '/' ) ) . ' ?\]\] ?/';
+					$this->removeRegexMatched( $removeLink );
+					if ( $lengthBefore < strlen( $text ) ) {
+						echo "Removed link! $lang:$titleVarient\n";
 					}
 				}
-
 			}
 
-			//Remove extra space we might have left at the end
-			$this->pregReplace( '/(\n\n)\n+$/', "$1" );
-			$this->pregReplace( '/^(\n|\r){0,5}$/', "" );
-
-			return true;
 		}
-		return false;
+
+		//Remove extra space we might have left at the end
+		$this->pregReplace( '/(\n\n)\n+$/', "$1" );
+		$this->pregReplace( '/^(\n|\r){0,5}$/', "" );
+
+		return true;
 	}
 }
