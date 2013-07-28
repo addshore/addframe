@@ -249,7 +249,7 @@ class Mysql {
 			foreach ( $conds as $col => $val ) {
 				$cnds[] = "`$col`" . "= '" . $this->mysqlEscape( $val ) . "'";
 			}
-			$cnds = implode( ', ', $cnds );
+			$cnds = implode( ' AND ', $cnds );
 
 			$sql .= " WHERE " . $cnds;
 		}

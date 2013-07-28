@@ -94,7 +94,7 @@ foreach ( $rows as $row ) {
 					$conflicts[] = $errorMessage['parameters']['2'];
 				}
 			}
-				$log = "Conflicts with ".implode(', ', $conflicts);
+			$log .= "Conflict(".implode(', ', $conflicts).")";
 		}
 	}
 
@@ -114,7 +114,7 @@ foreach ( $rows as $row ) {
 			);
 		} else {
 			//update the db
-			$db->update('iwlink', array( 'links' => $remaining, 'log' => $log ,'updated' => ''), array(
+			$db->update('iwlink', array( 'links' => $remaining, 'log' => $log ), array(
 				'lang' => $row['lang'],
 				'site' => $row['site'],
 				'namespace' => $row['namespace'],
