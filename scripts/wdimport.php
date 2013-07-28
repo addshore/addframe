@@ -39,6 +39,7 @@ if( $rows === false ){
 }
 
 foreach ( $rows as $row ) {
+	$log = '';
 	echo "* Next page!\n";
 	// Load our site
 	$baseSite = $wm->getSiteFromSiteid( $row['lang'] . $row['site'] );
@@ -93,8 +94,7 @@ foreach ( $rows as $row ) {
 					$conflicts[] = $errorMessage['parameters']['2'];
 				}
 			}
-				$story = "Conflicts when using http://{$baseSite->url} : [[{$usedPages[0]->title}]] with [[d:".implode(']], [[d:', $conflicts)."]]\n";
-			echo $story;
+				$log = "Conflicts with ".implode(', ', $conflicts);
 		}
 	}
 
@@ -114,7 +114,7 @@ foreach ( $rows as $row ) {
 			);
 		} else {
 			//update the db
-			$db->update('iwlink', array( 'links' => $remaining, 'updated' => ''), array(
+			$db->update('iwlink', array( 'links' => $remaining, 'log' => $log ,'updated' => ''), array(
 				'lang' => $row['lang'],
 				'site' => $row['site'],
 				'namespace' => $row['namespace'],
@@ -123,7 +123,7 @@ foreach ( $rows as $row ) {
 		}
 	}
 
-	unset($baseEntity,$usedPages);
+	unset($baseEntity, $usedPages, $log);
 }
 
 function getLocalSummary( Site $site , $id){
