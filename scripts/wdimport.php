@@ -127,7 +127,6 @@ foreach ( $rows as $row ) {
 				'title' => $row['title'])
 			);
 		} else {
-			//update the db
 			$db->update('iwlink', array( 'links' => $remaining, 'log' => $log ), array(
 				'lang' => $row['lang'],
 				'site' => $row['site'],
@@ -140,6 +139,11 @@ foreach ( $rows as $row ) {
 	unset($baseEntity, $usedPages, $log);
 }
 
+/**
+ * @param Site $site (to get the language from)
+ * @param $id string (to add to the summary)
+ * @return string Localised Summary
+ */
 function getLocalSummary( Site $site , $id){
 	$language = $site->getLanguage();
 	$bot = $site->getUserLogin()->username;
