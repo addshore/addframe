@@ -108,6 +108,9 @@ class Mysql {
 	 * @static
 	 */
 	public static function mysql2array( $data ) {
+		if($data === false){
+			return false;
+		}
 
 		$return = array();
 		while ( $row = mysql_fetch_assoc( $data ) ) {

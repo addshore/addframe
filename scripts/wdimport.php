@@ -32,10 +32,13 @@ $db = new Mysql(
 	$dbHost, '3306',
 	Globals::$config['replica.my']['user'],
 	Globals::$config['replica.my']['password'],
-	Globals::$config['replica.my']['user'].'wikidata_p' );
+	Globals::$config['replica.my']['user'].'_wikidata_p' );
 
 $dbQuery = $db->select( 'iwlink','*', null, array('ORDER BY' => 'updated ASC', 'LIMIT' => '100' ) );
 $rows = $db->mysql2array( $dbQuery );
+if( $rows === false ){
+	die('Empty database?');
+}
 
 foreach ( $rows as $row ) {
 	echo "* Next page!\n";
