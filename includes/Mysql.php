@@ -194,12 +194,12 @@ class Mysql {
 	 * @param $values array Values to set.
 	 * @param $options array Options
 	 * @return object MySQL object
-	 * @throws Exception Write query called while under read-only mode
+	 * @throws \Exception Write query called while under read-only mode
 	 */
 	public function insert( $table, $values, $options = array() ) {
 		//echo "Running insert.";
 		if ( $this->mReadonly == true )
-			throw new Exception( "Write query called while under read-only mode" );
+			throw new \Exception( "Write query called while under read-only mode" );
 		if ( ! count( $values ) ) {
 			return true;
 		}
@@ -229,11 +229,11 @@ class Mysql {
 	 * @param $values array Values to set.
 	 * @param $conds string|array Conditions to update. Default *, updates every entry.
 	 * @return object MySQL object
-	 * @throws Exception Write query called while under read-only mode
+	 * @throws \Exception Write query called while under read-only mode
 	 */
 	public function update( $table, $values, $conds = '*' ) {
 		if ( $this->mReadonly == true )
-			throw new Exception( "Write query called while under read-only mode" );
+			throw new \Exception( "Write query called while under read-only mode" );
 		$vals = array();
 		foreach ( $values as $col => $val ) {
 			$vals[] = "`$col`" . "= '" . $this->mysqlEscape( $val ) . "'";
@@ -258,11 +258,11 @@ class Mysql {
 	 * @param $table string Table to delete from.
 	 * @param $conds array Conditions to delete. Default *, deletes every entry.
 	 * @return object MySQL object
-	 * @throws Exception Write query called while under read-only mode
+	 * @throws \Exception Write query called while under read-only mode
 	 */
 	public function delete( $table, $conds ) {
 		if ( $this->mReadonly == true )
-			throw new Exception( "Write query called while under read-only mode" );
+			throw new \Exception( "Write query called while under read-only mode" );
 		$sql = "DELETE FROM $table";
 		if ( $conds != '*' ) {
 			$cnds = array();
