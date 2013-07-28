@@ -96,6 +96,12 @@ foreach ( $rows as $row ) {
 //			);
 		} else {
 			//update the db
+//			$db->update('iwlink', array( 'links' => $remaining), array(
+//				'lang' => $row['lang'],
+//				'site' => $row['site'],
+//				'namespace' => $row['namespace'],
+//				'title' => $row['title'])
+//			);)
 		}
 	}
 }
