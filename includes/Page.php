@@ -320,7 +320,6 @@ class Page {
 	/**
 	 * Gets the entity for the article and removes all possible interwiki links
 	 * from the page text.
-	 * @todo this is rather request intensive! REDUCE IT!
 	 */
 	public function removeEntityLinksFromText() {
 		$text = $this->getText();

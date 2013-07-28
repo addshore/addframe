@@ -107,10 +107,11 @@ class Site {
 			$this->requestNamespaces();
 		}
 		if ( isset( $this->namespaces[$id] ) ) {
-			return $this->namespaces[$id][0];
-		}
-		if ( $id == '0' ) {
-			return '';
+			if( $this->namespaces[$id][0] == ''){
+				return $this->namespaces[$id][0];
+			} else {
+				return $this->namespaces[$id][0].':';
+			}
 		}
 		throw new \Exception( "Could not return a namespace for id $id in " . $this->url );
 	}
