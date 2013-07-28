@@ -27,6 +27,7 @@ class Site {
 	private $http;
 	/** @var string cache of the token we are using */
 	private $token;
+	private $isLoggedIn = false;
 	/** @var Array */
 	private $namespaces;
 	/** @var UserLogin */
@@ -180,11 +181,8 @@ class Site {
 		return new Entity( $this, $id );
 	}
 
-	public function newLogin( $username, $password, $doLogin = false ) {
+	public function newLogin( $username, $password ) {
 		$this->userlogin = new UserLogin( $username, $password );
-		if ( $doLogin === true ) {
-			$this->requestLogin();
-		}
 	}
 
 	/*
@@ -202,7 +200,7 @@ class Site {
 			$returned = $this->http->get( $apiurl . $query );
 		} else {
 			if ( $post['action'] != 'login' ) {
-				$this->requestLogin();
+				$this->requestEditToken();
 			}
 			$query = "?" . http_build_query( $query );
 			$returned = $this->http->post( $apiurl . $query, $post );
@@ -332,7 +330,7 @@ class Site {
 	 * @throws \Exception
 	 */
 	public function requestLogin() {
-		if ( !isset( $this->token ) ) {
+		if ( $this->isLoggedIn == false ) {
 			$post['action'] = 'login';
 			$post['lgname'] = $this->userlogin->username;
 			$post['lgpassword'] = $this->userlogin->getPassword();
@@ -346,7 +344,8 @@ class Site {
 
 			if ( $result['login']['result'] == "Success" ) {
 				echo "Logged in to " . $this->url . "\n";
-				return true;
+				$this->isLoggedIn = true;
+				return $this->isLoggedIn;
 			} else if ( $result['login']['result'] == "Throttled" ) {
 				echo "Throttled! Waiting for " . $result['login']['wait'] . "\n";
 				sleep( $result['login']['wait'] );
