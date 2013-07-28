@@ -10,12 +10,10 @@ use Addframe\Family;
 use Addframe\Globals;
 use Addframe\Mysql;
 use Addframe\Page;
+use Addframe\Site;
 use Addframe\UserLogin;
 
 require_once( dirname( __FILE__ ) . '/../init.php' );
-
-//This is an array that we can keep our summaries in...
-$summaries = array();
 
 $wm = new Family(
 	new UserLogin( Globals::$config['user.addbot']['user'],
@@ -90,7 +88,7 @@ foreach ( $rows as $row ) {
 
 	echo "* Removing links from the page!\n";
 	if ( $usedPages[0]->removeEntityLinksFromText() == true ) {
-		$usedPages[0]->save(); //@todo localised edit summaries
+		$usedPages[0]->save( getLocalSummary( $usedPages[0]->getSite(), $baseEntity->id) );
 
 		$remaining = count( $usedPages[0]->getInterwikisFromtext() );
 		echo "* $remaining interwiki links left on page\n";
@@ -114,4 +112,19 @@ foreach ( $rows as $row ) {
 	}
 
 	unset($baseEntity,$usedPages);
+}
+
+function getLocalSummary( Site $site , $id){
+	$language = $site->getLanguage();
+	$bot = $site->getUserLogin()->username;
+
+	$summary = '[[$who|Bot]]: Migrating interwiki links, now provided by [[d:|Wikidata]] on [[d:$id]]';
+	if( isset( Globals::$config['wbimport.summary'][ $language ] ) ){
+		$summary = Globals::$config['wbimport.summary'][ $language ];
+	}
+
+	$summary = str_replace('$who', $bot, $summary);
+	$summary = str_replace('$id', $id, $summary);
+	return $summary;
+
 }

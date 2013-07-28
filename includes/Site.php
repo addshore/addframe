@@ -67,6 +67,10 @@ class Site {
 		}
 	}
 
+	public function getUserLogin(){
+		return $this->userlogin;
+	}
+
 	public function getApiUrl(){
 		if ( $this->api == null ){
 			$this->requestApiUrl();
