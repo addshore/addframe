@@ -106,7 +106,6 @@ class Family extends Registry {
 
 			if ( ! isset( $this->sites[ $siteData['url'] ] ) ) {
 				$url = $cleanUrl = str_replace( array('http://','https://','//'), '', $siteData['url'] );
-				echo "Loading $url\n";
 				$this->addSite( $url );
 				return $this->getSite( $url );
 			}
@@ -118,9 +117,12 @@ class Family extends Registry {
 	 * @return Site
 	 */
 	public function addSite( $url ) {
-		$this->sites[$url] = new Site( $url, $this );
-		if ( isset( $this->login ) ) {
-			$this->sites[$url]->setLogin( $this->login );
+		if( ! $this->sites[$url] instanceof Site ){
+			echo "Loading $url\n";
+			$this->sites[$url] = new Site( $url, $this );
+			if ( isset( $this->login ) ) {
+				$this->sites[$url]->setLogin( $this->login );
+			}
 		}
 
 		return $this->sites[$url];
