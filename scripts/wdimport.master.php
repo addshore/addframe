@@ -21,6 +21,7 @@
 
 use Addframe\Globals;
 use Addframe\Mysql;
+use Addframe\Stathat;
 
 require_once( dirname( __FILE__ ) . '/../init.php' );
 
@@ -29,6 +30,8 @@ $db = new Mysql(
 	Globals::$config['replica.my']['user'],
 	Globals::$config['replica.my']['password'],
 	Globals::$config['replica.my']['user'].'_wikidata_p' );
+
+$stathat = new Stathat( Globals::$config['stathat']['key'] );
 
 $redis = new Redis();
 $redis->connect('tools-mc');
@@ -52,6 +55,10 @@ while(true){
 		$count++;
 		$redis->lpush('iwlink', json_encode( $row ) );
 	}
+
+	$dbQuery = $db->select( 'iwlink','count(*)', null, null );
+	$rows = $db->mysql2array( $dbQuery );
+	$stathat->stathat_ez_count( "Addbot - IW Removal - Remaining", $rows[0]['count(*)'] );
 
 	while ( $count > 0){
 		echo "Waiting before we add more, $count in list\n";
