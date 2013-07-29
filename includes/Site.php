@@ -23,6 +23,8 @@ class Site {
 	private $api;
 	/** @var string language eg. en */
 	private $language;
+	/** @var string iwPrefix eg. en or simple */
+	private $iwPrefix;
 	/** @var Http class */
 	private $http;
 	/** @var string cache of the token we are using */
@@ -57,7 +59,6 @@ class Site {
 			}
 			$this->family = $family;
 		}
-
 
 		//terrible hack to try and get the language code from the url (works for wikimedia stuff)..
 		//@todo just remove this once everything works, lang will only be requested once per site anyway
@@ -97,6 +98,13 @@ class Site {
 			$this->requestSiteinfo();
 		}
 		return $this->language;
+	}
+
+	public function getIwPrefix(){
+		if( $this->url == 'simple.wikipedia.org' ){
+			return 'simple';
+		}
+		return $this->getLanguage();
 	}
 
 	public function getWikibase(){

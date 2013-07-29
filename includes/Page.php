@@ -351,7 +351,7 @@ class Page {
 		foreach ( $baseEntity->languageData['sitelinks'] as $sitelink ) {
 			$site = $this->site->family->getSiteFromSiteid( $sitelink['site'] );
 			if( $site instanceof Site && $this->site->getType() == $site->getType() ){
-				$lang = $site->getLanguage();
+				$iwPrefix = $site->getIwPrefix();
 				$page = $site->newPageFromTitle( $sitelink['title'] );
 				$titleEnd = $page->getTitleWithoutNamespace();
 				$possibleNamespaces = $site->requestNamespaces();
@@ -366,10 +366,10 @@ class Page {
 					}
 					//@todo remember (zh-min-nan|nan) and (nb|no) (they are the same site)
 					$lengthBefore = strlen( $text );
-					$removeLink = '/\n ?\[\[' . $lang . ' ?: ?' . str_replace( ' ', '( |_)', preg_quote( $titleVarient, '/' ) ) . ' ?\]\] ?/';
+					$removeLink = '/\n ?\[\[' . $iwPrefix . ' ?: ?' . str_replace( ' ', '( |_)', preg_quote( $titleVarient, '/' ) ) . ' ?\]\] ?/';
 					$this->removeRegexMatched( $removeLink );
 					if ( $lengthBefore < strlen( $text ) ) {
-						echo "Removed link! $lang:$titleVarient\n";
+						echo "Removed link! $iwPrefix:$titleVarient\n";
 					}
 				}
 			}
