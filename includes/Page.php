@@ -383,7 +383,7 @@ class Page {
 				$this->removeRegexMatched('/<noinclude>\s+?<\/noinclude>/');
 			}
 
-		//@todo here remove interwiki comments
+		$this->removeRegexMatched('/<!-- ?(interwikis?( links?)?|other (wiki|language)s?) ?-->/i');
 
 		//Remove extra space we might have left at the end
 		$this->pregReplace( '/(\n\n)\n+$/', "$1" );
