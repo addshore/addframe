@@ -286,11 +286,10 @@ class Site {
 
 	/**
 	 * Gets and returns array of namespaces for the site and aliases
-	 *
-	 * @return array of namespaces
+	 * @param integer $nsid Array of namespaces to return
+	 * @return Array
 	 */
-	//@todo specify a single nsid to return
-	public function requestNamespaces() {
+	public function requestNamespaces( $nsid = null ) {
 		if ( ! isset( $this->namespaces ) ) {
 			$returned = $this->doRequest( array( 'action' => 'query', 'meta' => 'siteinfo', 'siprop' => 'namespaces|namespacealiases' ) );
 			$this->namespaces[0] = Array( '' );
@@ -302,6 +301,12 @@ class Site {
 			}
 			foreach ( $returned['query']['namespacealiases'] as $nsArray ) {
 				$this->namespaces[$nsArray['id']][] = $nsArray['*'];
+			}
+		}
+
+		if( $nsid !== null ){
+			if( isset( $this->namespaces[$nsid] ) ){
+				return $this->namespaces[$nsid];
 			}
 		}
 		return $this->namespaces;
