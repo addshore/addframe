@@ -106,9 +106,18 @@ foreach ( $rows as $row ) {
 				if( $messageKey == 'html' ){ continue; }
 				if( $errorMessage['name'] == 'wikibase-error-sitelink-already-used' ){
 					$conflicts[] = $errorMessage['parameters']['2'];
+
+					//Now remove it
+					$errorUrl = strstr( trim( $errorMessage['parameters']['0'], '/') , '/' , true );
+					$errorSite = $wm->getSite( $errorUrl );
+					if( $errorMessage instanceof Site ){
+						$baseEntity->removeSitelink( $errorSite->getId() );
+					}
+
 				}
 			}
 			$log .= "Conflict(".implode(', ', $conflicts).")";
+			$saveResult = $baseEntity->save();
 		}
 	}
 
