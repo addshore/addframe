@@ -78,6 +78,10 @@ class Mysql {
 			$result = mysql_query( $sql, $this->mConn );
 		}
 
+		if( $this->errorStr() ){
+			echo $this->errorStr();
+		}
+		
 		if ( ! $result )
 			return false;
 		return $result;
