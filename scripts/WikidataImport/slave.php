@@ -45,14 +45,14 @@ $db = new Mysql(
 $stathat = new Stathat( Globals::$config['stathat']['key'] );
 
 $redis = new Redis();
-$redis->connect('tools-mc');
-$redis->setOption(Redis::OPT_PREFIX, 'addbotiw:');
+$redis->connect(Globals::$config['redis']['server']);
+$redis->setOption(Redis::OPT_PREFIX, Globals::$config['redis']['prefix']);
 $redis->select(9);
 
 while(true){
 
 	echo "* Getting next page from redis!\n";
-	$row = $redis->brPop('iwlink', 0);
+	$row = $redis->brPop(Globals::$config['redis']['key'], 0);
 	$row = json_decode( $row[1], true );
 
 	// Load our site

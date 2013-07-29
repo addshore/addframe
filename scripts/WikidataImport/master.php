@@ -34,8 +34,8 @@ $db = new Mysql(
 $stathat = new Stathat( Globals::$config['stathat']['key'] );
 
 $redis = new Redis();
-$redis->connect('tools-mc');
-$redis->setOption(Redis::OPT_PREFIX, 'addbotiw:');
+$redis->connect(Globals::$config['redis']['server']);
+$redis->setOption(Redis::OPT_PREFIX, Globals::$config['redis']['prefix']);
 $redis->select(9);
 $redis->delete('iwlink');
 
@@ -53,7 +53,7 @@ while(true){
 	echo "Adding 50 to redis\n";
 	foreach( $rows as $row ){
 		$count++;
-		$redis->lpush('iwlink', json_encode( $row ) );
+		$redis->lpush(Globals::$config['redis']['key'], json_encode( $row ) );
 	}
 
 	$dbQuery = $db->select( 'iwlink','count(*)', null, null );
@@ -62,7 +62,7 @@ while(true){
 
 	while ( $count > 0){
 		echo "Waiting before we add more, $count in list\n";
-		$count = $redis->lSize('iwlink');
+		$count = $redis->lSize(Globals::$config['redis']['key']);
 		sleep(1);
 	}
 
