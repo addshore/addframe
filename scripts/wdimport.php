@@ -90,7 +90,7 @@ foreach ( $rows as $row ) {
 	echo "* Adding everything to the entity!\n";
 	$baseEntity->load();
 	foreach ( $usedPages as $page ) {
-		$baseEntity->addSitelink( $page->site->getId(), $page->title );
+		$baseEntity->addSitelink( $page->site->getId(), $page->normaliseTitleNamespace() );
 		if ( $page->site->getType() == 'wiki' ) {
 			$baseEntity->addLabel( $page->site->getLanguage(), $page->title );
 		}
