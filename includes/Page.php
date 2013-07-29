@@ -350,7 +350,7 @@ class Page {
 
 		foreach ( $baseEntity->languageData['sitelinks'] as $sitelink ) {
 			$site = $this->site->family->getSiteFromSiteid( $sitelink['site'] );
-			if( $this->site->getType() == $site->getType() ){
+			if( $site instanceof Site && $this->site->getType() == $site->getType() ){
 				$lang = $site->getLanguage();
 				$page = $site->newPageFromTitle( $sitelink['title'] );
 				$titleEnd = $page->getTitleWithoutNamespace();//@todo this should be the language data title...
