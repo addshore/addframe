@@ -149,6 +149,10 @@ foreach ( $rows as $row ) {
 		}
 	}
 
+	if( !empty( $log ) ){
+		echo $log."\n";
+	}
+
 	unset($baseEntity, $usedPages, $log);
 	sleep(10);
 }
