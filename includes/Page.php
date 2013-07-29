@@ -370,7 +370,7 @@ class Page {
 					$lengthBefore = strlen( $this->text );
 					$removeLink = '/\n ?\[\[' . $iwPrefix . ' ?: ?' . str_replace( ' ', '( |_)', preg_quote( $titleVarient, '/' ) ) . ' ?\]\] ?/';
 					$this->removeRegexMatched( $removeLink );
-					if ( $lengthBefore < strlen( $this->text ) ) {
+					if ( $lengthBefore > strlen( $this->text ) ) {
 						$counter = $counter + 1;
 						echo "Removed link! $iwPrefix:$titleVarient\n";
 					}
