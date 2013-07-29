@@ -25,6 +25,7 @@ use Addframe\Globals;
 use Addframe\Mysql;
 use Addframe\Page;
 use Addframe\Site;
+use Addframe\Stathat;
 use Addframe\UserLogin;
 
 require_once( dirname( __FILE__ ) . '/../init.php' );
@@ -52,7 +53,10 @@ if( $rows === false ){
 	die('Empty database?');
 }
 
+$stathat = new Stathat( Globals::$config['stathat']['key'] );
+
 foreach ( $rows as $row ) {
+	$stathat->stathat_ez_count( "Addbot - IW Removal - Articles Loaded", 1 );
 	$log = '';
 	echo "* Next page!\n";
 	// Load our site
@@ -125,12 +129,16 @@ foreach ( $rows as $row ) {
 	$removed = $usedPages[0]->removeEntityLinksFromText();
 	if ( $removed != false ) {
 		$usedPages[0]->save( getLocalSummary( $usedPages[0]->getSite(), $baseEntity->id) );
+		//@todo make sure the edit was a success before posting stats?
+		$stathat->stathat_ez_count( "Addbot - IW Removal - Global Edits", 1 );
+		$stathat->stathat_ez_count( "Addbot - IW Removal - Global Removals", $removed );
 
 		$usedPages[0]->getText( true );
 		$remaining = count( $usedPages[0]->getInterwikisFromtext() );
 		echo "* $remaining interwiki links left on page\n";
 		if( $remaining == 0 ){
 			echo "* Deleting from database\n";
+			$stathat->stathat_ez_count( "Addbot - IW Removal - DB Removal", 1 );
 			$db->delete( 'iwlink', array(
 				'lang' => $row['lang'],
 				'site' => $row['site'],
