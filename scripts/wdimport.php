@@ -46,7 +46,7 @@ $db = new Mysql(
 	Globals::$config['replica.my']['password'],
 	Globals::$config['replica.my']['user'].'_wikidata_p' );
 
-$dbQuery = $db->select( 'iwlink','*', null, array('ORDER BY' => 'updated ASC', 'LIMIT' => '1' ) );
+$dbQuery = $db->select( 'iwlink','*', null, array('ORDER BY' => 'updated ASC', 'LIMIT' => '100' ) );
 $rows = $db->mysql2array( $dbQuery );
 if( $rows === false ){
 	die('Empty database?');
@@ -140,6 +140,7 @@ foreach ( $rows as $row ) {
 	}
 
 	unset($baseEntity, $usedPages, $log);
+	sleep(10);
 }
 
 /**
