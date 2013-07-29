@@ -34,7 +34,9 @@ $redis = new Redis();
 $redis->connect('tools-mc');
 $redis->setOption(Redis::OPT_PREFIX, 'addbotiw:');
 $redis->select(9);
-$redis->lTrim('iwlink',0,0);
+$redis->delete('iwlink');
+
+$count = 0;
 
 while(true){
 
@@ -47,11 +49,13 @@ while(true){
 
 	echo "Adding 50 to redis\n";
 	foreach( $rows as $row ){
+		$count++;
 		$redis->lpush('iwlink', json_encode( $row ) );
 	}
 
-	while ( $count = $redis->lSize('iwlink') > 0){
+	while ( $count > 0){
 		echo "Waiting before we add more, $count in list\n";
+		$count = $redis->lSize('iwlink');
 		sleep(1);
 	}
 
