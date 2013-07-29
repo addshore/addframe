@@ -394,7 +394,7 @@ class Page {
 
 		}
 
-		if( $counter == 0 ){
+		if( $counter != 0 ){
 			return $counter;
 		}
 		return false;
