@@ -53,7 +53,7 @@ while(true){
 
 	echo "* Getting next page from redis!\n";
 	$row = $redis->brPop('iwlink', 0);
-	$row = json_decode( $row[1] );
+	$row = json_decode( $row[1], true );
 
 	// Load our site
 	$stathat->stathat_ez_count( "Addbot - IW Removal - Articles Loaded", 1 );
