@@ -94,6 +94,7 @@ class Entity extends Page {
 		if ( isset( $summary ) ) {
 			$param['summary'] = $summary;
 		}
+		$param['bot'] = '';
 		echo "Saving entity " . $this->id . "\n";
 		return $this->site->requestWbEditEntity( $param );
 	}
