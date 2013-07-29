@@ -56,10 +56,10 @@ if( $rows === false ){
 $stathat = new Stathat( Globals::$config['stathat']['key'] );
 
 foreach ( $rows as $row ) {
+	// Load our site
 	$stathat->stathat_ez_count( "Addbot - IW Removal - Articles Loaded", 1 );
 	$log = '';
 	echo "* Next page!\n";
-	// Load our site
 	$baseSite = $wm->getSiteFromSiteid( $row['lang'] . $row['site'] );
 
 	// Get an array of all pages involved
@@ -82,51 +82,51 @@ foreach ( $rows as $row ) {
 		}
 	}
 
-	// Are we still missing an entity?
-	if ( ! isset( $baseEntity ) ) {
-		echo "* Failed to find an entiy to work from\n";
-		//We could create an entity to work on here... Instead we will continue;
-		//We could also try 'linking titles' here?
-		continue;
-	}
-
-	// Add everything to the entity
-	echo "* Adding everything to the entity!\n";
-	$baseEntity->load();
-	foreach ( $usedPages as $page ) {
-		$baseEntity->addSitelink( $page->site->getId(), $page->normaliseTitleNamespace() );
-		if ( $page->site->getType() == 'wiki' ) {
-			$baseEntity->addLabel( $page->site->getLanguage(), $page->title );
-		}
-	}
-
-	if( $baseEntity->changed === true ){
-		echo "* Saving the entity!\n";
-		$saveResult = $baseEntity->save();
-		if( isset ( $saveResult['error']['code'] ) && $saveResult['error']['code'] == 'failed-save' ){
-			$conflicts = array();
-			$conflicts[] = $baseEntity->id;
-			foreach( $saveResult['error']['messages'] as $messageKey => $errorMessage ){
-				if( $messageKey == 'html' ){ continue; }
-				if( $errorMessage['name'] == 'wikibase-error-sitelink-already-used' ){
-					$conflicts[] = $errorMessage['parameters']['2'];
-
-					//Now remove it
-					$errorUrl = strstr( trim( $errorMessage['parameters']['0'], '/') , '/' , true );
-					$errorSite = $wm->getSite( $errorUrl );
-					if( $errorMessage instanceof Site ){
-						$baseEntity->removeSitelink( $errorSite->getId() );
-					}
-
-				}
+	//If we have an entity try to update it
+	if ( isset( $baseEntity ) ) {
+		// Add everything to the entity
+		echo "* Adding everything to the entity!\n";
+		$baseEntity->load();
+		foreach ( $usedPages as $page ) {
+			$baseEntity->addSitelink( $page->site->getId(), $page->normaliseTitleNamespace() );
+			if ( $page->site->getType() == 'wiki' ) {
+				$baseEntity->addLabel( $page->site->getLanguage(), $page->title );
 			}
-			$log .= "Conflict(".implode(', ', $conflicts).")";
-			$saveResult = $baseEntity->save();
-		} else {
-			$stathat->stathat_ez_count( "Addbot - Wikidata Edits", 1 );
 		}
+
+		// If the entity is changed try to save it
+		if( $baseEntity->changed === true ){
+			echo "* Saving the entity!\n";
+			$saveResult = $baseEntity->save();
+			// If we get an error try to work around it
+			if( isset ( $saveResult['error']['code'] ) && $saveResult['error']['code'] == 'failed-save' ){
+				$conflicts = array();
+				$conflicts[] = $baseEntity->id;
+				foreach( $saveResult['error']['messages'] as $messageKey => $errorMessage ){
+					if( $messageKey == 'html' ){ continue; }
+					if( $errorMessage['name'] == 'wikibase-error-sitelink-already-used' ){
+						$conflicts[] = $errorMessage['parameters']['2'];
+
+						//Now remove it
+						$errorUrl = strstr( trim( $errorMessage['parameters']['0'], '/') , '/' , true );
+						$errorSite = $wm->getSite( $errorUrl );
+						if( $errorMessage instanceof Site ){
+							$baseEntity->removeSitelink( $errorSite->getId() );
+						}
+
+					}
+				}
+				$log .= "Conflict(".implode(', ', $conflicts).")";
+				$saveResult = $baseEntity->save();
+			} else {
+				$stathat->stathat_ez_count( "Addbot - Wikidata Edits", 1 );
+			}
+		}
+	} else {
+		echo "* Failed to find an entiy to work from\n";
 	}
 
+	// Try to remove links from the article
 	echo "* Removing links from the page!\n";
 	$removed = $usedPages[0]->removeEntityLinksFromText();
 	if ( $removed != false ) {
@@ -134,39 +134,40 @@ foreach ( $rows as $row ) {
 		//@todo make sure the edit was a success before posting stats?
 		$stathat->stathat_ez_count( "Addbot - IW Removal - Global Edits", 1 );
 		$stathat->stathat_ez_count( "Addbot - IW Removal - Global Removals", $removed );
+	}
 
-		$usedPages[0]->getText( true );
-		$remaining = count( $usedPages[0]->getInterwikisFromtext() );
-		echo "* $remaining interwiki links left on page\n";
-		if( $remaining == 0 ){
-			echo "* Deleting from database\n";
-			$stathat->stathat_ez_count( "Addbot - IW Removal - DB Removal", 1 );
-			$db->delete( 'iwlink', array(
+	// Try to update the database
+	$usedPages[0]->getText( true );
+	$remaining = count( $usedPages[0]->getInterwikisFromtext() );
+	echo "* $remaining interwiki links left on page\n";
+	if( $remaining == 0 ){
+		echo "* Deleting from database\n";
+		$stathat->stathat_ez_count( "Addbot - IW Removal - DB Removal", 1 );
+		$db->delete( 'iwlink', array(
 				'lang' => $row['lang'],
 				'site' => $row['site'],
 				'namespace' => $row['namespace'],
 				'title' => $row['title'])
-			);
-		} else {
-			if( $usedPages[0]->isFullyEditProtected() ){
-				$log = "Protected()".$log;
-			}
-			echo "* Updating in database\n";
-			$db->update('iwlink',
-				array( 'links' => $remaining, 'log' => $log , 'updated' => date( "Y-m-d H:i:s" ) ),
-				array(
-					'lang' => $row['lang'],
-					'site' => $row['site'],
-					'namespace' => $row['namespace'],
-					'title' => $row['title'])
-			);
+		);
+	} else {
+		if( $usedPages[0]->isFullyEditProtected() ){
+			$log = "Protected()".$log;
 		}
+		echo "* Updating in database\n";
+		$db->update('iwlink',
+			array( 'links' => $remaining, 'log' => $log , 'updated' => date( "Y-m-d H:i:s" ) ),
+			array(
+				'lang' => $row['lang'],
+				'site' => $row['site'],
+				'namespace' => $row['namespace'],
+				'title' => $row['title'])
+		);
 	}
 
+	// Try to reset stuff
 	if( !empty( $log ) ){
 		echo $log."\n";
 	}
-
 	unset($baseEntity, $usedPages, $log);
 	sleep(10);
 }
