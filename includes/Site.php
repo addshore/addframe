@@ -59,13 +59,6 @@ class Site {
 			}
 			$this->family = $family;
 		}
-
-		//terrible hack to try and get the language code from the url (works for wikimedia stuff)..
-		//@todo just remove this once everything works, lang will only be requested once per site anyway
-		$attemptedLanguage =  substr( $url, 0, strpos( $url, '.' ) );
-		if( strstr( Globals::$regex['langs'],$attemptedLanguage ) ){
-			$this->language = $attemptedLanguage;
-		}
 	}
 
 	public function getUserLogin(){
@@ -232,7 +225,6 @@ class Site {
 	 */
 	public function requestApiUrl() {
 		$pageData = $this->http->get( $this->url );
-		//@todo should die if cant contact site!
 		preg_match( '/\<link rel=\"EditURI.*?$/im', $pageData, $apiData );
 		if ( ! isset( $apiData[0] ) ) {
 			throw new \Exception( "Undefined offset when getting EditURL (api url)" );
