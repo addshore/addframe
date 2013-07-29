@@ -47,7 +47,7 @@ while(true){
 
 	echo "Adding 50 to redis\n";
 	foreach( $rows as $row ){
-		$redis->lpush('iwlink', serialize( $row ) );
+		$redis->lpush('iwlink', $row );
 	}
 
 	while ( $redis->lSize('iwlink') > 0){

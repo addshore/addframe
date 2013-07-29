@@ -53,7 +53,7 @@ $redis->select(9);
 while(true){
 
 	echo "* Getting next page from redis!\n";
-	$row = unserialize( $redis->brPop('iwlink', 0) );
+	$row = $redis->brPop('iwlink', 0);
 
 	// Load our site
 	$stathat->stathat_ez_count( "Addbot - IW Removal - Articles Loaded", 1 );
