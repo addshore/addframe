@@ -23,9 +23,23 @@ Globals::$regex['langs'] = '(nostalgia|ten|aa|ab|ace|af|ak|als|am|an|ang|ar|arc|
 	'|vi|vls|vo|wa|war|wo|wuu|xal|xh|xmf|yi|yo|za|zea|zh|zh-classical|zh-min-nan|zh-yue|zu)';
 Globals::$regex['sites'] = '(wikipedia|wiki|wikivoyage)';
 
+
+/**
+ * This function loads all configs in /configs
+ *
+ * First all configs ending in .cfg will be loading (we presume these are the defaults)
+ * Then all configs ending in .cfgp will be loaded (these are user specific)
+ *
+ * All configs will be loaded into Globals::$config in the format...
+ * Globals::$config['configname excluding .cfgp?']['setting'] = value;
+ *
+ */
 function loadConfigs(){
+	// Specify the config directory
 	$configPath = dirname( __FILE__ ).'/configs';
 	$di = new DirectoryIterator($configPath);
+
+	// First load the defaults
 	foreach ($di as $file) {
 
 		if ($file->isDir() && !$file->isLink() && !$file->isDot()) {
@@ -35,4 +49,15 @@ function loadConfigs(){
 			Globals::$config[$configName] = parse_ini_file( $configPath.'/'.$file->getFilename() );
 		}
 	}
+
+	//Then load the private configs
+	foreach ($di as $file) {
+		if ($file->isDir() && !$file->isLink() && !$file->isDot()) {
+			//do nothing
+		} elseif (substr($file->getFilename(), -5) === '.cnfp') {
+			$configName = substr($file->getFilename(), 0, -5);
+			Globals::$config[$configName] = parse_ini_file( $configPath.'/'.$file->getFilename() );
+		}
+	}
+
 }
