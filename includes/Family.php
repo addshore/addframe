@@ -15,7 +15,7 @@ class Family extends Registry {
 	/** @var array Index of siteMatrix with keys (url|dbname) */
 	private $siteMatrixIndex;
 	/** @var Site[] List of sites in the family */
-	private $sites;
+	private $sites = array();
 	/** * @var Site the home site for the family */
 	private $homeSite;
 
