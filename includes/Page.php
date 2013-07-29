@@ -60,10 +60,11 @@ class Page {
 	}
 
 	/**
+	 * @param bool $force force getting new text?
 	 * @return string
 	 */
-	public function getText() {
-		if( $this->text == null ){
+	public function getText( $force = false) {
+		if( $this->text == null || $force == true ){
 			$this->text = $this->getSite()->getPageTextFromPageTitle( $this->title );
 		}
 		return $this->text;

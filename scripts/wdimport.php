@@ -116,6 +116,7 @@ foreach ( $rows as $row ) {
 	if ( $usedPages[0]->removeEntityLinksFromText() == true ) {
 		$usedPages[0]->save( getLocalSummary( $usedPages[0]->getSite(), $baseEntity->id) );
 
+		$usedPages[0]->getText( true );
 		$remaining = count( $usedPages[0]->getInterwikisFromtext() );
 		echo "* $remaining interwiki links left on page\n";
 		if( $remaining == 0 ){
