@@ -26,10 +26,10 @@ use Addframe\Stathat;
 require_once( dirname( __FILE__ ) . '/../../init.php' );
 
 $db = new Mysql(
-	'tools-db', '3306',
-	Globals::$config['replica.my']['user'],
-	Globals::$config['replica.my']['password'],
-	Globals::$config['replica.my']['user'].'_wikidata_p' );
+	Globals::$config['mysql']['server'], '3306',
+	Globals::$config['mysql']['user'],
+	Globals::$config['mysql']['password'],
+	Globals::$config['mysql']['user'].'_wikidata_p' );
 
 $stathat = new Stathat( Globals::$config['stathat']['key'] );
 

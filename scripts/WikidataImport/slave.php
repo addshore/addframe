@@ -31,16 +31,16 @@ use Addframe\UserLogin;
 require_once( dirname( __FILE__ ) . '/../../init.php' );
 
 $wm = new Family(
-	new UserLogin( Globals::$config['user.addbot']['user'],
-		Globals::$config['user.addbot']['password'] ), 'meta.wikimedia.org' );
+	new UserLogin( Globals::$config['wikiuser']['username'],
+		Globals::$config['wikiuser']['password'] ), Globals::$config['wikiuser']['home'] );
 
 $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 
 $db = new Mysql(
-	'tools-db', '3306',
-	Globals::$config['replica.my']['user'],
-	Globals::$config['replica.my']['password'],
-	Globals::$config['replica.my']['user'].'_wikidata_p' );
+	Globals::$config['mysql']['server'], '3306',
+	Globals::$config['mysql']['user'],
+	Globals::$config['mysql']['password'],
+	Globals::$config['mysql']['user'].'_wikidata_p' );
 
 $stathat = new Stathat( Globals::$config['stathat']['key'] );
 

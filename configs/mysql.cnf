@@ -1,3 +1,4 @@
 [client]
+server='localhost'
 user='username'
 password='password'
