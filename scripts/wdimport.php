@@ -122,6 +122,8 @@ foreach ( $rows as $row ) {
 			}
 			$log .= "Conflict(".implode(', ', $conflicts).")";
 			$saveResult = $baseEntity->save();
+		} else {
+			$stathat->stathat_ez_count( "Addbot - Wikidata Edits", 1 );
 		}
 	}
 
@@ -149,11 +151,14 @@ foreach ( $rows as $row ) {
 			if( $usedPages[0]->isFullyEditProtected() ){
 				$log = "Protected()".$log;
 			}
-			$db->update('iwlink', array( 'links' => $remaining, 'log' => $log ), array(
-				'lang' => $row['lang'],
-				'site' => $row['site'],
-				'namespace' => $row['namespace'],
-				'title' => $row['title'])
+			echo "* Updating in database\n";
+			$db->update('iwlink',
+				array( 'links' => $remaining, 'log' => $log , 'updated' => date( "Y-m-d H:i:s" ) ),
+				array(
+					'lang' => $row['lang'],
+					'site' => $row['site'],
+					'namespace' => $row['namespace'],
+					'title' => $row['title'])
 			);
 		}
 	}
