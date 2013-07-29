@@ -46,7 +46,6 @@ $stathat = new Stathat( Globals::$config['stathat']['key'] );
 
 $redis = new Redis();
 $redis->connect('tools-mc');
-$redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
 $redis->setOption(Redis::OPT_PREFIX, 'addbotiw:');
 $redis->select(9);
 
@@ -54,6 +53,7 @@ while(true){
 
 	echo "* Getting next page from redis!\n";
 	$row = $redis->brPop('iwlink', 0);
+	$row = json_decode( $row[1] );
 
 	// Load our site
 	$stathat->stathat_ez_count( "Addbot - IW Removal - Articles Loaded", 1 );

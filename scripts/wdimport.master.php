@@ -32,9 +32,9 @@ $db = new Mysql(
 
 $redis = new Redis();
 $redis->connect('tools-mc');
-$redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
 $redis->setOption(Redis::OPT_PREFIX, 'addbotiw:');
 $redis->select(9);
+$redis->lTrim('iwlink',0,0);
 
 while(true){
 
@@ -47,11 +47,11 @@ while(true){
 
 	echo "Adding 50 to redis\n";
 	foreach( $rows as $row ){
-		$redis->lpush('iwlink', $row );
+		$redis->lpush('iwlink', json_encode( $row ) );
 	}
 
-	while ( $redis->lSize('iwlink') > 0){
-		echo "Waiting before we add more\n";
+	while ( $count = $redis->lSize('iwlink') > 0){
+		echo "Waiting before we add more, $count in list\n";
 		sleep(1);
 	}
 
