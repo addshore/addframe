@@ -117,7 +117,7 @@ class Family extends Registry {
 	 * @return Site
 	 */
 	public function addSite( $url ) {
-		if( ! $this->sites[$url] instanceof Site ){
+		if( ! array_key_exists($url, $this->sites) || ! $this->sites[$url] instanceof Site ){
 			echo "Loading $url\n";
 			$this->sites[$url] = new Site( $url, $this );
 			if ( isset( $this->login ) ) {

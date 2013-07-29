@@ -81,7 +81,7 @@ class Mysql {
 		if( $this->errorStr() ){
 			echo $this->errorStr();
 		}
-		
+
 		if ( ! $result )
 			return false;
 		return $result;
