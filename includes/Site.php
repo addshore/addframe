@@ -381,6 +381,7 @@ class Site {
 		$parameters['action'] = 'edit';
 		$parameters['title'] = $title;
 		$parameters['text'] = $text;
+		$parameters['bot'] = '';
 		if ( isset( $summary ) ) {
 			$parameters['summary'] = $summary;
 		}

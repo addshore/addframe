@@ -130,7 +130,7 @@ foreach ( $rows as $row ) {
 	echo "* Removing links from the page!\n";
 	$removed = $usedPages[0]->removeEntityLinksFromText();
 	if ( $removed != false ) {
-		$usedPages[0]->save( getLocalSummary( $usedPages[0]->getSite(), $baseEntity->id) );
+		$usedPages[0]->save( getLocalSummary( $usedPages[0]->getSite(), $usedPages[0]->getEntity()->id ), true );
 		//@todo make sure the edit was a success before posting stats?
 		$stathat->stathat_ez_count( "Addbot - IW Removal - Global Edits", 1 );
 		$stathat->stathat_ez_count( "Addbot - IW Removal - Global Removals", $removed );
