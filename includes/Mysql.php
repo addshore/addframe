@@ -47,8 +47,10 @@ class Mysql {
 	 * @param bool $force
 	 */
 	private function connectToServer( $force = false ) {
-		$this->mConn = mysql_connect( $this->mHost . ':' . $this->mPort, $this->mUser, $this->mPass, $force );
-		//@todo make sure we always read in utf8!
+		$this->mConn = mysql_connect( $this->mHost.':'.$this->mPort, $this->mUser, $this->mPass, $force );
+		mysql_query("SET character_set_results=utf8", $this->mConn);
+		mb_language('uni');
+		mb_internal_encoding('UTF-8');
 		mysql_select_db( $this->mDb, $this->mConn );
 	}
 
