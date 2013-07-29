@@ -48,7 +48,9 @@ class Mysql {
 	 */
 	private function connectToServer( $force = false ) {
 		$this->mConn = mysql_connect( $this->mHost.':'.$this->mPort, $this->mUser, $this->mPass, $force );
-		mysql_query("SET character_set_results=utf8", $this->mConn);
+		mysql_query("SET character_set_results = 'utf8',".
+			" character_set_client = 'utf8', character_set_connection = 'utf8',".
+			" character_set_database = 'utf8', character_set_server = 'utf8'", $this->mConn);
 		mb_language('uni');
 		mb_internal_encoding('UTF-8');
 		mysql_select_db( $this->mDb, $this->mConn );
