@@ -118,6 +118,7 @@ while(true){
 
 						}
 					}
+					$conflicts = array_unique( $conflicts );
 					$log .= "Conflict(".implode(', ', $conflicts).")";
 					$saveResult = $baseEntity->save();
 				} else {
