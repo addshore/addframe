@@ -52,7 +52,7 @@ $redis->select(9);
 
 while(true){
 
-	$row = unserialize( $redis->blPop('iwlink', 0) );
+	$row = unserialize( $redis->brPop('iwlink', 0) );
 
 	// Load our site
 	$stathat->stathat_ez_count( "Addbot - IW Removal - Articles Loaded", 1 );

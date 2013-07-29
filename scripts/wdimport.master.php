@@ -21,7 +21,6 @@
 
 use Addframe\Globals;
 use Addframe\Mysql;
-use Addframe\Stathat;
 
 require_once( dirname( __FILE__ ) . '/../init.php' );
 
