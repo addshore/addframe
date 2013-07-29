@@ -9,8 +9,8 @@ class SiteTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider provideValidConstructionValues
 	 */
-	function testCanConstructFamily( ){
-		new Site('localhost');
+	function testCanConstructFamily( $values ){
+		new Site( $values[0], $values[1] );
 		$this->assertTrue( true, 'Unable to construct a Site object with a url' );
 	}
 
@@ -23,15 +23,25 @@ class SiteTest extends \PHPUnit_Framework_TestCase {
 
 	function provideMockFamily(){
 		$family = $this->getMock( 'Addframe\Family', array('getSiteDetailsFromSiteIndex') );
-		$family->expects( $this->any())->
+		$family->expects( $this->any() )->
 			method( 'getSiteDetailsFromSiteIndex' )->
 			will( $this->returnValue( array('lang' => 'en', 'code' => 'wiki') ) );
 		return $family;
 	}
 
-	function testCanNotConstructFamilyWithEmptyUrl( ){
+	/**
+	 * @dataProvider provideInvalidConstructionValues
+	 */
+	function testCanNotConstructFamilyWithEmptyUrl( $values  ){
 		$this->setExpectedException('Exception', 'Can not construct a site without a url');
-		new Site('');
+		new Site( $values[0], $values[1] );
+	}
+
+	function provideInvalidConstructionValues(){
+		return array(
+			array( array( '', null ) ),
+			array( array( '', $this->provideMockFamily() ) ),
+		);
 	}
 
 }
