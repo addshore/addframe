@@ -132,7 +132,7 @@ while(true){
 		// Try to remove links from the article
 		echo "* Removing links from the page!\n";
 		$removed = $usedPages[0]->removeEntityLinksFromText();
-		if ( $removed != false ) {
+		if ( $removed > 0 ) {
 			$usedPages[0]->save( getLocalSummary( $usedPages[0]->getSite(), $usedPages[0]->getEntity()->id ), true );
 			//@todo make sure the edit was a success before posting stats?
 			$stathat->stathat_ez_count( "Addbot - IW Removal - Global Edits", 1 );

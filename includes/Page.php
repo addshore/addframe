@@ -394,9 +394,6 @@ class Page {
 
 		}
 
-		if( $counter > 0 ){
-			return $counter;
-		}
-		return false;
+		return $counter;
 	}
 }
