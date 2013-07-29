@@ -96,9 +96,11 @@ class Page {
 		$q['inprop'] = 'protected';
 		$result = $this->site->doRequest( $q );
 		foreach( $result['query']['pages'] as $page ){
-			foreach( $page['protection'] as $protection ){
-				if( $protection['type'] == 'edit' && $protection['level'] == 'sysop'){
-					return true;
+			if( isset( $page['protection'] ) ){
+				foreach( $page['protection'] as $protection ){
+					if( $protection['type'] == 'edit' && $protection['level'] == 'sysop'){
+						return true;
+					}
 				}
 			}
 		}
