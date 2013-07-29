@@ -122,7 +122,8 @@ foreach ( $rows as $row ) {
 	}
 
 	echo "* Removing links from the page!\n";
-	if ( $usedPages[0]->removeEntityLinksFromText() == true ) {
+	$removed = $usedPages[0]->removeEntityLinksFromText();
+	if ( $removed != false ) {
 		$usedPages[0]->save( getLocalSummary( $usedPages[0]->getSite(), $baseEntity->id) );
 
 		$usedPages[0]->getText( true );

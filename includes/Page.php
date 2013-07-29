@@ -343,6 +343,7 @@ class Page {
 	public function removeEntityLinksFromText() {
 		$text = $this->getText();
 		$baseEntity = $this->getEntity();
+		$counter = 0;
 
 		if ( ! $baseEntity instanceof Entity ) {
 				return false;
@@ -370,6 +371,7 @@ class Page {
 					$removeLink = '/\n ?\[\[' . $iwPrefix . ' ?: ?' . str_replace( ' ', '( |_)', preg_quote( $titleVarient, '/' ) ) . ' ?\]\] ?/';
 					$this->removeRegexMatched( $removeLink );
 					if ( $lengthBefore < strlen( $text ) ) {
+						$counter = $counter + 1;
 						echo "Removed link! $iwPrefix:$titleVarient\n";
 					}
 				}
@@ -392,6 +394,9 @@ class Page {
 
 		}
 
-		return true;
+		if( $counter == 0 ){
+			return $counter;
+		}
+		return false;
 	}
 }
