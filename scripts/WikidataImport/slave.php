@@ -181,8 +181,8 @@ function getLocalSummary( Site $site , $id){
 	$bot = $site->getUserLogin()->username;
 
 	$summary = '[[$who|Bot]]: Migrating interwiki links, now provided by [[d:|Wikidata]] on [[d:$id]]';
-	if( isset( Globals::$config['wbimport.summary'][ $language ] ) ){
-		$summary = Globals::$config['wbimport.summary'][ $language ];
+	if( isset( Globals::$config['WikidataImport.Summary'][ $language ] ) ){
+		$summary = Globals::$config['WikidataImport.Summary'][ $language ];
 	}
 
 	$summary = str_replace('$who', 'User:'.$bot, $summary);
