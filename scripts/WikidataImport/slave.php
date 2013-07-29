@@ -28,7 +28,7 @@ use Addframe\Site;
 use Addframe\Stathat;
 use Addframe\UserLogin;
 
-require_once( dirname( __FILE__ ) . '/../init.php' );
+require_once( dirname( __FILE__ ) . '/../../init.php' );
 
 $wm = new Family(
 	new UserLogin( Globals::$config['user.addbot']['user'],

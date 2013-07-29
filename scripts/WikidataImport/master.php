@@ -23,7 +23,7 @@ use Addframe\Globals;
 use Addframe\Mysql;
 use Addframe\Stathat;
 
-require_once( dirname( __FILE__ ) . '/../init.php' );
+require_once( dirname( __FILE__ ) . '/../../init.php' );
 
 $db = new Mysql(
 	'tools-db', '3306',
