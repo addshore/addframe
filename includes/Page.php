@@ -376,9 +376,20 @@ class Page {
 
 		}
 
+		if( count( $this->getInterwikisFromtext() ) == 0 ){
+
+			if( $this->getNsid() == 10 ){
+				//Remove empty no include tags
+				$this->removeRegexMatched('/<noinclude>\s+?<\/noinclude>/');
+			}
+
+		//@todo here remove interwiki comments
+
 		//Remove extra space we might have left at the end
 		$this->pregReplace( '/(\n\n)\n+$/', "$1" );
 		$this->pregReplace( '/^(\n|\r){0,5}$/', "" );
+
+		}
 
 		return true;
 	}
