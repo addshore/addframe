@@ -289,16 +289,24 @@ class Page {
 
 	/**
 	 * @param $text string to append to $text
+	 * @param bool $save
 	 */
-	public function appendText( $text ) {
+	public function appendText( $text , $save = false) {
 		$this->text = $this->getText() . $text;
+		if( $save === true ){
+			$this->save("Appending: $text", true);
+		}
 	}
 
 	/**
 	 * @param $text string to prepend to $text
+	 * @param bool $save
 	 */
-	public function prependText( $text ) {
+	public function prependText( $text , $save = false) {
 		$this->text = $text . $this->getText();
+		if( $save === true ){
+			$this->save("Prepending: $text", true);
+		}
 	}
 
 	/**
