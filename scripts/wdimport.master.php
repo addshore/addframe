@@ -41,7 +41,7 @@ $count = 0;
 while(true){
 
 	echo "Querying db\n";
-	$dbQuery = $db->select( 'iwlink','*', null, array('ORDER BY' => 'updated ASC', 'LIMIT' => '50' ) );
+	$dbQuery = $db->select( 'iwlink','*', null, array('ORDER BY' => 'updated ASC', 'LIMIT' => '500' ) );
 	$rows = $db->mysql2array( $dbQuery );
 	if( $rows === false ){
 		die('Empty database?');
