@@ -31,7 +31,9 @@ class Family extends Registry {
 		}
 		if ( isset( $globalLogin ) ) {
 			$this->login = $globalLogin;
-			$this->homeSite->setLogin( $globalLogin );
+			if( isset( $this->homeSite ) ){
+				$this->homeSite->setLogin( $globalLogin );
+			}
 		}
 	}
 
