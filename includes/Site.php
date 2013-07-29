@@ -153,7 +153,11 @@ class Site {
 		foreach ( $result['query']['pages'] as $x ) {
 			$this->nsid=  $x['ns'];
 			if ( ! isset( $x['missing'] ) ) {
-				return $x['revisions']['0']['*'];
+				if( isset( $x['revisions']['0']['*'] ) ){
+					return $x['revisions']['0']['*'];
+				} else {
+					throw new \Exception( 'Request to get page text did not have expected key' );
+				}
 			} else {
 				return '';
 			}
