@@ -10,7 +10,7 @@ class FamilyTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider provideValidConstructionValues
 	 */
 	function testCanConstructFamily( $values ){
-		$family = new Family( $values[0], $values[1] );
+		new Family( $values[0], $values[1] );
 		$this->assertTrue( true, 'Unable to construct a Family object' );
 	}
 
