@@ -52,12 +52,12 @@ $redis->select(9);
 
 while(true){
 
+	echo "* Getting next page from redis!\n";
 	$row = unserialize( $redis->brPop('iwlink', 0) );
 
 	// Load our site
 	$stathat->stathat_ez_count( "Addbot - IW Removal - Articles Loaded", 1 );
 	$log = '';
-	echo "* Next page!\n";
 	$baseSite = $wm->getSiteFromSiteid( $row['lang'] . $row['site'] );
 
 	// Get an array of all pages involved

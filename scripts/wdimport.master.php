@@ -38,17 +38,20 @@ $redis->select(9);
 
 while(true){
 
+	echo "Querying db\n";
 	$dbQuery = $db->select( 'iwlink','*', null, array('ORDER BY' => 'updated ASC', 'LIMIT' => '50' ) );
 	$rows = $db->mysql2array( $dbQuery );
 	if( $rows === false ){
 		die('Empty database?');
 	}
 
+	echo "Adding 50 to redis\n";
 	foreach( $rows as $row ){
 		$redis->lpush('iwlink', serialize( $row ) );
 	}
 
 	while ( $redis->lSize('iwlink') > 0){
+		echo "Waiting before we add more\n";
 		sleep(1);
 	}
 
