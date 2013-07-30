@@ -1,5 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- colors don't work on Windows! -->
 <phpunit bootstrap="tests/bootstrap.php"
          colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
          stopOnError="false"
          stopOnFailure="false"
          stopOnIncomplete="false"
