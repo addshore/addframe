@@ -96,7 +96,8 @@ while(true){
 		// If the entity is changed try to save it
 		if( $baseEntity->changed === true ){
 			echo "* Saving the entity!\n";
-			$saveResult = $baseEntity->save();
+			$summary = "Adding links from ".$usedPages->getPageWithkey(0)->site->getId()." ".$usedPages->getPageWithkey(0)->title;
+			$saveResult = $baseEntity->save( $summary );
 			// If we get an error try to work around it
 			if( isset ( $saveResult['error']['code'] ) && $saveResult['error']['code'] == 'failed-save' ){
 				$conflicts = array();
@@ -117,7 +118,7 @@ while(true){
 				}
 				$conflicts = array_unique( $conflicts );
 				$log .= "Conflict(".implode(', ', $conflicts).")";
-				$saveResult = $baseEntity->save();
+				$saveResult = $baseEntity->save( $summary );
 			} else {
 				$stathat->stathat_ez_count( "Addbot - Wikidata Edits", 1 );
 			}
