@@ -37,7 +37,7 @@ $redis = new Redis();
 $redis->connect(Globals::$config['redis']['server']);
 $redis->setOption(Redis::OPT_PREFIX, Globals::$config['redis']['prefix']);
 $redis->select(9);
-$redis->delete('iwlink');
+$redis->delete(Globals::$config['redis']['key']);
 
 $count = 0;
 
