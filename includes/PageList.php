@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe;
+
 use Addframe\Page;
 
 /**
