@@ -98,8 +98,10 @@ class Entity extends Page {
 			$param['baserevid'] = $this->lastrevid;
 		}
 		$param['bot'] = '';
+		
 		echo "Saving entity " . $this->id . "\n";
-		return $this->site->requestWbEditEntity( $param );
+		$result = $this->site->requestWbEditEntity( $param );
+		return $result;
 	}
 
 	/**

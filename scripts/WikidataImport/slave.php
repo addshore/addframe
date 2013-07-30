@@ -110,7 +110,7 @@ while(true){
 						//Now remove it
 						$errorUrl = strstr( trim( $errorMessage['parameters']['0'], '/') , '/' , true );
 						$errorSite = $wm->getSite( $errorUrl );
-						if( $errorMessage instanceof Site ){
+						if( $errorSite instanceof Site ){
 							$baseEntity->removeSitelink( $errorSite->getId() );
 						}
 

@@ -267,7 +267,8 @@ class Site {
 		$this->requestLogin();
 		$apiresult = $this->doRequest( array( 'action' => 'query', 'prop' => 'info', 'intoken' => 'edit', 'titles' => 'Main Page' ) );
 		foreach($apiresult['query']['pages'] as $value){
-			return $value['edittoken'];
+			$this->token = $value['edittoken'];
+			return $this->token;
 		}
 	}
 
