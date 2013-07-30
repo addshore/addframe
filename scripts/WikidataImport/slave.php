@@ -72,7 +72,7 @@ while(true){
 	// Try to find an entity to work on
 	/* @var $page Page */
 	echo "* Trying to find an entity to work on!\n";
-	foreach ( $usedPages as $page ) {
+	foreach ( $usedPages->toArray() as $page ) {
 		if ( $page->getEntity() instanceof Entity ) {
 			$baseEntity = $page->getEntity();
 			echo "* Found entity " . $baseEntity->id . "\n";
@@ -85,7 +85,7 @@ while(true){
 		// Add everything to the entity
 		echo "* Adding everything to the entity!\n";
 		$baseEntity->load();
-		foreach ( $usedPages as $page ) {
+		foreach ( $usedPages->toArray() as $page ) {
 			$baseEntity->addSitelink( $page->site->getId(), $page->normaliseTitleNamespace() );
 			//@todo this should only happen for entity site links so should be in a different place
 //			if ( $page->site->getType() == 'wiki' ) {
@@ -128,17 +128,17 @@ while(true){
 
 	// Try to remove links from the article
 	echo "* Removing links from the page!\n";
-	$removed = $usedPages[0]->removeEntityLinksFromText();
+	$removed = $usedPages->getPageWithkey(0)->removeEntityLinksFromText();
 	if ( $removed > 0 ) {
-		$usedPages[0]->save( getLocalSummary( $usedPages[0]->getSite(), $usedPages[0]->getEntity()->id ), true );
+		$usedPages->getPageWithkey(0)->save( getLocalSummary( $usedPages->getPageWithkey(0)->getSite(), $usedPages->getPageWithkey(0)->getEntity()->id ), true );
 		//@todo make sure the edit was a success before posting stats?
 		$stathat->stathat_ez_count( "Addbot - IW Removal - Global Edits", 1 );
 		$stathat->stathat_ez_count( "Addbot - IW Removal - Global Removals", $removed );
 	}
 
 	// Try to update the database
-	$usedPages[0]->getText( true );
-	$remaining = count( $usedPages[0]->getInterwikisFromtext() );
+	$usedPages->getPageWithkey(0)->getText( true );
+	$remaining = count( $usedPages->getPageWithkey(0)->getInterwikisFromtext() );
 	echo "* $remaining interwiki links left on page\n";
 	if( $remaining == 0 ){
 		echo "* Deleting from database\n";
@@ -150,7 +150,7 @@ while(true){
 				'title' => $row['title'])
 		);
 	} else {
-		if( $usedPages[0]->isFullyEditProtected() ){
+		if( $usedPages->getPageWithkey(0)->isFullyEditProtected() ){
 			$log = "Protected()".$log;
 		}
 		echo "* Updating in database\n";

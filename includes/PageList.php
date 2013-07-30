@@ -18,7 +18,7 @@ class PageList {
 	 * @param null|Array|Page $values to be added to the page list at the start
 	 */
 	function __construct( $values = null ) {
-		if ( ! $values === null ){
+		if ( $values !== null ){
 			if( is_array( $values ) ){
 				/* @var $page Page */
 				foreach( $values as $page ){
