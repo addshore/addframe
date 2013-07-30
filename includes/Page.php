@@ -197,7 +197,15 @@ class Page {
 		$text = $this->getText();
 		$pages = array();
 
-		preg_match_all( '/\[\[' . Globals::$regex['sites'] . ':(' . Globals::$regex['langs'] . ':)?([^\]]+?)\]\]/i', $text, $matches );
+		//We do not want to match our own site links so remove these from matches!
+		$sitesArray = Globals::$regex['sites'];
+		$thisTypeArray = array( $this->site->getType() );
+		if( $thisTypeArray[0] == 'wiki' ){
+			$thisTypeArray[] = 'wikipedia';
+		}
+		$sitesArray = array_diff( $sitesArray, $thisTypeArray );
+
+		preg_match_all( '/\n\[\[(' . implode('|',$sitesArray) . '):(' . Globals::$regex['langs'] . ':)?([^\]]+?)\]\]/i', $text, $matches );
 		foreach ( $matches[0] as $key => $match ) {
 			$parts = array();
 

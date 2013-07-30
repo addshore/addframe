@@ -21,7 +21,7 @@ Globals::$regex['langs'] = '(nostalgia|ten|aa|ab|ace|af|ak|als|am|an|ang|ar|arc|
 	'|pnt|ps|pt|qu|rm|rmy|rn|ro|roa-rup|roa-tara|ru|rue|rw|sa|sah|sc|scn|sco|sd|se|sg|sh|si|simple|sk|sl|sm|sn|so|' .
 	'sq|sr|srn|ss|st|stq|su|sv|sw|szl|ta|te|tet|tg|th|ti|tk|tl|tn|to|tpi|tr|ts|tt|tum|tw|ty|udm|ug|uk|ur|ve|vec|vep' .
 	'|vi|vls|vo|wa|war|wo|wuu|xal|xh|xmf|yi|yo|za|zea|zh|zh-classical|zh-min-nan|zh-yue|zu)';
-Globals::$regex['sites'] = '(wikipedia|wiki|wikivoyage)';
+Globals::$regex['sites'] = array( 'wiki','wikipedia','wikivoyage' );
 
 
 /**
