@@ -61,13 +61,12 @@ while(true){
 	$baseSite = $wm->getSiteFromSiteid( $row['lang'] . $row['site'] );
 
 	// Get an array of all pages involved
-	/* @var $usedPages Page[] */
-	$usedPages = array();
-	$usedPages[] = $baseSite->newPageFromTitle( $baseSite->getNamespaceFromId( $row['namespace'] ) . $row['title'] );
-	$usedPages = array_merge( $usedPages, $usedPages[0]->getPagesFromInterwikiLinks() );
-	$usedPages = array_merge( $usedPages, $usedPages[0]->getPagesFromInterprojectLinks() );
-	$usedPages = array_merge( $usedPages, $usedPages[0]->getPagesFromInterprojectTemplates() );
-	//@todo remove duplicate pages (maybe use an PageList?)
+	$usedPages = new PageList(
+		$baseSite->newPageFromTitle( $baseSite->getNamespaceFromId( $row['namespace'] ) . $row['title'] ) );
+	$usedPages->addArray( $usedPages->getPageWithkey(0)->getPagesFromInterwikiLinks() );
+	$usedPages->addArray( $usedPages->getPageWithkey(0)->getPagesFromInterprojectLinks() );
+	$usedPages->addArray( $usedPages->getPageWithkey(0)->getPagesFromInterprojectTemplates() );
+	$usedPages->makeUniqueFromPage();
 
 	// Try to find an entity to work on
 	/* @var $page Page */
