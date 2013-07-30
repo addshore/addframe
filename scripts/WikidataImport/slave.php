@@ -110,7 +110,7 @@ while(true){
 						//Now remove it
 						$errorUrl = strstr( trim( $errorMessage['parameters']['0'], '/') , '/' , true );
 						$errorSite = $wm->getSite( $errorUrl );
-						if( $errorSite instanceof Site ){
+						if( $errorMessage instanceof Site ){
 							$baseEntity->removeSitelink( $errorSite->getId() );
 						}
 
@@ -119,7 +119,9 @@ while(true){
 				$conflicts = array_unique( $conflicts );
 				$log .= "Conflict(".implode(', ', $conflicts).")";
 				$saveResult = $baseEntity->save( $summary );
-			} else {
+			}
+			
+			if( !array_key_exists( 'error', $saveResult ) ){
 				$stathat->stathat_ez_count( "Addbot - Wikidata Edits", 1 );
 			}
 		}
