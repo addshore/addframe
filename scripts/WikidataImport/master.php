@@ -43,7 +43,7 @@ $count = 0;
 
 while(true){
 
-	$group = $db->mysql2array( $db->doQuery("SELECT lang,site from iwlink group by lang,site order by site,lang ASC") );
+	$group = $db->mysql2array( $db->doQuery("SELECT lang,site from iwlink group by lang,site order by updated ASC") );
 
 	foreach( $group as $grp ){
 
