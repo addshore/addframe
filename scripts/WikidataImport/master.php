@@ -43,27 +43,42 @@ $count = 0;
 
 while(true){
 
-	echo "Querying db\n";
-	$dbQuery = $db->select( 'iwlink','*', null, array('ORDER BY' => 'updated ASC', 'LIMIT' => '500' ) );
-	$rows = $db->mysql2array( $dbQuery );
-	if( $rows === false ){
-		die('Empty database?');
-	}
+	$group = $db->mysql2array( $db->doQuery("SELECT lang,site from iwlink group by lang,site order by site,lang ASC") );
 
-	echo "Adding 50 to redis\n";
-	foreach( $rows as $row ){
-		$count++;
-		$redis->lpush(Globals::$config['redis']['key'], json_encode( $row ) );
-	}
+	foreach( $group as $grp ){
 
-	$dbQuery = $db->select( 'iwlink','count(*)', null, null );
-	$rows = $db->mysql2array( $dbQuery );
-	$stathat->stathat_ez_count( "Addbot - IW Removal - Remaining", $rows[0]['count(*)'] );
+		//no flags for these wikis...
+		if($grp['site'] == 'wikivoyage'){
+			$badLangs = array('fr','sv','ro','he','el');
+			foreach( $badLangs as $badLang ){
+				if( $grp['lang'] == $badLang ){
+					continue 2;
+				}
+			}
+		}
 
-	while ( $count > 0){
-		echo "Waiting before we add more, $count in list\n";
-		$count = $redis->lSize(Globals::$config['redis']['key']);
-		sleep(1);
+		echo "Querying db\n";
+		$dbQuery = $db->select( 'iwlink','*', "site = '".$grp['site']."' AND lang = '".$grp['lang']."'", array('ORDER BY' => 'updated ASC' ) );
+		$rows = $db->mysql2array( $dbQuery );
+		if( $rows === false ){
+			die('Empty database?');
+		}
+
+		echo "Adding to redis for site = '".$grp['site']."' AND lang = '".$grp['lang']."'\n";
+		foreach( $rows as $row ){
+			$count++;
+			$redis->lpush(Globals::$config['redis']['key'], json_encode( $row ) );
+		}
+
+		$dbQuery = $db->select( 'iwlink','count(*)', null, null );
+		$rows = $db->mysql2array( $dbQuery );
+		$stathat->stathat_ez_count( "Addbot - IW Removal - Remaining", $rows[0]['count(*)'] );
+
+		while ( $count > 0){
+			echo "Waiting before we add more, $count in list\n";
+			$count = $redis->lSize(Globals::$config['redis']['key']);
+			sleep(1);
+		}
 	}
 
 }
