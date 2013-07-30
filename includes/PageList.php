@@ -2,8 +2,6 @@
 
 namespace Addframe;
 
-use Addframe\Page;
-
 /**
  * Class PageList, Represents a list of pages
  *

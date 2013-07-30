@@ -24,6 +24,7 @@ use Addframe\Family;
 use Addframe\Globals;
 use Addframe\Mysql;
 use Addframe\Page;
+use Addframe\PageList;
 use Addframe\Site;
 use Addframe\Stathat;
 use Addframe\UserLogin;
