@@ -3,31 +3,27 @@
 #The deploy script for the WikidataImport code
 #
 
+#Find the path
 ABSPATH=$(cd "$(dirname "$0")"; pwd)
 
-jstart -mem 512m -N WdIm.m php $ABSPATH/master.php
+#Start the master
+jstart -mem 350m -N WdIm.m php $ABSPATH/master.php
 
-jstart -mem 512m -N WdIm.01 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.02 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.03 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.04 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.05 php $ABSPATH/slave.php
+#Get the limit (default 10)
+limit=$1
+if [[ -z $limit ]] ; then
+	limit=10
+fi
 
-jstart -mem 512m -N WdIm.06 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.07 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.08 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.09 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.10 php $ABSPATH/slave.php
+#If the limit is too high, lower it
+if [ $limit -gt 50 ] ; then
+	limit=10
+else
+	limit=$limit
+fi
 
-
-jstart -mem 512m -N WdIm.11 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.12 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.13 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.14 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.15 php $ABSPATH/slave.php
-
-jstart -mem 512m -N WdIm.16 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.17 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.18 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.19 php $ABSPATH/slave.php
-jstart -mem 512m -N WdIm.20 php $ABSPATH/slave.php
+#Run the slaves
+for (( c=01; c<=limit; c++ ))
+do
+	jstart -mem 350m -N WdIm.$c php $ABSPATH/slave.php
+done
