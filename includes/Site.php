@@ -41,15 +41,21 @@ class Site {
 
 	/**
 	 * @param $url string URL of the api
-	 * @param Family $family Family
+	 * @param Http|null $http
+	 * @param Family|null $family Family
 	 * @throws \Exception
 	 */
-	public function __construct( $url, $family = null ) {
+	public function __construct( $url, Http $http = null , Family $family = null ) {
 		if( empty ( $url ) ){
 			throw new \Exception('Can not construct a site without a url');
 		}
 		$this->url = $url;
-		$this->http = new Http();
+
+		if( ! $http instanceof Http ){
+			$this->http = new Http();
+		} else {
+			$this->http = $http;
+		}
 
 		if ( isset( $family ) ) {
 			$siteDetails = $family->getSiteDetailsFromSiteIndex('url', $url);
