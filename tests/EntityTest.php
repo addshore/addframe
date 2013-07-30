@@ -50,4 +50,30 @@ class EntityTest extends \PHPUnit_Framework_TestCase {
 		return new Entity( $this->getMockSite(), 'q42' );
 	}
 
+	/**
+	 * @dataProvider provideDescriptions
+	 */
+	function testCanAddDescriptions( $values ){
+		$entity = $this->getDefaultEntity();
+		$entity->addDescription( $values['lang'], $values['value'] );
+		$this->assertTrue( isset( $entity->languageData['descriptions'][ $values['lang'] ] ) );
+		$this->assertEquals( array('language' => $values['lang'], 'value' => $values['value']), $entity->languageData['descriptions'][ $values['lang'] ] );
+	}
+
+	function provideDescriptions(){
+		$values = array();
+		$values[] = array( array( 'lang' => 'en', 'value' => 'This is a description' ) );
+		$values[] = array( array( 'lang' => 'zh-min', 'value' => 'And a UTF8 description?' ) );
+		return $values;
+	}
+
+	//@todo test add alias/aliases
+	//@todo test set sitelink
+	//@todo test set description
+	//@todo test set aliases
+	//@todo test remove sitelink
+	//@todo test remove description
+	//@todo test remove aliases
+
+
 }
