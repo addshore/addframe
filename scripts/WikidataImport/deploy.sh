@@ -16,8 +16,8 @@ if [[ -z $limit ]] ; then
 fi
 
 #If the limit is too high, lower it
-if [ $limit -gt 50 ] ; then
-	limit=10
+if [ $limit -gt 16 ] ; then
+	limit=16
 else
 	limit=$limit
 fi
