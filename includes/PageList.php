@@ -29,6 +29,8 @@ class PageList {
 					$this->addPage( $values );
 				}
 			}
+		} else {
+			$this->entries = array();
 		}
 	}
 
