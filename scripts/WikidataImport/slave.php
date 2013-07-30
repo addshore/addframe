@@ -87,9 +87,10 @@ while(true){
 		$baseEntity->load();
 		foreach ( $usedPages as $page ) {
 			$baseEntity->addSitelink( $page->site->getId(), $page->normaliseTitleNamespace() );
-			if ( $page->site->getType() == 'wiki' ) {
-				$baseEntity->addLabel( $page->site->getLanguage(), $page->title );
-			}
+			//@todo this should only happen for entity site links so should be in a different place
+//			if ( $page->site->getType() == 'wiki' ) {
+//				$baseEntity->addLabel( $page->site->getLanguage(), $page->title );
+//			}
 		}
 
 		// If the entity is changed try to save it
