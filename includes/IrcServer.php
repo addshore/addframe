@@ -12,6 +12,7 @@ class IrcServer  {
 	private $host;
 	private $port;
 	private $username;
+	private $readBuffer = array();
 
 	function __construct( $host, $username, $port = 6667, $connect = true ) {
 		$this->host = $host;
@@ -24,7 +25,8 @@ class IrcServer  {
 
 	private function connect() {
 		$this->socket = @fsockopen($this->host, $this->port, $errno, $errstr, 10);
-		$pid = pcntl_fork();
+		//@tothink @todo The PCNTL extension requires *nix platforms.
+		$pid = \pcntl_fork();
 		if( $pid == 0 ){
 			set_time_limit(0);
 
@@ -48,15 +50,23 @@ class IrcServer  {
 	}
 
 	private function addToReadBuffer( $what ) {
-		//@todo add this to the queue of incomming lines
+		$this->readBuffer[] = $what;
 	}
 
 	public function flushReadBuffer(){
-		//@todo flash the read buffer
+		$this->readBuffer = array();
 	}
 
-	private function write( $what ) {
+	public function write( $what ) {
 		@fwrite($this->socket, $what."\r");
+	}
+
+	public function read(){
+		return array_shift( $this->readBuffer );
+	}
+
+	public function joinChannel( $channel ){
+		$this->write("JOIN $channel");
 	}
 
 
