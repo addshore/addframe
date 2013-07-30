@@ -27,7 +27,8 @@ class Entity extends Page {
 
 	function __construct( $site, $id = null, $new = null ) {
 		if ( isset ( $id ) ) {
-			$this->id = $id; //@todo validate  and correct the id (lower case)
+			//todo this is a valid id
+			$this->id = strtolower( $id );
 		}
 		if ( isset( $new ) ) {
 			$this->new = true;
