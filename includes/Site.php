@@ -437,6 +437,7 @@ class Site {
 	}
 
 	public function requestPropCoordinates( $parameters ) {
+		$parameters['coprop'] = 'dim|globe';
 		$parameters['action'] = 'query';
 		$parameters['prop'] = 'coordinates';
 		return $this->doRequest( null, $parameters );

@@ -109,7 +109,19 @@ function getWdCoordFromWiki( $array ) {
 	foreach ( $array as $key => $coord ) {
 		$newArray[$key]['latitude'] = $coord['lat'];
 		$newArray[$key]['longitude'] = $coord['lon'];
-		$newArray[$key]['globe'] = $coord['globe'];
+		if( array_key_exists( 'dim', $coord) ){
+			$newArray[$key]['dimension'] = $coord['dim'];
+		}
+		if( array_key_exists( 'globe', $coord) ){
+			$newArray[$key]['globe'] = $coord['globe'];
+		}
+		$p = max( strlen(substr(strrchr($coord['lat'], "."), 1)), strlen(substr(strrchr($coord['lon'], "."), 1)));
+		if($p > 15 || $p < 1){ return null; }
+		$calc = str_repeat('0',$p);
+		$calc = $calc.str_repeat('9', 15-strlen($calc) );
+		$calc = '0.'.$calc;
+		if( strlen($calc) != 17){ return null; }
+		$newArray[$key]['precision'] = $calc;
 
 		if ( array_key_exists( 'primary', $coord ) ) {
 			return $newArray[$key];
