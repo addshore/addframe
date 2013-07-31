@@ -115,7 +115,7 @@ function getWdCoordFromWiki( $array ) {
 		if( array_key_exists( 'globe', $coord) ){
 			$newArray[$key]['globe'] = $coord['globe'];
 		}
-		$p = max( strlen(substr(strrchr($coord['lat'], "."), 1)), strlen(substr(strrchr($coord['lon'], "."), 1)));
+		$p = min( strlen(substr(strrchr($coord['lat'], "."), 1)), strlen(substr(strrchr($coord['lon'], "."), 1)));
 		if($p > 15 || $p < 1){ return null; }
 		$calc = str_repeat('0',$p);
 		$calc = $calc.str_repeat('9', 15-strlen($calc) );
