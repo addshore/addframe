@@ -17,6 +17,9 @@ require_once( dirname( __FILE__ ) . '/../init.php' );
 $options = getopt("", Array(
 	"site::"
 ));
+if( !array_key_exists( 'site', $options ) ){
+	die("No site specificed");
+}
 
 $stathat = new Stathat( Globals::$config['stathat']['key'] );
 
@@ -40,7 +43,7 @@ while (true){
 
 	echo "#";
 	$list = $db->mysql2array( $db->doQuery("select page_title as title, page_namespace as namespace from geo_tags,page where gt_page_id = page_id limit 100 offset ".$offset) );
-		$offset = $offset + 100;
+	$offset = $offset + 100;
 	if( !count( $list ) > 0 ){
 		die();
 	}
@@ -93,8 +96,8 @@ while (true){
 								$result = $entity->site->requestWbSetReference( array( 'statement' => $result['claim']['id'], 'snaks' => $refJson ) );
 							}
 						}
-						
-					} 
+
+					}
 				}
 
 			}
@@ -107,28 +110,23 @@ function getWdCoordFromWiki( $array ) {
 	$newArray = array();
 
 	foreach ( $array as $key => $coord ) {
+		if ( !array_key_exists( 'primary', $coord ) ) {
+			continue;
+		}
+		if ( !array_key_exists( 'lat', $coord ) ) { continue; }
+		if ( !array_key_exists( 'lon', $coord ) ) { continue; }
+		if ( !array_key_exists( 'dim', $coord ) ) { continue; }
 		$newArray[$key]['latitude'] = $coord['lat'];
 		$newArray[$key]['longitude'] = $coord['lon'];
+		$newArray[$key]['dimension'] = $coord['dim'];
 		if( array_key_exists( 'globe', $coord) ){
 			if( $coord['globe'] != 'earth' ){
 				$newArray[$key]['globe'] = $coord['globe'];
 			}
 		}
-		$p = min( strlen(substr(strrchr($coord['lat'], "."), 1)), strlen(substr(strrchr($coord['lon'], "."), 1)));
-		if($p > 9 || $p < 1){ return null; }
-		$calc = str_repeat('0',$p);
-		$calc = $calc.str_repeat('9', 9-strlen($calc) );
-		$calc = '0.'.$calc;
-		if( strlen($calc) != 11){ return null; }
-		$newArray[$key]['precision'] = (float)$calc;
+		$newArray[$key]['precision'] = rad2deg( $coord['dim'] / ( 6378137 * cos( deg2rad( $coord['lat'] ) ) ) );
 
-		if ( array_key_exists( 'primary', $coord ) ) {
-			return $newArray[$key];
-		}
-	}
-
-	foreach ( $newArray as $toReturn ) {
-		return $toReturn;
+		return $newArray[$key];
 	}
 	return null;
 }
