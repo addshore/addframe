@@ -432,4 +432,29 @@ class Site {
 		return $this->doRequest( null, $parameters );
 	}
 
+	public function requestPropCoordinates( $parameters ) {
+		$parameters['action'] = 'query';
+		$parameters['prop'] = 'coordinates';
+		return $this->doRequest( null, $parameters );
+	}
+
+	public function requestWbGetClaims( $parameters ) {
+		$parameters['action'] = 'wbgetclaims';
+		return $this->doRequest( null, $parameters );
+	}
+
+	public function requestWbCreateClaim( $parameters ) {
+		$parameters['action'] = 'wbcreateclaim';
+		$parameters['token'] = $this->requestEditToken();
+		$parameters['bot'] = '';
+		return $this->doRequest( null, $parameters );
+	}
+
+	public function requestWbSetReference( $parameters ) {
+		$parameters['action'] = 'wbsetreference';
+		$parameters['token'] = $this->requestEditToken();
+		$parameters['bot'] = '';
+		return $this->doRequest( null, $parameters );
+	}
+
 }

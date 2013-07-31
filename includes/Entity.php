@@ -239,4 +239,37 @@ class Entity extends Page {
 		}
 	}
 
+	/**
+	 * @param string $property id of property to filter
+	 * @return mixed
+	 */
+	public function getClaims( $property = nul ) {
+		$params['entity'] = $this->id;
+ 		if( isset( $property ) ){
+			$params['property'] = $property;
+		}
+		$result = $this->site->requestWbGetClaims( $params );
+		return $result['claims'];
+	}
+
+	/**
+	 * @param $snaktype string One value: value, novalue, somevalue
+	 * @param $property string id of property
+	 * @param $value string json value
+	 * @return mixed
+	 */
+	public function createClaim( $snaktype, $property, $value ) {
+		$params['entity'] = $this->id;
+		$params['snaktype'] = $snaktype;
+		if(isset($property)){
+			$params['property'] = $property;
+		}
+		if(isset($value)){
+			$params['value'] = $value;
+		}
+
+		$result = $this->site->requestWbCreateClaim( $params );
+		return $result;
+	}
+
 }

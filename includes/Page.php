@@ -285,6 +285,14 @@ class Page {
 		return $this->categories;
 	}
 
+	public function getCoordinates(){
+		$params['titles'] = $this->title;
+		$result = $this->site->requestPropCoordinates( $params );
+		foreach( $result['query']['pages'] as $page ){
+			return $page['coordinates'];
+		}
+	}
+
 	/**
 	 * @param null $summary string to save the Page with
 	 * @param bool $minor should be minor?
