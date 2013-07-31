@@ -16,6 +16,8 @@ $options = getopt("", Array(
 	"site::"
 ));
 
+$stathat = new Stathat( Globals::$config['stathat']['key'] );
+
 $wm = new Family( new UserLogin( Globals::$config['wikiuser']['username'], Globals::$config['wikiuser']['password'] ), Globals::$config['wikiuser']['home'] );
 $wiki = $wm->getSiteFromSiteid( $options['site'] )
 if( !$wiki instanceof Site){
@@ -76,6 +78,7 @@ while (true){
 						//add the claim
 						$result = $entity->createClaim( 'value', 'p625', json_encode( $ourCoord ) );
 						echo "Added data to ".$entity->id."\n";
+						$stathat->stathat_ez_count( "Addbot - AddGeo", 1 );
 						//if we can find a id for the ref
 						if( array_key_exists( $page->site->getLanguage(), $sources ) ){
 							if ( isset( $result['claim']['id'] ) ) {
