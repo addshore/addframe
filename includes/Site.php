@@ -408,7 +408,7 @@ class Site {
 			$result = $this->requestEdit( $title, $text, $summary, $minor );
 		}
 		if( $this->getLanguage() == 'ja' && $this->getType() == 'wiki' ){
-			sleep(5);
+			sleep(60);
 		}
 		return $result;
 	}
