@@ -4,62 +4,86 @@ namespace Addwiki;
 use Addframe\Entity;
 use Addframe\Family;
 use Addframe\Globals;
+use Addframe\Mysql;
+use Addframe\Page;
 use Addframe\UserLogin;
 
 require_once( dirname( __FILE__ ) . '/../init.php' );
 
 $wm = new Family( new UserLogin( Globals::$config['wikiuser']['username'], Globals::$config['wikiuser']['password'] ), Globals::$config['wikiuser']['home'] );
+$wiki = $wm->getSite( 'en.wikipedia.org' );
 
-$wikidata = $wm->getSite( 'www.wikidata.org' );
+$db = new Mysql(
+	'enwiki.labsdb', '3306',
+	Globals::$config['mysql']['user'],
+	Globals::$config['mysql']['password'],
+	'enwiki_p' );
 
-$listPage = $wikidata->newPageFromTitle( 'User:Addbot/geoimport' );
-$text = $listPage->getText( true );
-$explode = explode( "\n", $text );
-$workOn = $explode[1];
-if($workOn == "<!--This is the bottom of the list-->"){
-	die("Nothing in the list");
-}
-$listPage->removeRegexMatched( '/' . $workOn . '\n/' );
-$listPage->save( "Removing $workOn from list" );
-$explode = explode( ' ', $workOn, 2 );
+echo "Doing database query\n";
+$list = $db->mysql2array( $db->doQuery("select page_title as title, page_namespace as namespace from geo_tags,page where gt_page_id = page_id limit 5") );
 
-$wiki = $wm->getSite( $explode[0] );
-$page = $wiki->newPageFromTitle( $explode[1] );
-echo "Loading page " . $page->title . "\n";
-$entity = $page->getEntity();
-//if it has an entity
-if ( $entity instanceof Entity ) {
-	$entity->id = "Q4115189";
-	//print_r($entity->site->requestWbEditEntity(array('id' => $entity->id, 'clear' => '', 'data' => '{}')));die();
-	echo "Found Entity\n";
-	$startClaims = $entity->getClaims( 'p625' );
-	//if there are no coords already
-	if ( count( $startClaims ) != 1110 ) { // @todo should be if( count($startClaims) == 0 ){
-		$coordArray = $page->getCoordinates();
-		$ourCoord = getWdCoordFromWiki( $coordArray );
-		//if we have a coors
-		if ( is_array( $ourCoord ) ) {
-			echo "Adding coord " . json_encode( $ourCoord ) . "\n";
-			//add the claim
-			$result = $entity->createClaim( 'value', 'p625', json_encode( $ourCoord ) );
-			if ( array_key_exists( 'id', $result['claim'] ) ) {
-				//if we can find a id for the ref
-				$refId = getWikiSource( $page->site->getLanguage() );
-				if ( $refId !== null ) {
-					$ref['snaktype'] = 'value';
-					$ref['property'] = 'p143';
-					$ref['datavalue'] = array( 'type' => 'wikibase-entityid', 'value' => array( 'entity-type' => 'item', 'numeric-id' => intval( trim( $refId, 'Q' ) ) ) );
-					$ref = '{"' . $ref['property'] . '":[' . json_encode( $ref ) . ']}';
-					//add it
-					echo "Adding reference " . $ref . "\n";
-					$result = $entity->site->requestWbSetReference( array( 'statement' => $result['claim']['id'], 'snaks' => $ref ) );
-					print_r( $result );
-				}
+
+foreach($list as $page ){
+	if($page['ns'] != '0'){
+		continue;
+	}
+	$page = $wiki->newPageFromTitle( $page['title'] );
+	if( !$page instanceof Page){
+		continue;
+	}
+
+	echo "Loading page " . $page->title . "\n";
+	$coordArray = $page->getCoordinates();
+	if( is_array( $coordArray ) ){
+		$entity = $page->getEntity();
+		//if it has an entity
+		if ( $entity instanceof Entity ) {
+			$entity->id = "Q4115189";
+			echo "Found Entity ".$entity->id."\n";
+
+			//skip if not a place gnd
+			$gndClaims = $entity->getClaims( 'p107' );
+			if( array_key_exists( 'p107', $gndClaims ) ){
+				$gnd = $gndClaims['p107']['0']['mainsnak']['datavalue']['value']['numeric-id'];
+			} else {
+				$gnd = '';
 			}
-		}
+			if( $gnd !== '618123'){
+				echo "Note correct GND\n";
+				continue;
+			}
 
-	} else {
-		echo "Not adding as already contains " . count( $startClaims ) . " coords\n";
+			$startClaims = $entity->getClaims( 'p625' );
+			//if there are no coords already
+			if( count($startClaims) == 0 ){
+				$ourCoord = getWdCoordFromWiki( $coordArray );
+				//if we have a coors
+				if ( is_array( $ourCoord ) ) {
+					echo "Adding coord " . json_encode( $ourCoord ) . "\n";
+					//add the claim
+					$result = $entity->createClaim( 'value', 'p625', json_encode( $ourCoord ) );
+					if ( array_key_exists( 'id', $result['claim'] ) ) {
+						//if we can find a id for the ref
+						$refId = getWikiSource( $page->site->getLanguage() );
+						if ( $refId !== null ) {
+							$ref['snaktype'] = 'value';
+							$ref['property'] = 'p143';
+							$ref['datavalue'] = array( 'type' => 'wikibase-entityid', 'value' => array( 'entity-type' => 'item', 'numeric-id' => intval( trim( $refId, 'Q' ) ) ) );
+							$ref = '{"' . $ref['property'] . '":[' . json_encode( $ref ) . ']}';
+							//add it
+							echo "Adding reference " . $ref . "\n";
+							$result = $entity->site->requestWbSetReference( array( 'statement' => $result['claim']['id'], 'snaks' => $ref ) );
+							print_r( $result );
+						}
+					}
+				} else {
+					echo "No coord got from the api\n";
+				}
+			} else {
+				echo "Not adding as already contains " . count( $startClaims ) . " coords\n";
+			}
+
+		}
 	}
 }
 

@@ -2,11 +2,26 @@
 
 namespace Addframe;
 
-// @todo think of a better way to load the includes with order in mind so this can be loaded after Page
-/*
 class Category extends Page{
 
-	//@todo get members of this category
+	public function getCategoryMembers( $limit = 5000 ){
+		echo "Getting members of ".$this->title."\n";
+		$returnArray  = array();
+		$params['cmtitle'] = $this->title;
+		$params['cmlimit'] = $limit;
+//		$params['cmtype'] = 'page|subcat';
+		$result = $this->site->requestListCategoryMembers( $params );
+		$returnArray = array_merge( $returnArray, $result['query']['categorymembers'] );
+		foreach( $result['query']['categorymembers'] as $member){
+			if($member['ns'] == '14' ){
+				$innerCat = $this->site->newCategoryFromTitle( $member['title'] );
+				if( $innerCat instanceof Category ){
+					$returnArray = array_merge( $returnArray, $innerCat->getCategoryMembers() );
+				}
+
+			}
+		}
+		return $returnArray;
+	}
 
 }
-*/

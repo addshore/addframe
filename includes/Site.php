@@ -181,6 +181,10 @@ class Site {
 		return new Page( $this, $title );
 	}
 
+	public function newCategoryFromTitle( $title ) {
+		return new Category( $this, $title );
+	}
+
 	/**
 	 * @param $username string
 	 * @return User
@@ -454,6 +458,12 @@ class Site {
 		$parameters['action'] = 'wbsetreference';
 		$parameters['token'] = $this->requestEditToken();
 		$parameters['bot'] = '';
+		return $this->doRequest( null, $parameters );
+	}
+
+	public function requestListCategoryMembers( $parameters ){
+		$parameters['action'] = 'query';
+		$parameters['list'] = 'categorymembers';
 		return $this->doRequest( null, $parameters );
 	}
 

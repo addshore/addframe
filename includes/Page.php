@@ -289,8 +289,11 @@ class Page {
 		$params['titles'] = $this->title;
 		$result = $this->site->requestPropCoordinates( $params );
 		foreach( $result['query']['pages'] as $page ){
-			return $page['coordinates'];
+			if(array_key_exists( 'coordinates', $page )){
+				return $page['coordinates'];
+			}
 		}
+		return null;
 	}
 
 	/**
