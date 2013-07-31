@@ -24,12 +24,12 @@ $offset = 0;
 while (true){
 
 	echo "Doing database query\n";
-	$list = $db->mysql2array( $db->doQuery("select page_title as title, page_namespace as namespace from geo_tags,page where gt_page_id = page_id limit 100 offset".$offset) );
+	$list = $db->mysql2array( $db->doQuery("select page_title as title, page_namespace as namespace from geo_tags,page where gt_page_id = page_id limit 100 offset ".$offset) );
 		$offset = $offset + 100;
 	if( !count( $list ) > 0 ){
 		die();
 	}
-	
+
 	foreach($list as $page ){
 		if($page['namespace'] != '0'){
 			continue;
@@ -45,7 +45,6 @@ while (true){
 			$entity = $page->getEntity();
 			//if it has an entity
 			if ( $entity instanceof Entity ) {
-				$entity->id = "Q4115189";
 				echo "Found Entity ".$entity->id."\n";
 
 				//skip if not a place gnd
@@ -55,8 +54,8 @@ while (true){
 				} else {
 					$gnd = '';
 				}
-				if( $gnd !== '618123'){
-					echo "Note correct GND\n";
+				if( $gnd != '618123'){
+					echo "-Not correct GND\n";
 					continue;
 				}
 
@@ -66,7 +65,7 @@ while (true){
 					$ourCoord = getWdCoordFromWiki( $coordArray );
 					//if we have a coors
 					if ( is_array( $ourCoord ) ) {
-						echo "Adding coord " . json_encode( $ourCoord ) . "\n";
+						echo "+Adding coord " . json_encode( $ourCoord ) . "\n";
 						//add the claim
 						$result = $entity->createClaim( 'value', 'p625', json_encode( $ourCoord ) );
 						if ( array_key_exists( 'id', $result['claim'] ) ) {
@@ -78,16 +77,16 @@ while (true){
 								$ref['datavalue'] = array( 'type' => 'wikibase-entityid', 'value' => array( 'entity-type' => 'item', 'numeric-id' => intval( trim( $refId, 'Q' ) ) ) );
 								$ref = '{"' . $ref['property'] . '":[' . json_encode( $ref ) . ']}';
 								//add it
-								echo "Adding reference " . $ref . "\n";
+								echo "+Adding reference " . $ref . "\n";
 								$result = $entity->site->requestWbSetReference( array( 'statement' => $result['claim']['id'], 'snaks' => $ref ) );
 								print_r( $result );
 							}
 						}
 					} else {
-						echo "No coord got from the api\n";
+						echo "-No coord got from the api\n";
 					}
 				} else {
-					echo "Not adding as already contains " . count( $startClaims ) . " coords\n";
+					echo "-Already contains " . count( $startClaims ) . " coords\n";
 				}
 
 			}
