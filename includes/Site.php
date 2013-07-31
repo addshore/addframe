@@ -394,6 +394,7 @@ class Site {
 		$parameters['title'] = $title;
 		$parameters['text'] = $text;
 		$parameters['bot'] = '';
+		$parameters['maxlag'] = '5';
 		if ( isset( $summary ) ) {
 			$parameters['summary'] = $summary;
 		}
@@ -401,7 +402,12 @@ class Site {
 			$parameters['minor'] = '1';
 		}
 		$parameters['token'] = $this->requestEditToken();
-		return $this->doRequest( null, $parameters );
+		$result = $this->doRequest( null, $parameters );
+		if( array_key_exists( 'error', $result ) && $result['error']['code'] == 'maxlag' ){
+			sleep(5);
+			$result = $this->requestEdit( $title, $text, $summary, $minor );
+		}
+		return $result;
 	}
 
 	public function requestPropRevsions( $parameters ) {
