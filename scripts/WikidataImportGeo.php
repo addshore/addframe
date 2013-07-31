@@ -19,7 +19,7 @@ $options = getopt("", Array(
 $stathat = new Stathat( Globals::$config['stathat']['key'] );
 
 $wm = new Family( new UserLogin( Globals::$config['wikiuser']['username'], Globals::$config['wikiuser']['password'] ), Globals::$config['wikiuser']['home'] );
-$wiki = $wm->getSiteFromSiteid( $options['site'] )
+$wiki = $wm->getSiteFromSiteid( $options['site'] );
 if( !$wiki instanceof Site){
 	die("no such wiki");
 }
