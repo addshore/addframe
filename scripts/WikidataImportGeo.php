@@ -7,6 +7,8 @@ use Addframe\Globals;
 use Addframe\Mysql;
 use Addframe\Page;
 use Addframe\UserLogin;
+use Addframe\Stathat;
+use Addframe\Site;
 
 require_once( dirname( __FILE__ ) . '/../init.php' );
 
@@ -20,15 +22,15 @@ $stathat = new Stathat( Globals::$config['stathat']['key'] );
 
 $wm = new Family( new UserLogin( Globals::$config['wikiuser']['username'], Globals::$config['wikiuser']['password'] ), Globals::$config['wikiuser']['home'] );
 $wiki = $wm->getSiteFromSiteid( $options['site'] );
-if( !$wiki instanceof Site){
-	die("no such wiki");
+if( !$wiki instanceof Site ){
+	die("No such wiki");
 }
 
 $db = new Mysql(
-	$options['site']'.labsdb', '3306',
+	$options['site'].'.labsdb', '3306',
 	Globals::$config['mysql']['user'],
 	Globals::$config['mysql']['password'],
-	$options['site']'_p' );
+	$options['site'].'_p' );
 
 $offset = 0;
 
@@ -36,7 +38,7 @@ $sources = array( 'tr' => "58255", 'lg' => "8566347", 'cy' => "848525", 'sm' => 
 
 while (true){
 
-	echo "Doing database query\n";
+	echo "#";
 	$list = $db->mysql2array( $db->doQuery("select page_title as title, page_namespace as namespace from geo_tags,page where gt_page_id = page_id limit 100 offset ".$offset) );
 		$offset = $offset + 100;
 	if( !count( $list ) > 0 ){
@@ -44,6 +46,7 @@ while (true){
 	}
 
 	foreach($list as $page ){
+		echo ".";
 		if($page['namespace'] != '0'){
 			continue;
 		}
@@ -77,7 +80,7 @@ while (true){
 					if ( is_array( $ourCoord ) ) {
 						//add the claim
 						$result = $entity->createClaim( 'value', 'p625', json_encode( $ourCoord ) );
-						echo "Added data to ".$entity->id."\n";
+						echo $entity->id;
 						$stathat->stathat_ez_count( "Addbot - AddGeo", 1 );
 						//if we can find a id for the ref
 						if( array_key_exists( $page->site->getLanguage(), $sources ) ){
