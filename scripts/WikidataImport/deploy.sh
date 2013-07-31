@@ -7,7 +7,7 @@
 ABSPATH=$(cd "$(dirname "$0")"; pwd)
 
 #Start the master
-jstart -mem 350m -N WdIm.m php $ABSPATH/master.php
+jstart -mem 1G -N WdIm.m php $ABSPATH/master.php
 
 #Get the limit (default 10)
 limit=$1
