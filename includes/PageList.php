@@ -6,6 +6,7 @@ namespace Addframe;
  * Class PageList, Represents a list of pages
  *
  * @author Addshore
+ * @since 0.0.3
  */
 class PageList extends \ArrayObject{
 

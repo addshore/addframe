@@ -3,7 +3,8 @@
 namespace Addframe;
 
 /**
- * This class is designed to represet a User with login details
+ * This class is designed to represent a User with login details
+ * @since 0.0.1
  * @author Addshore
  **/
 

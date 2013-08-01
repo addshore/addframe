@@ -4,6 +4,13 @@ namespace Addframe\Tests;
 
 use Addframe\Entity;
 
+/**
+ *
+ * @since 0.0.3
+ *
+ * @author Addshore
+ */
+
 class EntityTest extends \PHPUnit_Framework_TestCase {
 
 	/**

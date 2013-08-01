@@ -2,6 +2,12 @@
 
 namespace Addframe;
 
+/**
+ * Represents a wiki Category
+ * @since 0.0.3
+ * @author Addshore
+ **/
+
 class Category extends Page{
 
 	public function getCategoryMembers( $limit = 5000 ){

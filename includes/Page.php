@@ -5,6 +5,7 @@ namespace Addframe;
 /**
  * This class is designed to represent a Site Page
  * @author Addshore
+ * @since 0.0.1
  **/
 class Page {
 

@@ -4,6 +4,7 @@ namespace Addframe;
 
 /**
  * This class is designed to represent a Site Wikibase entity
+ * @since 0.0.1
  * @author Addshore
  **/
 class Entity extends Page {

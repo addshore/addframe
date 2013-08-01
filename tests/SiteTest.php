@@ -4,6 +4,13 @@ namespace Addframe\Tests;
 
 use Addframe\Site;
 
+/**
+ *
+ * @since 0.0.2
+ *
+ * @author Addshore
+ */
+
 class SiteTest extends \PHPUnit_Framework_TestCase {
 
 	/**

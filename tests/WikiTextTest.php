@@ -5,6 +5,10 @@ namespace Addframe\Tests;
 use Addframe\WikiText;
 
 /**
+ * @covers Addframe\WikiText
+ *
+ * @since 0.0.3
+ *
  * @author Addshore
  */
 

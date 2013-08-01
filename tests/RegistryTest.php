@@ -4,6 +4,13 @@ namespace Addframe\Tests;
 
 use Addframe\Registry;
 
+/**
+ *
+ * @since 0.0.1
+ *
+ * @author Addshore
+ */
+
 class ReqistryTest extends \PHPUnit_Framework_TestCase {
 
 	function testCanConstructRegistry(){

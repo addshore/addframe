@@ -6,6 +6,10 @@ use Addframe\Page;
 use Addframe\PageList;
 
 /**
+ * @covers Addframe\PageList
+ *
+ * @since 0.0.3
+ *
  * @author Addshore
  */
 

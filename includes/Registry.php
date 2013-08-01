@@ -2,8 +2,10 @@
 
 namespace Addframe;
 
-/*
-*** The registry class
+/**
+ *  The registry class
+ * @since 0.0.1
+ * @author Addshore
 */
 
 use Exception;

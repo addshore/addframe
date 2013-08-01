@@ -1,10 +1,12 @@
 <?php
 /**
- * This file is the main script used for moving information
+ * This file is the master script used for moving information
  * from projects to wikidata
  * @author Addshore
  *
  **/
+
+
 
 use Addframe\Globals;
 use Addframe\Mysql;

@@ -4,6 +4,13 @@ namespace Addframe\Tests;
 
 use Addframe\Family;
 
+/**
+ *
+ * @since 0.0.2
+ *
+ * @author Addshore
+ */
+
 class FamilyTest extends \PHPUnit_Framework_TestCase {
 
 	/**

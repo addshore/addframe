@@ -9,6 +9,9 @@ use Addframe\Page;
 use Addframe\UserLogin;
 use Addframe\Stathat;
 use Addframe\Site;
+/**
+ * @author Addshore
+ */
 
 require_once( dirname( __FILE__ ) . '/../init.php' );
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is the main script used for moving information
+ * This file is the slave script used for moving information
  * from projects to wikidata
  * @author Addshore
  *

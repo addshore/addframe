@@ -5,6 +5,7 @@ namespace Addframe;
 /**
  * This class is designed to represent a mediawiki installation
  * @author Addshore
+ * @since 0.0.1
  **/
 
 class Site {

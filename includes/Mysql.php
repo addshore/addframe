@@ -4,6 +4,8 @@ namespace Addframe;
 
 /**
  * Class Mysql
+ * @since 0.0.1
+ * @author Addshore
  */
 class Mysql {
 	/**

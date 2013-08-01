@@ -2,6 +2,11 @@
 
 namespace Addframe;
 
+/**
+ * @author Stathat.com
+ * @author Addshore
+ **/
+
 class Stathat {
 
 	protected $key;

@@ -4,6 +4,7 @@ namespace Addframe;
 
 /**
  * This class is designed to provide a simplified interface to cURL which maintains cookies.
+ * @since 0.0.1
  * @author Cobi
  * @author Addshore
  **/

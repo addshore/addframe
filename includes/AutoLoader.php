@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @since 0.0.1
+ * @author Addshore
+ **/
+
 class AutoLoader {
 
 	static private $classNames = array();

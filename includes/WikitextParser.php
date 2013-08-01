@@ -2,16 +2,19 @@
 
 namespace Addframe;
 
-/*
-* Whole wikObject_file sourced from http://pastebin.com/0bNNPy0p
-* Created by User:Chris_G
-* 22nd January 2013
+/**
+ * Whole wikObject_file sourced from http://pastebin.com/0bNNPy0p
+ * 22nd January 2013
+ *
+ * @author User:Chris_G
+ * @since 0.0.1
+ */
 
+/*
 ----Usage----
 $p = new parser("PageTitle","WikiText");
 $p->parse();
 print_r($p);
-
 */
 
 class wikObject {

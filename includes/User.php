@@ -4,6 +4,7 @@ namespace Addframe;
 
 /**
  * This class is designed to represet a Site User
+ * @since 0.0.1
  * @author Addshore
  **/
 

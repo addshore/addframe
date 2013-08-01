@@ -4,6 +4,8 @@ namespace Addframe;
 
 /**
  * Class Family for a collection of  mediawiki sites
+ * @since 0.0.1
+ * @author addshore
  */
 class Family extends Registry {
 
