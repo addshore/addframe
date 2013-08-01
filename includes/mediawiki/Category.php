@@ -4,7 +4,7 @@ namespace Addframe;
 
 /**
  * Represents a wiki Category
- * @since 0.0.3
+ * @since 0.0.2
  * @author Addshore
  **/
 

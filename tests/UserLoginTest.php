@@ -7,7 +7,7 @@ use Addframe\UserLogin;
 /**
  * @covers Addframe\UserLogin
  *
- * @since 0.0.3
+ * @since 0.0.2
  *
  * @author Addshore
  */

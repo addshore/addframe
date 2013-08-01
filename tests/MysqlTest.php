@@ -7,7 +7,7 @@ use Addframe\Mysql;
 /**
  * @covers Addframe\Mysql
  *
- * @since 0.0.3
+ * @since 0.0.2
  *
  * @author Addshore
  */
