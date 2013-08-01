@@ -29,7 +29,7 @@ foreach ( $items as $item ) {
 
 	$linkedPages = array();
 	$guessedPages = array();
-	foreach ( $itemOne->languageData['sitelinks'] as $siteid => $value ) {
+	foreach ( $itemOne->getLanguageData('sitelinks') as $siteid => $value ) {
 		$site = $wm->getSiteFromSiteid( $siteid );
 		$page = $site->newPageFromTitle( $value['title'] );
 		$linkedPages = array_merge( $linkedPages, $page->getPagesFromInterprojectLinks() );
@@ -43,7 +43,7 @@ foreach ( $items as $item ) {
 		if ( $itemTwo instanceof Entity ) {
 			$itemTwo->load();
 
-			foreach ( $itemOne->languageData['sitelinks'] as $siteid => $value ) {
+			foreach ( $itemOne->getLanguageData('sitelinks') as $siteid => $value ) {
 				$itemOne->removeSitelink( $siteid );
 				$itemTwo->addSitelink( $siteid, $value['title'] );
 			}
@@ -52,9 +52,9 @@ foreach ( $items as $item ) {
 		}
 	}
 
-	if ( $itemOne->changed && $itemTwo->changed ) {
-		$itemOne->save( 'Merging to ' . $itemTwo->id );
-		$itemTwo->save( 'Adding sitelinks from ' . $itemTwo->id );
+	if ( $itemOne->isChanged() && $itemTwo->isChanged() ) {
+		$itemOne->save( 'Merging to ' . $itemTwo->getId() );
+		$itemTwo->save( 'Adding sitelinks from ' . $itemTwo->getId() );
 	}
 
 }

@@ -11,16 +11,16 @@ class Entity extends Page {
 	/** @var Site site of entity */
 	public $site;
 	/** @var string id of entity */
-	public $id;
+	protected  $id;
 	/** @var boolean is this a new entity? Does it need to be created? */
-	public $new = null;
-	public $lastrevid;
+	protected $new = null;
+	protected $lastrevid;
 	/** @var string type of entity (property|item) */
-	public $entityType;
+	protected $entityType;
 	/** @var array languagedata for the item (alliases|labels|sitelinks) */
-	public $languageData;
+	protected $languageData;
 	/** @var boolean has the item been changed since it was loaded? */
-	public $changed = false;
+	protected $changed = false;
 
 
 	//@todo manipulate statements
@@ -56,6 +56,20 @@ class Entity extends Page {
 		return $this->id;
 	}
 
+	public function getId(){
+		return $this->id;
+	}
+
+	public function getLanguageData( $key = null ){
+		if( $key === null ){
+			return $this->languageData;
+		}
+		return $this->languageData[$key];
+	}
+
+	public function isChanged(){
+		return $this->changed;
+	}
 
 	/**
 	 * Get the entity from the api

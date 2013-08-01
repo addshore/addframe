@@ -12,7 +12,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase {
 	function testCanConstructEntity( $values ){
 		$entity = new Entity( $values[0] , $values[1] , $values[2] );
 		$this->assertTrue( true, 'Unable to construct a  Entity object with a url' );
-		$this->assertEquals( strtolower( $values[1] ), $entity->id );
+		$this->assertEquals( strtolower( $values[1] ), $entity->getId() );
 	}
 
 	function provideValidConstructionValues(){
@@ -34,8 +34,8 @@ class EntityTest extends \PHPUnit_Framework_TestCase {
 	function testCanAddSitelink( $values ){
 		$entity = $this->getDefaultEntity();
 		$entity->addSitelink( $values['site'], $values['title'] );
-		$this->assertTrue( isset( $entity->languageData['sitelinks'][ $values['site'] ] ) );
-		$this->assertEquals( array('site' => $values['site'], 'title' => $values['title']), $entity->languageData['sitelinks'][ $values['site'] ] );
+		$this->assertTrue( isset( $entity->getLanguageData('sitelinks')[ $values['site'] ] ) );
+		$this->assertEquals( array('site' => $values['site'], 'title' => $values['title']), $entity->getLanguageData('sitelinks')[ $values['site'] ] );
 	}
 
 	function provideSitelinks(){
@@ -56,8 +56,8 @@ class EntityTest extends \PHPUnit_Framework_TestCase {
 	function testCanAddDescriptions( $values ){
 		$entity = $this->getDefaultEntity();
 		$entity->addDescription( $values['lang'], $values['value'] );
-		$this->assertTrue( isset( $entity->languageData['descriptions'][ $values['lang'] ] ) );
-		$this->assertEquals( array('language' => $values['lang'], 'value' => $values['value']), $entity->languageData['descriptions'][ $values['lang'] ] );
+		$this->assertTrue( isset( $entity->getLanguageData('descriptions')[ $values['lang'] ] ) );
+		$this->assertEquals( array('language' => $values['lang'], 'value' => $values['value']), $entity->getLanguageData('descriptions')[ $values['lang'] ] );
 	}
 
 	function provideDescriptions(){

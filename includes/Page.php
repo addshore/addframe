@@ -377,7 +377,7 @@ class Page {
 		}
 		$baseEntity->load();
 
-		foreach ( $baseEntity->languageData['sitelinks'] as $sitelink ) {
+		foreach ( $baseEntity->getLanguageData('sitelinks') as $sitelink ) {
 			$site = $this->site->family->getSiteFromSiteid( $sitelink['site'] );
 			if( $site instanceof Site && $this->site->getType() == $site->getType() ){
 				$iwPrefix = $site->getIwPrefix();

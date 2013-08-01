@@ -83,7 +83,7 @@ while (true){
 					if ( is_array( $ourCoord ) ) {
 						//add the claim
 						$result = $entity->createClaim( 'value', 'p625', json_encode( $ourCoord ) );
-						echo $entity->id;
+						echo $entity->getId();
 						$stathat->stathat_ez_count( "Addbot - AddGeo", 1 );
 						//if we can find a id for the ref
 						if( array_key_exists( $page->site->getLanguage(), $sources ) ){

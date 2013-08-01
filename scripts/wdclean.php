@@ -17,7 +17,7 @@ $wikidata->requestLogin();
 for ( $i = 1; $i < 14000000; $i ++ ) {
 	$entity = $wikidata->newEntityFromEntityId( 'q' . $i );
 	$entity->load();
-	foreach ( $entity->languageData as $site => $link ) {
+	foreach ( $entity->getLanguageData() as $site => $link ) {
 		$site = $wm->getSiteFromSiteid( $site );
 		//if the article does not exist
 		//if we have been moved update the sitelink

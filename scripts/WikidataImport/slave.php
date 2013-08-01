@@ -62,7 +62,7 @@ while(true){
 	foreach ( $usedPages->toArray() as $page ) {
 		if ( $page->getEntity() instanceof Entity ) {
 			$baseEntity = $page->getEntity();
-			echo "* Found entity " . $baseEntity->id . "\n";
+			echo "* Found entity " . $baseEntity->getId() . "\n";
 			break;
 		}
 	}
@@ -81,14 +81,14 @@ while(true){
 		}
 
 		// If the entity is changed try to save it
-		if( $baseEntity->changed === true ){
+		if( $baseEntity->isChanged() === true ){
 			echo "* Saving the entity!\n";
 			$summary = "Adding links from ".$usedPages->getPageWithkey(0)->site->getId()." ".$usedPages->getPageWithkey(0)->title;
 			$saveResult = $baseEntity->save( $summary );
 			// If we get an error try to work around it
 			if( isset ( $saveResult['error']['code'] ) && $saveResult['error']['code'] == 'failed-save' ){
 				$conflicts = array();
-				$conflicts[] = $baseEntity->id;
+				$conflicts[] = $baseEntity->getId();
 				foreach( $saveResult['error']['messages'] as $messageKey => $errorMessage ){
 					if( $messageKey == 'html' ){ continue; }
 					if( $errorMessage['name'] == 'wikibase-error-sitelink-already-used' ){
@@ -120,7 +120,7 @@ while(true){
 	echo "* Removing links from the page!\n";
 	$removed = $usedPages->getPageWithkey(0)->removeEntityLinksFromText();
 	if ( $removed > 0 ) {
-		$usedPages->getPageWithkey(0)->save( getLocalSummary( $usedPages->getPageWithkey(0)->getSite(), $usedPages->getPageWithkey(0)->getEntity()->id ), true );
+		$usedPages->getPageWithkey(0)->save( getLocalSummary( $usedPages->getPageWithkey(0)->getSite(), $usedPages->getPageWithkey(0)->getEntity()->getId() ), true );
 		//@todo make sure the edit was a success before posting stats?
 		$stathat->stathat_ez_count( "Addbot - IW Removal - Global Edits", 1 );
 		$stathat->stathat_ez_count( "Addbot - IW Removal - Global Removals", $removed );
