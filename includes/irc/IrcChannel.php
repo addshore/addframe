@@ -23,8 +23,18 @@ class IrcChannel  {
 		return $this->name;
 	}
 
+	public function join( ){
+		$this->server->write("JOIN ".$this->name);
+	}
+
+	public function part( ){
+		$this->server->write("JOIN ".$this->name);
+	}
+
+	public function cycle( ){
+		$this->part();
+		$this->join();
+	}
+
 	//todo send a message
-	//todo part
-	//todo join
-	//todo cycle
 }

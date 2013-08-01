@@ -62,10 +62,9 @@ class IrcServer  {
 		return !feof ( $this->socket );
 	}
 
-	public function joinChannel( $channel ){
-		$this->write("JOIN $channel");
+	public function changeusername( $newUsername ){
+		$this->write("NICK ".$newUsername);
+		$this->username = $newUsername;
 	}
-
-	//todo changename
 
 }
