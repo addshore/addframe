@@ -112,6 +112,7 @@ class Family extends Registry {
 				return $this->getSite( $url );
 			}
 		}
+		return null;
 	}
 
 	/**

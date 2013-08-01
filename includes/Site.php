@@ -261,8 +261,9 @@ class Site {
 
 	/**
 	 * This function returns and edit token from the api
+	 * @throws \Exception
 	 * @return string Edit token.
-	 **/
+	 */
 	public function requestEditToken() {
 		if ( isset( $this->token ) ) {
 			return $this->token;
@@ -273,6 +274,7 @@ class Site {
 			$this->token = $value['edittoken'];
 			return $this->token;
 		}
+		throw new \Exception("Failed to get token");
 	}
 
 	public function requestSitematrix() {
