@@ -93,7 +93,7 @@ while (true){
 								$ref['datavalue'] = array( 'type' => 'wikibase-entityid', 'value' => array( 'entity-type' => 'item', 'numeric-id' => intval( $sources[$page->site->getLanguage()] ) ) );
 								$refJson = '{"' . $ref['property'] . '":[' . json_encode( $ref ) . ']}';
 								//add it
-								$result = $entity->site->requestWbSetReference( array( 'statement' => $result['claim']['id'], 'snaks' => $refJson ) );
+								$entity->site->requestWbSetReference( array( 'statement' => $result['claim']['id'], 'snaks' => $refJson ) );
 							}
 						}
 

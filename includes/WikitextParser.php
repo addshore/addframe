@@ -162,7 +162,6 @@ class parser {
 		$text = $this->attributes['text'];
 		$lines = explode( "\n", $text );
 		$pos = $line_number = 0;
-		$list_number = 0;
 		foreach ( $lines as $line ) {
 			$pos = $pos + strlen( $line ) + 1;
 			$line_number ++;
@@ -271,7 +270,6 @@ class parser {
 
 	public function nowiki() {
 		$text = $this->attributes['text'];
-		$offset = 0;
 		$tags = array();
 		$search = $this->findText( $text, '<nowiki>', '</nowiki>' );
 		foreach ( $search as $found ) {
@@ -282,7 +280,6 @@ class parser {
 
 	public function wikObject_htmlComments() {
 		$text = $this->attributes['text'];
-		$offset = 0;
 		$comments = array();
 		$search = $this->findText( $text, '<!--', '-->' );
 		foreach ( $search as $found ) {
@@ -296,7 +293,6 @@ class parser {
 		$text = $this->attributes['text'];
 		$offset = 0;
 
-		$wikObject_links = array();
 		$ignore = array();
 		while ( true ) {
 			$wikObject_link = array();
@@ -385,7 +381,6 @@ class parser {
 		$text = $this->attributes['text'];
 		$offset = 0;
 
-		$wikObject_links = array();
 		$alpha = str_split( 'abcdefghijklmnopqrstuvwxyz' );
 		while ( true ) {
 			$wikObject_link = array();
