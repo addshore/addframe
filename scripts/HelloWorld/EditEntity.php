@@ -16,7 +16,6 @@ $wm = new Family(
 	new UserLogin( Globals::$config['wikiuser']['username'],
 		Globals::$config['wikiuser']['password'] ), Globals::$config['wikiuser']['home'] );
 
-//$wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 $wikidata = $wm->getSite( 'www.wikidata.org' );
 $sandbox = $wikidata->newEntityFromEntityId( 'q4115189' );
 $sandbox->addAlias( 'en', "This is a new Alias" );
