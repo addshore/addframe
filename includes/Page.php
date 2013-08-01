@@ -12,9 +12,8 @@ class Page {
 	public $site;
 	/** @var string title of Page including namespace */
 	public $title;
-
-	/** @var string text of Page */
-	protected $text;
+	/** @var WikiText Wikitext for page */
+	public $wikiText;
 	/** @var string pageid for Page */
 	protected $pageid;
 	/** @var string namespace id number eg. 2 */
@@ -64,10 +63,10 @@ class Page {
 	 * @return string
 	 */
 	public function getText( $force = false) {
-		if( $this->text == null || $force == true ){
-			$this->text = $this->getSite()->getPageTextFromPageTitle( $this->title );
+		if( $this->wikiText->getText() == null || $force == true ){
+			$this->wikiText->setText( $this->getSite()->getPageTextFromPageTitle( $this->title ) );
 		}
-		return $this->text;
+		return $this->wikiText->getText();
 	}
 
 	/**
@@ -307,63 +306,6 @@ class Page {
 	}
 
 	/**
-	 * @param $text string to append to $text
-	 * @param bool $save
-	 */
-	public function appendText( $text , $save = false) {
-		$this->text = $this->getText() . $text;
-		if( $save === true ){
-			$this->save("Appending: $text", true);
-		}
-	}
-
-	/**
-	 * @param $text string to prepend to $text
-	 * @param bool $save
-	 */
-	public function prependText( $text , $save = false) {
-		$this->text = $text . $this->getText();
-		if( $save === true ){
-			$this->save("Prepending: $text", true);
-		}
-	}
-
-	/**
-	 * Empties the text of the page
-	 */
-	public function emptyText() {
-		$this->text = "";
-	}
-
-	/**
-	 * Find a string
-	 * @param $string string The string that you want to find.
-	 * @return bool value (1 found and 0 not-found)
-	 **/
-	public function findString( $string ) {
-		if ( strstr( $this->getText(), $string ) )
-			return 1; else
-			return 0;
-	}
-
-	/**
-	 * Replace a string
-	 * @param $string string The string that you want to replace.
-	 * @param $newstring string The string that will replace the present string.
-	 */
-	public function replaceString( $string, $newstring ) {
-		$this->text = str_replace( $string, $newstring, $this->getText() );
-	}
-
-	public function pregReplace( $patern, $replacment ) {
-		$this->text = preg_replace( $patern, $replacment, $this->getText() );
-	}
-
-	public function removeRegexMatched( $patern ) {
-		$this->pregReplace( $patern, '' );
-	}
-
-	/**
 	 * Gets the entity for the article and removes all possible interwiki links
 	 * from the page text.
 	 */
@@ -401,10 +343,10 @@ class Page {
 						$iwPrefix = '(nb|no)';
 					}
 
-					$lengthBefore = strlen( $this->text );
+					$lengthBefore = $this->wikiText->getLength();
 					$removeLink = '/\n ?\[\[' . $iwPrefix . ' ?: ?' . str_replace( ' ', '( |_)', preg_quote( $titleVarient, '/' ) ) . ' ?\]\] ?/';
-					$this->removeRegexMatched( $removeLink );
-					if ( $lengthBefore > strlen( $this->text ) ) {
+					$this->wikiText->removeRegexMatched( $removeLink );
+					if ( $lengthBefore > $this->wikiText->getLength() ) {
 						$counter = $counter + 1;
 						echo "Removed link! $iwPrefix:$titleVarient\n";
 					}
@@ -417,14 +359,14 @@ class Page {
 
 			if( $this->getNsid() == 10 ){
 				//Remove empty no include tags
-				$this->removeRegexMatched('/<noinclude>\s+?<\/noinclude>/');
+				$this->wikiText->removeRegexMatched('/<noinclude>\s+?<\/noinclude>/');
 			}
 
-		$this->removeRegexMatched('/<!-- ?(interwikis?( links?)?|other (wiki|language)s?) ?-->/i');
+			$this->wikiText->removeRegexMatched('/<!-- ?(interwikis?( links?)?|other (wiki|language)s?) ?-->/i');
 
 		//Remove extra space we might have left at the end
-		$this->pregReplace( '/(\n\n)\n+$/', "$1" );
-		$this->pregReplace( '/^(\n|\r){0,5}$/', "" );
+		$this->wikiText->pregReplace( '/(\n\n)\n+$/', "$1" );
+		$this->wikiText->pregReplace( '/^(\n|\r){0,5}$/', "" );
 
 		}
 

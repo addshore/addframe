@@ -18,6 +18,6 @@ $wm = new Family(
 
 $enwiki = $wm->getSite( 'en.wikipedia.org' );
 $sandbox = $enwiki->newPageFromTitle( 'Wikipedia:Sandbox' );
-$sandbox->appendText( 'This is a simple edit to this page!' );
+$sandbox->wikiText->appendText( "\nThis is a simple edit to this page!" );
 $sandbox->save( 'This is a simply summary');
 
