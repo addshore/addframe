@@ -4,6 +4,9 @@ namespace Addframe;
 
 /**
  * Class IrcServer
+ *
+ * @since 0.0.2
+ * @author Addshore
  */
 
 class IrcServer  {
@@ -12,7 +15,6 @@ class IrcServer  {
 	private $host;
 	private $port;
 	private $username;
-	private $readBuffer = array();
 
 	function __construct( $host, $username, $port = 6667, $connect = true ) {
 		$this->host = $host;
@@ -31,23 +33,9 @@ class IrcServer  {
 
 			while( !feof ( $this->socket ) ){
 				$read = str_replace(array("\n","\r"),'',fgets($this->socket, 1024)); //get a line of data from the server
-				$parts = explode(' ',$read);
-
-				if (strtolower($parts[0]) == 'ping') {
-					$this->write("PONG :".substr($read, 6)); //Reply with pong
-				} elseif (strtolower($parts[1]) == 'privmsg') {
-					$this->addToReadBuffer( $read );
-				}
+				//todo, if threads are enabled we can fork one for Ping and Pong here
 			}
 		}
-	}
-
-	private function addToReadBuffer( $what ) {
-		$this->readBuffer[] = $what;
-	}
-
-	public function flushReadBuffer(){
-		$this->readBuffer = array();
 	}
 
 	public function write( $what ) {
@@ -55,7 +43,23 @@ class IrcServer  {
 	}
 
 	public function read(){
-		return array_shift( $this->readBuffer );
+		$read = str_replace(array("\n","\r"),'',fgets($this->socket, 1024));
+		$parts = explode(' ',$read);
+		if (strtolower($parts[0]) == 'ping') {
+			$this->pong( $read );
+		} elseif (strtolower($parts[1]) == 'privmsg') {
+			return $read;
+		}
+		return $this->read();
+	}
+
+	public function pong( $read ){
+		//todo, does this actually need $read?
+		$this->write("PONG :".substr($read, 6));
+	}
+
+	public function isConnected(){
+		return !feof ( $this->socket );
 	}
 
 	public function joinChannel( $channel ){
