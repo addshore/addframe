@@ -32,9 +32,10 @@ class Mysql {
 	 * @param $user string User for server
 	 * @param $pass string Password for user
 	 * @param $db string Database to connect to
+	 * @param bool $connect
 	 * @param bool $readonly
 	 */
-	public function __construct( $host, $port = '3306', $user, $pass, $db, $readonly = false ) {
+	public function __construct( $host, $port = '3306', $user, $pass, $db, $connect = true, $readonly = false ) {
 		$this->mHost = $host;
 		$this->mPort = $port;
 		$this->mUser = $user;
@@ -42,28 +43,43 @@ class Mysql {
 		$this->mDb = $db;
 		$this->mReadonly = $readonly;
 
-		$this->connectToServer();
+		if( $connect ){
+			$this->connect();
+		}
 	}
 
 	/**
 	 * @param bool $force
 	 */
-	private function connectToServer( $force = false ) {
-		$this->mConn = mysql_connect( $this->mHost.':'.$this->mPort, $this->mUser, $this->mPass, $force );
-		mysql_query("SET character_set_results = 'utf8',".
-			" character_set_client = 'utf8', character_set_connection = 'utf8',".
-			" character_set_database = 'utf8', character_set_server = 'utf8'", $this->mConn);
-		mb_language('uni');
-		mb_internal_encoding('UTF-8');
-		mysql_select_db( $this->mDb, $this->mConn );
+	public function connect( $force = false ) {
+		if( !isset( $this->mConn ) ){
+			$this->mConn = mysql_connect( $this->mHost.':'.$this->mPort, $this->mUser, $this->mPass, $force );
+			mysql_query("SET character_set_results = 'utf8',".
+				" character_set_client = 'utf8', character_set_connection = 'utf8',".
+				" character_set_database = 'utf8', character_set_server = 'utf8'", $this->mConn);
+			mb_language('uni');
+			mb_internal_encoding('UTF-8');
+			mysql_select_db( $this->mDb, $this->mConn );
+		}
 	}
 
 	/**
-	 * Destruct function, front-end for mysql_close.
+	 * If we are connected, disconnect
+	 * @return void
+	 */
+	public function disconnect(){
+		if( isset( $this->mConn ) ){
+			mysql_close( $this->mConn );
+			unset( $this->mConn );
+		}
+	}
+
+	/**
+	 * Destruct function
 	 * @return void
 	 */
 	public function __destruct() {
-		mysql_close( $this->mConn );
+		$this->disconnect();
 	}
 
 	/**
@@ -78,7 +94,7 @@ class Mysql {
 		$result = mysql_query( $sql, $this->mConn );
 		//var_dump($result);
 		if ( mysql_errno( $this->mConn ) == 2006 ) {
-			$this->connectToServer( true );
+			$this->connect( true );
 			$result = mysql_query( $sql, $this->mConn );
 		}
 

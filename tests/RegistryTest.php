@@ -5,6 +5,7 @@ namespace Addframe\Tests;
 use Addframe\Registry;
 
 /**
+ * @covers Addframe\Registry
  *
  * @since 0.0.1
  *
