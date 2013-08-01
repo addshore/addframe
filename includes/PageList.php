@@ -7,74 +7,45 @@ namespace Addframe;
  *
  * @author Addshore
  */
-class PageList {
+class PageList extends \ArrayObject{
 
 	/**
-	 * @var array The pages in the list
+	 * @param null|Array|Page $value to be added to the page list at the start
 	 */
-	protected $entries;
-
-	/**
-	 * @param null|Array|Page $values to be added to the page list at the start
-	 */
-	function __construct( $values = null ) {
-		if ( $values !== null ){
-			if( is_array( $values ) ){
+	function __construct( $value = null ) {
+		if ( $value !== null ){
+			if( is_array( $value ) ){
 				/* @var $page Page */
-				foreach( $values as $page ){
-					$this->addPage( $page );
+				foreach( $value as $page ){
+					$this[] = $page;
 				}
 			} else {
-				if( $values instanceof Page ){
-					$this->addPage( $values );
+				if( $value instanceof Page ){
+					$this[] = $value;
 				}
 			}
-		} else {
-			$this->entries = array();
-		}
-	}
-
-	public function toArray (){
-		return $this->entries;
-	}
-
-	public function addPage( $page ) {
-		$this->entries[] = $page;
-	}
-
-	public function addArray( $pages ){
-		foreach( $pages as $page ){
-			$this->addPage( $page );
-		}
-	}
-
-	private function removeKey( $key ) {
-		if( array_key_exists( $key, $this->entries ) ){
-			unset( $this->entries[$key] );
 		}
 	}
 
 	/**
-	 * @param $key
-	 * @return Page
+	 * @param $pages Page[]
 	 */
-	public function getPageWithkey( $key ){
-		if( array_key_exists( $key, $this->entries ) ){
-			return $this->entries[$key];
+	public function appendArray( $pages ){
+		foreach( $pages as $page ){
+			$this[] = $page ;
 		}
-		return null;
 	}
 
 	/**
 	 * This makes the list unique using sitelang, sitetype and title(en,wiki,Wikipedia:Sandbox)
 	 */
-	public function makeUniqueFromPage( ){
+	public function makeUniqueUsingPageDetails( ){
 		$index = array();
 		/* @var $page Page */
-		foreach( $this->entries as $key => $page ){
-			$sig = array( $page->title, $page->site->getLanguage(), $page->site->getType() );
+		foreach( $this->getArrayCopy() as $key => $page ){
+			$sig = array( $page->getTitle(), $page->site->getLanguage(), $page->site->getType() );
 			if( in_array( $sig , $index ) ){
-				$this->removeKey( $key );
+				$this->offsetUnset( $key );
 			} else {
 				$index[] = $sig;
 			}
@@ -84,13 +55,13 @@ class PageList {
 	/**
 	 * This makes the list unique using sitelang and sitetype (en,wiki)
 	 */
-	public function makeUniqueFromSite( ){
+	public function makeUniqueUsingSiteDetails( ){
 		$index = array();
 		/* @var $page Page */
-		foreach( $this->entries as $key => $page ){
+		foreach( $this->getArrayCopy() as $key => $page ){
 			$sig = array( $page->site->getLanguage(), $page->site->getType() );
 			if( in_array( $sig , $index ) ){
-				$this->removeKey( $key );
+				$this->offsetUnset( $key );
 			} else {
 				$index[] = $sig;
 			}

@@ -51,15 +51,15 @@ while(true){
 	// Get an array of all pages involved
 	$usedPages = new PageList(
 		$baseSite->newPageFromTitle( $baseSite->getNamespaceFromId( $row['namespace'] ) . $row['title'] ) );
-	$usedPages->addArray( $usedPages->getPageWithkey(0)->getPagesFromInterwikiLinks() );
-	$usedPages->addArray( $usedPages->getPageWithkey(0)->getPagesFromInterprojectLinks() );
-	$usedPages->addArray( $usedPages->getPageWithkey(0)->getPagesFromInterprojectTemplates() );
-	$usedPages->makeUniqueFromPage();
+	$usedPages->appendArray( $usedPages->offsetGet(0)->getPagesFromInterwikiLinks() );
+	$usedPages->appendArray( $usedPages->offsetGet(0)->getPagesFromInterprojectLinks() );
+	$usedPages->appendArray( $usedPages->offsetGet(0)->getPagesFromInterprojectTemplates() );
+	$usedPages->makeUniqueUsingPageDetails();
 
 	// Try to find an entity to work on
 	/* @var $page Page */
 	echo "* Trying to find an entity to work on!\n";
-	foreach ( $usedPages->toArray() as $page ) {
+	foreach ( $usedPages as $page ) {
 		if ( $page->getEntity() instanceof Entity ) {
 			$baseEntity = $page->getEntity();
 			echo "* Found entity " . $baseEntity->getId() . "\n";
@@ -72,7 +72,7 @@ while(true){
 		// Add everything to the entity
 		echo "* Adding everything to the entity!\n";
 		$baseEntity->load();
-		foreach ( $usedPages->toArray() as $page ) {
+		foreach ( $usedPages as $page ) {
 			$baseEntity->addSitelink( $page->site->getId(), $page->normaliseTitleNamespace() );
 			//@todo this should only happen for entity site links so should be in a different place
 //			if ( $page->site->getType() == 'wiki' ) {
@@ -83,7 +83,7 @@ while(true){
 		// If the entity is changed try to save it
 		if( $baseEntity->isChanged() === true ){
 			echo "* Saving the entity!\n";
-			$summary = "Adding links from ".$usedPages->getPageWithkey(0)->site->getId()." ".$usedPages->getPageWithkey(0)->title;
+			$summary = "Adding links from ".$usedPages->offsetGet(0)->site->getId()." ".$usedPages->offsetGet(0)->title;
 			$saveResult = $baseEntity->save( $summary );
 			// If we get an error try to work around it
 			if( isset ( $saveResult['error']['code'] ) && $saveResult['error']['code'] == 'failed-save' ){
@@ -118,17 +118,17 @@ while(true){
 
 	// Try to remove links from the article
 	echo "* Removing links from the page!\n";
-	$removed = $usedPages->getPageWithkey(0)->removeEntityLinksFromText();
+	$removed = $usedPages->offsetGet(0)->removeEntityLinksFromText();
 	if ( $removed > 0 ) {
-		$usedPages->getPageWithkey(0)->save( getLocalSummary( $usedPages->getPageWithkey(0)->getSite(), $usedPages->getPageWithkey(0)->getEntity()->getId() ), true );
+		$usedPages->offsetGet(0)->save( getLocalSummary( $usedPages->offsetGet(0)->getSite(), $usedPages->offsetGet(0)->getEntity()->getId() ), true );
 		//@todo make sure the edit was a success before posting stats?
 		$stathat->stathat_ez_count( "Addbot - IW Removal - Global Edits", 1 );
 		$stathat->stathat_ez_count( "Addbot - IW Removal - Global Removals", $removed );
 	}
 
 	// Try to update the database
-	$usedPages->getPageWithkey(0)->getText( true );
-	$remaining = count( $usedPages->getPageWithkey(0)->getInterwikisFromtext() );
+	$usedPages->offsetGet(0)->getText( true );
+	$remaining = count( $usedPages->offsetGet(0)->getInterwikisFromtext() );
 	echo "* $remaining interwiki links left on page\n";
 	if( $remaining == 0 ){
 		echo "* Deleting from database\n";
@@ -140,7 +140,7 @@ while(true){
 				'title' => $row['title'])
 		);
 	} else {
-		if( $usedPages->getPageWithkey(0)->isFullyEditProtected() ){
+		if( $usedPages->offsetGet(0)->isFullyEditProtected() ){
 			$log = "Protected()".$log;
 		}
 		echo "* Updating in database\n";
