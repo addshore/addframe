@@ -36,10 +36,6 @@ class Site {
 	/** @var UserLogin */
 	protected $userlogin;
 
-	public function setLogin( $userLogin ) {
-		$this->userlogin = $userLogin;
-	}
-
 	/**
 	 * @param $url string URL of the api
 	 * @param Http|null $http
@@ -66,6 +62,10 @@ class Site {
 			}
 			$this->family = $family;
 		}
+	}
+
+	public function setLogin( $userLogin ) {
+		$this->userlogin = $userLogin;
 	}
 
 	public function getUserLogin(){

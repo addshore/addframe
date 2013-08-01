@@ -16,16 +16,16 @@ class SiteTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider provideValidConstructionValues
 	 */
-	function testCanConstructFamily( $values ){
-		new Site( $values[0], $values[1], $values[2] );
+	function testCanConstructFamily( $url, $http, $family ){
+		new Site( $url, $http, $family );
 		$this->assertTrue( true, 'Unable to construct a Site object with a url' );
 	}
 
 	function provideValidConstructionValues(){
 		return array(
-			array( array( 'localhost', null , null ) ),
-			array( array( 'localhost', $this->getMock('Addframe\Http') , null ) ),
-			array( array( 'en.wikipedia.org', $this->getMock('Addframe\Http') , $this->getMockFamilyForConstruction() ) ),
+			array( 'localhost', null , null ),
+			array( 'localhost', $this->getMock('Addframe\Http') , null ),
+			array( 'en.wikipedia.org', $this->getMock('Addframe\Http') , $this->getMockFamilyForConstruction() ),
 		);
 	}
 
@@ -40,26 +40,26 @@ class SiteTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider provideInvalidConstructionValues
 	 */
-	function testCanNotConstructFamilyWithEmptyUrl( $values  ){
+	function testCanNotConstructFamilyWithEmptyUrl( $url, $http  ){
 		$this->setExpectedException('Exception', 'Can not construct a site without a url');
-		new Site( $values[0], $values[1] );
+		new Site( $url, $http );
 	}
 
 	function provideInvalidConstructionValues(){
 		return array(
-			array( array( '', null , null ) ),
-			array( array( '', $this->getMockHttp() , null ) ),
-			array( array( '', $this->getMockHttp() ,$this->getMockFamilyForConstruction() ) ),
-			array( array( '', null ,$this->getMockFamilyForConstruction() ) ),
+			array( '', null , null ),
+			array( '', $this->getMockHttp() , null ),
+			array( '', $this->getMockHttp() ,$this->getMockFamilyForConstruction() ),
+			array( '', null ,$this->getMockFamilyForConstruction() ),
 		);
 	}
 
 	/**
 	 * @dataProvider provideRequestApiUrlData
 	 */
-	function testGetApiUrl( $values ){
-		$site = new Site( 'localhost', $this->getMockHttp( $values[1] ) );
-		$this->assertEquals( $values[0], $site->getApiUrl() );
+	function testGetApiUrl( $apiUrl, $pretendHtml ){
+		$site = new Site( 'localhost', $this->getMockHttp( $pretendHtml ) );
+		$this->assertEquals( $apiUrl, $site->getApiUrl() );
 	}
 
 	function provideRequestApiUrlData(){
@@ -76,7 +76,7 @@ class SiteTest extends \PHPUnit_Framework_TestCase {
 
 		$toReturn = array();
 		foreach( $apiLocations as $apiUrl ){
-			$toReturn[] = array ( array( $apiUrl, array( 0 => $before.$apiUrl.$after ) ) );
+			$toReturn[] = array( $apiUrl, array( 0 => $before.$apiUrl.$after ) );
 		}
 
 		return $toReturn;
@@ -90,6 +90,18 @@ class SiteTest extends \PHPUnit_Framework_TestCase {
 			$http->expects( $this->at( $key ) )->method( 'post' )->will( $this->returnValue( $return ) );
 		}
 		return $http;
+	}
+
+	function testSetUserLoginGetUserLoginRoundtrip(){
+		$mockLogin = $this->getMock( 'Addframe\UserLogin', array(), array('username','password') );
+		$site = $this->getDefaultSite();
+		$site->setLogin( $mockLogin );
+		$this->assertEquals( $mockLogin, $site->getUserLogin(), 'Cannot assert login was set correctly' );
+
+	}
+
+	function getDefaultSite(){
+		return new Site('localhost');
 	}
 
 }

@@ -16,25 +16,16 @@ class FamilyTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider provideValidConstructionValues
 	 */
-	function testCanConstructFamily( $values ){
-		new Family( $values[0], $values[1] );
+	function testCanConstructFamily( $login, $homeurl ){
+		new Family( $login, $homeurl );
 		$this->assertTrue( true, 'Unable to construct a Family object' );
 	}
 
 	function provideValidConstructionValues(){
 		return array(
-			array( array( null, null ) ),
-			array( array( $this->getMockUserLogin(), null) ),
+			array(  null, null ),
+			array(  $this->getMockBuilder( 'Addframe\UserLogin' )->disableOriginalConstructor()->getMock(), null),
 			//@todo test with url
 		);
 	}
-
-	function getMockUserLogin(){
-		return $this->getMockBuilder( 'Addframe\UserLogin' )
-			->disableOriginalConstructor()->getMock()
-			->expects( $this->any() )
-			->method( 'getPassword' )
-			->will( $this->returnValue( 'password' ) );
-	}
-
 }

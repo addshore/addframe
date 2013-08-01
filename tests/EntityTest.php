@@ -16,17 +16,17 @@ class EntityTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider provideValidConstructionValues
 	 */
-	function testCanConstructEntity( $values ){
-		$entity = new Entity( $values[0] , $values[1] , $values[2] );
+	function testCanConstructEntity( $site, $id, $new ){
+		$entity = new Entity( $site , $id , $new );
 		$this->assertTrue( true, 'Unable to construct a  Entity object with a url' );
-		$this->assertEquals( strtolower( $values[1] ), $entity->getId() );
+		$this->assertEquals( strtolower( $id ), $entity->getId() );
 	}
 
 	function provideValidConstructionValues(){
 		$values = array();
-		$values[] = array( array( $this->getMockSite(), null , null ) );
-		$values[] = array( array( $this->getMockSite(), 'q42' , null ) );
-		$values[] = array( array( $this->getMockSite(), 'Q100' , null ) );
+		$values[] = array( $this->getMockSite(), null , null );
+		$values[] = array( $this->getMockSite(), 'q42' , null );
+		$values[] = array( $this->getMockSite(), 'Q100' , null );
 			//@todo add testing for new entities once implemented
 		return $values;
 	}
@@ -38,19 +38,19 @@ class EntityTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider provideSitelinks
 	 */
-	function testCanAddSitelink( $values ){
+	function testCanAddSitelink( $site, $title ){
 		$entity = $this->getDefaultEntity();
-		$entity->addSitelink( $values['site'], $values['title'] );
+		$entity->addSitelink( $site, $title );
 		$sitelinks = $entity->getLanguageData('sitelinks');
-		$this->assertTrue( isset( $sitelinks[ $values['site'] ] ) );
-		$this->assertEquals( array('site' => $values['site'], 'title' => $values['title']), $sitelinks[ $values['site'] ] );
+		$this->assertTrue( isset( $sitelinks[ $site ] ) );
+		$this->assertEquals( array('site' => $site, 'title' => $title), $sitelinks[ $site ] );
 	}
 
 	function provideSitelinks(){
 		$values = array();
-		$values[] = array( array( 'site' => 'enwiki', 'title' => 'Wikipedia:Sandbox' ) );
-		$values[] = array( array( 'site' => 'ptwikivoyage', 'title' => 'RegularArticle' ) );
-		$values[] = array( array( 'site' => 'zh_minwiki', 'title' => 'M' ) );
+		$values[] = array( 'enwiki', 'Wikipedia:Sandbox' );
+		$values[] = array( 'ptwikivoyage', 'RegularArticle' );
+		$values[] = array( 'zh_minwiki', 'M' );
 		return $values;
 	}
 
@@ -61,18 +61,18 @@ class EntityTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider provideDescriptions
 	 */
-	function testCanAddDescriptions( $values ){
+	function testCanAddDescriptions( $lang, $description ){
 		$entity = $this->getDefaultEntity();
-		$entity->addDescription( $values['lang'], $values['value'] );
+		$entity->addDescription( $lang, $description );
 		$descriptions = $entity->getLanguageData('descriptions');
-		$this->assertTrue( isset( $descriptions[ $values['lang'] ] ) );
-		$this->assertEquals( array('language' => $values['lang'], 'value' => $values['value']), $descriptions[ $values['lang'] ] );
+		$this->assertTrue( isset( $descriptions[ $lang ] ) );
+		$this->assertEquals( array('language' => $lang, 'value' => $description), $descriptions[ $lang ] );
 	}
 
 	function provideDescriptions(){
 		$values = array();
-		$values[] = array( array( 'lang' => 'en', 'value' => 'This is a description' ) );
-		$values[] = array( array( 'lang' => 'zh-min', 'value' => 'And a UTF8 description?' ) );
+		$values[] =  array( 'en', 'This is a description' );
+		$values[] =  array( 'zh-min', 'And a UTF8 description?' );
 		return $values;
 	}
 
