@@ -393,7 +393,14 @@ class Page {
 					} else {
 						$titleVarient = $titleEnd;
 					}
-					//@todo remember (zh-min-nan|nan) and (nb|no) (they are the same site)
+
+					//@todo this code is wikimedia specific
+					if( $iwPrefix == 'zh-min-nan' || $iwPrefix == 'nan' ){
+						$iwPrefix = '(zh-min-nan|nan)';
+					} else if ( $iwPrefix == 'no' || $iwPrefix = 'nb'){
+						$iwPrefix = '(nb|no)';
+					}
+
 					$lengthBefore = strlen( $this->text );
 					$removeLink = '/\n ?\[\[' . $iwPrefix . ' ?: ?' . str_replace( ' ', '( |_)', preg_quote( $titleVarient, '/' ) ) . ' ?\]\] ?/';
 					$this->removeRegexMatched( $removeLink );
