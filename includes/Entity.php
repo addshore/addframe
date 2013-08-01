@@ -257,7 +257,7 @@ class Entity extends Page {
 	 * @param string $property id of property to filter
 	 * @return mixed
 	 */
-	public function getClaims( $property = nul ) {
+	public function getClaims( $property = null ) {
 		$params['entity'] = $this->id;
  		if( isset( $property ) ){
 			$params['property'] = $property;

@@ -150,7 +150,6 @@ class Site {
 		$result = $this->requestPropRevsions( $param );
 
 		foreach ( $result['query']['pages'] as $x ) {
-			$this->nsid=  $x['ns'];
 			if ( ! isset( $x['missing'] ) ) {
 				if( isset( $x['revisions']['0']['*'] ) ){
 					return $x['revisions']['0']['*'];
