@@ -66,5 +66,6 @@ class IrcServer  {
 		$this->write("JOIN $channel");
 	}
 
+	//todo changename
 
 }
