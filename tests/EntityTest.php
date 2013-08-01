@@ -34,8 +34,9 @@ class EntityTest extends \PHPUnit_Framework_TestCase {
 	function testCanAddSitelink( $values ){
 		$entity = $this->getDefaultEntity();
 		$entity->addSitelink( $values['site'], $values['title'] );
-		$this->assertTrue( isset( $entity->getLanguageData('sitelinks')[ $values['site'] ] ) );
-		$this->assertEquals( array('site' => $values['site'], 'title' => $values['title']), $entity->getLanguageData('sitelinks')[ $values['site'] ] );
+		$sitelinks = $entity->getLanguageData('sitelinks');
+		$this->assertTrue( isset( $sitelinks[ $values['site'] ] ) );
+		$this->assertEquals( array('site' => $values['site'], 'title' => $values['title']), $sitelinks[ $values['site'] ] );
 	}
 
 	function provideSitelinks(){
