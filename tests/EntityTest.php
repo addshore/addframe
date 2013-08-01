@@ -57,8 +57,9 @@ class EntityTest extends \PHPUnit_Framework_TestCase {
 	function testCanAddDescriptions( $values ){
 		$entity = $this->getDefaultEntity();
 		$entity->addDescription( $values['lang'], $values['value'] );
-		$this->assertTrue( isset( $entity->getLanguageData('descriptions')[ $values['lang'] ] ) );
-		$this->assertEquals( array('language' => $values['lang'], 'value' => $values['value']), $entity->getLanguageData('descriptions')[ $values['lang'] ] );
+		$descriptions = $entity->getLanguageData('descriptions');
+		$this->assertTrue( isset( $descriptions[ $values['lang'] ] ) );
+		$this->assertEquals( array('language' => $values['lang'], 'value' => $values['value']), $descriptions[ $values['lang'] ] );
 	}
 
 	function provideDescriptions(){
