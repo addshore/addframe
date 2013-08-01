@@ -2,11 +2,13 @@ Addwiki MediaWiki Framework
 =======
 
 This is the framework that Addbot uses on Wikimedia projects.
-The framework is new and is currently very Wikimedia specific.
-Some code is currently very Addbot specific...
+The framework is currently under development
 
-Documentation
-=======
+How to use
+-------------
+
+Take a look at some example scripts in scripts/HelloWorld to see basic use
+
 
 Directory Structure
 -------------

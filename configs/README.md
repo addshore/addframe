@@ -1,3 +1,5 @@
+Configuration files
+-------------
 All of the configs in this file will be loaded when init.php is run
 
 First all configs ending in .cfg will be loading (we presume these are the defaults)

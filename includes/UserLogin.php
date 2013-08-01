@@ -14,7 +14,7 @@ class UserLogin {
 
 	/**
 	 * @param $username string Username for login
-	 * @param $password string Password for login
+	 * @param $password
 	 */
 	public function __construct( $username, $password ) {
 		$this->username = $username;
