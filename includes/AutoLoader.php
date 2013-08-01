@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe;
+
 /**
  * @since 0.0.1
  * @author Addshore
@@ -14,7 +16,7 @@ class AutoLoader {
 	 */
 	public static function registerDirectory($dirName) {
 
-		$di = new DirectoryIterator($dirName);
+		$di = new \DirectoryIterator($dirName);
 		foreach ($di as $file) {
 
 			if ($file->isDir() && !$file->isLink() && !$file->isDot()) {
@@ -36,12 +38,12 @@ class AutoLoader {
 		if (isset(AutoLoader::$classNames[$className])) {
 			require_once(AutoLoader::$classNames[$className]);
 		} else {
-			throw new Exception( "Could not find class {$className}" );
+			throw new \Exception( "Could not find class {$className}" );
 		}
 	}
 
 }
 
-spl_autoload_register(array('AutoLoader', 'loadClass'));
+spl_autoload_register(array('Addframe\AutoLoader', 'loadClass'));
 
 AutoLoader::registerDirectory( dirname( __FILE__ ) );

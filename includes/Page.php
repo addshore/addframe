@@ -33,6 +33,7 @@ class Page {
 	public function __construct( $site, $title ) {
 		$this->site = $site;
 		$this->title =  $title;
+		$this->wikiText = new WikiText();
 	}
 
 	/**
