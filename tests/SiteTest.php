@@ -94,9 +94,11 @@ class SiteTest extends \PHPUnit_Framework_TestCase {
 
 	function testSetUserLoginGetUserLoginRoundtrip(){
 		$mockLogin = $this->getMock( 'Addframe\UserLogin', array(), array('username','password') );
+		$mockLogin->expects( $this->any() )->method( 'getPassword' )->will( $this->returnValue( 'password' ) );
 		$site = $this->getDefaultSite();
 		$site->setLogin( $mockLogin );
 		$this->assertEquals( $mockLogin, $site->getUserLogin(), 'Cannot assert login was set correctly' );
+		$this->assertEquals( 'password', $site->getUserLogin()->getPassword(), 'Cannot assert login was set correctly');
 
 	}
 

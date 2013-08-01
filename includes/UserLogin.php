@@ -8,7 +8,7 @@ namespace Addframe;
  * @author Addshore
  **/
 
-class UserLogin extends User {
+class UserLogin {
 
 	protected $password;
 
@@ -26,13 +26,6 @@ class UserLogin extends User {
 	 */
 	public function getPassword() {
 		return $this->password;
-	}
-
-	/**
-	 * @return Page a sandbox that can be used during testing
-	 */
-	public function newSandboxPage() {
-		return new Page( $this->site, "User:$this->username/Sandbox" );
 	}
 
 }
