@@ -12,7 +12,7 @@ class PageList {
 	/**
 	 * @var array The pages in the list
 	 */
-	private $entries;
+	protected $entries;
 
 	/**
 	 * @param null|Array|Page $values to be added to the page list at the start

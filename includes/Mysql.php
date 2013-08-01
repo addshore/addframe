@@ -10,19 +10,19 @@ class Mysql {
 	 * MySQL object
 	 * @var resource
 	 */
-	private $mConn;
+	protected $mConn;
 
 	/**
 	 * Read-only mode
 	 * @var bool
 	 */
-	private $mReadonly;
+	protected $mReadonly;
 
-	private $mHost;
-	private $mPort;
-	private $mUser;
-	private $mPass;
-	private $mDb;
+	protected $mHost;
+	protected $mPort;
+	protected $mUser;
+	protected $mPass;
+	protected $mDb;
 
 	/**
 	 * @param $host string Host of server

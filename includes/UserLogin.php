@@ -9,7 +9,7 @@ namespace Addframe;
 
 class UserLogin extends User {
 
-	private $password;
+	protected $password;
 
 	/**
 	 * @param $username string Username for login

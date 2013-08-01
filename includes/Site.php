@@ -12,28 +12,28 @@ class Site {
 	public $family;
 
 	/** @var Site|bool wikibase the site is associated to */
-	private $wikibase;
+	protected $wikibase;
 	/** @var string id of the site */
-	private $id;
+	protected $id;
 	/** @var string type of site eg.(wiki|wikivoyage) */
-	private $type;
+	protected $type;
 	/** @var string url of the site */
 	public $url;
 	/** @var string url of the api */
-	private $api;
+	protected $api;
 	/** @var string language eg. en */
-	private $language;
+	protected $language;
 	/** @var string iwPrefix eg. en or simple */
-	private $iwPrefix;
+	protected $iwPrefix;
 	/** @var Http class */
-	private $http;
+	protected $http;
 	/** @var string cache of the token we are using */
-	private $token;
-	private $isLoggedIn = false;
+	protected $token;
+	protected $isLoggedIn = false;
 	/** @var Array */
-	private $namespaces;
+	protected $namespaces;
 	/** @var UserLogin */
-	private $userlogin;
+	protected $userlogin;
 
 	public function setLogin( $userLogin ) {
 		$this->userlogin = $userLogin;

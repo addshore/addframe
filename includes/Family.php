@@ -8,16 +8,16 @@ namespace Addframe;
 class Family extends Registry {
 
 	/** @var UserLogin */
-	private $login;
+	protected $login;
 	/** * @var array of sites with the following keys
 	 * [url][wikiid][code][sitename][closed][private] */
-	private $siteMatrix;
+	protected $siteMatrix;
 	/** @var array Index of siteMatrix with keys (url|dbname) */
-	private $siteMatrixIndex;
+	protected $siteMatrixIndex;
 	/** @var Site[] List of sites in the family */
-	private $sites = array();
+	protected $sites = array();
 	/** * @var Site the home site for the family */
-	private $homeSite;
+	protected $homeSite;
 
 	/**
 	 * Create an object to hold a family of sites

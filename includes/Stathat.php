@@ -4,7 +4,7 @@ namespace Addframe;
 
 class Stathat {
 
-	private $key;
+	protected $key;
 
 	function __construct( $key ) {
 		$this->key = $key;

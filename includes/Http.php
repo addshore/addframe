@@ -9,8 +9,8 @@ namespace Addframe;
  **/
 
 class http {
-	private $ch;
-	private $uid;
+	protected $ch;
+	protected $uid;
 	public $cookie_jar;
 	public $postfollowredirs;
 	public $getfollowredirs;
