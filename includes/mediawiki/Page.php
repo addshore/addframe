@@ -171,7 +171,7 @@ class Page {
 
 		$toReturn = array();
 		//@todo this list of langs should definatly come from a better place...
-		preg_match_all( '/\n\[\[' . Globals::$regex['langs'] . ':([^\]]+)\]\]/', $text, $matches );
+		preg_match_all( '/\n\[\[' . Regex::getLanguageRegex() . ':([^\]]+)\]\]/', $text, $matches );
 		foreach ( $matches[0] as $key => $match ) {
 			$toReturn[] = Array( 'site' => $matches[1][$key], 'link' => $matches[2][$key] );
 		}
@@ -205,14 +205,14 @@ class Page {
 		$pages = array();
 
 		//We do not want to match our own site links so remove these from matches!
-		$sitesArray = Globals::$regex['sites'];
+		$sitesArray = Regex::getSiteTypeArray();
 		$thisTypeArray = array( $this->site->getType() );
 		if( $thisTypeArray[0] == 'wiki' ){
 			$thisTypeArray[] = 'wikipedia';
 		}
 		$sitesArray = array_diff( $sitesArray, $thisTypeArray );
 
-		preg_match_all( '/\n\[\[(' . implode('|',$sitesArray) . '):(' . Globals::$regex['langs'] . ':)?([^\]]+?)\]\]/i', $text, $matches );
+		preg_match_all( '/\n\[\[(' . implode('|',$sitesArray) . '):(' . Regex::getLanguageRegex() . ':)?([^\]]+?)\]\]/i', $text, $matches );
 		foreach ( $matches[0] as $key => $match ) {
 			$parts = array();
 
