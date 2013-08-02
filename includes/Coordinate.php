@@ -354,13 +354,14 @@ class Coordinate {
 	 */
 	public function getPrecision(){
 		$precision = 1/60/60; //default
-		if( $this->coor[6] == '' || $this->coor[2] == '' ){
+		if( $this->coor[2] == '' || $this->coor[6] == '' ){
 			$precision = 1/60; //1 arc second
 		}
-		if( $this->coor[5] == '' || $this->coor[1] == '' ){
+		if( $this->coor[1] == '' || $this->coor[5] == '' ){
 			$precision = 1; //1 arc min
 		}
 		if( $this->coor[0] == '' || $this->coor[4] == ''){
+			print_r($this->coor);
 			$precision = 360; //1 degree (its probably bad if we get here
 		}
 		return $precision;
