@@ -26,6 +26,7 @@ class Entity extends Page {
 
 	//@todo manipulate statements
 
+	//todo get entities from site and title combo!
 	function __construct( $site, $id = null, $new = null ) {
 		if ( isset ( $id ) ) {
 			//todo this is a valid id

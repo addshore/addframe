@@ -183,6 +183,8 @@ class Site {
 		return new Page( $this, $title );
 	}
 
+	//@todo newPageFromPageId()
+
 	public function newCategoryFromTitle( $title ) {
 		return new Category( $this, $title );
 	}

@@ -376,4 +376,10 @@ class Page {
 
 		return $counter;
 	}
+
+	//todo add whatlinkshere() https://github.com/addshore/addwiki/blob/PreRewrite/classes/botclasses.php#L333
+	//todo getSubpages https://github.com/addshore/addwiki/blob/PreRewrite/classes/botclasses.php#L405
+	//todo nobots https://github.com/addshore/addwiki/blob/PreRewrite/classes/botclasses.php#L474
+	//todo purge https://github.com/addshore/addwiki/blob/PreRewrite/classes/botclasses.php#L503
+	//todo getTransclusions https://github.com/addshore/addwiki/blob/PreRewrite/classes/botclasses.php#L531
 }
