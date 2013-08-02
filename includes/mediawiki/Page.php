@@ -71,6 +71,12 @@ class Page {
 		return $this->wikiText->getText();
 	}
 
+	public function getTextWithExpandedTemplates(){
+		$params['titles'] = $this->title;
+		$params['rvexpandtemplates'] = '';
+		return $this->site->requestPropRevsions( $params );
+	}
+
 	/**
 	 * @return string
 	 */
