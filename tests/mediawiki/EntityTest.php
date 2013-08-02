@@ -18,7 +18,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase {
 	 */
 	function testCanConstructEntity( $site, $id, $new ){
 		$entity = new Entity( $site , $id , $new );
-		$this->assertTrue( true, 'Unable to construct a  Entity object with a url' );
+		$this->assertTrue( true, 'Unable to construct a Entity' );
 		$this->assertEquals( strtolower( $id ), $entity->getId() );
 	}
 

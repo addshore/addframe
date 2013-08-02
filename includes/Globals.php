@@ -9,8 +9,6 @@ namespace Addframe;
  */
 class Globals {
 
-	public static $regex;
-
 	public static $config;
 
 }
