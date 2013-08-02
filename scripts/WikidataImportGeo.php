@@ -1,6 +1,7 @@
 <?php
 namespace Addwiki;
 
+use Addframe\Coordinate;
 use Addframe\Entity;
 use Addframe\Family;
 use Addframe\Globals;
@@ -61,8 +62,28 @@ while (true){
 			continue;
 		}
 
-		$coordArray = $page->getCoordinates();
-		if( is_array( $coordArray ) ){
+		//todo this all might be better somewhere else
+		$expandedText = $page->getTextWithExpandedTemplates();
+		$allUrls = $expandedText->getUrls();
+		foreach( $allUrls as $url ){
+			$url = parse_url( $url );
+			if( strstr( $url['path'], 'tools.wmflabs.org/geohack/geohack.php' ) ){
+				$queryParts = explode('&amp;', $url['query']);
+				foreach( $queryParts as $queryPart ){
+					$splitQuery = explode( '=', $queryPart );
+					if( $splitQuery[0] == 'params' ){
+						$coord = new Coordinate( $splitQuery[1] );
+						$ourCoord = $coord->getWikidataArray();
+						if( $ourCoord['precision'] == 360 ){
+							//if it is not very precise lets not bother
+							continue 3;
+						}
+					}
+				}
+			}
+		}
+
+		if( isset( $ourCoord ) && is_array( $ourCoord ) ){
 			$entity = $page->getEntity();
 			//if it has an entity
 			if ( $entity instanceof Entity ) {
@@ -81,55 +102,24 @@ while (true){
 				$startClaims = $entity->getClaims( 'p625' );
 				//if there are no coords already
 				if( count($startClaims) == 0 ){
-					$ourCoord = getWdCoordFromWiki( $coordArray );
-					//if we have a coors
-					if ( is_array( $ourCoord ) ) {
-						//add the claim
-						$result = $entity->createClaim( 'value', 'p625', json_encode( $ourCoord ) );
-						echo $entity->getId();
-						$stathat->stathat_ez_count( "Addbot - AddGeo", 1 );
-						//if we can find a id for the ref
-						if( array_key_exists( $page->site->getLanguage(), $sources ) ){
-							if ( isset( $result['claim']['id'] ) ) {
-								$ref['snaktype'] = 'value';
-								$ref['property'] = 'p143';
-								$ref['datavalue'] = array( 'type' => 'wikibase-entityid', 'value' => array( 'entity-type' => 'item', 'numeric-id' => intval( $sources[$page->site->getLanguage()] ) ) );
-								$refJson = '{"' . $ref['property'] . '":[' . json_encode( $ref ) . ']}';
-								//add it
-								$entity->site->requestWbSetReference( array( 'statement' => $result['claim']['id'], 'snaks' => $refJson ) );
-							}
+					//add the claim
+					$result = $entity->createClaim( 'value', 'p625', json_encode( $ourCoord ) );
+					echo $entity->getId();
+					$stathat->stathat_ez_count( "Addbot - AddGeo", 1 );
+					//if we can find a id for the ref
+					if( array_key_exists( $page->site->getLanguage(), $sources ) ){
+						if ( isset( $result['claim']['id'] ) ) {
+							$ref['snaktype'] = 'value';
+							$ref['property'] = 'p143';
+							$ref['datavalue'] = array( 'type' => 'wikibase-entityid', 'value' => array( 'entity-type' => 'item', 'numeric-id' => intval( $sources[$page->site->getLanguage()] ) ) );
+							$refJson = '{"' . $ref['property'] . '":[' . json_encode( $ref ) . ']}';
+							//add it
+							$entity->site->requestWbSetReference( array( 'statement' => $result['claim']['id'], 'snaks' => $refJson ) );
 						}
-
 					}
 				}
 
 			}
 		}
 	}
-}
-
-//Function to convert an array of coords from wiki to a single coord for wikidata
-function getWdCoordFromWiki( $array ) {
-	$newArray = array();
-
-	foreach ( $array as $key => $coord ) {
-		if ( !array_key_exists( 'primary', $coord ) ) {
-			continue;
-		}
-		if ( !array_key_exists( 'lat', $coord ) ) { continue; }
-		if ( !array_key_exists( 'lon', $coord ) ) { continue; }
-		if ( !array_key_exists( 'dim', $coord ) ) { continue; }
-		$newArray[$key]['latitude'] = $coord['lat'];
-		$newArray[$key]['longitude'] = $coord['lon'];
-		$newArray[$key]['dimension'] = $coord['dim'];
-		if( array_key_exists( 'globe', $coord) ){
-			if( $coord['globe'] != 'earth' ){
-				$newArray[$key]['globe'] = $coord['globe'];
-			}
-		}
-		$newArray[$key]['precision'] = rad2deg( $coord['dim'] / ( 6378137 * cos( deg2rad( $coord['lat'] ) ) ) );
-
-		return $newArray[$key];
-	}
-	return null;
 }

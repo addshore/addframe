@@ -37,7 +37,7 @@ class Regex {
 	}
 
 	public static function getUrlRegex(){
-		return '#\bhttps?://[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/))#';
+		return '#(https?:)?//[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/))#';
 	}
 
 }
