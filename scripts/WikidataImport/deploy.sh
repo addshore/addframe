@@ -32,5 +32,5 @@ fi
 #Run the correct number of slaves
 for (( c=01; c<=limit; c++ ))
 do
-	jstart -mem 350m -N WdIm.$c php $ABSPATH/slave.php
+	jstart -mem 400m -N WdIm.$c php $ABSPATH/slave.php
 done
