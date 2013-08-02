@@ -12,14 +12,14 @@ How to use
 Take a look at some example scripts in scripts/HelloWorld to see basic use.
 
 ```php
-use Addframe\Family;
-use Addframe\Globals;
-use Addframe\UserLogin;
-require_once( dirname( __FILE__ ) . '/../../init.php' );
+use Addframe\Config;
+use Addframe\Mediawiki\Family;
+use Addframe\Mediaqiki\UserLogin;
+require_once( dirname( __FILE__ ) . '/../Init.php' );
 
 $wm = new Family(
-	new UserLogin( Globals::$config['wikiuser']['username'],
-		Globals::$config['wikiuser']['password'] ), Globals::$config['wikiuser']['home'] );
+	new UserLogin( Config::get( 'wikiuser', 'username'),
+		Config::get( 'wikiuser', 'password') ), Config::get( 'wikiuser', 'home') );
 $enwiki = $wm->getSite( 'en.wikipedia.org' );
 $sandbox = $enwiki->newPageFromTitle( 'Wikipedia:Sandbox' );
 $sandbox->wikiText->appendText( "\nThis is a simple edit to this page!" );
@@ -30,17 +30,17 @@ $sandbox->save( 'This is a simply summary');
 Directory Structure
 -------------
 
-* configs - For user specific config files
-* includes - All framework classes are in here (split into subdirectories)
-* scripts - Scripts that use the framework
-* tests - Tests for the framework
+* Configs - For config files
+* Includes - All framework classes and extensions are here
+* Scripts - Scripts that use the framework
+* Tests - Tests for the core framework
 
 Tests
 -------------
 
-* The framework is tested using PHPUnit tests. (see /tests)
-* The bootstrap file for the tests can be found at /tests/bootstrap.php
+* The framework is tested using PHPUnit tests.
 * The configuration file for the tests can be found at /tests/phpunit.xml
+* The bootstrap file for the tests can be found at /Tests/Bootstrap.php
 * On any push, branch or pull request Travis will run all tests
 * If Travis reports failing tests please try to fix them ASAP
 * https://travis-ci.org/addshore/addwiki/builds
