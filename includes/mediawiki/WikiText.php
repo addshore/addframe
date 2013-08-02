@@ -80,7 +80,7 @@ class WikiText {
 	}
 
 	/**
-	 * @author PeachyAWBFunctions class @ GNU General Public License
+	 * @original PeachyAWBFunctions class @ GNU General Public License
 	 */
 	public function fixCitations( ) {
 		$text = $this->text;
@@ -148,11 +148,12 @@ class WikiText {
 	}
 
 	/**
-	 * @author PeachyAWBFunctions class @ GNU General Public License
+	 * @original PeachyAWBFunctions class @ GNU General Public License
 	 */
 	public function fixDateTags( ) {
 		$text = $this->text;
 
+		//XX IF CHANGED ---->>> If you change ANY regex below please add test cases that test your change!
 		$text = preg_replace( '/\{\{\s*(?:template:)?\s*(?:wikify(?:-date)?|wfy|wiki)(\s*\|\s*section)?\s*\}\}/iS', "{{Wikify$1|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
 		$text = preg_replace( '/\{\{(template:)?(Clean( ?up)?|CU|Tidy)\}\}/iS', "{{Cleanup|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
 		$text = preg_replace( '/\{\{(template:)?(Linkless|Orphan)\}\}/iS', "{{Orphan|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
@@ -168,7 +169,16 @@ class WikiText {
 		$text = preg_replace( '/\{\{(template:)?(Intro( |-)?missing|Nointro(duction)?|Lead missing|No ?lead|Missingintro|Opening|No-intro|Leadsection|No lead section)\}\}/iS', "{{Intro missing|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
 		$text = preg_replace( '/\{\{(template:)?([Pp]rimary ?[Ss]ources?|[Rr]eliable ?sources)\}\}/iS', "{{Primary sources|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}}}", $text );
 
-		//Other template fixes
+		$this->setText( $text );
+	}
+
+	/**
+	 * @original PeachyAWBFunctions class @ GNU General Public License
+	 */
+	public function fixTemplates( ) {
+		$text = $this->text;
+
+		//XX IF CHANGED ---->>> If you change ANY regex below please add test cases that test your change!
 		$text = preg_replace( '/\{\{(?:Template:)?(Dab|Disamb|Disambiguation)\}\}/iS', "{{Disambig}}", $text );
 		$text = preg_replace( '/\{\{(?:Template:)?(Bio-dab|Hndisambig)/iS', "{{Hndis", $text );
 		$text = preg_replace( '/\{\{(?:Template:)?(Prettytable|Prettytable100)\}\}/iS', "{{subst:Prettytable}}", $text );
@@ -187,7 +197,7 @@ class WikiText {
 	}
 
 	/**
-	 * @author PeachyAWBFunctions class @ GNU General Public License
+	 * @original PeachyAWBFunctions class @ GNU General Public License
 	 */
 	public function fixHTML( ) {
 		$text = $this->text;
@@ -223,7 +233,7 @@ class WikiText {
 	}
 
 	/**
-	 * @author PeachyAWBFunctions class @ GNU General Public License
+	 * @original PeachyAWBFunctions class @ GNU General Public License
 	 */
 	public function fixHyperlinking( ) {
 		$text = $this->text;

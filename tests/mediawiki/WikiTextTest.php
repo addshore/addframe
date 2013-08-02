@@ -160,4 +160,51 @@ class WikiTextTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
+	/**
+	 * @dataProvider provideTextWithDateTagToFix
+	 */
+	public function testFixDateTags( $text, $result ){
+		$wikiText = new WikiText( $text );
+		$wikiText->fixDateTags();
+		$this->assertEquals( $result, $wikiText->getText() );
+	}
+
+	function provideTextWithDateTagToFix(){
+		$date = '|date={{subst:CURRENTMONTHNAME}} {{subst:CURRENTYEAR}}';
+		//We could add every possibility but thats just silly. So just have some.
+		//If there is a reported problem with a specific template case, Add it as a test!
+		$templateFamily = array(
+			'Wikify' => array( 'Wikify', 'wikify-date', 'wfy' ),
+			'Cleanup' => array( 'Cleanup', 'Clean up', 'CU' ),
+			'Orphan' => array( 'Orphan', 'Linkless', ),
+			'Unreferenced' => array( 'Unreferenced', 'add references' ),
+			'Uncategorized' => array( 'Uncategorized', 'Classify', 'Category needed' ),
+			'Trivia' => array( 'Trivia', 'Trivia2', ),
+			'Deadend' => array( 'Deadend', 'DEP' ),
+			'Copyedit' => array( 'Copyedit', 'copy-edit', 'cleanup-copyedit' ),
+			'Refimprove' => array( 'refimprove', 'sources', 'not verified' ),
+			'Expand' => array( 'Expand' ),
+			'COI' => array( 'COI', 'Conflict of interest', 'Selfpromotion' ),
+			'Intro missing' => array( 'Intro missing', 'No lead', 'No-Intro' ),
+			'Primary sources' => array( 'Primary sources', 'reliablesources'),
+		);
+		$array = array(
+			array( "", "" ),
+			array( "A regular String Should remain\n", "A regular String Should remain\n" ),
+			array( "A regular String {{orphan}} Should change\n", "A regular String {{Orphan".$date."}} Should change\n" ),
+			array( "A regular String \n {{Template:wikify-date}}\n\n Should change\n", "A regular String \n {{Wikify".$date."}}\n\n Should change\n" )
+		);
+		foreach( $templateFamily as $mainTemplate => $templates ){
+			foreach( $templates as $template ){
+				$array[] = array( '{{'.$template.'}}', '{{'.$mainTemplate.$date.'}}' );
+				$array[] = array( '{{Template:'.$template.'}}', '{{'.$mainTemplate.$date.'}}' );
+			}
+		}
+		return $array;
+	}
+
+	//todo test cases for fixTemplates() (basically the same as above, just without date..
+	//todo test cases for fixHTML()
+	//todo test cases for fixHyperlinking()
+
 }
