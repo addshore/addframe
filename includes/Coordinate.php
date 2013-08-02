@@ -204,18 +204,24 @@ class Coordinate {
 	{
 		$latdms = $this->make_minsec( $lat );
 		$londms = $this->make_minsec( $lon );
-		$outlat = intval(abs($latdms['deg'])) . "&deg;&nbsp;";
-		$outlon = intval(abs($londms['deg'])) . "&deg;&nbsp;";
+		$outlat = intval(abs($latdms['deg'])) . "_";
+		$outlon = intval(abs($londms['deg'])) . "_";
 		if ($latdms['min'] != 0 or $londms['min'] != 0
 			or $latdms['sec'] != 0 or $londms['sec'] != 0) {
-			$outlat .= intval($latdms['min']) . "&prime;&nbsp;";
-			$outlon .= intval($londms['min']) . "&prime;&nbsp;";
+			$outlat .= intval($latdms['min']) . "_";
+			$outlon .= intval($londms['min']) . "_";
 			if ($latdms['sec'] != 0 or $londms['sec'] != 0) {
-				$outlat .= $latdms['sec']. "&Prime;&nbsp;";
-				$outlon .= $londms['sec']. "&Prime;&nbsp;";
+				$outlat .= $latdms['sec']. "_";
+				$outlon .= $londms['sec']. "_";
+			} else {
+				$outlat.= "_";
+				$outlon.= "_";
 			}
+		} else {
+			$outlat.= "__";
+			$outlon.= "__";
 		}
-		return $outlat . $latdms['NS'] . " " . $outlon . $londms['EW'];
+		return $outlat . $latdms['NS'] . "_" . $outlon . $londms['EW'];
 	}
 
 	/**
@@ -361,8 +367,12 @@ class Coordinate {
 			$precision = 1; //1 arc min
 		}
 		if( $this->coor[0] == '' || $this->coor[4] == ''){
-			print_r($this->coor);
 			$precision = 360; //1 degree (its probably bad if we get here
+		}
+		if( $precision == 1  && strstr( $this->coor[0],'.' ) && strstr( $this->coor[4],'.' ) ){
+			$this->parseGeohackParams( $this->make_position( $this->coor[0], $this->coor[4] ) );
+			return $this->getPrecision();
+
 		}
 		return $precision;
 	}
