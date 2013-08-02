@@ -1,4 +1,4 @@
-Addwiki Mediawiki Framework
+Addwiki MediaWiki Framework
 =======
 
 This is the framework that Addbot uses on Wikimedia projects.
