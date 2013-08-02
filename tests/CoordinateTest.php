@@ -62,14 +62,14 @@ class CoordinateTest extends \PHPUnit_Framework_TestCase {
 					'precision' => strval( 1/60/60 )
 				)
 			),
-//			//6 Decimal degree only
-//			array( '29.583333333333___N_82.083333333333___E',
-//				array(
-//					'latitude' => '29.583333333333',
-//					'longitude' => '82.083333333333',
-//					'precision' => strval( 1/60 )
-//				)
-//			),
+			//6 Decimal degree only
+			array( '29.583333333333___N_82.083333333333___E',
+				array(
+					'latitude' => '29.583333333333',
+					'longitude' => '82.083333333333',
+					'precision' => strval( 1/60 )
+				)
+			),
 		);
 	}
 
