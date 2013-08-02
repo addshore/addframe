@@ -98,7 +98,6 @@ while (true){
 				foreach( $queryParts as $queryPart ){
 					$splitQuery = explode( '=', $queryPart );
 					if( $splitQuery[0] == 'params' ){
-					echo $splitQuery[1]."\n";
 						$coord = new Coordinate( $splitQuery[1] );
 						$coordArray = $coord->getWikidataArray();
 						if( $coordArray['precision'] != 360 ){

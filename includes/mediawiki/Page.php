@@ -66,6 +66,7 @@ class Page {
 	 */
 	public function getText( $force = false) {
 		if( $this->wikiText->getText() == null || $force == true ){
+			echo "Loading page " . $this->site->url . " " . $this->title . "\n";
 			$this->wikiText->setText( $this->getSite()->getPageTextFromPageTitle( $this->title ) );
 		}
 		return $this->wikiText->getText();
