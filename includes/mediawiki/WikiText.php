@@ -67,4 +67,9 @@ class WikiText {
 	public function getLength(){
 		return strlen( $this->text );
 	}
+
+	public function getUrls() {
+		preg_match_all( Regex::getUrlRegex(), $this->text, $matches );
+		return $matches[0];
+	}
 }
