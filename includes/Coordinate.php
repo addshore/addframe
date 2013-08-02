@@ -129,32 +129,32 @@ class Coordinate {
 
 		$latfactor = 1.0 ;
 		$lonfactor = 1.0 ;
-		if ( !empty( $latNS ) && strtoupper($latNS) == "S") {
+		if ( isset( $latNS ) && strtoupper($latNS) == "S") {
 			$latfactor = -1.0 ;
 			#$this->latdeg = -$this->latdeg;
 		}
 
-		if ( !empty( $lonEW ) && strtoupper($lonEW) == "W") {
+		if ( isset( $lonEW ) && strtoupper($lonEW) == "W") {
 			$lonfactor = -1.0 ;
 			#$this->londeg = -$this->londeg;
 		}
 
 		# Make decimal degree, if not already
-		if( !empty( $latsec ) && !empty( $latmin ) ){
+		if( isset( $latsec ) && isset( $latmin ) ){
 			$latmin += $latsec/60.0;
 		}
-		if( !empty( $lonsec ) && !empty( $lonmin ) ){
+		if( isset( $lonsec ) && isset( $lonmin ) ){
 			$lonmin += $lonsec/60.0;
 		}
 
-		if( !empty( $latmin ) ){
+		if( isset( $latmin ) ){
 			if ($this->latdeg < 0) {
 				$this->latdeg -= $latmin/60.0;
 			} else {
 				$this->latdeg += $latmin/60.0;
 			}
 		}
-		if( !empty( $lonmin ) ){
+		if( isset( $lonmin ) ){
 			if ($this->londeg < 0) {
 				$this->londeg -= $lonmin/60.0;
 			} else {
