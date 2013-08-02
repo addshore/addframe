@@ -144,9 +144,12 @@ class Site {
 		return '0';
 	}
 
-	public function getPageTextFromPageTitle( $title ) {
+	public function getPageTextFromPageTitle( $title, $expanded = false) {
 		echo "Loading page " . $this->url . " " . $title . "\n";
 		$param['titles'] = $title;
+		if( $expanded ){
+			$param['rvexpandtemplates'] = '';
+		}
 
 		$result = $this->requestPropRevsions( $param );
 

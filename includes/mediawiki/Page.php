@@ -72,9 +72,7 @@ class Page {
 	}
 
 	public function getTextWithExpandedTemplates(){
-		$params['titles'] = $this->title;
-		$params['rvexpandtemplates'] = '';
-		return $this->site->requestPropRevsions( $params );
+		return new WikiText( $this->getSite()->getPageTextFromPageTitle( $this->title, true) );
 	}
 
 	/**
@@ -171,7 +169,7 @@ class Page {
 
 		$toReturn = array();
 		//@todo this list of langs should definatly come from a better place...
-		preg_match_all( '/\n\[\[' . Regex::getLanguageRegex() . ':([^\]]+)\]\]/', $text, $matches );
+		preg_match_all( '/\n\[\[' . Regex::getLanguageRegexPart() . ':([^\]]+)\]\]/', $text, $matches );
 		foreach ( $matches[0] as $key => $match ) {
 			$toReturn[] = Array( 'site' => $matches[1][$key], 'link' => $matches[2][$key] );
 		}
@@ -212,7 +210,7 @@ class Page {
 		}
 		$sitesArray = array_diff( $sitesArray, $thisTypeArray );
 
-		preg_match_all( '/\n\[\[(' . implode('|',$sitesArray) . '):(' . Regex::getLanguageRegex() . ':)?([^\]]+?)\]\]/i', $text, $matches );
+		preg_match_all( '/\n\[\[(' . implode('|',$sitesArray) . '):(' . Regex::getLanguageRegexPart() . ':)?([^\]]+?)\]\]/i', $text, $matches );
 		foreach ( $matches[0] as $key => $match ) {
 			$parts = array();
 

@@ -10,7 +10,16 @@ namespace Addframe;
 
 class Regex {
 
-	public static function getLanguageRegex(){
+	/**
+	 * Returns a regex string from an array of values (we match all values in the array)
+	 * @param $array array of strings
+	 * @return string regex
+	 */
+	public static function partFromArray( $array ){
+		return '('.implode( '|',$array ).')';
+	}
+
+	public static function getLanguageRegexPart(){
 		return '(nostalgia|ten|aa|ab|ace|af|ak|als|am|an|ang|ar|arc|arz|as|ast|av|ay|az|ba|bar|' .
 	'bat-smg|bcl|be|be-x-old|bg|bh|bi|bjn|bm|bn|bo|bpy|br|bs|bug|bxr|ca|cbk-zam|cdo|ce|ceb|ch|cho|chr|chy|ckb|' .
 	'co|cr|crh|cs|csb|cu|cv|cy|da|de|diq|dsb|dv|dz|ee|el|eml|en|eo|es|et|eu|ext|fa|ff|fi|fiu-vro|fj|fo|fr|frp|frr' .
@@ -27,13 +36,8 @@ class Regex {
 		return array( 'wiki','wikipedia','wikivoyage' );
 	}
 
-	/**
-	 * Returns a regex string from an array of values (we match all values in the array)
-	 * @param $array array of strings
-	 * @return string regex
-	 */
-	public static function fromArray( $array ){
-		return '('.implode( '|',$array ).')';
+	public static function getUrlRegex(){
+		return '#\bhttps?://[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/))#';
 	}
 
 }
