@@ -6,7 +6,7 @@
  *
  **/
 
-use Addframe\Globals;
+use Addframe\Config;
 use Addframe\Mediawiki\Family;
 use Addframe\Mediawiki\Page;
 use Addframe\Mediawiki\PageList;
@@ -19,28 +19,28 @@ use Addframe\Stathat;
 require_once( dirname( __FILE__ ) . '/../../../Init.php' );
 
 $wm = new Family(
-	new UserLogin( Globals::$config['wikiuser']['username'],
-		Globals::$config['wikiuser']['password'] ), Globals::$config['wikiuser']['home'] );
+	new UserLogin( Config::get( 'wikiuser', 'username'),
+		Config::get( 'wikiuser', 'password') ), Config::get( 'wikiuser', 'home') );
 
 $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 
 $db = new Mysql(
-	Globals::$config['mysql']['server'], '3306',
-	Globals::$config['mysql']['user'],
-	Globals::$config['mysql']['password'],
-	Globals::$config['mysql']['user'].'_wikidata_p' );
+	Config::get( 'mysql', 'server'), '3306',
+	Config::get( 'mysql', 'user'),
+	Config::get( 'mysql', 'password'),
+	Config::get( 'mysql', 'user').'_wikidata_p' );
 
-$stathat = new Stathat( Globals::$config['stathat']['key'] );
+$stathat = new Stathat( Config::get( 'stathat', 'key') );
 
 $redis = new Redis();
-$redis->connect(Globals::$config['redis']['server']);
-$redis->setOption(Redis::OPT_PREFIX, Globals::$config['redis']['prefix']);
+$redis->connect(Config::get( 'redis', 'server'));
+$redis->setOption(Redis::OPT_PREFIX, Config::get( 'redis', 'prefix'));
 $redis->select(9);
 
 while(true){
 
 	echo "* Getting next page from redis!\n";
-	$row = $redis->brPop(Globals::$config['redis']['key'], 0);
+	$row = $redis->brPop(Config::get( 'redis', 'key'), 0);
 	$row = json_decode( $row[1], true );
 
 	// Load our site
@@ -52,8 +52,8 @@ while(true){
 	$usedPages = new PageList(
 		$baseSite->newPageFromTitle( $baseSite->getNamespaceFromId( $row['namespace'] ) . $row['title'] ) );
 	$usedPages->appendArray( $usedPages->offsetGet(0)->getPagesFromInterwikiLinks() );
-	//$usedPages->appendArray( $usedPages->offsetGet(0)->getPagesFromInterprojectLinks() );
-	//$usedPages->appendArray( $usedPages->offsetGet(0)->getPagesFromInterprojectTemplates() );
+	$usedPages->appendArray( $usedPages->offsetGet(0)->getPagesFromInterprojectLinks() );
+	$usedPages->appendArray( $usedPages->offsetGet(0)->getPagesFromInterprojectTemplates() );
 	$usedPages->makeUniqueUsingPageDetails();
 
 	// Try to find an entity to work on
@@ -168,12 +168,12 @@ while(true){
  * @return string Localised Summary
  */
 function getLocalSummary( Site $site , $id){
-	$siteid = $site->getId();
+	$language = $site->getLanguage();
 	$bot = $site->getUserLogin()->username;
 
 	$summary = '[[$who|Bot]]: Migrating interwiki links, now provided by [[d:|Wikidata]] on [[d:$id]]';
-	if( isset( Globals::$config['WikidataImport.Summary'][ $siteid ] ) ){
-		$summary = Globals::$config['WikidataImport.Summary'][ $siteid ];
+	if( Config::get( 'WikidataImport.Summary' , $language ) != null ){
+		$summary = Config::get( 'WikidataImport.Summary' , $language );
 	}
 
 	$summary = str_replace('$who', 'User:'.$bot, $summary);

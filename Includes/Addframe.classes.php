@@ -9,7 +9,7 @@ return call_user_func( function() {
 	$classes = array(
 		'Addframe\AutoLoader' => 'AutoLoader.php',
 		'Addframe\Coordinate' => 'Coordinate.php',
-		'Addframe\Globals' => 'Globals.php',
+		'Addframe\Config' => 'Config.php',
 		'Addframe\Http' => 'Http.php',
 		'Addframe\Mysql' => 'Mysql.php',
 		'Addframe\Registry' => 'Registry.php',
