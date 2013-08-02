@@ -183,6 +183,8 @@ class Site {
 		return new Page( $this, $title );
 	}
 
+	//@todo newPageFromPageId()
+
 	public function newCategoryFromTitle( $title ) {
 		return new Category( $this, $title );
 	}
@@ -286,6 +288,8 @@ class Site {
 		if ( empty ( $returned ) ) {
 			//@todo also catch if the result is returned but with an error code (not recognised action)
 			throw new \Exception( "Sitematrix empty... Maybe you are offline." );
+		} else if( array_key_exists( 'error', $returned ) && $returned['error']['code'] == "unknown_action" ) {
+			throw new \Exception ( "No Sitematrix availible.. ".$returned['error']['code'] );
 		}
 
 		//add language to the site details

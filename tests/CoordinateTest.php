@@ -35,6 +35,20 @@ class CoordinateTest extends \PHPUnit_Framework_TestCase {
 					'precision' => '1'
 				)
 			),
+			array( '29_0__N_5_0__E',
+				array(
+					'latitude' => '29',
+					'longitude' => '5',
+					'precision' => strval( 1/60 )
+				)
+			),
+			array( '22_0_0_N_2_0_0_E',
+				array(
+					'latitude' => '22',
+					'longitude' => '2',
+					'precision' => strval( 1/60/60 )
+				)
+			),
 		);
 	}
 

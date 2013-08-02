@@ -87,4 +87,6 @@ class User {
 		return $this->editcount;
 	}
 
+	//todo hasEmailEnabled() https://github.com/addshore/addwiki/blob/PreRewrite/classes/botclasses.php#L513
+
 }
