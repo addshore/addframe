@@ -7,7 +7,6 @@
  **/
 
 use Addframe\Config;
-use Addframe\Config;
 use Addframe\Mediawiki\Family;
 use Addframe\Mediawiki\UserLogin;
 

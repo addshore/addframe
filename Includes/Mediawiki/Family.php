@@ -1,6 +1,7 @@
 <?php
 
 namespace Addframe\Mediawiki;
+use Addframe\Http;
 use Addframe\Registry;
 
 /**

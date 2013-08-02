@@ -9,7 +9,7 @@ namespace Addframe;
  * @author Addshore
  **/
 
-class http {
+class Http {
 	protected $ch;
 	protected $uid;
 	public $cookie_jar;

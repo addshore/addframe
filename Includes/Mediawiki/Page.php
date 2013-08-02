@@ -1,6 +1,7 @@
 <?php
 
 namespace Addframe\Mediawiki;
+use Addframe\Mediawiki\Wikibase\Entity;
 
 /**
  * This class is designed to represent a Site Page
