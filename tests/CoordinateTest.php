@@ -15,10 +15,10 @@ class CoordinateTest extends \PHPUnit_Framework_TestCase {
 	function provideCoordinateParams(){
 		return array(
 			//0 regular with data
-			array( '29_35_17_N_82_5_2_W_region:US_type:city',
+			array( '29_35_17_N_13_0_29_E_region:US_type:city',
 				array(
 					'latitude' => '29.588055555556',
-					'longitude' => '-82.083888888889',
+					'longitude' => '13.008055555556',
 					'precision' => strval( 1/60/60 )
 				)
 			),
