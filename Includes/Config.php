@@ -1,6 +1,7 @@
 <?php
 
 namespace Addframe;
+use DirectoryIterator;
 
 /**
  * Class to handle all configs
@@ -23,10 +24,15 @@ class Config {
 	 * Globals::$config['configname excluding .cfgp?']['setting'] = value;
 	 *
 	 */
-	public static function loadConfigs(){
-		// Specify the config directory
-		$configPath = dirname( __FILE__ ).'/../Configs';
-		$di = new \DirectoryIterator($configPath);
+	public static function loadConfigs( $configPath = null ){
+		// Specify the config directory if not set
+		if( $configPath = null ){
+			$configPath = dirname( __FILE__ ).'/../Configs';
+		}
+
+		//Iterate over the location
+		/* @var $di DirectoryIterator[] */
+		$di = new DirectoryIterator($configPath);
 
 		// First load the defaults
 		foreach ($di as $file) {
@@ -35,7 +41,7 @@ class Config {
 				//do nothing
 			} elseif (substr($file->getFilename(), -4) === '.cnf') {
 				$configName = substr($file->getFilename(), 0, -4);
-				$settings[$configName] = parse_ini_file( $configPath.'/'.$file->getFilename() );
+				Config::setFromIni($configName, $configPath.'/'.$file->getFilename() );
 			}
 		}
 
@@ -45,10 +51,18 @@ class Config {
 				//do nothing
 			} elseif (substr($file->getFilename(), -5) === '.cnfp') {
 				$configName = substr($file->getFilename(), 0, -5);
-				$settings[$configName] = parse_ini_file( $configPath.'/'.$file->getFilename() );
+				Config::setFromIni($configName, $configPath.'/'.$file->getFilename() );
 			}
 		}
 
+	}
+
+	private static function set($config, $setting){
+		Config::$settings[$config] = $setting;
+	}
+
+	private static function setFromIni($config, $location){
+		Config::set( $config, parse_ini_file( $location ) );
 	}
 
 	public static function get( $config, $setting ){

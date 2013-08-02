@@ -17,4 +17,11 @@ class AutoLoaderTest extends \PHPUnit_Framework_TestCase {
 		}
 	}
 
+	//This must be at the bottom so we do not try to load the non existing dummy class
+	public function testCanRegisterClass(){
+		AutoLoader::registerClass('className', 'FilePath');
+		$this->assertArrayHasKey('className', AutoLoader::$classNames );
+		$this->assertEquals( 'FilePath', AutoLoader::$classNames['className'] );
+	}
+
 }
