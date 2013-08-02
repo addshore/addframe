@@ -38,9 +38,10 @@ Directory Structure
 Tests
 -------------
 
-The framework is tested using PHPUnit tests. (see /tests)
-The bootstrap file for the tests can be found at /tests/bootstrap.php
-The configuration file for the tests can be found at /tests/phpunit.xml
-On any push, branch or pull request Jenkins will run all tests
-If Jenkins reports failing tests please try to fix them ASAP
-When writing new code please add tests for the code!
+* The framework is tested using PHPUnit tests. (see /tests)
+* The bootstrap file for the tests can be found at /tests/bootstrap.php
+* The configuration file for the tests can be found at /tests/phpunit.xml
+* On any push, branch or pull request Travis will run all tests
+* If Travis reports failing tests please try to fix them ASAP
+* https://travis-ci.org/addshore/addwiki/builds
+* When writing new code please add tests for the code!
