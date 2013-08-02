@@ -1,15 +1,16 @@
 <?php
 namespace Addwiki;
 
+use Addframe\Config;
 use Addframe\Coordinate;
 use Addframe\Mediawiki\Entity;
 use Addframe\Mediawiki\Family;
-use Addframe\Globals;
-use Addframe\Mysql;
 use Addframe\Mediawiki\Page;
-use Addframe\Mediawiki\UserLogin;
-use Addframe\Stathat;
 use Addframe\Mediawiki\Site;
+use Addframe\Mediawiki\UserLogin;
+use Addframe\Mysql;
+use Addframe\Stathat;
+
 /**
  * @author Addshore
  */
@@ -25,9 +26,9 @@ if( !array_key_exists( 'site', $options ) ){
 	die("No site specificed");
 }
 
-$stathat = new Stathat( Globals::$config['stathat']['key'] );
+$stathat = new Stathat( Config::get( 'stathat', 'key') );
 
-$wm = new Family( new UserLogin( Globals::$config['wikiuser']['username'], Globals::$config['wikiuser']['password'] ), Globals::$config['wikiuser']['home'] );
+$wm = new Family( new UserLogin( Config::get( 'wikiuser', 'username'), Config::get( 'wikiuser', 'password') ), Config::get( 'wikiuser', 'home') );
 $wiki = $wm->getSiteFromSiteid( $options['site'] );
 if( !$wiki instanceof Site ){
 	die("No such wiki");
@@ -35,8 +36,8 @@ if( !$wiki instanceof Site ){
 
 $db = new Mysql(
 	$options['site'].'.labsdb', '3306',
-	Globals::$config['mysql']['user'],
-	Globals::$config['mysql']['password'],
+	Config::get( 'mysql', 'user'),
+	Config::get( 'mysql', 'password'),
 	$options['site'].'_p' );
 
 $offset = 0;
