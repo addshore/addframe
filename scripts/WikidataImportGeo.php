@@ -54,71 +54,92 @@ while (true){
 
 	foreach($list as $page ){
 		echo ".";
+		
+		//Skip if we are a bad namespace
 		if($page['namespace'] != '0'){
 			continue;
 		}
+		
+		//Skip if we are not an existing page
 		$page = $wiki->newPageFromTitle( $page['title'] );
 		if( !$page instanceof Page){
 			continue;
 		}
+		
+		//Skip if we dont have an entity
+		$entity = $page->getEntity();
+		if ( !$entity instanceof Entity ) {
+			continue;
+		}
 
-		//todo this all might be better somewhere else
+		//Skip if not a place gnd
+		$gndClaims = $entity->getClaims( 'p107' );
+		if( !array_key_exists( 'p107', $gndClaims ) ){
+			continue;
+		}
+		if ( $gndClaims['p107']['0']['mainsnak']['datavalue']['value']['numeric-id'] != '618123'){
+			continue;
+		}
+
+		//Skip if already has a coord
+		$startClaims = $entity->getClaims( 'p625' );
+		if( count($startClaims) > 0 ){
+			continue;
+		}
+		
+		//Get a list of coordinate arrays from expanded page text
+		$listOfCoords = array();
 		$expandedText = $page->getTextWithExpandedTemplates();
 		$allUrls = $expandedText->getUrls();
 		foreach( $allUrls as $url ){
 			$url = parse_url( $url );
-			if( strstr( $url['path'], 'tools.wmflabs.org/geohack/geohack.php' ) ){
-				$queryParts = explode('&amp;', $url['query']);
+			if( array_key_exists('path', $url) && strstr( $url['path'], 'tools.wmflabs.org/geohack/geohack.php' ) ){
+				$queryParts = explode('&', $url['query']);
 				foreach( $queryParts as $queryPart ){
 					$splitQuery = explode( '=', $queryPart );
 					if( $splitQuery[0] == 'params' ){
+					echo $splitQuery[1]."\n";
 						$coord = new Coordinate( $splitQuery[1] );
-						$ourCoord = $coord->getWikidataArray();
-						if( $ourCoord['precision'] == 360 ){
-							//if it is not very precise lets not bother
-							continue 3;
+						$coordArray = $coord->getWikidataArray();
+						if( $coordArray['precision'] != 360 ){
+							$listOfCoords[] = $coordArray;
 						}
 					}
 				}
 			}
 		}
-
-		if( isset( $ourCoord ) && is_array( $ourCoord ) ){
-			$entity = $page->getEntity();
-			//if it has an entity
-			if ( $entity instanceof Entity ) {
-
-				//skip if not a place gnd
-				$gndClaims = $entity->getClaims( 'p107' );
-				if( array_key_exists( 'p107', $gndClaims ) ){
-					$gnd = $gndClaims['p107']['0']['mainsnak']['datavalue']['value']['numeric-id'];
-				} else {
-					$gnd = '';
-				}
-				if( $gnd != '618123'){
-					continue;
-				}
-
-				$startClaims = $entity->getClaims( 'p625' );
-				//if there are no coords already
-				if( count($startClaims) == 0 ){
-					//add the claim
-					$result = $entity->createClaim( 'value', 'p625', json_encode( $ourCoord ) );
-					echo $entity->getId();
-					$stathat->stathat_ez_count( "Addbot - AddGeo", 1 );
-					//if we can find a id for the ref
-					if( array_key_exists( $page->site->getLanguage(), $sources ) ){
-						if ( isset( $result['claim']['id'] ) ) {
-							$ref['snaktype'] = 'value';
-							$ref['property'] = 'p143';
-							$ref['datavalue'] = array( 'type' => 'wikibase-entityid', 'value' => array( 'entity-type' => 'item', 'numeric-id' => intval( $sources[$page->site->getLanguage()] ) ) );
-							$refJson = '{"' . $ref['property'] . '":[' . json_encode( $ref ) . ']}';
-							//add it
-							$entity->site->requestWbSetReference( array( 'statement' => $result['claim']['id'], 'snaks' => $refJson ) );
-						}
+		
+		//Skip if no coords
+		if( count( $listOfCoords ) == 0 ){
+			continue;
+		}
+		
+		//Leave only the higest precision
+		$bestPrecision = 361;
+		foreach( $listOfCoords as $coord ){
+			if( $coord['precision'] < $bestPrecision ){
+				$bestPrecision = $coord['precision'];
+			}
+		}
+		
+		//Add Claims
+		foreach( $listOfCoords as $ourCoord ){
+			if( $ourCoord['precision'] == $bestPrecision ){
+				$result = $entity->createClaim( 'value', 'p625', json_encode( $ourCoord ) );
+				echo $entity->getId();
+				$stathat->stathat_ez_count( "Addbot - AddGeo", 1 );
+				//if we can find a id for the ref
+				if( array_key_exists( $page->site->getLanguage(), $sources ) ){
+					if ( isset( $result['claim']['id'] ) ) {
+						$ref['snaktype'] = 'value';
+						$ref['property'] = 'p143';
+						$ref['datavalue'] = array( 'type' => 'wikibase-entityid', 'value' => array( 'entity-type' => 'item', 'numeric-id' => intval( $sources[$page->site->getLanguage()] ) ) );
+						$refJson = '{"' . $ref['property'] . '":[' . json_encode( $ref ) . ']}';
+						//add it
+						$entity->site->requestWbSetReference( array( 'statement' => $result['claim']['id'], 'snaks' => $refJson ) );
+						break;
 					}
 				}
-
 			}
 		}
 	}
