@@ -29,7 +29,11 @@ class AutoLoader {
 				}
 
 				$className = substr($file->getFilename(), 0, -4);
-				AutoLoader::registerClass($namespace.'\\'.$className, $file->getPathname());
+
+				//dont load tests
+				if( !( substr($className, -4) == "Test" ) ){
+					AutoLoader::registerClass($namespace.'\\'.$className, $file->getPathname());
+				}
 			}
 		}
 	}
@@ -41,7 +45,9 @@ class AutoLoader {
 	public static function loadClass($className) {
 		if (isset(AutoLoader::$classNames[$className])) {
 			require_once(AutoLoader::$classNames[$className]);
+			return true;
 		}
+		return false;
 	}
 
 }
