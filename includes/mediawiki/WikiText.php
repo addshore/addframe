@@ -72,4 +72,9 @@ class WikiText {
 		preg_match_all( Regex::getUrlRegex(), $this->text, $matches );
 		return $matches[0];
 	}
+
+	public function trimWhitespace(){
+		$this->pregReplace( '/(\n\n)\n+$/', "$1" );
+		$this->pregReplace( '/^(\n|\r){0,5}$/', "" );
+	}
 }

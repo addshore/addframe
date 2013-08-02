@@ -369,11 +369,8 @@ class Page {
 				$this->wikiText->removeRegexMatched('/<noinclude>\s+?<\/noinclude>/');
 			}
 
-			$this->wikiText->removeRegexMatched('/<!-- ?(interwikis?( links?)?|other (wiki|language)s?) ?-->/i');
-
-		//Remove extra space we might have left at the end
-		$this->wikiText->pregReplace( '/(\n\n)\n+$/', "$1" );
-		$this->wikiText->pregReplace( '/^(\n|\r){0,5}$/', "" );
+		$this->wikiText->removeRegexMatched('/<!-- ?(interwikis?( links?)?|other (wiki|language)s?) ?-->/i');
+		$this->wikiText->trimWhitespace();
 
 		}
 
