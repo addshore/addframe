@@ -145,7 +145,6 @@ class Site {
 	}
 
 	public function getPageTextFromPageTitle( $title, $expanded = false) {
-		echo "Loading page " . $this->url . " " . $title . "\n";
 		$param['titles'] = $title;
 		if( $expanded ){
 			$param['rvexpandtemplates'] = '';
