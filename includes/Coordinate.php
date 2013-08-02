@@ -9,29 +9,35 @@ namespace Addframe;
  * @since 0.0.2
  * @author Magnus Manske (origional)
  * @author Kolossos (origional)
+ * @author Addshore
  */
 
 class Coordinate {
 
-	var $latdeg;
-	var $londeg;
+	protected $latdeg;
+	protected $londeg;
 
-	var $latdeg_min;
-	var $londeg_min;
-	var $latdeg_max;
-	var $londeg_max;
+	protected $latdeg_min;
+	protected $londeg_min;
+	protected $latdeg_max;
+	protected $londeg_max;
 
-	var $pieces;
-	var $error;
-	var $coor;
-	var $title;
+	protected $pieces;
+	protected $error;
+	protected $coor;
+	protected $title;
+
+	public function __construct( $params ) {
+		//todo: enable constructing with other sets of params (i.e from db or api)
+		$this->geo_param( $params );
+	}
 
 	/**
 	 *   Constructor:
 	 *   Read coordinates, and if there is a range, read the range
 	 *  @origional
 	 */
-	function geo_param( $param )
+	protected function geo_param( $param )
 	{
 		$this->pieces = explode(" ", str_replace ( ' O' , ' E' , str_replace( '_', ' ', $param )));
 		$this->get_coor( );
@@ -62,7 +68,13 @@ class Coordinate {
 	 *  Get a set of coordinates from parameters
 	 * @origional
 	 */
-	function get_coor( ) {
+	protected function get_coor( ) {
+
+		if( !array_key_exists( 2, $this->pieces) ){ $this->pieces[2] = null;}
+		if( !array_key_exists( 3, $this->pieces) ){ $this->pieces[3] = null;}
+		if( !array_key_exists( 5, $this->pieces) ){ $this->pieces[5] = null;}
+		if( !array_key_exists( 7, $this->pieces) ){ $this->pieces[7] = null;}
+
 		if ($i = strpos($this->pieces[0],';')) {
 			/* two values seperated by a semicolon */
 			$this->coor = array(
@@ -72,14 +84,14 @@ class Coordinate {
 			$latNS = 'N';
 			$lonEW = 'E';
 			$latmin = $lonmin = $latsec = $lonsec = 0;
-		} elseif ($this->is_coor($this->pieces[1],$this->pieces[3])) {
+		} elseif ( $this->is_coor($this->pieces[1],$this->pieces[3])) {
 			$this->coor = array(
 				$this->latdeg = array_shift($this->pieces),
 				$latNS        = array_shift($this->pieces),
 				$this->londeg = array_shift($this->pieces),
 				$lonEW        = array_shift($this->pieces));
 			$latmin = $lonmin = $latsec = $lonsec = 0;
-		} elseif ($this->is_coor($this->pieces[2],$this->pieces[5])) {
+		} elseif ( $this->is_coor($this->pieces[2],$this->pieces[5])) {
 			$this->coor = array(
 				$this->latdeg = array_shift($this->pieces),
 				$latmin       = array_shift($this->pieces),
@@ -88,7 +100,7 @@ class Coordinate {
 				$lonmin       = array_shift($this->pieces),
 				$lonEW        = array_shift($this->pieces));
 			$latsec = $lonsec = 0;
-		} elseif ($this->is_coor($this->pieces[3],$this->pieces[7])) {
+		} elseif ( $this->is_coor($this->pieces[3],$this->pieces[7])) {
 			$this->coor = array(
 				$this->latdeg = array_shift($this->pieces),
 				$latmin       = array_shift($this->pieces),
@@ -117,28 +129,37 @@ class Coordinate {
 
 		$latfactor = 1.0 ;
 		$lonfactor = 1.0 ;
-		if (strtoupper($latNS) == "S") {
+		if ( !empty( $latNS ) && strtoupper($latNS) == "S") {
 			$latfactor = -1.0 ;
 			#$this->latdeg = -$this->latdeg;
 		}
 
-		if (strtoupper($lonEW) == "W") {
+		if ( !empty( $lonEW ) && strtoupper($lonEW) == "W") {
 			$lonfactor = -1.0 ;
 			#$this->londeg = -$this->londeg;
 		}
 
 		# Make decimal degree, if not already
-		$latmin += $latsec/60.0;
-		$lonmin += $lonsec/60.0;
-		if ($this->latdeg < 0) {
-			$this->latdeg -= $latmin/60.0;
-		} else {
-			$this->latdeg += $latmin/60.0;
+		if( !empty( $latsec ) && !empty( $latmin ) ){
+			$latmin += $latsec/60.0;
 		}
-		if ($this->londeg < 0) {
-			$this->londeg -= $lonmin/60.0;
-		} else {
-			$this->londeg += $lonmin/60.0;
+		if( !empty( $lonsec ) && !empty( $lonmin ) ){
+			$lonmin += $lonsec/60.0;
+		}
+
+		if( !empty( $latmin ) ){
+			if ($this->latdeg < 0) {
+				$this->latdeg -= $latmin/60.0;
+			} else {
+				$this->latdeg += $latmin/60.0;
+			}
+		}
+		if( !empty( $lonmin ) ){
+			if ($this->londeg < 0) {
+				$this->londeg -= $lonmin/60.0;
+			} else {
+				$this->londeg += $lonmin/60.0;
+			}
 		}
 		$this->latdeg *= $latfactor ;
 		$this->londeg *= $lonfactor ;
@@ -149,7 +170,7 @@ class Coordinate {
 	 *   minutes, seconds and direction
 	 * @origional
 	 */
-	function make_minsec( $deg )
+	protected function make_minsec( $deg )
 	{
 		if ( $deg >= 0) {
 			$NS = "N";
@@ -179,10 +200,10 @@ class Coordinate {
 	 *   string
 	 * @origional
 	 */
-	function make_position( $lat, $lon )
+	protected function make_position( $lat, $lon )
 	{
-		$latdms = geo_param::make_minsec( $lat );
-		$londms = geo_param::make_minsec( $lon );
+		$latdms = $this->make_minsec( $lat );
+		$londms = $this->make_minsec( $lon );
 		$outlat = intval(abs($latdms['deg'])) . "&deg;&nbsp;";
 		$outlon = intval(abs($londms['deg'])) . "&deg;&nbsp;";
 		if ($latdms['min'] != 0 or $londms['min'] != 0
@@ -201,7 +222,7 @@ class Coordinate {
 	 *  Get the additional attributes in an associative array
 	 * @origional
 	 */
-	function get_attr()
+	protected function get_attr()
 	{
 		$a = array();
 		while (($s = array_shift($this->pieces))) {
@@ -223,7 +244,7 @@ class Coordinate {
 		return $a;
 	}
 
-	function is_coor( $ns,$ew )
+	protected function is_coor( $ns,$ew )
 	{
 		$ns = strtoupper($ns);
 		$ew = strtoupper($ew);
@@ -231,7 +252,7 @@ class Coordinate {
 			($ew=="E" or $ew=="W"));
 	}
 
-	function frac( $f)
+	protected function frac( $f)
 	{
 		return abs($f) - abs(intval($f));
 	}
@@ -240,7 +261,7 @@ class Coordinate {
 	 *  Get composite position in RFC2045 format
 	 * @origional
 	 */
-	function get_position( )
+	protected function get_position( )
 	{
 		return $this->latdeg.";".$this->londeg;
 	}
@@ -249,7 +270,7 @@ class Coordinate {
 	 *  Get error message that applies, or "" of all is well
 	 * @origional
 	 */
-	function get_error()
+	protected function get_error()
 	{
 		if ($this->error != "") {
 			return "Error:".$this->error;
@@ -262,7 +283,7 @@ class Coordinate {
 	 *  Use original content as much as possible
 	 * @origional
 	 */
-	function get_markup()
+	protected function get_markup()
 	{
 		$n = count($this->coor);
 
