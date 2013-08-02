@@ -5,7 +5,7 @@ use Addframe\Mediawiki\User;
 
 
 /**
- * @covers Addframe\User
+ * @covers Addframe\Mediawiki\User
  *
  * @since 0.0.2
  *

@@ -5,7 +5,7 @@ use Addframe\Mediawiki\Page;
 use Addframe\Mediawiki\PageList;
 
 /**
- * @covers Addframe\PageList
+ * @covers Addframe\Mediawiki\PageList
  *
  * @since 0.0.2
  *

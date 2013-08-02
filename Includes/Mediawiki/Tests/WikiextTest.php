@@ -4,7 +4,7 @@ namespace Addframe\Tests;
 use Addframe\Mediawiki\Wikitext;
 
 /**
- * @covers Addframe\Wikitext
+ * @covers Addframe\Mediawiki\Wikitext
  *
  * @since 0.0.2
  *
