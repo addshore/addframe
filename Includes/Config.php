@@ -49,7 +49,20 @@ class Config {
 
 	}
 
-	public static function get( $config, $setting ){
+	public static function set($config, $setting){
+		Config::$settings[$config] = $setting;
+	}
+
+	public static function setFromIni($config, $location){
+		Config::set( $config, parse_ini_file( $location ) );
+	}
+
+	public static function get( $config, $setting = null ){
+		if( $setting == null ){
+			if( isset( Config::$settings[$config] ) ) {
+				return Config::$settings[$config];
+			}
+		}
 		if( isset( Config::$settings[$config][$setting] ) ) {
 			return Config::$settings[$config][$setting];
 		}
