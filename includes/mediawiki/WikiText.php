@@ -68,6 +68,7 @@ class WikiText {
 		return strlen( $this->text );
 	}
 
+	//todo: this will currently match things like "ssh://123.456.789.com", We probably want to avoid that...
 	public function getUrls() {
 		preg_match_all( Regex::getUrlRegex(), $this->text, $matches );
 		return $matches[0];

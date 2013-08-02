@@ -121,4 +121,43 @@ class WikiTextTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals("a string with the word in it", $wikiText->getText(), "Failed to remove regex match");
 	}
 
+	/**
+	 * @dataProvider provideStringWithUrls
+	 */
+	public function testGeturls( $string, $expected ){
+		$wikiText = new WikiText( $string );
+		$this->assertEquals( $expected, $wikiText->getUrls(), "Failed to correctly get Urls");
+	}
+
+	function provideStringWithUrls(){
+		return array(
+			array( "", array( ) ),
+			array( "This is just a regular string", array( ) ),
+			array( "https://meta.wikimedia.org/wiki", array( "https://meta.wikimedia.org/wiki" ) ),
+			array( "ah8h8IFJKuihuifHUhiuyf8\nkjhIUFYhiuh\nhttp://www.google.com WOO\n.", array( "http://www.google.com" ) ),
+			array( "ah8\nkjhI UFYhi uh\nhttp://tools.wmflabs.org/?status WOO\nDGJHkmf sggsg.", array( "http://tools.wmflabs.org/?status" ) ),
+			array( "http://www.wikidata.org and //en.wikipedia.org", array( "http://www.wikidata.org", "//en.wikipedia.org" ) ),
+			array( "http://", array( ) ),
+		);
+	}
+
+	/**
+	 * @dataProvider provideStringWithTrailingWhitespace
+	 */
+	public function testTrimWhitespace( $string, $expected ){
+		$wikiText = new WikiText( $string );
+		$wikiText->trimWhitespace();
+		$this->assertEquals( $expected, $wikiText->getText() );
+	}
+
+	function provideStringWithTrailingWhitespace(){
+		return array(
+			array( "a string\n", "a string\n" ),
+			array( "a string\n\n\n", "a string\n\n" ),
+			array( "a\n\n\nstring\n\n\n", "a\n\n\nstring\n\n" ),
+			array( "a string\n\n\n", "a string\n\n" ),
+			array( "\n\n\n\na string\n\n\n", "\n\n\n\na string\n\n" ),
+		);
+	}
+
 }
