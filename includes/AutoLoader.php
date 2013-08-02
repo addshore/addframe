@@ -37,8 +37,6 @@ class AutoLoader {
 	public static function loadClass($className) {
 		if (isset(AutoLoader::$classNames[$className])) {
 			require_once(AutoLoader::$classNames[$className]);
-		} else {
-			throw new \Exception( "Could not find class {$className}" );
 		}
 	}
 
