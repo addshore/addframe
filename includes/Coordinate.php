@@ -7,12 +7,14 @@ namespace Addframe;
  * This is taken from the Geohack tool at http://tools.wmflabs.org/geohack/
  *
  * @since 0.0.2
- * @author Magnus Manske (origional)
- * @author Kolossos (origional)
+ * @author Magnus Manske (@origional)
+ * @author Kolossos (@origional)
  * @author Addshore
  */
 
 class Coordinate {
+
+	protected $globe;
 
 	protected $latdeg;
 	protected $londeg;
@@ -29,15 +31,14 @@ class Coordinate {
 
 	public function __construct( $params ) {
 		//todo: enable constructing with other sets of params (i.e from db or api)
-		$this->geo_param( $params );
+		$this->parseGeohackParams( $params );
 	}
 
 	/**
-	 *   Constructor:
-	 *   Read coordinates, and if there is a range, read the range
+	 *  Read coordinates, and if there is a range, read the range
 	 *  @origional
 	 */
-	protected function geo_param( $param )
+	protected function parseGeohackParams( $param )
 	{
 		$this->pieces = explode(" ", str_replace ( ' O' , ' E' , str_replace( '_', ' ', $param )));
 		$this->get_coor( );
@@ -64,8 +65,7 @@ class Coordinate {
 	}
 
 	/**
-	 *  Private:
-	 *  Get a set of coordinates from parameters
+	 * Get a set of coordinates from parameters
 	 * @origional
 	 */
 	protected function get_coor( ) {
@@ -166,8 +166,8 @@ class Coordinate {
 	}
 
 	/**
-	 *   Given decimal degrees, convert to
-	 *   minutes, seconds and direction
+	 *  Given decimal degrees, convert to
+	 *  minutes, seconds and direction
 	 * @origional
 	 */
 	protected function make_minsec( $deg )
@@ -196,8 +196,8 @@ class Coordinate {
 	}
 
 	/**
-	 *   Given decimal degrees latitude and longitude, convert to
-	 *   string
+	 *  Given decimal degrees latitude and longitude, convert to
+	 *  string
 	 * @origional
 	 */
 	protected function make_position( $lat, $lon )
@@ -219,7 +219,7 @@ class Coordinate {
 	}
 
 	/**
-	 *  Get the additional attributes in an associative array
+	 * Get the additional attributes in an associative array
 	 * @origional
 	 */
 	protected function get_attr()
@@ -244,6 +244,9 @@ class Coordinate {
 		return $a;
 	}
 
+	/**
+	 * @origional
+	 */
 	protected function is_coor( $ns,$ew )
 	{
 		$ns = strtoupper($ns);
@@ -252,13 +255,16 @@ class Coordinate {
 			($ew=="E" or $ew=="W"));
 	}
 
+	/**
+	 * @origional
+	 */
 	protected function frac( $f)
 	{
 		return abs($f) - abs(intval($f));
 	}
 
 	/**
-	 *  Get composite position in RFC2045 format
+	 * Get composite position in RFC2045 format
 	 * @origional
 	 */
 	protected function get_position( )
@@ -267,7 +273,7 @@ class Coordinate {
 	}
 
 	/**
-	 *  Get error message that applies, or "" of all is well
+	 * Get error message that applies, or "" of all is well
 	 * @origional
 	 */
 	protected function get_error()
@@ -324,6 +330,56 @@ class Coordinate {
 		} else {
 			return $this->get_error();
 		}
+	}
+
+	public function getLonDeg(){
+		return $this->londeg;
+	}
+
+	public function getLatDeg(){
+		return $this->latdeg;
+	}
+
+	public function setGlobe( $globe ){
+		$this->globe = $globe;
+	}
+
+	public function getGlobe(){
+		return $this->globe;
+	}
+
+	/**
+	 * This functions calculates the precision of the coordinate
+	 * @return float|int
+	 */
+	public function getPrecision(){
+		$precision = 1/60/60; //default
+		if( $this->coor[6] == '' || $this->coor[2] == '' ){
+			$precision = 1/60; //1 arc second
+		}
+		if( $this->coor[5] == '' || $this->coor[1] == '' ){
+			$precision = 1; //1 arc min
+		}
+		if( $this->coor[0] == '' || $this->coor[4] == ''){
+			$precision = 360; //1 degree (its probably bad if we get here
+		}
+		return $precision;
+	}
+
+	public function getWikidataArray(){
+		if( !isset( $this->londeg ) || !isset( $this->latdeg ) ||  $this->getPrecision() == null ){
+			return null;
+		}
+
+		$array = array();
+		$array['latitude'] = $this->latdeg;
+		$array['longitude'] = $this->londeg;
+		if( isset( $this->globe ) ){
+			$array['globe'] = $this->globe;
+		}
+		$array['precision'] = $this->getPrecision();
+
+		return $array;
 	}
 }
 
