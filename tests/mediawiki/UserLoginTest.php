@@ -38,4 +38,14 @@ class UserLoginTest extends \PHPUnit_Framework_TestCase {
 
 	}
 
+	/**
+	 * @dataProvider provideLoginDetails
+	 */
+	function testCanUnsetPassword( $username, $password ){
+		$userLogin = new UserLogin( $username, $password );
+		$userLogin->unsetPassword();
+		$this->assertEquals( null , $userLogin->getPassword(), 'Could not assert password was unset');
+
+	}
+
 }

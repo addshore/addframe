@@ -28,4 +28,11 @@ class UserLogin {
 		return $this->password;
 	}
 
+	/**
+	 * Unsets the users password.
+	 */
+	public function unsetPassword(){
+		$this->password = null;
+	}
+
 }
