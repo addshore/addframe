@@ -62,7 +62,7 @@ class CoordinateTest extends \PHPUnit_Framework_TestCase {
 					'precision' => strval( 1/60/60 )
 				)
 			),
-			//6 Decimal degree only
+			//6 Decimal degree specificed, same as //1 above
 			array( '29.583333333333___N_82.083333333333___E',
 				array(
 					'latitude' => '29.583333333333',
@@ -87,7 +87,7 @@ class CoordinateTest extends \PHPUnit_Framework_TestCase {
 	function testCanGetWikidataArray( $params, $expectedArray ){
 		$coor = new Coordinate( $params );
 		$array = $coor->getWikidataArray();
-		$this->assertEquals( $expectedArray, $array, "Failed to assert Coordinate array was correct" );
+		$this->assertEquals( $expectedArray, $array, "Failed to assert Coordinate array was correct from $params" );
 	}
 
 }
