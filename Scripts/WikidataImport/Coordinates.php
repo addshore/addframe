@@ -81,7 +81,7 @@ while ( $maxoffset == 0 || $offset <= $maxoffset ){
 		}
 
 		//Skip bad names...
-		if( preg_match( '/^(List|Geography) of/i', $page['title'] ) ){
+		if( preg_match( '/^(List|Geography)( |_)of/i', $page['title'] ) ){
 			continue;
 		}
 		
