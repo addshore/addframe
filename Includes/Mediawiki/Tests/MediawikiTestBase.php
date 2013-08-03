@@ -51,4 +51,8 @@ class MediawikiTestBase extends \PHPUnit_Framework_TestCase {
 		return $this->getMockBuilder('Addframe\Mediawiki\Page')->disableOriginalConstructor()->getMock();
 	}
 
+	function getMockPageList(){
+		return $this->getMockBuilder('Addframe\Mediawiki\PageList')->disableOriginalConstructor()->getMock();
+	}
+
 }

@@ -40,6 +40,7 @@ class PageListTest extends MediawikiTestBase {
 			array( null , 0 ),
 			array( $this->getMockPage(), 1 ),
 			array( array ( $this->getMockPage(), $this->getMockPage() ), 2 ),
+			array( $this->getMockPageList(), 0 ),
 		);
 	}
 

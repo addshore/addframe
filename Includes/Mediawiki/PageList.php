@@ -15,6 +15,9 @@ class PageList extends \ArrayObject{
 	 */
 	function __construct( $value = null ) {
 		if ( $value !== null ){
+			if( $value instanceof PageList ){
+				$value = $value->getArrayCopy();
+			}
 			if( is_array( $value ) ){
 				/* @var $page Page */
 				foreach( $value as $page ){
