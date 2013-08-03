@@ -27,4 +27,14 @@ class ConfigTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
+	function testCanLoadDefaultConfigs(){
+		Config::loadConfigs();
+		$this->assertTrue( true, "Failed to load default configs" );
+	}
+
+	function testLoadConfigException(){
+		$this->setExpectedException('UnexpectedValueException', "Config failed to detected bad config directory");
+		Config::loadConfigs('ThisPathDoesClearlyNotExist');
+	}
+
 }
