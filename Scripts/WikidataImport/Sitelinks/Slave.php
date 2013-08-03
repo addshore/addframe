@@ -73,7 +73,7 @@ while(true){
 		echo "* Adding everything to the entity!\n";
 		$baseEntity->load();
 		foreach ( $usedPages as $page ) {
-			$baseEntity->addSitelink( $page->site->getId(), $page->normaliseTitleNamespace() );
+			$baseEntity->addSitelink( $page->site->getId(), $page->title->normaliseTitle() );
 			//@todo this should only happen for entity site links so should be in a different place
 //			if ( $page->site->getType() == 'wiki' ) {
 //				$baseEntity->addLabel( $page->site->getLanguage(), $page->title );
