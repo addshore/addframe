@@ -128,6 +128,11 @@ while (true){
 				$bestPrecision = $coord['precision'];
 			}
 		}
+
+		//Skip if we can only say to 1 degree
+		if( $bestPrecision >= 1 ){
+			continue;
+		}
 		
 		//Add Claims
 		foreach( $listOfCoords as $ourCoord ){
