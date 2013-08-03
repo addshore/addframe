@@ -1,6 +1,6 @@
 <?php
 
-namespace Addframe\Tests;
+namespace Addframe\Mediawiki\Tests;
 use Addframe\Mediawiki\User;
 
 
@@ -12,18 +12,13 @@ use Addframe\Mediawiki\User;
  * @author Addshore
  */
 
-class UserLogin extends \PHPUnit_Framework_TestCase {
+class UserLogin extends MediawikiTestBase {
 
 	function provideUserDetails(){
 		return array(
 			array( 'username', $this->getMockSite() ),
 			array( 'DifferentUsername', $this->getMockSite() ),
 		);
-	}
-
-	function getMockSite(){
-		$mockSite = $this->getMockBuilder( 'Addframe\Mediawiki\Site' )->disableOriginalConstructor()->getMock();
-		return $mockSite;
 	}
 
 	/**
