@@ -70,10 +70,12 @@ class Coordinate {
 	 */
 	protected function get_coor( ) {
 
+		if( !array_key_exists( 0, $this->pieces) ){ $this->pieces[0] = null;}
+		if( !array_key_exists( 1, $this->pieces) ){ $this->pieces[1] = null;}
 		if( !array_key_exists( 2, $this->pieces) ){ $this->pieces[2] = null;}
-		if( !array_key_exists( 3, $this->pieces) ){ $this->pieces[3] = null;}
+		if( !array_key_exists( 4, $this->pieces) ){ $this->pieces[4] = null;}
 		if( !array_key_exists( 5, $this->pieces) ){ $this->pieces[5] = null;}
-		if( !array_key_exists( 7, $this->pieces) ){ $this->pieces[7] = null;}
+		if( !array_key_exists( 6, $this->pieces) ){ $this->pieces[6] = null;}
 
 		if ($i = strpos($this->pieces[0],';')) {
 			/* two values seperated by a semicolon */
