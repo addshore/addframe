@@ -113,7 +113,12 @@ while ( $maxoffset == 0 || $offset > $maxoffset ){
 		$listOfCoords = array();
 		$expandedText = $page->getTextWithExpandedTemplates();
 		$allUrls = $expandedText->getUrls();
+		$usedUrls = array();
 		foreach( $allUrls as $url ){
+			if( in_array( $url, $usedUrls ) ){
+				continue;
+			}
+			$usedUrls[] = $url;
 			$url = parse_url( $url );
 			if( array_key_exists('path', $url) && strstr( $url['path'], 'tools.wmflabs.org/geohack/geohack.php' ) ){
 				$queryParts = explode('&', $url['query']);
@@ -122,9 +127,7 @@ while ( $maxoffset == 0 || $offset > $maxoffset ){
 					if( $splitQuery[0] == 'params' ){
 						$coord = new Coordinate( $splitQuery[1] );
 						$coordArray = $coord->getWikidataArray();
-						if( $coordArray['precision'] != 360 ){
-							$listOfCoords[] = $coordArray;
-						}
+						$listOfCoords[] = $coordArray;
 					}
 				}
 			}
