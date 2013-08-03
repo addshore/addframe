@@ -3,7 +3,7 @@
 namespace Addframe\Mediawiki;
 
 /**
- * Represents a wiki Template
+ * Represents a wiki Image
  **/
 
 class Template extends Page{

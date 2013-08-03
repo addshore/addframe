@@ -12,7 +12,7 @@ class Page {
 
 	/** @var Site siteUrl for associated site */
 	public $site;
-	/** @var Title title of Page including namespace */
+	/** @var string title of Page including namespace */
 	public $title;
 	/** @var Wikitext Wikitext for page */
 	public $wikiText;
@@ -33,13 +33,12 @@ class Page {
 	 */
 	public function __construct( $site, $title ) {
 		$this->site = $site;
-		$this->title =  new Title( $title, $this );
+		$this->title =  $title;
 		$this->wikiText = new Wikitext();
 	}
 
 	/**
 	 * @return string
-	 * @deprecated
 	 */
 	public function getNsid() {
 		if( $this->nsid == null ){
@@ -68,7 +67,7 @@ class Page {
 	 */
 	public function getText( $force = false) {
 		if( $this->wikiText->getText() == null || $force == true ){
-			echo "Loading page " . $this->site->url . " " . $this->title->getTitle() . "\n";
+			echo "Loading page " . $this->site->url . " " . $this->title . "\n";
 			$this->wikiText->setText( $this->getSite()->getPageTextFromPageTitle( $this->title ) );
 		}
 		return $this->wikiText->getText();
@@ -80,7 +79,6 @@ class Page {
 
 	/**
 	 * @return string
-	 * @deprecated
 	 */
 	public function getTitle() {
 		return $this->title;
@@ -88,10 +86,9 @@ class Page {
 
 	/**
 	 * @return string The title with the namespace removed if possible
-	 * @deprecated
 	 */
 	public function getTitleWithoutNamespace() {
-		$this->title->getNamespaceId();
+		$this->getNsid();
 
 		if ( $this->nsid != null && $this->nsid != '0' ) {
 			$explode = explode( ':', $this->title, '2' );
@@ -132,10 +129,9 @@ class Page {
 
 	/**
 	 * @return string Normalise the namespace of the title if possible.
-	 * @deprecated
 	 */
 	public function normaliseTitleNamespace() {
-		$this->title->getNamespaceId();
+		$this->getNsid();
 
 		if ( $this->nsid != '0' ) {
 			$siteNamespaces = $this->site->requestNamespaces();
@@ -146,6 +142,7 @@ class Page {
 			$this->title = implode( ':', $explosion );
 		}
 		return $this->title;
+
 	}
 
 	/**
@@ -312,7 +309,7 @@ class Page {
 	 * @return string
 	 */
 	public function save( $summary = null, $minor = false ) {
-		echo "Saved page " . $this->title->getTitle() . "\n";
+		echo "Saved page " . $this->title . "\n";
 		return $this->site->requestEdit( $this->title, $this->getText(), $summary, $minor );
 	}
 
@@ -331,13 +328,13 @@ class Page {
 		$baseEntity->load();
 
 		foreach ( $baseEntity->getLanguageData('sitelinks') as $sitelink ) {
-			$site = $this->site->family->getSiteFromSiteid( $sitelink['site'] );
-			if( $site instanceof Site && $this->site->getType() == $site->getType() ){
-				$iwPrefix = $site->getIwPrefix();
-				$page = $site->newPageFromTitle( $sitelink['title'] );
-				$titleEnd = $page->title->getTitleWithoutNamespace();
-				$possibleNamespaces = $site->requestNamespaces();
-				$possibleNamespaces = $possibleNamespaces[$page->title->getNamespaceId()];
+			$linkSite = $this->site->family->getSiteFromSiteid( $sitelink['site'] );
+			if( $linkSite instanceof Site && $this->site->getType() == $linkSite->getType() ){
+				$iwPrefix = $linkSite->getIwPrefix();
+				$page = $linkSite->newPageFromTitle( $sitelink['title'] );
+				$titleEnd = $page->getTitleWithoutNamespace();
+				$possibleNamespaces = $linkSite->requestNamespaces();
+				$possibleNamespaces = $possibleNamespaces[$page->getNsid()];
 
 				//@todo this could all be improved with something like getRegexForTitle or  getRegexForInterwikiLink
 				foreach ( $possibleNamespaces as $namespace ) {
@@ -350,7 +347,7 @@ class Page {
 					//@todo this code is wikimedia specific
 					if( $iwPrefix == 'zh-min-nan' || $iwPrefix == 'nan' ){
 						$iwPrefix = '(zh-min-nan|nan)';
-					} else if ( $iwPrefix == 'no' || $iwPrefix = 'nb'){
+					} else if ( $iwPrefix == 'no' || $iwPrefix == 'nb'){
 						$iwPrefix = '(nb|no)';
 					}
 
@@ -368,7 +365,7 @@ class Page {
 
 		if( count( $this->getInterwikisFromtext() ) == 0 ){
 
-			if( $this->title->getNamespaceId() == 10 ){
+			if( $this->getNsid() == 10 ){
 				//Remove empty no include tags
 				$this->wikiText->removeRegexMatched('/<noinclude>\s+?<\/noinclude>/');
 			}

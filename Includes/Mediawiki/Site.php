@@ -2,7 +2,6 @@
 
 namespace Addframe\Mediawiki;
 use Addframe\Http;
-use Addframe\Mediawiki\Wikibase\Entity;
 
 /**
  * This class is designed to represent a mediawiki installation

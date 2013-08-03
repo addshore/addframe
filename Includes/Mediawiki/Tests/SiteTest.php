@@ -1,6 +1,6 @@
 <?php
 
-namespace Addframe\Mediawiki\Tests;
+namespace Addframe\Tests;
 use Addframe\Mediawiki\Site;
 
 /**
@@ -10,7 +10,7 @@ use Addframe\Mediawiki\Site;
  * @author Addshore
  */
 
-class SiteTest extends MediawikiTestBase {
+class SiteTest extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * @dataProvider provideValidConstructionValues
@@ -26,6 +26,14 @@ class SiteTest extends MediawikiTestBase {
 			array( 'localhost', $this->getMock('Addframe\Http') , null ),
 			array( 'en.wikipedia.org', $this->getMock('Addframe\Http') , $this->getMockFamilyForConstruction() ),
 		);
+	}
+
+	function getMockFamilyForConstruction(){
+		$family = $this->getMock( 'Addframe\Mediawiki\Family', array('getSiteDetailsFromSiteIndex') );
+		$family->expects( $this->any() )->
+			method( 'getSiteDetailsFromSiteIndex' )->
+			will( $this->returnValue( array('lang' => 'en', 'code' => 'wiki') ) );
+		return $family;
 	}
 
 	/**
@@ -72,6 +80,15 @@ class SiteTest extends MediawikiTestBase {
 
 		return $toReturn;
 
+	}
+
+	function getMockHttp( $requestResult = array( 0 => '' ) ){
+		$http = $this->getMock( 'Addframe\Http', array('get','post') );
+		foreach( $requestResult as $key => $return ){
+			$http->expects( $this->at( $key ) )->method( 'get' )->will( $this->returnValue( $return ) );
+			$http->expects( $this->at( $key ) )->method( 'post' )->will( $this->returnValue( $return ) );
+		}
+		return $http;
 	}
 
 	function testSetUserLoginGetUserLoginRoundtrip(){

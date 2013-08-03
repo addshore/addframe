@@ -1,6 +1,6 @@
 <?php
 
-namespace Addframe\Mediawiki\Tests;
+namespace Addframe\Tests;
 use Addframe\Mediawiki\User;
 
 
@@ -12,13 +12,18 @@ use Addframe\Mediawiki\User;
  * @author Addshore
  */
 
-class UserLogin extends MediawikiTestBase {
+class UserLogin extends \PHPUnit_Framework_TestCase {
 
 	function provideUserDetails(){
 		return array(
 			array( 'username', $this->getMockSite() ),
 			array( 'DifferentUsername', $this->getMockSite() ),
 		);
+	}
+
+	function getMockSite(){
+		$mockSite = $this->getMockBuilder( 'Addframe\Mediawiki\Site' )->disableOriginalConstructor()->getMock();
+		return $mockSite;
 	}
 
 	/**
@@ -36,7 +41,7 @@ class UserLogin extends MediawikiTestBase {
 		$user = new User( $site,$username );
 		$userPage = $user->getUserPage();
 		$this->assertInstanceOf( 'Addframe\Mediawiki\Page', $userPage , 'Did not return instance of Page' );
-		$this->assertEquals( 'User:'.$username, $userPage->title->getTitle(), 'Did not set the correct Page Title' );
+		$this->assertEquals( 'User:'.$username, $userPage->getTitle(), 'Did not set the correct Page Title' );
 	}
 
 	/**
@@ -46,7 +51,7 @@ class UserLogin extends MediawikiTestBase {
 		$user = new User( $site,$username );
 		$userTalkPage = $user->getUserTalkPage();
 		$this->assertInstanceOf( 'Addframe\Mediawiki\Page', $userTalkPage , 'Did not return instance of Page' );
-		$this->assertEquals( 'User talk:'.$username, $userTalkPage->title->getTitle(), 'Did not set the correct Page Title' );
+		$this->assertEquals( 'User talk:'.$username, $userTalkPage->getTitle(), 'Did not set the correct Page Title' );
 	}
 
 }

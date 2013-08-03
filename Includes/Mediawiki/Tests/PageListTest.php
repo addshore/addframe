@@ -1,6 +1,6 @@
 <?php
 
-namespace Addframe\Mediawiki\Tests;
+namespace Addframe\Tests;
 use Addframe\Mediawiki\Page;
 use Addframe\Mediawiki\PageList;
 
@@ -12,7 +12,7 @@ use Addframe\Mediawiki\PageList;
  * @author Addshore
  */
 
-class PageListTest extends MediawikiTestBase {
+class PageListTest extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * @dataProvider provideValidConstructionValues
@@ -41,6 +41,24 @@ class PageListTest extends MediawikiTestBase {
 			array( $this->getMockPage(), 1 ),
 			array( array ( $this->getMockPage(), $this->getMockPage() ), 2 ),
 		);
+	}
+
+	/**
+	 * @param null $site array (language,type)
+	 * @param null $title string Title
+	 * @return \PHPUnit_Framework_MockObject_MockObject|string
+	 */
+	function getMockPage( $site = null, $title = null ){
+		if( $site != null && $title != null ){
+			$mockSite = $this->getMockBuilder('Addframe\Mediawiki\Site')->disableOriginalConstructor()->getMock();
+			$mockSite->expects( $this->any() )->method( 'getLanguage' )->will( $this->returnValue( $site['lang'] ) );
+			$mockSite->expects( $this->any() )->method( 'getType' )->will( $this->returnValue( $site['type'] ) );
+
+			$pageMock = $this->getMock('Addframe\Mediawiki\Page', array( 'getTitle' ), array( $mockSite, $title ) );
+			$pageMock->expects( $this->any() )->method( 'getTitle' )->will( $this->returnValue( $title ) );
+			return $pageMock;
+		}
+		return $this->getMockBuilder('Addframe\Mediawiki\Page')->disableOriginalConstructor()->getMock();
 	}
 
 	function testCanAppendArray(){

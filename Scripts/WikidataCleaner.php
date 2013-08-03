@@ -4,6 +4,7 @@
  * @author Addshore
  **/
 use Addframe\Mediawiki\Family;
+use Addframe\Mediawiki\Page;
 use Addframe\Mediawiki\UserLogin;
 
 /**
@@ -17,18 +18,56 @@ $wm = new Family( new UserLogin( 'Bot', 'botp123' ), 'meta.wikimedia.org/w/api.p
 $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 $wikidata->requestLogin();
 
-for ( $i = 1; $i < 14000000; $i ++ ) {
-	$entity = $wikidata->newEntityFromEntityId( 'q' . $i );
+//@todo different item generations here
+$list = array();
+
+foreach ( $list as $itemId ) {
+	$entity = $wikidata->newEntityFromEntityId( $itemId );
 	$entity->load();
-	foreach ( $entity->getLanguageData() as $site => $link ) {
-		$site = $wm->getSiteFromSiteid( $site );
-		//if the article does not exist
-		//if we have been moved update the sitelink
-		//if not then remove the sitelink
-		//if we are a redirect, find out target and update the sitelink
-		//Normalise the namespace is possible
-		//if no label, add it from the title
-		//if redirects go to here add their names as aliases
+	foreach ( $entity->getLanguageData() as $siteId => $articleTitle ) {
+		$page = new Page( $wm->getSiteFromSiteid( $siteId ), $articleTitle );
+		$docPage = getDocsubpage( $siteId );
+		//@todo It might be nice to have a $page->findBase()
+		if( isset( $docPage ) && preg_match('/\/'.$docPage.'$/', $page->title->getTitle() ) ){
+			$entity->removeSitelink( $siteId );
+			$entity->addSitelink( $siteId, preg_replace( '/\/'.$docPage.'$/', '' , $page->title->getTitle() ) );
+		}
 	}
-	//if stuff has changed on the entity then save it!
+	if( $entity->isChanged() ){
+		$entity->save();
+	}
+}
+
+/**
+ * @param $site string siteid
+ * @return null|string name of doc page if set
+ * @author SchreyP (Listed origional 61 subpages)
+ * @author Addshore
+ * @todo this should probably be included in the framework somewhere..
+ */
+function getDocsubpage( $site ){
+	
+	$docPages = array('angwiki' => 'doc','astwiki' => 'doc','aswiki' => 'doc','azwiki' => 'doc','bnwiki' => 'doc','cywiki' => 'doc','enwiki' => 'doc',
+		'eswiki' => 'doc','etwiki' => 'doc','gawiki' => 'doc','gdwiki' => 'doc','guwiki' => 'doc','hiwiki' => 'doc','hywiki' => 'doc','idwiki' => 'doc',
+		'ilowiki' => 'doc','jawiki' => 'doc','jvwiki' => 'doc','kmwiki' => 'doc','knwiki' => 'doc','kywiki' => 'doc','lawiki' => 'doc','minwiki' => 'doc',
+		'mkwiki' => 'doc','mrwiki' => 'doc','mswiki' => 'doc','newiki' => 'doc','nsowiki' => 'doc','orwiki' => 'doc','pawiki' => 'doc','ptwiki' => 'doc',
+		'rowiki' => 'doc','ruwiki' => 'doc','sawiki' => 'doc','scowiki' => 'doc','shwiki' => 'doc','simplewiki' => 'doc','siwiki' => 'doc',
+		'swwiki' => 'doc','thwiki' => 'doc','tpiwiki' => 'doc','uzwiki' => 'doc','viwiki' => 'doc','zhwiki' => 'doc');
+	$docPages['frwiki'] = 'Documentation';
+	$docPages['cswiki'] = 'ús';
+	$docPages['elwiki'] = 'τεκμηρίωση';
+	$docPages['glwiki'] = 'uso';
+	$docPages['itwiki'] = 'man';
+	$docPages['kawiki'] = 'ინფო';
+	$docPages['kowiki'] = '설명문서';
+	$docPages['nowiki'] = 'dok';
+	$docPages['slwiki'] = 'dok';
+	$docPages['trwiki'] = 'belge';
+	$docPages['ukwiki'] = 'Документація';
+	$docPages['zh-yuewiki'] = '解';
+	
+	if( array_key_exists( $site, $docPages ) ){
+		return $docPages[$site];
+	}
+	return null;
 }
