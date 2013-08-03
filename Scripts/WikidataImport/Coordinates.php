@@ -20,6 +20,7 @@ use Addframe\Mediawiki\Site;
  * The output of this file is very minimal. See the key below...
  * '.' = a page has been loaded
  * '#100#' = a new DB query has been carried out with the offset of 100
+ * ',' = as page has been skiped to try and avoid importing incorrect or non precise coords
  * 'Q123' = item Q123 has been edited
  *
  * @author addshore
@@ -127,8 +128,9 @@ while ( $maxoffset == 0 || $offset > $maxoffset ){
 			}
 		}
 		
-		//Skip if no coords
-		if( count( $listOfCoords ) == 0 ){
+		//Skip if we do not only find 1 coord
+		if( count( $listOfCoords ) != 1 ){
+			echo ",";
 			continue;
 		}
 		
@@ -142,6 +144,7 @@ while ( $maxoffset == 0 || $offset > $maxoffset ){
 
 		//Skip if we can only say to 1 degree
 		if( $bestPrecision >= 1 ){
+			echo ",";
 			continue;
 		}
 		
