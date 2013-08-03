@@ -77,5 +77,11 @@ class Config {
 		return null;
 	}
 
+	/**
+	 * Used to purge all settings
+	 */
+	public static function clear(){
+		Config::$settings = array();
+	}
 
 }

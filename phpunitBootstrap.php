@@ -1,7 +1,8 @@
 <?php
 
+namespace Addframe;
 /** @author Addshore */
 
-use Addframe\AutoLoader;
+require_once(dirname( __FILE__ ) . '/Init.php');
 
-require_once(dirname( __FILE__ ) . '/Includes/AutoLoader.php');
+Config::clear();

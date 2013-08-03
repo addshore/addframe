@@ -10,7 +10,7 @@ use Addframe\Mediawiki\Site;
  * @author Addshore
  */
 
-class SiteTest extends MediawikiTestBase {
+class SiteTest extends MediawikiTestCase {
 
 	/**
 	 * @dataProvider provideValidConstructionValues

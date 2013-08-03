@@ -9,7 +9,7 @@ namespace Addframe\Mediawiki\Tests;
  * @author Addshore
  */
 
-class MediawikiTestBase extends \PHPUnit_Framework_TestCase {
+class MediawikiTestCase extends \PHPUnit_Framework_TestCase {
 
 	function getMockFamilyForConstruction(){
 		$family = $this->getMock( 'Addframe\Mediawiki\Family', array('getSiteDetailsFromSiteIndex') );

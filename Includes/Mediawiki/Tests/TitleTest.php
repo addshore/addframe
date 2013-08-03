@@ -10,7 +10,7 @@ use Addframe\Mediawiki\Title;
  * @author Addshore
  */
 
-class TitleTest extends MediawikiTestBase {
+class TitleTest extends MediawikiTestCase {
 
 	/**
 	 * @dataProvider provideValidTitleValues

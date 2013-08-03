@@ -12,7 +12,7 @@ use Addframe\Mediawiki\PageList;
  * @author Addshore
  */
 
-class PageListTest extends MediawikiTestBase {
+class PageListTest extends MediawikiTestCase {
 
 	/**
 	 * @dataProvider provideValidConstructionValues

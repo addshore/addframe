@@ -11,7 +11,7 @@ use Addframe\Mediawiki\Wikitext;
  * @author Addshore
  */
 
-class WikitextTest extends MediawikiTestBase {
+class WikitextTest extends MediawikiTestCase {
 
 	function provideString(){
 		return array(

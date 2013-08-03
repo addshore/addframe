@@ -10,7 +10,7 @@ use Addframe\Mediawiki\Family;
  * @author Addshore
  */
 
-class FamilyTest extends MediawikiTestBase {
+class FamilyTest extends MediawikiTestCase {
 
 	/**
 	 * @dataProvider provideValidConstructionValues

@@ -12,7 +12,7 @@ use Addframe\Mediawiki\User;
  * @author Addshore
  */
 
-class UserLogin extends MediawikiTestBase {
+class UserLogin extends MediawikiTestCase {
 
 	function provideUserDetails(){
 		return array(
