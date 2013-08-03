@@ -44,7 +44,7 @@ class PageList extends \ArrayObject{
 		$index = array();
 		/* @var $page Page */
 		foreach( $this->getArrayCopy() as $key => $page ){
-			$sig = array( $page->getTitle(), $page->site->getLanguage(), $page->site->getType() );
+			$sig = array( $page->title->getTitle(), $page->site->getLanguage(), $page->site->getType() );
 			if( in_array( $sig , $index ) ){
 				$this->offsetUnset( $key );
 			} else {
