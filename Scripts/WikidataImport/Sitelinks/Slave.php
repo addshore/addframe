@@ -52,8 +52,8 @@ while(true){
 	$usedPages = new PageList(
 		$baseSite->newPageFromTitle( $baseSite->getNamespaceFromId( $row['namespace'] ) . $row['title'] ) );
 	$usedPages->appendArray( $usedPages->offsetGet(0)->getPagesFromInterwikiLinks() );
-	$usedPages->appendArray( $usedPages->offsetGet(0)->getPagesFromInterprojectLinks() );
-	$usedPages->appendArray( $usedPages->offsetGet(0)->getPagesFromInterprojectTemplates() );
+	//$usedPages->appendArray( $usedPages->offsetGet(0)->getPagesFromInterprojectLinks() );
+	//$usedPages->appendArray( $usedPages->offsetGet(0)->getPagesFromInterprojectTemplates() );
 	$usedPages->makeUniqueUsingPageDetails();
 
 	// Try to find an entity to work on
