@@ -33,7 +33,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	function testLoadConfigException(){
-		$this->setExpectedException('UnexpectedValueException', "No such file or directory");
+		$this->setExpectedException('UnexpectedValueException');
 		Config::loadConfigs('ThisPathDoesClearlyNotExist');
 	}
 
