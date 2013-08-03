@@ -79,6 +79,11 @@ while ( $maxoffset == 0 || $offset <= $maxoffset ){
 		if($page['namespace'] != '0'){
 			continue;
 		}
+
+		//Skip bad names...
+		if( preg_match( '/^(List|Geography) of/i', $page['title'] ) ){
+			continue;
+		}
 		
 		//Skip if we are not an existing page
 		$page = $wiki->newPageFromTitle( $page['title'] );
