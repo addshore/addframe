@@ -10,7 +10,7 @@ use Addframe\Config;
 use Addframe\Mediawiki\Family;
 use Addframe\Mediawiki\UserLogin;
 
-require_once( dirname( __FILE__ ) . '/../../init.php' );
+require_once( dirname( __FILE__ ) . '/../../Init.php' );
 
 $wm = new Family(
 	new UserLogin( Config::get( 'wikiuser', 'username'),

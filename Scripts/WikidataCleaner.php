@@ -10,7 +10,7 @@ use Addframe\Mediawiki\UserLogin;
  * @author Addshore
  */
 
-require_once( dirname( __FILE__ ) . '/../init.php' );
+require_once( dirname( __FILE__ ) . '/../Init.php' );
 
 //Create a site
 $wm = new Family( new UserLogin( 'Bot', 'botp123' ), 'meta.wikimedia.org/w/api.php' );

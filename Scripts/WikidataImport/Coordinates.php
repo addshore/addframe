@@ -15,7 +15,7 @@ use Addframe\Stathat;
  * @author Addshore
  */
 
-require_once( dirname( __FILE__ ) . '/../../init.php' );
+require_once( dirname( __FILE__ ) . '/../../Init.php' );
 
 //php script.php --site='enwiki'
 //$options['site']

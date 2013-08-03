@@ -13,7 +13,7 @@ use Addframe\Mediawiki\UserLogin;
  * @author Addshore
  */
 
-require_once( dirname( __FILE__ ) . '/../../init.php' );
+require_once( dirname( __FILE__ ) . '/../../Init.php' );
 
 //This is an array that we can keep our summaries in...
 $summaries = array();
