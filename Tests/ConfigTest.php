@@ -27,4 +27,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
+	function testLoadConfigException(){
+		$this->setExpectedException('UnexpectedValueException');
+		Config::loadConfigs('ThisPathDoesClearlyNotExist');
+	}
+
 }
