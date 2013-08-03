@@ -26,7 +26,7 @@ class Config {
 	 */
 	public static function loadConfigs( $configPath = null ){
 		// Specify the config directory if not set
-		if( $configPath = null ){
+		if( $configPath == null ){
 			$configPath = dirname( __FILE__ ).'/../Configs';
 		}
 

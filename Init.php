@@ -7,6 +7,6 @@ namespace Addframe;
  * @author Addshore
  **/
 
-require_once(dirname( __FILE__ ) . '/includes/AutoLoader.php');
+require_once(dirname( __FILE__ ) . '/Includes/AutoLoader.php');
 
 Config::loadConfigs();
