@@ -12,7 +12,14 @@ use Addframe\Mysql;
 use Addframe\Stathat;
 
 /**
+ * This is a script to import coordinated from a wiki to wikibase
+ *
  * @author Addshore
+ *
+ * The output of this file is very minimal. See the key below...
+ * '.' = a page has been loaded
+ * '#100#' = a new DB query has been carried out with the offset of 100
+ * 'Q123' = item Q123 has been edited
  */
 
 require_once( dirname( __FILE__ ) . '/../../Init.php' );
@@ -46,7 +53,7 @@ $sources = array( 'tr' => "58255", 'lg' => "8566347", 'cy' => "848525", 'sm' => 
 
 while (true){
 
-	echo "#";
+	echo "#$offset#";
 	$list = $db->mysql2array( $db->doQuery("select page_title as title, page_namespace as namespace from geo_tags,page where gt_page_id = page_id limit 100 offset ".$offset) );
 	$offset = $offset + 100;
 	if( !count( $list ) > 0 ){
