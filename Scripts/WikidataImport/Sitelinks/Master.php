@@ -36,7 +36,7 @@ while(true){
 
 		//no flags for these wikis...
 		if($grp['site'] == 'wikivoyage'){
-			$badLangs = array('fr','sv','ro','he','el');
+			$badLangs = array('fr','sv','he');
 			foreach( $badLangs as $badLang ){
 				if( $grp['lang'] == $badLang ){
 					continue 2;
