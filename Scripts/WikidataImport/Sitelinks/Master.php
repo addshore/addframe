@@ -47,9 +47,6 @@ while(true){
 		echo "Querying db\n";
 		$dbQuery = $db->select( 'iwlink','*', "site = '".$grp['site']."' AND lang = '".$grp['lang']."'", array('ORDER BY' => 'updated ASC' ) );
 		$rows = $db->mysql2array( $dbQuery );
-		if( $rows === false ){
-			die('Empty database?');
-		}
 
 		echo "Adding to redis for site = '".$grp['site']."' AND lang = '".$grp['lang']."'\n";
 		foreach( $rows as $row ){
