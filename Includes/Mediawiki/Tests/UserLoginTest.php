@@ -1,6 +1,6 @@
 <?php
 
-namespace Addframe\Tests;
+namespace Addframe\Mediawiki\Tests;
 
 use Addframe\Mediawiki\UserLogin;
 
@@ -12,7 +12,7 @@ use Addframe\Mediawiki\UserLogin;
  * @author Addshore
  */
 
-class UserLoginTest extends \PHPUnit_Framework_TestCase {
+class UserLoginTest extends MediawikiTestBase {
 
 	function provideLoginDetails(){
 		return array(

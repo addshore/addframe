@@ -1,6 +1,6 @@
 <?php
 
-namespace Addframe\Tests;
+namespace Addframe\Mediawiki\Tests;
 use Addframe\Mediawiki\Family;
 
 /**
@@ -10,7 +10,7 @@ use Addframe\Mediawiki\Family;
  * @author Addshore
  */
 
-class FamilyTest extends \PHPUnit_Framework_TestCase {
+class FamilyTest extends MediawikiTestBase {
 
 	/**
 	 * @dataProvider provideValidConstructionValues
