@@ -168,12 +168,12 @@ while(true){
  * @return string Localised Summary
  */
 function getLocalSummary( Site $site , $id){
-	$language = $site->getLanguage();
+	$siteid = $site->getId();
 	$bot = $site->getUserLogin()->username;
 
 	$summary = '[[$who|Bot]]: Migrating interwiki links, now provided by [[d:|Wikidata]] on [[d:$id]]';
-	if( isset( Globals::$config['WikidataImport.Summary'][ $language ] ) ){
-		$summary = Globals::$config['WikidataImport.Summary'][ $language ];
+	if( isset( Globals::$config['WikidataImport.Summary'][ $siteid ] ) ){
+		$summary = Globals::$config['WikidataImport.Summary'][ $siteid ];
 	}
 
 	$summary = str_replace('$who', 'User:'.$bot, $summary);
