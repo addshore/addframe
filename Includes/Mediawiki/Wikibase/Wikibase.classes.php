@@ -7,7 +7,7 @@
 return call_user_func( function() {
 
 	$classes = array(
-		'Wikibase\Entity' => 'Wikibase/Entity.php'
+		'Addframe\Mediawiki\Wikibase\Entity' => 'Entity.php'
 	);
 
 	return $classes;

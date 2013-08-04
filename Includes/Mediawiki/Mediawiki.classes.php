@@ -7,18 +7,18 @@
 return call_user_func( function() {
 
 	$classes = array(
-		'Mediawiki\Category' => 'Mediawiki/Category.php',
-		'Mediawiki\Family' => 'Mediawiki/Family.php',
-		'Mediawiki\Image' => 'Mediawiki/Image.php',
-		'Mediawiki\Page' => 'Mediawiki/Page.php',
-		'Mediawiki\PageList' => 'Mediawiki/PageList.php',
-		'Mediawiki\Regex' => 'Mediawiki/Regex.php',
-		'Mediawiki\Site' => 'Mediawiki/Site.php',
-		'Mediawiki\Template' => 'Mediawiki/Template.php',
-		'Mediawiki\User' => 'Mediawiki/User.php',
-		'Mediawiki\UserLogin' => 'Mediawiki/UserLogin.php',
-		'Mediawiki\Wikitext' => 'Mediawiki/Wikitext.php',
-		'Mediawiki\WikitextParser' => 'Mediawiki/WikitextParser.php',
+		'Addframe\Mediawiki\Category' => 'Category.php',
+		'Addframe\Mediawiki\Family' => 'Family.php',
+		'Addframe\Mediawiki\Image' => 'Image.php',
+		'Addframe\Mediawiki\Page' => 'Page.php',
+		'Addframe\Mediawiki\PageList' => 'PageList.php',
+		'Addframe\Mediawiki\Regex' => 'Regex.php',
+		'Addframe\Mediawiki\Site' => 'Site.php',
+		'Addframe\Mediawiki\Template' => 'Template.php',
+		'Addframe\Mediawiki\User' => 'User.php',
+		'Addframe\Mediawiki\UserLogin' => 'UserLogin.php',
+		'Addframe\Mediawiki\Wikitext' => 'Wikitext.php',
+		'Addframe\Mediawiki\WikitextParser' => 'WikitextParser.php',
 	);
 
 	return $classes;
