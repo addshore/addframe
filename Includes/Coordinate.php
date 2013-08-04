@@ -24,6 +24,8 @@ class Coordinate {
 	protected $latdeg_max;
 	protected $londeg_max;
 
+	protected $precision;
+
 	protected $pieces;
 	protected $error;
 	protected $coor;
@@ -70,16 +72,20 @@ class Coordinate {
 	 */
 	protected function get_coor( ) {
 
+		if( !array_key_exists( 0, $this->pieces) ){ $this->pieces[0] = null;}
+		if( !array_key_exists( 1, $this->pieces) ){ $this->pieces[1] = null;}
 		if( !array_key_exists( 2, $this->pieces) ){ $this->pieces[2] = null;}
-		if( !array_key_exists( 3, $this->pieces) ){ $this->pieces[3] = null;}
+		if( !array_key_exists( 4, $this->pieces) ){ $this->pieces[4] = null;}
 		if( !array_key_exists( 5, $this->pieces) ){ $this->pieces[5] = null;}
-		if( !array_key_exists( 7, $this->pieces) ){ $this->pieces[7] = null;}
+		if( !array_key_exists( 6, $this->pieces) ){ $this->pieces[6] = null;}
 
 		if ($i = strpos($this->pieces[0],';')) {
 			/* two values seperated by a semicolon */
 			$this->coor = array(
 				$this->latdeg = substr($this->pieces[0],0,$i),
 				$this->londeg = substr($this->pieces[0],$i+1));
+			$this->precision = 360;
+			//$this->parseGeohackParams( $this->make_position( $this->coor[0], $this->coor[1] ) );
 			array_shift($this->pieces);
 			$latNS = 'N';
 			$lonEW = 'E';
@@ -90,6 +96,7 @@ class Coordinate {
 				$latNS        = array_shift($this->pieces),
 				$this->londeg = array_shift($this->pieces),
 				$lonEW        = array_shift($this->pieces));
+			$this->getPrecision($this->latdeg, null, null, $this->londeg, null, null);
 			$latmin = $lonmin = $latsec = $lonsec = 0;
 		} elseif ( $this->is_coor($this->pieces[2],$this->pieces[5])) {
 			$this->coor = array(
@@ -99,6 +106,7 @@ class Coordinate {
 				$this->londeg = array_shift($this->pieces),
 				$lonmin       = array_shift($this->pieces),
 				$lonEW        = array_shift($this->pieces));
+			$this->getPrecision($this->latdeg, $latmin, null, $this->londeg, $lonmin, null);
 			$latsec = $lonsec = 0;
 		} elseif ( $this->is_coor($this->pieces[3],$this->pieces[7])) {
 			$this->coor = array(
@@ -110,6 +118,7 @@ class Coordinate {
 				$lonmin       = array_shift($this->pieces),
 				$lonsec       = array_shift($this->pieces),
 				$lonEW        = array_shift($this->pieces));
+			$this->getPrecision($this->latdeg, $latmin, $latsec, $this->londeg, $lonmin, $lonsec);
 		} else {
 			# support decimal, signed lat, lon
 			$this->error = "Unrecognized format";
@@ -356,29 +365,32 @@ class Coordinate {
 
 	/**
 	 * This functions calculates the precision of the coordinate
+	 * @param null $latdeg
+	 * @param null $latmin
+	 * @param null $latsec
+	 * @param null $londeg
+	 * @param null $lonmin
+	 * @param null $lonsec
+	 * @throws \Exception
 	 * @return float|int
 	 */
-	public function getPrecision(){
-		$precision = 1/60/60; //default
-		if( $this->coor[2] == '' || $this->coor[6] == '' ){
-			$precision = 1/60; //1 arc second
+	public function getPrecision( $latdeg = null, $latmin = null, $latsec = null, $londeg = null, $lonmin = null, $lonsec = null){
+		if( isset( $latsec )  && isset( $lonsec ) && $latsec != '' && $lonsec != '' ){
+			$this->precision = 1/60/60;
+		} else if( isset( $latmin ) && isset( $lonmin ) && $latmin != '' && $lonmin != '' ){
+			$this->precision = 1/60;
+		} else if( isset( $latdeg ) && isset( $londeg ) && $latdeg != '' && $londeg != '' ){
+			$this->precision = 1;
+			if( strstr($latdeg, '.') || strstr($londeg, '.') ){
+				$this->parseGeohackParams( $this->make_position( $latdeg, $londeg ) );
+			}
+		} else {
+			throw new \Exception("Unable to calculate precision from coordinate");
 		}
-		if( $this->coor[1] == '' || $this->coor[5] == '' ){
-			$precision = 1; //1 arc min
-		}
-		if( $this->coor[0] == '' || $this->coor[4] == ''){
-			$precision = 360; //1 degree (its probably bad if we get here
-		}
-		if( $precision == 1  && strstr( $this->coor[0],'.' ) && strstr( $this->coor[4],'.' ) ){
-			$this->parseGeohackParams( $this->make_position( $this->coor[0], $this->coor[4] ) );
-			return $this->getPrecision();
-
-		}
-		return $precision;
 	}
 
 	public function getWikidataArray(){
-		if( !isset( $this->londeg ) || !isset( $this->latdeg ) ||  $this->getPrecision() == null ){
+		if( !isset( $this->londeg ) || !isset( $this->latdeg ) ||  !isset( $this->precision) ){
 			return null;
 		}
 
@@ -388,7 +400,7 @@ class Coordinate {
 		if( isset( $this->globe ) ){
 			$array['globe'] = $this->globe;
 		}
-		$array['precision'] = $this->getPrecision();
+		$array['precision'] = $this->precision;
 
 		return $array;
 	}
