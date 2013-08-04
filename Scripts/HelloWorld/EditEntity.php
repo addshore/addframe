@@ -6,8 +6,8 @@
  *
  **/
 
-use Addframe\Mediawiki\Family;
 use Addframe\Globals;
+use Addframe\Mediawiki\Family;
 use Addframe\Mediawiki\UserLogin;
 
 require_once( dirname( __FILE__ ) . '/../../Init.php' );

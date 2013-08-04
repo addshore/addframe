@@ -3,9 +3,9 @@
  * This file is the main script used for cleaning up wikidata items
  * @author Addshore
  **/
-
 use Addframe\Mediawiki\Family;
 use Addframe\Mediawiki\UserLogin;
+
 /**
  * @author Addshore
  */

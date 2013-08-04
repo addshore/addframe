@@ -2,14 +2,15 @@
 namespace Addwiki;
 
 use Addframe\Coordinate;
+use Addframe\Globals;
 use Addframe\Mediawiki\Entity;
 use Addframe\Mediawiki\Family;
-use Addframe\Globals;
-use Addframe\Mysql;
 use Addframe\Mediawiki\Page;
-use Addframe\Mediawiki\UserLogin;
-use Addframe\Stathat;
 use Addframe\Mediawiki\Site;
+use Addframe\Mediawiki\UserLogin;
+use Addframe\Mysql;
+use Addframe\Stathat;
+
 /**
  * This is a script to import coordinated from a wiki to wikibase
  *

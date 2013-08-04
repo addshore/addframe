@@ -6,15 +6,15 @@
  *
  **/
 
-use Addframe\Mediawiki\Family;
 use Addframe\Globals;
-use Addframe\Mediawiki\Wikibase\Entity;
-use Addframe\Mysql;
+use Addframe\Mediawiki\Family;
 use Addframe\Mediawiki\Page;
 use Addframe\Mediawiki\PageList;
 use Addframe\Mediawiki\Site;
-use Addframe\Stathat;
 use Addframe\Mediawiki\UserLogin;
+use Addframe\Mediawiki\Wikibase\Entity;
+use Addframe\Mysql;
+use Addframe\Stathat;
 
 require_once( dirname( __FILE__ ) . '/../../../Init.php' );
 

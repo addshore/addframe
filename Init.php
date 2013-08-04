@@ -1,10 +1,11 @@
 <?php
-use Addframe\Globals;
 
 /**
  * This file is main route into the framework
  * @author Addshore
  **/
+
+use Addframe\Globals;
 
 require_once(dirname( __FILE__ ) . '/Includes/AutoLoader.php');
 
