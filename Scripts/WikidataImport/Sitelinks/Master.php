@@ -12,6 +12,15 @@ use Addframe\Stathat;
 
 require_once( dirname( __FILE__ ) . '/../../../Init.php' );
 
+$options = getopt("", Array(
+	"filter::"
+));
+if( !array_key_exists( 'filter', $options ) ){
+	$filter = '';
+} else {
+	$filter = $options['filter']
+}
+
 $db = new Mysql(
 	Globals::$config['mysql']['server'], '3306',
 	Globals::$config['mysql']['user'],
@@ -30,7 +39,7 @@ $count = 0;
 
 while(true){
 
-	$group = $db->mysql2array( $db->doQuery("SELECT lang,site from iwlink group by lang,site order by updated ASC") );
+	$group = $db->mysql2array( $db->doQuery("SELECT lang,site from iwlink $filter group by lang,site order by updated ASC") );
 
 	foreach( $group as $grp ){
 
