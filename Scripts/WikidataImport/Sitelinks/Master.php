@@ -18,7 +18,7 @@ $options = getopt("", Array(
 if( !array_key_exists( 'filter', $options ) ){
 	$filter = '';
 } else {
-	$filter = $options['filter']
+	$filter = $options['filter'];
 }
 
 $db = new Mysql(
