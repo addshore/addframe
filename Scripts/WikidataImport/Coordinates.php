@@ -3,7 +3,7 @@ namespace Addwiki;
 
 use Addframe\Coordinate;
 use Addframe\Globals;
-use Addframe\Mediawiki\Entity;
+use Addframe\Mediawiki\Wikibase\Entity;
 use Addframe\Mediawiki\Family;
 use Addframe\Mediawiki\Page;
 use Addframe\Mediawiki\Site;
