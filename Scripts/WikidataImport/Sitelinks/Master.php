@@ -48,7 +48,12 @@ while(true){
 		$dbQuery = $db->select( 'iwlink','*', "site = '".$grp['site']."' AND lang = '".$grp['lang']."'", array('ORDER BY' => 'updated ASC' ) );
 		$rows = $db->mysql2array( $dbQuery );
 		if( $rows === false ){
-			die('Empty database?');
+			$db->connect();
+			$dbQuery = $db->select( 'iwlink','*', "site = '".$grp['site']."' AND lang = '".$grp['lang']."'", array('ORDER BY' => 'updated ASC' ) );
+			$rows = $db->mysql2array( $dbQuery );
+			if( $rows === false ){
+				die("We have lost the DB");
+			}
 		}
 
 		echo "Adding to redis for site = '".$grp['site']."' AND lang = '".$grp['lang']."'\n";
