@@ -5,7 +5,7 @@ namespace Addframe\Tests;
 use Addframe\Mediawiki\UserLogin;
 
 /**
- * @covers Addframe\UserLogin
+ * @covers Addframe\Mediawiki\UserLogin
  *
  * @since 0.0.2
  *
