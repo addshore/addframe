@@ -156,10 +156,12 @@ class Page {
 		$q['prop'] = 'pageprops';
 		$q['titles'] = $this->title;
 		$result = $this->site->doRequest( $q );
-		foreach ( $result['query']['pages'] as $page ) {
-			if ( isset( $page['pageprops']['wikibase_item'] ) ) {
-				$this->entity = new Entity( $this->site->getWikibase(), $page['pageprops']['wikibase_item'] );
-				return $this->entity;
+		if( array_key_exists( 'query', $result ) ){
+			foreach ( $result['query']['pages'] as $page ) {
+				if ( isset( $page['pageprops']['wikibase_item'] ) ) {
+					$this->entity = new Entity( $this->site->getWikibase(), $page['pageprops']['wikibase_item'] );
+					return $this->entity;
+				}
 			}
 		}
 		return null;

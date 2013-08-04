@@ -154,15 +154,17 @@ class Site {
 
 		$result = $this->requestPropRevsions( $param );
 
-		foreach ( $result['query']['pages'] as $x ) {
-			if ( ! isset( $x['missing'] ) ) {
-				if( isset( $x['revisions']['0']['*'] ) ){
-					return $x['revisions']['0']['*'];
+		if( array_key_exists( 'query', $result ) ){
+			foreach ( $result['query']['pages'] as $x ) {
+				if ( ! isset( $x['missing'] ) ) {
+					if( isset( $x['revisions']['0']['*'] ) ){
+						return $x['revisions']['0']['*'];
+					} else {
+						throw new \Exception( 'Request to get page text did not have expected key' );
+					}
 				} else {
-					throw new \Exception( 'Request to get page text did not have expected key' );
+					return '';
 				}
-			} else {
-				return '';
 			}
 		}
 		return null;
