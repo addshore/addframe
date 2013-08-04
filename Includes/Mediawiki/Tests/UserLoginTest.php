@@ -1,18 +1,18 @@
 <?php
 
-namespace Addframe\Mediawiki\Tests;
+namespace Addframe\Tests;
 
 use Addframe\Mediawiki\UserLogin;
 
 /**
- * @covers Addframe\Mediawiki\UserLogin
+ * @covers Addframe\UserLogin
  *
  * @since 0.0.2
  *
  * @author Addshore
  */
 
-class UserLoginTest extends MediawikiTestCase {
+class UserLoginTest extends \PHPUnit_Framework_TestCase {
 
 	function provideLoginDetails(){
 		return array(

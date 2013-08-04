@@ -11,7 +11,7 @@ namespace Addframe\Mediawiki;
 class Category extends Page{
 
 	public function getCategoryMembers( $limit = 5000 ){
-		echo "Getting members of ".$this->title->getTitle()."\n";
+		echo "Getting members of ".$this->title."\n";
 		$returnArray  = array();
 		$params['cmtitle'] = $this->title;
 		$params['cmlimit'] = $limit;

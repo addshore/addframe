@@ -14,7 +14,7 @@ class AutoLoader {
 	/**
 	 * Store the filename (sans extension) & full path of all ".php" files found
 	 */
-	public static function registerDirectory($dirName, $namespace = 'Addframe') {
+	public static function registerDirectory($dirName, $namespace = '') {
 
 		$di = new \DirectoryIterator($dirName);
 		foreach ($di as $file) {
@@ -24,12 +24,12 @@ class AutoLoader {
 
 			} elseif ( substr($file->getFilename(), -4) === '.php' ) {
 
-				$className = substr($file->getFilename(), 0, -4);
-
-				//dont bother loading tests
-				if( !( substr($className, -4) == "Test" ) ){
-					AutoLoader::registerClass($namespace.'\\'.$className, $file->getPathname());
+				if($namespace == ''){
+					$namespace = "Addframe".$namespace;
 				}
+
+				$className = substr($file->getFilename(), 0, -4);
+				AutoLoader::registerClass($namespace.'\\'.$className, $file->getPathname());
 			}
 		}
 	}
@@ -41,11 +41,11 @@ class AutoLoader {
 	public static function loadClass($className) {
 		if (isset(AutoLoader::$classNames[$className])) {
 			require_once(AutoLoader::$classNames[$className]);
-			return true;
 		}
-		return false;
 	}
 
 }
 
 spl_autoload_register(array('Addframe\AutoLoader', 'loadClass'));
+
+AutoLoader::registerDirectory( dirname( __FILE__ ) );

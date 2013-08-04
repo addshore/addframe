@@ -6,25 +6,25 @@
  *
  **/
 
-use Addframe\Config;
+use Addframe\Globals;
 use Addframe\Mysql;
 use Addframe\Stathat;
 
 require_once( dirname( __FILE__ ) . '/../../../Init.php' );
 
 $db = new Mysql(
-	Config::get( 'mysql', 'server'), '3306',
-	Config::get( 'mysql', 'user'),
-	Config::get( 'mysql', 'password'),
-	Config::get( 'mysql', 'user').'_wikidata_p' );
+	Globals::$config['mysql']['server'], '3306',
+	Globals::$config['mysql']['user'],
+	Globals::$config['mysql']['password'],
+	Globals::$config['mysql']['user'].'_wikidata_p' );
 
-$stathat = new Stathat( Config::get( 'stathat', 'key') );
+$stathat = new Stathat( Globals::$config['stathat']['key'] );
 
 $redis = new Redis();
-$redis->connect(Config::get( 'redis', 'server'));
-$redis->setOption(Redis::OPT_PREFIX, Config::get( 'redis', 'prefix'));
+$redis->connect(Globals::$config['redis']['server']);
+$redis->setOption(Redis::OPT_PREFIX, Globals::$config['redis']['prefix']);
 $redis->select(9);
-$redis->delete(Config::get( 'redis', 'key'));
+$redis->delete(Globals::$config['redis']['key']);
 
 $count = 0;
 
@@ -36,7 +36,7 @@ while(true){
 
 		//no flags for these wikis...
 		if($grp['site'] == 'wikivoyage'){
-			$badLangs = array('fr','sv','he');
+			$badLangs = array('fr','sv','ro','he','el');
 			foreach( $badLangs as $badLang ){
 				if( $grp['lang'] == $badLang ){
 					continue 2;
@@ -47,11 +47,14 @@ while(true){
 		echo "Querying db\n";
 		$dbQuery = $db->select( 'iwlink','*', "site = '".$grp['site']."' AND lang = '".$grp['lang']."'", array('ORDER BY' => 'updated ASC' ) );
 		$rows = $db->mysql2array( $dbQuery );
+		if( $rows === false ){
+			die('Empty database?');
+		}
 
 		echo "Adding to redis for site = '".$grp['site']."' AND lang = '".$grp['lang']."'\n";
 		foreach( $rows as $row ){
 			$count++;
-			$redis->lpush(Config::get( 'redis', 'key'), json_encode( $row ) );
+			$redis->lpush(Globals::$config['redis']['key'], json_encode( $row ) );
 		}
 
 		$dbQuery = $db->select( 'iwlink','count(*)', null, null );
@@ -60,7 +63,7 @@ while(true){
 
 		while ( $count > 0){
 			echo "Waiting before we add more, $count in list\n";
-			$count = $redis->lSize(Config::get( 'redis', 'key'));
+			$count = $redis->lSize(Globals::$config['redis']['key']);
 			sleep(1);
 		}
 	}

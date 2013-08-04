@@ -1,13 +1,14 @@
 <?php
 
 namespace Addframe;
-use Exception;
 
 /**
  *  The registry class
  * @since 0.0.1
  * @author Addshore
 */
+
+use Exception;
 
 class Registry {
 

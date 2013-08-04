@@ -1,17 +1,17 @@
 <?php
 
-namespace Addframe\Mediawiki\Tests;
+namespace Addframe\Tests;
 use Addframe\Mediawiki\Wikitext;
 
 /**
- * @covers Addframe\Mediawiki\Wikitext
+ * @covers Addframe\Wikitext
  *
  * @since 0.0.2
  *
  * @author Addshore
  */
 
-class WikitextTest extends MediawikiTestCase {
+class WikitextTest extends \PHPUnit_Framework_TestCase {
 
 	function provideString(){
 		return array(

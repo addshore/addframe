@@ -4,11 +4,11 @@
  * from projects to wikidata
  * @author Addshore
  **/
-use Addframe\Mediawiki\Wikibase\Entity;
+
+use Addframe\Mediawiki\Entity;
 use Addframe\Mediawiki\Family;
 use Addframe\Mediawiki\Page;
 use Addframe\Mediawiki\UserLogin;
-
 /**
  * @author Addshore
  */

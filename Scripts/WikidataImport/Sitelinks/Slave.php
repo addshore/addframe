@@ -6,41 +6,41 @@
  *
  **/
 
-use Addframe\Config;
 use Addframe\Mediawiki\Family;
+use Addframe\Globals;
+use Addframe\Mediawiki\Wikibase\Entity;
+use Addframe\Mysql;
 use Addframe\Mediawiki\Page;
 use Addframe\Mediawiki\PageList;
 use Addframe\Mediawiki\Site;
-use Addframe\Mediawiki\UserLogin;
-use Addframe\Mediawiki\Wikibase\Entity;
-use Addframe\Mysql;
 use Addframe\Stathat;
+use Addframe\Mediawiki\UserLogin;
 
 require_once( dirname( __FILE__ ) . '/../../../Init.php' );
 
 $wm = new Family(
-	new UserLogin( Config::get( 'wikiuser', 'username'),
-		Config::get( 'wikiuser', 'password') ), Config::get( 'wikiuser', 'home') );
+	new UserLogin( Globals::$config['wikiuser']['username'],
+		Globals::$config['wikiuser']['password'] ), Globals::$config['wikiuser']['home'] );
 
 $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 
 $db = new Mysql(
-	Config::get( 'mysql', 'server'), '3306',
-	Config::get( 'mysql', 'user'),
-	Config::get( 'mysql', 'password'),
-	Config::get( 'mysql', 'user').'_wikidata_p' );
+	Globals::$config['mysql']['server'], '3306',
+	Globals::$config['mysql']['user'],
+	Globals::$config['mysql']['password'],
+	Globals::$config['mysql']['user'].'_wikidata_p' );
 
-$stathat = new Stathat( Config::get( 'stathat', 'key') );
+$stathat = new Stathat( Globals::$config['stathat']['key'] );
 
 $redis = new Redis();
-$redis->connect(Config::get( 'redis', 'server'));
-$redis->setOption(Redis::OPT_PREFIX, Config::get( 'redis', 'prefix'));
+$redis->connect(Globals::$config['redis']['server']);
+$redis->setOption(Redis::OPT_PREFIX, Globals::$config['redis']['prefix']);
 $redis->select(9);
 
 while(true){
 
 	echo "* Getting next page from redis!\n";
-	$row = $redis->brPop(Config::get( 'redis', 'key'), 0);
+	$row = $redis->brPop(Globals::$config['redis']['key'], 0);
 	$row = json_decode( $row[1], true );
 
 	// Load our site
@@ -73,7 +73,7 @@ while(true){
 		echo "* Adding everything to the entity!\n";
 		$baseEntity->load();
 		foreach ( $usedPages as $page ) {
-			$baseEntity->addSitelink( $page->site->getId(), $page->title->normaliseTitle() );
+			$baseEntity->addSitelink( $page->site->getId(), $page->normaliseTitleNamespace() );
 			//@todo this should only happen for entity site links so should be in a different place
 //			if ( $page->site->getType() == 'wiki' ) {
 //				$baseEntity->addLabel( $page->site->getLanguage(), $page->title );
@@ -172,8 +172,8 @@ function getLocalSummary( Site $site , $id){
 	$bot = $site->getUserLogin()->username;
 
 	$summary = '[[$who|Bot]]: Migrating interwiki links, now provided by [[d:|Wikidata]] on [[d:$id]]';
-	if( Config::get( 'WikidataImport.Summary' , $language ) != null ){
-		$summary = Config::get( 'WikidataImport.Summary' , $language );
+	if( isset( Globals::$config['WikidataImport.Summary'][ $language ] ) ){
+		$summary = Globals::$config['WikidataImport.Summary'][ $language ];
 	}
 
 	$summary = str_replace('$who', 'User:'.$bot, $summary);
