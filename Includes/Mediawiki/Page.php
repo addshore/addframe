@@ -328,12 +328,12 @@ class Page {
 		$baseEntity->load();
 
 		foreach ( $baseEntity->getLanguageData('sitelinks') as $sitelink ) {
-			$site = $this->site->family->getSiteFromSiteid( $sitelink['site'] );
-			if( $site instanceof Site && $this->site->getType() == $site->getType() ){
-				$iwPrefix = $site->getIwPrefix();
-				$page = $site->newPageFromTitle( $sitelink['title'] );
+			$linkSite = $this->site->family->getSiteFromSiteid( $sitelink['site'] );
+			if( $linkSite instanceof Site && $this->site->getType() == $linkSite->getType() ){
+				$iwPrefix = $linkSite->getIwPrefix();
+				$page = $linkSite->newPageFromTitle( $sitelink['title'] );
 				$titleEnd = $page->getTitleWithoutNamespace();
-				$possibleNamespaces = $site->requestNamespaces();
+				$possibleNamespaces = $linkSite->requestNamespaces();
 				$possibleNamespaces = $possibleNamespaces[$page->getNsid()];
 
 				//@todo this could all be improved with something like getRegexForTitle or  getRegexForInterwikiLink
@@ -347,7 +347,7 @@ class Page {
 					//@todo this code is wikimedia specific
 					if( $iwPrefix == 'zh-min-nan' || $iwPrefix == 'nan' ){
 						$iwPrefix = '(zh-min-nan|nan)';
-					} else if ( $iwPrefix == 'no' || $iwPrefix = 'nb'){
+					} else if ( $iwPrefix == 'no' || $iwPrefix == 'nb'){
 						$iwPrefix = '(nb|no)';
 					}
 
