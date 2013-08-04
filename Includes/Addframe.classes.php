@@ -7,13 +7,13 @@
 return call_user_func( function() {
 
 	$classes = array(
-		'Addframe\AutoLoader' => 'Addframe/AutoLoader.php',
-		'Addframe\Coordinate' => 'Addframe/Coordinate.php',
-		'Addframe\Globals' => 'Addframe/Globals.php',
-		'Addframe\Http' => 'Addframe/Http.php',
-		'Addframe\Mysql' => 'Addframe/Mysql.php',
-		'Addframe\Registry' => 'Addframe/Registry.php',
-		'Addframe\Stathat' => 'Addframe/Stathat.php',
+		'Addframe\AutoLoader' => 'AutoLoader.php',
+		'Addframe\Coordinate' => 'Coordinate.php',
+		'Addframe\Globals' => 'Globals.php',
+		'Addframe\Http' => 'Http.php',
+		'Addframe\Mysql' => 'Mysql.php',
+		'Addframe\Registry' => 'Registry.php',
+		'Addframe\Stathat' => 'Stathat.php',
 	);
 
 	return $classes;
