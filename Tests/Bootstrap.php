@@ -2,7 +2,10 @@
 
 /** @author Addshore */
 
-use Addframe\AutoLoader;
+use Addframe\Globals;
 
-require_once(dirname( __FILE__ ) . '/../Includes/AutoLoader.php');
-AutoLoader::registerDirectory( dirname( __FILE__ ) );
+//Load the init files
+require_once(dirname( __FILE__ ) . '/../Init.php');
+
+//Clear any config settings...
+Globals::$config = null;
