@@ -10,7 +10,7 @@ namespace Addframe\Mediawiki;
 
 class Category extends Page{
 
-	public function getCategoryMembers( $limit = 5000 ){
+	public function getCategoryMembers( $limit = 5000, $recursive = true ){
 		echo "Getting members of ".$this->title."\n";
 		$returnArray  = array();
 		$params['cmtitle'] = $this->title;
@@ -19,7 +19,7 @@ class Category extends Page{
 		$result = $this->site->requestListCategoryMembers( $params );
 		$returnArray = array_merge( $returnArray, $result['query']['categorymembers'] );
 		foreach( $result['query']['categorymembers'] as $member){
-			if($member['ns'] == '14' ){
+			if($member['ns'] == '14' && $recursive ){
 				$innerCat = $this->site->newCategoryFromTitle( $member['title'] );
 				if( $innerCat instanceof Category ){
 					$returnArray = array_merge( $returnArray, $innerCat->getCategoryMembers() );
