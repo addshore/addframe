@@ -6,15 +6,15 @@
  *
  **/
 
-use Addframe\Globals;
+use Addframe\Config;
 use Addframe\Mediawiki\Family;
 use Addframe\Mediawiki\UserLogin;
 
 require_once( dirname( __FILE__ ) . '/../../Init.php' );
 
 $wm = new Family(
-	new UserLogin( Globals::$config['wikiuser']['username'],
-		Globals::$config['wikiuser']['password'] ), Globals::$config['wikiuser']['home'] );
+	new UserLogin( Config::get( 'wikiuser', 'username'),
+		Config::get( 'wikiuser', 'password') ), Config::get( 'wikiuser', 'home') );
 
 $wikidata = $wm->getSite( 'www.wikidata.org' );
 $sandbox = $wikidata->newEntityFromEntityId( 'q4115189' );

@@ -6,7 +6,7 @@
  *
  **/
 
-use Addframe\Globals;
+use Addframe\Config;
 use Addframe\Mysql;
 use Addframe\Stathat;
 
@@ -22,18 +22,18 @@ if( !array_key_exists( 'filter', $options ) ){
 }
 
 $db = new Mysql(
-	Globals::$config['mysql']['server'], '3306',
-	Globals::$config['mysql']['user'],
-	Globals::$config['mysql']['password'],
-	Globals::$config['mysql']['user'].'_wikidata_p' );
+	Config::get( 'mysql', 'server'), '3306',
+	Config::get( 'mysql', 'user'),
+	Config::get( 'mysql', 'password'),
+	Config::get( 'mysql', 'user').'_wikidata_p' );
 
-$stathat = new Stathat( Globals::$config['stathat']['key'] );
+$stathat = new Stathat( Config::get( 'stathat', 'key') );
 
 $redis = new Redis();
-$redis->connect(Globals::$config['redis']['server']);
-$redis->setOption(Redis::OPT_PREFIX, Globals::$config['redis']['prefix']);
+$redis->connect(Config::get( 'redis', 'server'));
+$redis->setOption(Redis::OPT_PREFIX, Config::get( 'redis', 'prefix'));
 $redis->select(9);
-$redis->delete(Globals::$config['redis']['key']);
+$redis->delete(Config::get( 'redis', 'key'));
 
 $count = 0;
 
@@ -68,7 +68,7 @@ while(true){
 		echo "Adding to redis for site = '".$grp['site']."' AND lang = '".$grp['lang']."'\n";
 		foreach( $rows as $row ){
 			$count++;
-			$redis->lpush(Globals::$config['redis']['key'], json_encode( $row ) );
+			$redis->lpush(Config::get( 'redis', 'key'), json_encode( $row ) );
 		}
 
 		$dbQuery = $db->select( 'iwlink','count(*)', null, null );
@@ -77,7 +77,7 @@ while(true){
 
 		while ( $count > 0){
 			echo "Waiting before we add more, $count in list\n";
-			$count = $redis->lSize(Globals::$config['redis']['key']);
+			$count = $redis->lSize(Config::get( 'redis', 'key'));
 			sleep(1);
 		}
 	}
