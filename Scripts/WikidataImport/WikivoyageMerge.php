@@ -23,11 +23,10 @@ $summaries = array();
 $wm = new Family(
 	new UserLogin( Config::get( 'wikiuser', 'username'),
 		Config::get( 'wikiuser', 'password') ), Config::get( 'wikiuser', 'home') );
-$wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
+$wikidata = $wm->getSite('www.wikidata.org');
 
-
-$items = array( 'q14208163' );
-foreach ( $items as $item ) {
+for ( $i = 14587324; $i > 12000000; $i--) {
+	$item = 'q'.$i;
 
 	$itemOne = $wikidata->newEntityFromEntityId( $item );
 	$itemOne->load();
