@@ -168,9 +168,9 @@ class Page {
 	//@todo add data about site type here i.e. wiki or wikivoyage?
 	public function getInterwikisFromtext() {
 		$text = $this->getText();
+		$text = preg_replace("/(<nowiki>.*?<\/nowiki>|<!--.*?-->)/is","",$text);
 
 		$toReturn = array();
-		//@todo this list of langs should definatly come from a better place...
 		preg_match_all( '/\n\[\[' . Regex::getLanguageRegexPart() . ':([^\]]+)\]\]/', $text, $matches );
 		foreach ( $matches[0] as $key => $match ) {
 			$toReturn[] = Array( 'site' => $matches[1][$key], 'link' => $matches[2][$key] );
