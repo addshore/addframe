@@ -6,6 +6,7 @@
 use Addframe\Mediawiki\Family;
 use Addframe\Mediawiki\Page;
 use Addframe\Mediawiki\UserLogin;
+use Addframe\Config;
 
 /**
  * @author Addshore
@@ -14,7 +15,9 @@ use Addframe\Mediawiki\UserLogin;
 require_once( dirname( __FILE__ ) . '/../Init.php' );
 
 //Create a site
-$wm = new Family( new UserLogin( 'Bot', 'botp123' ), 'meta.wikimedia.org/w/api.php' );
+$wm = new Family(
+	new UserLogin( Config::get( 'wikiuser', 'username'),
+		Config::get( 'wikiuser', 'password') ), Config::get( 'wikiuser', 'home') );
 $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 $wikidata->requestLogin();
 
