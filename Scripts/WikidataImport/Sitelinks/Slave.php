@@ -74,10 +74,6 @@ while(true){
 		$baseEntity->load();
 		foreach ( $usedPages as $page ) {
 			$baseEntity->addSitelink( $page->site->getId(), $page->normaliseTitleNamespace() );
-			//@todo this should only happen for entity site links so should be in a different place
-//			if ( $page->site->getType() == 'wiki' ) {
-//				$baseEntity->addLabel( $page->site->getLanguage(), $page->title );
-//			}
 		}
 
 		// If the entity is changed try to save it
@@ -95,6 +91,7 @@ while(true){
 						$conflicts[] = $errorMessage['parameters']['2'];
 
 						//Now remove it
+						//@todo After deploy on 26th of AUG we can get the siteid straight from the returned array
 						$errorUrl = strstr( trim( $errorMessage['parameters']['0'], '/') , '/' , true );
 						$errorSite = $wm->getSite( $errorUrl );
 						if( $errorMessage instanceof Site ){
