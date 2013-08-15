@@ -20,8 +20,13 @@ class Entity extends Page {
 	protected $lastrevid;
 	/** @var string type of entity (property|item) */
 	protected $entityType;
-	/** @var array languagedata for the item (alliases|labels|sitelinks) */
-	protected $languageData;
+	/** @var array languagedata for the item */
+	protected $languageData = array(
+		'aliases'  => array(),
+		'labels' => array(),
+		'descriptions' => array(),
+		'sitelinks' => array()
+	);
 	/** @var boolean has the item been changed since it was loaded? */
 	protected $changed = false;
 
