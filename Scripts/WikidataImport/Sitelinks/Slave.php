@@ -22,7 +22,7 @@ $wm = new Family(
 	new UserLogin( Config::get( 'wikiuser', 'username'),
 		Config::get( 'wikiuser', 'password') ), Config::get( 'wikiuser', 'home') );
 
-$wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
+$wikidata = $wm->getSite('www.wikidata.org');
 
 $db = new Mysql(
 	Config::get( 'mysql', 'server'), '3306',
