@@ -29,6 +29,7 @@ class Entity extends Page {
 	);
 	/** @var boolean has the item been changed since it was loaded? */
 	protected $changed = false;
+	protected $missing = false;
 
 
 	//@todo manipulate statements
@@ -80,6 +81,10 @@ class Entity extends Page {
 		return $this->changed;
 	}
 
+	public function isMissing(){
+		return $this->missing;
+	}
+
 	/**
 	 * Get the entity from the api
 	 * @return array of entity languageData
@@ -90,12 +95,16 @@ class Entity extends Page {
 			$param['ids'] = $this->id;
 			$result = $this->site->requestWbGetEntities( $param );
 			foreach ( $result['entities'] as $x ) {
-				$this->pageid = $x['pageid'];
-				$this->nsid = $x['ns'];
-				$this->title = $x['title'];
-				$this->lastrevid = $x['lastrevid'];
-				$this->entityType = $x['type'];
-				$this->languageData = $this->unserializeLanguageData( $x );
+				if( array_key_exists( 'missing', $x ) ){
+					$this->missing = true;
+				} else {
+					$this->pageid = $x['pageid'];
+					$this->nsid = $x['ns'];
+					$this->title = $x['title'];
+					$this->lastrevid = $x['lastrevid'];
+					$this->entityType = $x['type'];
+					$this->languageData = $this->unserializeLanguageData( $x );
+				}
 			}
 			return $this->languageData;
 		}
