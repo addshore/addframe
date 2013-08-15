@@ -8,6 +8,7 @@ use Addframe\Mediawiki\Wikibase\Entity;
 use Addframe\Mediawiki\Family;
 use Addframe\Mediawiki\Page;
 use Addframe\Mediawiki\UserLogin;
+use Addframe\Config;
 
 /**
  * @author Addshore
@@ -19,7 +20,9 @@ require_once( dirname( __FILE__ ) . '/../../Init.php' );
 $summaries = array();
 
 //Create a site
-$wm = new Family( new UserLogin( 'addbot', 'password' ), 'meta.wikimedia.org' );
+$wm = new Family(
+	new UserLogin( Config::get( 'wikiuser', 'username'),
+		Config::get( 'wikiuser', 'password') ), Config::get( 'wikiuser', 'home') );
 $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
 
 
