@@ -11,3 +11,8 @@ notifications:
       - "chat.freenode.net##add"
     on_success: change
     on_failure: always
+  email:
+    recipients:
+      - johnflewis93@gmail.com
+    on_success: change
+    on_failure: always
