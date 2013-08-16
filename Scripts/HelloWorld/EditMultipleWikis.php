@@ -2,7 +2,6 @@
 /**
  * This file makes a simple edit to multiple wikis
  *
- * @author Addshore
  * @author John
  *
  **/
