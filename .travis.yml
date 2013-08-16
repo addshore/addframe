@@ -8,6 +8,6 @@ script: phpunit --configuration phpunit.xml
 notifications:
   irc:
     channels:
-      - "chat.freenode.net##addshore"
+      - "chat.freenode.net##add"
     on_success: change
     on_failure: always
