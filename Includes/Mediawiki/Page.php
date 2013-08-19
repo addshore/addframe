@@ -28,8 +28,8 @@ class Page {
 	protected $parser;
 
 	/**
-	 * @param $site
-	 * @param $title
+	 * @param Site $site
+	 * @param string $title
 	 */
 	public function __construct( $site, $title ) {
 		$this->site = $site;
@@ -322,7 +322,7 @@ class Page {
 		$baseEntity = $this->getEntity();
 		$counter = 0;
 
-		if ( ! $baseEntity instanceof Entity ) {
+		if ( !$baseEntity instanceof Entity ) {
 				return false;
 		}
 		$baseEntity->load();
