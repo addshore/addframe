@@ -84,7 +84,8 @@ class User {
 	 * @return array
 	 */
 	public function requestRights() {
-		$this->rights = $this->fetchUserInfo()['rights'];
+		$info = $this->fetchUserInfo();
+		$this->rights = $info['rights'];
 		return $this->rights;
 	}
 
@@ -93,7 +94,8 @@ class User {
 	 * @return int
 	 */
 	public function requestEditcount() {
-		$this->editcount = $this->fetchUserInfo()['editcount'];
+		$info = $this->fetchUserInfo();
+		$this->editcount = $info['editcount'];
 		$this->editcounttime = time();
 		return $this->editcount;
 	}
