@@ -34,6 +34,10 @@ class User {
 	 * @var string timestamp we got the editcount
 	 */
 	public $editcounttime;
+	/**
+	 * @var array
+	 */
+	protected $userinfo = null;
 
 	/**
 	 * @param $site
@@ -59,34 +63,49 @@ class User {
 	}
 
 	/**
+	 * Fetches all the info we can from list=users and stores it
+	 * @return array
+	 */
+	public function fetchUserInfo() {
+		if ( !is_null( $this->userinfo ) ) {
+			return $this->userinfo;
+		}
+		$params['ususers'] = $this->username;
+		$params['usprop'] = 'emailable|blockinfo|groups|implicitgroups|rights|editcount|registration|emailable|gender';
+		$params['uslimit'] = '1';
+		$result = $this->site->requestListUsers( $params );
+		$this->userinfo = $result['query']['users'][0];
+		return $this->userinfo;
+	}
+
+
+	/**
 	 * Gets a users rights
-	 * @return mixed
+	 * @return array
 	 */
 	public function requestRights() {
-		$param['auprop'] = 'rights';
-		$param['aufrom'] = $this->username;
-		$param['aulimit'] = '1';
-		$result = $this->site->requestListAllusers( $param );
-		$this->rights = $result->value['query']['allusers']['0']['rights'];
-		$this->userid = $result->value['query']['allusers']['0']['userid'];
+		$info = $this->fetchUserInfo();
+		$this->rights = $info['rights'];
 		return $this->rights;
 	}
 
 	/**
 	 * gets a users edit count
-	 * @return mixed
+	 * @return int
 	 */
 	public function requestEditcount() {
-		$param['auprop'] = 'editcount';
-		$param['aufrom'] = $this->username;
-		$param['aulimit'] = '1';
-		$result = $this->site->requestListAllusers( $param );
-		$this->editcount = $result->value['query']['allusers']['0']['editcount'];
-		$this->userid = $result->value['query']['allusers']['0']['userid'];
+		$info = $this->fetchUserInfo();
+		$this->editcount = $info['editcount'];
 		$this->editcounttime = time();
 		return $this->editcount;
 	}
 
-	//todo hasEmailEnabled() https://github.com/addshore/addwiki/blob/PreRewrite/classes/botclasses.php#L513
+	/**
+	 * Check whether we can email a user
+	 * @return bool
+	 */
+	public function hasEmailEnabled() {
+		return in_array( "emailable", array_keys( $this->fetchUserInfo() ) );
+	}
 
 }

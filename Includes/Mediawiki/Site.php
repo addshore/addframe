@@ -444,6 +444,12 @@ class Site {
 		return $this->doRequest( $parameters );
 	}
 
+	public function requestListUsers( $parameters ) {
+		$parameters['action'] = 'query';
+		$parameters['list'] = 'users';
+		return $this->doRequest( $parameters );
+	}
+
 	public function requestWbGetEntities( $parameters ) {
 		$parameters['action'] = 'wbgetentities';
 		return $this->doRequest( $parameters );
