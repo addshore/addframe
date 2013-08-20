@@ -16,7 +16,7 @@ class Category extends Page{
 		$params['cmtitle'] = $this->title;
 		$params['cmlimit'] = $limit;
 //		$params['cmtype'] = 'page|subcat';
-		$result = $this->site->requestListCategoryMembers( $params );
+		$result = $this->site->api->requestListCategoryMembers( $params );
 		$returnArray = array_merge( $returnArray, $result['query']['categorymembers'] );
 		foreach( $result['query']['categorymembers'] as $member){
 			if($member['ns'] == '14' && $recursive ){

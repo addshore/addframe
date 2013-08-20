@@ -7,6 +7,7 @@
 return call_user_func( function() {
 
 	$classes = array(
+		'Addframe\Addframe' => 'Addframe.php',
 		'Addframe\AutoLoader' => 'AutoLoader.php',
 		'Addframe\Coordinate' => 'Coordinate.php',
 		'Addframe\Config' => 'Config.php',

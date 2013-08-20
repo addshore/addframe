@@ -54,14 +54,14 @@ class SiteTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @dataProvider provideRequestApiUrlData
+	 * @dataProvider provideGetApiUrl
 	 */
 	function testGetApiUrl( $apiUrl, $pretendHtml ){
 		$site = new Site( 'localhost', $this->getMockHttp( $pretendHtml ) );
 		$this->assertEquals( $apiUrl, $site->getApiUrl() );
 	}
 
-	function provideRequestApiUrlData(){
+	function provideGetApiUrl(){
 		$before = '<link rel="search" type="application/opensearchdescription+xml" href="/mediawiki/opensearch_desc.php"'.
 			' title="Local Test Wiki (en-gb)" />'."\n".'<link rel="EditURI" type="application/rsd+xml" href="http://';
 		$after = '?action=rsd" />'."\n".'<link rel="alternate" type="application/atom+xml" title="Local Test Wiki Atom feed'.
