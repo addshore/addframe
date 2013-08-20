@@ -23,8 +23,6 @@ class Page {
 	protected $categories;
 	/** @var Entity entity that is associated with the page */
 	protected $entity;
-	/** @var WikitextParser entity that is associated with the page */
-	protected $parser;
 	/** @var  Array info from prop=info */
 	protected $pageinfo;
 
@@ -187,18 +185,6 @@ class Page {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Parsers the current text. Sets and returns the parser object.
-	 *
-	 * @return WikitextParser
-	 */
-	public function parse() {
-		$parser = new WikitextParser( $this->title, $this->getText() );
-		$parser->parse();
-		$this->parser = $parser;
-		return $this->parser;
 	}
 
 	/**
