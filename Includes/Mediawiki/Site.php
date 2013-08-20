@@ -1,6 +1,7 @@
 <?php
 
 namespace Addframe\Mediawiki;
+use Addframe\Addframe;
 use Addframe\Http;
 use Addframe\Mediawiki\Wikibase\Entity;
 
@@ -37,12 +38,6 @@ class Site {
 	protected $namespaces;
 	/** @var UserLogin */
 	protected $userlogin;
-	/**
-	 * Logging class if enabled in config.
-	 * Lazily enabled.
-	 * @var KLogger
-	 */
-	protected $logger;
 
 	/**
 	 * @param $url string URL of the api
@@ -521,19 +516,6 @@ class Site {
 	}
 
 	/**
-	 * Sets up the logger for us to use
-	 * @return KLogger
-	 * @todo Allow the user to set the path
-	 */
-	public function getLogger() {
-		if ( $this->logger === null ) {
-			$this->logger = new \KLogger('addwiki.log');
-		}
-
-		return $this->logger;
-	}
-
-	/**
 	 * Log stuff to the logger.
 	 * By default everything is printed unless the level is DEBUG,
 	 * but that can be overriden by setting $print to true.
@@ -542,7 +524,7 @@ class Site {
 	 * @param bool $print
 	 */
 	public function log( $msg, $severity = \KLogger::INFO, $print = false ) {
-		$this->getLogger()->log( $msg, $severity, \KLogger::NO_ARGUMENTS );
+		Addframe::getLogger()->log( $msg, $severity, \KLogger::NO_ARGUMENTS );
 		if ( $print || $severity != \KLogger::DEBUG ) {
 			echo $msg;
 		}
