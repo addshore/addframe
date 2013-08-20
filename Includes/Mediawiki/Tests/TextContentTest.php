@@ -1,17 +1,17 @@
 <?php
 
 namespace Addframe\Tests;
-use Addframe\Mediawiki\Wikitext;
+use Addframe\Mediawiki\TextContent;
 
 /**
- * @covers Addframe\Mediawiki\Wikitext
+ * @covers Addframe\Mediawiki\TextContentTest
  *
  * @since 0.0.2
  *
  * @author Addshore
  */
 
-class WikitextTest extends \PHPUnit_Framework_TestCase {
+class TextContentTest extends \PHPUnit_Framework_TestCase {
 
 	function provideString(){
 		return array(
@@ -26,16 +26,16 @@ class WikitextTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider provideString
 	 */
 	function testCanSetAndGetText( $string ){
-		$wikiText = new Wikitext();
+		$wikiText = new TextContent();
 		$wikiText->setText( $string );
-		$this->assertEquals( $string, $wikiText->getText(), "Wikitext Set Get roundtrip values did not match" );
+		$this->assertEquals( $string, $wikiText->getText(), "TextContent Set Get roundtrip values did not match" );
 	}
 
 	/**
 	 * @dataProvider provideString
 	 */
 	function testCanConstructWithString( $string ){
-		$wikiText = new Wikitext( $string );
+		$wikiText = new TextContent( $string );
 		$this->assertEquals( $string , $wikiText->getText(), "Failed to construct WikiText with a string" );
 	}
 
@@ -44,7 +44,7 @@ class WikitextTest extends \PHPUnit_Framework_TestCase {
 	 */
 	function testCanAppendText( $string ){
 		$start = "Starter String";
-		$wikiText = new Wikitext($start);
+		$wikiText = new TextContent($start);
 		$wikiText->appendText($string);
 		$this->assertEquals($start.$string, $wikiText->getText(), "Failed to append WikiText" );
 	}
@@ -54,7 +54,7 @@ class WikitextTest extends \PHPUnit_Framework_TestCase {
 	 */
 	function testCanPrependText( $string ){
 		$start = "Starter String";
-		$wikiText = new Wikitext( $start );
+		$wikiText = new TextContent( $start );
 		$wikiText->prependText($string);
 		$this->assertEquals($string.$start, $wikiText->getText(), "Failed to prepend WikiText" );
 	}
@@ -63,7 +63,7 @@ class WikitextTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider provideString
 	 */
 	function textCanEmptyText( $string ){
-		$wikiText = new Wikitext( $string );
+		$wikiText = new TextContent( $string );
 		$wikiText->emptyText();
 		$this->assertEquals("", $wikiText->getText(), "Failed to empty WikiText" );
 	}
@@ -72,7 +72,7 @@ class WikitextTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider provideString
 	 */
 	public function testGetLength( $string ){
-		$wikiText = new Wikitext( $string );
+		$wikiText = new TextContent( $string );
 		$this->assertEquals( strlen( $string ) , $wikiText->getLength(), "Failed to get correct length" );
 	}
 
@@ -89,7 +89,7 @@ class WikitextTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider provideStringReplacementAndResult
 	 */
 	function testCanFindStringReturnsTrue( $start, $substring, $existed){
-		$wikiText = new Wikitext( $start );
+		$wikiText = new TextContent( $start );
 		if( $existed ){
 			$this->assertTrue( $wikiText->findString( $substring ), "Could not assert string was found" );
 		} else {
@@ -101,7 +101,7 @@ class WikitextTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider provideStringReplacementAndResult
 	 */
 	public function testReplaceString(  $start, $substring, $existed, $replacement, $result ) {
-		$wikiText = new Wikitext( $start );
+		$wikiText = new TextContent( $start );
 		$wikiText->replaceString( $substring , $replacement );
 		$this->assertEquals($result, $wikiText->getText(), "Failed to replace string");
 	}
@@ -109,13 +109,13 @@ class WikitextTest extends \PHPUnit_Framework_TestCase {
 	//@todo extra text cases for regex
 
 	public function testPregReplace() {
-		$wikiText = new Wikitext("a string with the word b0t in it bot");
+		$wikiText = new TextContent("a string with the word b0t in it bot");
 		$wikiText->pregReplace('/B0t/i', 'bot');
 		$this->assertEquals("a string with the word bot in it bot", $wikiText->getText(), "Failed to preg replace string");
 	}
 
 	public function testRemoveRegexMatched() {
-		$wikiText = new Wikitext("a string with the word b0t in it");
+		$wikiText = new TextContent("a string with the word b0t in it");
 		$wikiText->removeRegexMatched('/B0t /i');
 		$this->assertEquals("a string with the word in it", $wikiText->getText(), "Failed to remove regex match");
 	}
@@ -124,7 +124,7 @@ class WikitextTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider provideStringWithUrls
 	 */
 	public function testGeturls( $string, $expected ){
-		$wikiText = new Wikitext( $string );
+		$wikiText = new TextContent( $string );
 		$this->assertEquals( $expected, $wikiText->getUrls(), "Failed to correctly get Urls");
 	}
 
@@ -144,7 +144,7 @@ class WikitextTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider provideStringWithTrailingWhitespace
 	 */
 	public function testTrimWhitespace( $string, $expected ){
-		$wikiText = new Wikitext( $string );
+		$wikiText = new TextContent( $string );
 		$wikiText->trimWhitespace();
 		$this->assertEquals( $expected, $wikiText->getText() );
 	}
@@ -163,7 +163,7 @@ class WikitextTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider provideTextWithDateTagToFix
 	 */
 	public function testFixDateTags( $text, $result ){
-		$wikiText = new Wikitext( $text );
+		$wikiText = new TextContent( $text );
 		$wikiText->fixDateTags();
 		$this->assertEquals( $result, $wikiText->getText() );
 	}
