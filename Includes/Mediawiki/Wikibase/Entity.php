@@ -99,7 +99,6 @@ class Entity extends Page {
 					$this->missing = true;
 				} else {
 					$this->pageid = $x['pageid'];
-					$this->nsid = $x['ns'];
 					$this->title = $x['title'];
 					$this->lastrevid = $x['lastrevid'];
 					$this->entityType = $x['type'];
