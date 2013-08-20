@@ -98,6 +98,16 @@ class Api {
 		return $this->doRequest( array( 'action' => 'query', 'meta' => 'siteinfo', 'siprop' => 'namespaces|namespacealiases' ) );
 	}
 
+	public function requestPageinfo( $title, $inprop = array( 'url' ) ) {
+		$params = array(
+			'action' => 'query',
+			'prop' => 'info',
+			'titles' => $title,
+			'inprop' => $inprop,
+		);
+		return $this->doRequest( $params );
+	}
+
 	public function requestSiteinfo() {
 		$q['action'] = 'query';
 		$q['meta'] = 'siteinfo';
