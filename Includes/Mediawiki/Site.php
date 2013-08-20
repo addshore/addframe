@@ -23,21 +23,21 @@ class Site {
 	protected $type;
 	/** @var string url of the site */
 	public $url;
-	/** @var string url of the api */
-	protected $api;
+	/** @var Api api for the site */
+	public $api; //todo should be made protected once everything is factored into the right places
 	/** @var string language eg. en */
 	protected $language;
 	/** @var string iwPrefix eg. en or simple */
 	protected $iwPrefix;
 	/** @var Http class */
-	protected $http;
+	public $http;
 	/** @var string cache of the token we are using */
 	protected $token;
 	protected $isLoggedIn = false;
 	/** @var Array */
 	protected $namespaces;
 	/** @var UserLogin */
-	protected $userlogin;
+	public $userlogin; //todo create getter and setter and make protected
 
 	/**
 	 * @param $url string URL of the api
@@ -65,6 +65,12 @@ class Site {
 			}
 			$this->family = $family;
 		}
+
+		$this->api = new Api( $this );
+	}
+
+	public function hasToken(){
+		return !is_null( $this->token );
 	}
 
 	public function setLogin( $userLogin ) {
@@ -75,30 +81,23 @@ class Site {
 		return $this->userlogin;
 	}
 
-	public function getApiUrl(){
-		if ( $this->api == null ){
-			$this->requestApiUrl();
-		}
-		return $this->api;
-	}
-
 	public function getType(){
 		if ( $this->type == null ){
-			$this->requestSiteinfo();
+			$this->getSiteinfo();
 		}
 		return $this->type;
 	}
 
 	public function getId(){
 		if ( $this->id == null ){
-			$this->requestSiteinfo();
+			$this->getSiteinfo();
 		}
 		return $this->id;
 	}
 
 	public function getLanguage(){
 		if ( $this->language == null ){
-			$this->requestSiteinfo();
+			$this->getSiteinfo();
 		}
 		return $this->language;
 	}
@@ -112,14 +111,14 @@ class Site {
 
 	public function getWikibase(){
 		if ( $this->wikibase == null ){
-			$this->requestWikibaseinfo();
+			$this->getWikibaseinfo();
 		}
 		return $this->wikibase;
 	}
 
 	public function getNamespaceFromId( $id ) {
 		if ( ! isset( $this->namespaces ) ) {
-			$this->requestNamespaces();
+			$this->getNamespaces();
 		}
 		if ( isset( $this->namespaces[$id] ) ) {
 			if( $this->namespaces[$id][0] == ''){
@@ -134,7 +133,7 @@ class Site {
 	public function getNamespaceIdFromTitle( $title ) {
 		$explosion = explode( ':', $title );
 		if ( isset( $explosion[0] ) ) {
-			$this->requestNamespaces();
+			$this->getNamespaces();
 			foreach ( $this->namespaces as $nsid => $namespaceArray ) {
 				foreach ( $namespaceArray as $namespace ) {
 					if ( $explosion[0] == $namespace ) {
@@ -153,7 +152,7 @@ class Site {
 			$param['rvexpandtemplates'] = '';
 		}
 
-		$result = $this->requestPropRevsions( $param );
+		$result = $this->api->requestPropRevsions( $param );
 
 		foreach ( $result['query']['pages'] as $x ) {
 			if ( ! isset( $x['missing'] ) ) {
@@ -167,15 +166,6 @@ class Site {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * This function resets the edit token in case we need to get a new one
-	 * //@todo catch token errors and call this to reset the token
-	 */
-	public function resetEditToken() {
-		unset( $this->token );
-		return $this->requestEditToken();
 	}
 
 	/**
@@ -193,7 +183,7 @@ class Site {
 			'titles' => $title,
 			'inprop' => array( 'url' ),
 		);
-		$data = $this->doRequest( $params );
+		$data = $this->api->doRequest( $params );
 		$data = array_values( $data['query']['pages'] );
 		$data = $data[0];
 		return $data;
@@ -225,88 +215,33 @@ class Site {
 		$this->userlogin = new UserLogin( $username, $password );
 	}
 
-	/*
-	* Performs a request to the api given the query and post data
-	* @param $query Array of query data
-	* @param $post Array of post data
-	* @return Array of the returning data
-	**/
-	public function doRequest( $query, $post = null ) {
-		// Normalize some stuff
-		foreach( $query as $param => $value ) {
-			if ( is_array( $value ) ) {
-				$query[$param] = implode( '|', $value );
-			}
-		}
-
-		$apiurl = $this->getApiUrl();
-		$query['format'] = 'php';
-
-		if ( $post == null ) {
-			$query = "?" . http_build_query( $query );
-			$returned = $this->http->get( $apiurl . $query );
-		} else {
-			if ( $post['action'] != 'login' ) {
-				$this->requestEditToken();
-			}
-			$query = "?" . http_build_query( $query );
-			$returned = $this->http->post( $apiurl . $query, $post );
-		}
-		return unserialize( $returned );
-	}
-
 	/**
 	 * Gets the api url from the main entry point
 	 * Hacky html screen scrape..
-	 * @todo this should probably be renamed
 	 */
-	public function requestApiUrl() {
+	public function getApiUrl() {
 		$pageData = $this->http->get( $this->url );
 		preg_match( '/\<link rel=\"EditURI.*?$/im', $pageData, $apiData );
 		if ( ! isset( $apiData[0] ) ) {
-			throw new \Exception( "Undefined offset when getting EditURL (api url)" );
+			throw new \Exception( "Undefined offset when getting EditURL (api url) stage1" );
 		}
 		preg_match( '/href=\"([^\"]+)\"/i', $apiData[0], $apiData );
 		if ( ! isset( $apiData[1] ) ) {
-			throw new \Exception( "Undefined offset when getting EditURL (api url)" );
+			throw new \Exception( "Undefined offset when getting EditURL (api url) stage2" );
 		}
 		$parsedApiUrl = parse_url( $apiData[1] );
 		
 		//Note: The below is back compatability check for the parse_url function
 		if( array_key_exists('host', $parsedApiUrl) ){
-			$this->api = $parsedApiUrl['host'] . $parsedApiUrl['path'];
+			return $parsedApiUrl['host'] . $parsedApiUrl['path'];
 		} else {
 			//pre 5.4.7
-			$this->api = trim($parsedApiUrl['path'] ,'/');
-		}
-
-		//Now hackily try and parse the lang
-		preg_match( '/\<html lang=\"([^\"]+)\"/im', $pageData, $langData );
-		if( ! empty($langData[1]) ){
-			$this->language = $langData[1];
+			return trim($parsedApiUrl['path'] ,'/');
 		}
 	}
 
-	/**
-	 * This function returns and edit token from the api
-	 * @throws \Exception
-	 * @return string Edit token.
-	 */
-	public function requestEditToken() {
-		if ( isset( $this->token ) ) {
-			return $this->token;
-		}
-		$this->requestLogin();
-		$apiresult = $this->doRequest( array( 'action' => 'query', 'prop' => 'info', 'intoken' => 'edit', 'titles' => 'Main Page' ) );
-		foreach($apiresult['query']['pages'] as $value){
-			$this->token = $value['edittoken'];
-			return $this->token;
-		}
-		throw new \Exception("Failed to get token");
-	}
-
-	public function requestSitematrix() {
-		$returned = $this->doRequest( array( 'action' => 'sitematrix') );
+	public function getSiteMatrix() {
+		$returned = $this->api->doRequest( array( 'action' => 'sitematrix') );
 
 		if ( empty ( $returned ) ) {
 			//@todo also catch if the result is returned but with an error code (not recognised action)
@@ -332,9 +267,9 @@ class Site {
 	 * @return Array
 	 * @todo this needs to be cached
 	 */
-	public function requestNamespaces( $nsid = null ) {
+	public function getNamespaces( $nsid = null ) {
 		if ( ! isset( $this->namespaces ) ) {
-			$returned = $this->doRequest( array( 'action' => 'query', 'meta' => 'siteinfo', 'siprop' => 'namespaces|namespacealiases' ) );
+			$returned = $this->api->requestNamespaces();
 			$this->namespaces[0] = Array( '' );
 			foreach ( $returned['query']['namespaces'] as $key => $nsArray ) {
 				if ( $nsArray['id'] != '0' ) {
@@ -355,22 +290,18 @@ class Site {
 		return $this->namespaces;
 	}
 
-	public function requestSiteinfo() {
-		$q['action'] = 'query';
-		$q['meta'] = 'siteinfo';
-		$result = $this->doRequest( $q );
+	public function getSiteinfo() {
+		$result = $this->api->requestSiteinfo();
 		$this->id = $result['query']['general']['wikiid'];
 		$this->language = $result['query']['general']['lang'];
 		$this->type = preg_replace( '/^' . $this->getLanguage() . '/i', '', $this->getId() );
 	}
 
-	public function requestWikibaseinfo() {
-		$q['action'] = 'query';
-		$q['meta'] = 'wikibase';
-		$result = $this->doRequest( $q );
+	public function getWikibaseinfo() {
+		$result = $this->api->requestWikibaseinfo();
 		if ( isset( $result['query']['wikibase']['repo']['url']['base'] ) ) {
 			$parsedApiUrl = parse_url( $result['query']['wikibase']['repo']['url']['base'] );
-			
+
 			//Note: The below is back compatability check for the parse_url function
 			if( array_key_exists('host', $parsedApiUrl) ){
 				$this->wikibase = $this->family->getSite( $parsedApiUrl['host'] );
@@ -386,17 +317,12 @@ class Site {
 	 * @return bool
 	 * @throws \Exception
 	 */
-	public function requestLogin() {
+	public function login() {
 		if ( $this->isLoggedIn == false ) {
-			$post['action'] = 'login';
-			$post['lgname'] = $this->userlogin->username;
-			$post['lgpassword'] = $this->userlogin->getPassword();
-
-			$result = $this->doRequest( null, $post );
+			$result = $this->api->requestLogin();
 
 			if ( $result['login']['result'] == 'NeedToken' ) {
-				$post['lgtoken'] = $result['login']['token'];
-				$result = $this->doRequest( null, $post );
+				$result = $this->api->requestLogin( $result['login']['token'] );
 			}
 
 			if ( $result['login']['result'] == "Success" ) {
@@ -406,7 +332,7 @@ class Site {
 			} else if ( $result['login']['result'] == "Throttled" ) {
 				$this->log( "Throttled! Waiting for " . $result['login']['wait'] . "\n" );
 				sleep( $result['login']['wait'] );
-				return $this->requestLogin();
+				return $this->login();
 			} else {
 				throw new \Exception( 'Failed login, with result ' . $result['login']['result'] );
 			}
@@ -421,98 +347,16 @@ class Site {
 	 * @param bool $minor Do we want to mark the edit as minor?
 	 * @return string
 	 */
-	public function requestEdit( $title, $text, $summary = null, $minor = false ) {
-		$parameters['action'] = 'edit';
-		$parameters['title'] = $title;
-		$parameters['text'] = $text;
-		$parameters['bot'] = '';
-		$parameters['maxlag'] = '5';
-		if ( isset( $summary ) ) {
-			$parameters['summary'] = $summary;
-		}
-		if ( $minor == true ) {
-			$parameters['minor'] = '1';
-		}
-		$parameters['token'] = $this->requestEditToken();
-		$result = $this->doRequest( null, $parameters );
+	public function doEdit( $title, $text, $summary = null, $minor = false ) {
+		$result = $this->api->requestEdit( $title, $text, $summary, $minor );
 		if( array_key_exists( 'error', $result ) && $result['error']['code'] == 'maxlag' ){
 			sleep(5);
-			$result = $this->requestEdit( $title, $text, $summary, $minor );
+			$result = $this->doEdit( $title, $text, $summary, $minor );
 		}
 		if( $this->getLanguage() == 'ja' && $this->getType() == 'wiki' ){
 			sleep(60);
 		}
 		return $result;
-	}
-
-	public function requestPropRevsions( $parameters ) {
-		$parameters['action'] = 'query';
-		$parameters['prop'] = 'revisions';
-		$parameters['rvprop'] = 'timestamp|content';
-		return $this->doRequest( $parameters );
-	}
-
-	public function requestPropCategories( $parameters ) {
-		$parameters['action'] = 'query';
-		$parameters['prop'] = 'categories';
-		$parameters['clprop'] = 'hidden';
-		$parameters['cllimit'] = '500';
-		return $this->doRequest( $parameters );
-	}
-
-	public function requestListAllusers( $parameters ) {
-		$parameters['action'] = 'query';
-		$parameters['list'] = 'allusers';
-		return $this->doRequest( $parameters );
-	}
-
-	public function requestListUsers( $parameters ) {
-		$parameters['action'] = 'query';
-		$parameters['list'] = 'users';
-		return $this->doRequest( $parameters );
-	}
-
-	public function requestWbGetEntities( $parameters ) {
-		$parameters['action'] = 'wbgetentities';
-		return $this->doRequest( $parameters );
-	}
-
-	public function requestWbEditEntity( $parameters ) {
-		$parameters['action'] = 'wbeditentity';
-		$parameters['token'] = $this->requestEditToken();
-		return $this->doRequest( null, $parameters );
-	}
-
-	public function requestPropCoordinates( $parameters ) {
-		$parameters['coprop'] = 'dim|globe';
-		$parameters['action'] = 'query';
-		$parameters['prop'] = 'coordinates';
-		return $this->doRequest( null, $parameters );
-	}
-
-	public function requestWbGetClaims( $parameters ) {
-		$parameters['action'] = 'wbgetclaims';
-		return $this->doRequest( null, $parameters );
-	}
-
-	public function requestWbCreateClaim( $parameters ) {
-		$parameters['action'] = 'wbcreateclaim';
-		$parameters['token'] = $this->requestEditToken();
-		$parameters['bot'] = '';
-		return $this->doRequest( null, $parameters );
-	}
-
-	public function requestWbSetReference( $parameters ) {
-		$parameters['action'] = 'wbsetreference';
-		$parameters['token'] = $this->requestEditToken();
-		$parameters['bot'] = '';
-		return $this->doRequest( null, $parameters );
-	}
-
-	public function requestListCategoryMembers( $parameters ){
-		$parameters['action'] = 'query';
-		$parameters['list'] = 'categorymembers';
-		return $this->doRequest( null, $parameters );
 	}
 
 	/**

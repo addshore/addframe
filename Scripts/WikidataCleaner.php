@@ -19,7 +19,7 @@ $wm = new Family(
 	new UserLogin( Config::get( 'wikiuser', 'username'),
 		Config::get( 'wikiuser', 'password') ), Config::get( 'wikiuser', 'home') );
 $wikidata = $wm->getSiteFromSiteid( 'wikidatawiki' );
-$wikidata->requestLogin();
+$wikidata->login();
 
 //@todo different item generations here
 $list = array();

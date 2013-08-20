@@ -56,7 +56,7 @@ class Entity extends Page {
 		$param['sites'] = $site;
 		$param['titles'] = $title;
 		$param['props'] = 'info';
-		$result = $this->site->requestWbGetEntities( $param );
+		$result = $this->site->api->requestWbGetEntities( $param );
 		if ( ! isset( $result['entities'] ) ) {
 			return false;
 		}
@@ -93,7 +93,7 @@ class Entity extends Page {
 		//@todo refactor into site->getentitydatafromid
 		if ( $this->new != true ) {
 			$param['ids'] = $this->id;
-			$result = $this->site->requestWbGetEntities( $param );
+			$result = $this->site->api->requestWbGetEntities( $param );
 			foreach ( $result['entities'] as $x ) {
 				if( array_key_exists( 'missing', $x ) ){
 					$this->missing = true;
@@ -132,7 +132,7 @@ class Entity extends Page {
 		$param['bot'] = '';
 		
 		echo "Saving entity " . $this->id . "\n";
-		$result = $this->site->requestWbEditEntity( $param );
+		$result = $this->site->api->requestWbEditEntity( $param );
 		return $result;
 	}
 
@@ -279,7 +279,7 @@ class Entity extends Page {
  		if( isset( $property ) ){
 			$params['property'] = $property;
 		}
-		$result = $this->site->requestWbGetClaims( $params );
+		$result = $this->site->api->requestWbGetClaims( $params );
 		return $result['claims'];
 	}
 
@@ -299,7 +299,7 @@ class Entity extends Page {
 			$params['value'] = $value;
 		}
 
-		$result = $this->site->requestWbCreateClaim( $params );
+		$result = $this->site->api->requestWbCreateClaim( $params );
 		return $result;
 	}
 

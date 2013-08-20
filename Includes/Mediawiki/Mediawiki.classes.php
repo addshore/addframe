@@ -14,6 +14,7 @@ return call_user_func( function() {
 		'Addframe\Mediawiki\PageList' => 'PageList.php',
 		'Addframe\Mediawiki\Regex' => 'Regex.php',
 		'Addframe\Mediawiki\Site' => 'Site.php',
+		'Addframe\Mediawiki\Api' => 'Api.php',
 		'Addframe\Mediawiki\Template' => 'Template.php',
 		'Addframe\Mediawiki\User' => 'User.php',
 		'Addframe\Mediawiki\UserLogin' => 'UserLogin.php',

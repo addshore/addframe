@@ -73,7 +73,7 @@ class User {
 		$params['ususers'] = $this->username;
 		$params['usprop'] = 'emailable|blockinfo|groups|implicitgroups|rights|editcount|registration|emailable|gender';
 		$params['uslimit'] = '1';
-		$result = $this->site->requestListUsers( $params );
+		$result = $this->site->api->requestListUsers( $params );
 		$this->userinfo = $result['query']['users'][0];
 		return $this->userinfo;
 	}
