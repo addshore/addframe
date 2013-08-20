@@ -5,8 +5,6 @@ php:
 
 script: phpunit --configuration phpunit.xml
 
-before_install: "git submodule init && git submodule update"
-
 notifications:
   irc:
     channels:
