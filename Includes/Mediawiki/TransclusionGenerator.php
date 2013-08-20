@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: km
- * Date: 8/20/13
- * Time: 2:20 AM
- * To change this template use File | Settings | File Templates.
- */
 
 namespace Addframe\Mediawiki;
 
