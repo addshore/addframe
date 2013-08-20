@@ -37,6 +37,12 @@ class Site {
 	protected $namespaces;
 	/** @var UserLogin */
 	protected $userlogin;
+	/**
+	 * Logging class if enabled in config.
+	 * Lazily enabled.
+	 * @var KLogger
+	 */
+	protected $logger;
 
 	/**
 	 * @param $url string URL of the api
@@ -378,11 +384,11 @@ class Site {
 			}
 
 			if ( $result['login']['result'] == "Success" ) {
-				echo "Logged in to " . $this->url . "\n";
+				$this->log( "Logged in to " . $this->url . "\n" );
 				$this->isLoggedIn = true;
 				return $this->isLoggedIn;
 			} else if ( $result['login']['result'] == "Throttled" ) {
-				echo "Throttled! Waiting for " . $result['login']['wait'] . "\n";
+				$this->log( "Throttled! Waiting for " . $result['login']['wait'] . "\n" );
 				sleep( $result['login']['wait'] );
 				return $this->requestLogin();
 			} else {
@@ -491,6 +497,34 @@ class Site {
 		$parameters['action'] = 'query';
 		$parameters['list'] = 'categorymembers';
 		return $this->doRequest( null, $parameters );
+	}
+
+	/**
+	 * Sets up the logger for us to use
+	 * @return KLogger
+	 * @todo Allow the user to set the path
+	 */
+	public function getLogger() {
+		if ( $this->logger === null ) {
+			$this->logger = new \KLogger('addwiki.log');
+		}
+
+		return $this->logger;
+	}
+
+	/**
+	 * Log stuff to the logger.
+	 * By default everything is printed unless the level is DEBUG,
+	 * but that can be overriden by setting $print to true.
+	 * @param string $msg
+	 * @param int $severity
+	 * @param bool $print
+	 */
+	public function log( $msg, $severity = \KLogger::INFO, $print = false ) {
+		$this->getLogger()->log( $msg, $severity, \KLogger::NO_ARGUMENTS );
+		if ( $print || $severity != \KLogger::DEBUG ) {
+			echo $msg;
+		}
 	}
 
 }
