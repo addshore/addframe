@@ -224,6 +224,13 @@ class Site {
 	* @return Array of the returning data
 	**/
 	public function doRequest( $query, $post = null ) {
+		// Normalize some stuff
+		foreach( $query as $param => $value ) {
+			if ( is_array( $value ) ) {
+				$query[$param] = implode( '|', $value );
+			}
+		}
+
 		$apiurl = $this->getApiUrl();
 		$query['format'] = 'php';
 
