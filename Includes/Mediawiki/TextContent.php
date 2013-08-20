@@ -7,7 +7,7 @@ namespace Addframe\Mediawiki;
  * @author Addshore
  */
 
-class Wikitext {
+class TextContent {
 
 	protected $text;
 	protected $isSet;

@@ -14,7 +14,7 @@ class Page {
 	public $site;
 	/** @var string title of Page including namespace */
 	public $title;
-	/** @var Wikitext Wikitext for page */
+	/** @var TextContent TextContent for page */
 	public $wikiText;
 	/** @var string pageid for Page */
 	protected $pageid;
@@ -34,7 +34,7 @@ class Page {
 	public function __construct( $site, $title ) {
 		$this->site = $site;
 		$this->title =  $title;
-		$this->wikiText = new Wikitext();
+		$this->wikiText = new TextContent();
 	}
 
 	/**
@@ -95,7 +95,7 @@ class Page {
 	/**
 	 * Current revision's page length
 	 * @return int
-	 * @todo integrate with Wikitext object somehow
+	 * @todo integrate with TextContent object somehow
 	 */
 	public function getLength() {
 		$data = $this->getInfo();
@@ -147,7 +147,7 @@ class Page {
 	}
 
 	public function getTextWithExpandedTemplates(){
-		return new Wikitext( $this->getSite()->getPageTextFromPageTitle( $this->title, true) );
+		return new TextContent( $this->getSite()->getPageTextFromPageTitle( $this->title, true) );
 	}
 
 	/**
