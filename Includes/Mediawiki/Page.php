@@ -1,6 +1,7 @@
 <?php
 
 namespace Addframe\Mediawiki;
+use Addframe\Addframe;
 use Addframe\Mediawiki\Wikibase\Entity;
 
 /**
@@ -140,7 +141,7 @@ class Page {
 	 */
 	public function getText( $force = false) {
 		if( $this->wikiText->getText() == null || $force == true ){
-			$this->site->log( "Loading page " . $this->site->url . " " . $this->title . "\n", \KLogger::DEBUG );
+			Addframe::log( "Loading page " . $this->site->url . " " . $this->title . "\n", \KLogger::DEBUG );
 			$this->wikiText->setText( $this->getSite()->getPageTextFromPageTitle( $this->title ) );
 		}
 		return $this->wikiText->getText();
@@ -381,7 +382,7 @@ class Page {
 	 * @return string
 	 */
 	public function save( $summary = null, $minor = false ) {
-		$this->site->log( "Saved page " . $this->title . "\n" );
+		Addframe::log( "Saved page " . $this->title . "\n" );
 		return $this->site->doEdit( $this->title, $this->getText(), $summary, $minor );
 	}
 
