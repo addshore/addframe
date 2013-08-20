@@ -185,6 +185,19 @@ class Site {
 		return new Page( $this, $title );
 	}
 
+	public function getPageInfo( $title ) {
+		$params = array(
+			'action' => 'query',
+			'prop' => 'info',
+			'titles' => $title,
+			'inprop' => array( 'url' ),
+		);
+		$data = $this->doRequest( $params );
+		$data = array_values( $data['query']['pages'] );
+		$data = $data[0];
+		return $data;
+	}
+
 	//@todo newPageFromPageId()
 
 	public function newCategoryFromTitle( $title ) {
@@ -316,6 +329,7 @@ class Site {
 	 * Gets and returns array of namespaces for the site and aliases
 	 * @param integer $nsid Array of namespaces to return
 	 * @return Array
+	 * @todo this needs to be cached
 	 */
 	public function requestNamespaces( $nsid = null ) {
 		if ( ! isset( $this->namespaces ) ) {

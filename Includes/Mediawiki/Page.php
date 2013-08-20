@@ -26,6 +26,8 @@ class Page {
 	protected $entity;
 	/** @var WikitextParser entity that is associated with the page */
 	protected $parser;
+	/** @var  Array info from prop=info */
+	protected $pageinfo;
 
 	/**
 	 * @param Site $site
@@ -38,7 +40,87 @@ class Page {
 	}
 
 	/**
+	 * Lazily fetch info from prop=info
+	 * @return Array
+	 */
+	public function getInfo() {
+		if ( $this->pageinfo === null ) {
+			$this->pageinfo = $this->site->getPageInfo( $this->getTitle() );
+		}
+		return $this->pageinfo;
+	}
+
+	/**
+	 * Get the page id
+	 * @return int
+	 */
+	public function getId() {
+		$data = $this->getInfo();
+		return $data['pageid'];
+	}
+
+	/**
+	 * ContentModel for the page
 	 * @return string
+	 */
+	public function getContentModel() {
+		$data = $this->getInfo();
+		return $data['contentmodel'];
+	}
+
+	/**
+	 * This is typically the site's contentlanguage, but can
+	 * be overridden by extension hooks.
+	 * Returns language code
+	 * @return string
+	 */
+	public function getPageLanguage() {
+		$data = $this->getInfo();
+		return $data['pagelanguage'];
+	}
+
+	/**
+	 * Returns the value of when the page was last touched
+	 * This is not equal to last edit
+	 * @return string
+	 * @todo This should be a timestamp object or something
+	 */
+	public function getTouched() {
+		$data = $this->getInfo();
+		return $data['touched'];
+	}
+
+	/**
+	 * Current revision's page length
+	 * @return int
+	 * @todo integrate with Wikitext object somehow
+	 */
+	public function getLength() {
+		$data = $this->getInfo();
+		return $data['length'];
+	}
+
+	/**
+	 * Human friendly url, eg "en.wp.o/wiki/Title"
+	 * @return string
+	 */
+	public function getPrettyUrl() {
+		$data = $this->getInfo();
+		return $data['fullurl'];
+	}
+
+	/**
+	 * Namespace number that the page is in
+	 * @return int
+	 */
+	public function getNamespace() {
+		$data = $this->getInfo();
+		return $data['ns'];
+	}
+
+	/**
+	 * @return string
+	 * @deprecated use getNamespace() instead
 	 */
 	public function getNsid() {
 		if( $this->nsid == null ){
