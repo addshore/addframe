@@ -53,7 +53,7 @@ class Family extends Registry {
 	 */
 	private function getSiteMatrix() {
 		if ( $this->siteMatrix == null ){
-			$this->siteMatrix = $this->homeSite->requestSitematrix();
+			$this->siteMatrix = $this->homeSite->getSiteMatrix();
 			$this->buildSiteIndex();
 		}
 		return $this->siteMatrix;
