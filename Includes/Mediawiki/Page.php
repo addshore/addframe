@@ -28,8 +28,8 @@ class Page {
 	protected $parser;
 
 	/**
-	 * @param $site
-	 * @param $title
+	 * @param Site $site
+	 * @param string $title
 	 */
 	public function __construct( $site, $title ) {
 		$this->site = $site;
