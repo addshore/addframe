@@ -326,11 +326,11 @@ class Site {
 			}
 
 			if ( $result['login']['result'] == "Success" ) {
-				$this->log( "Logged in to " . $this->url . "\n" );
+				Addframe::log( "Logged in to " . $this->url . "\n" );
 				$this->isLoggedIn = true;
 				return $this->isLoggedIn;
 			} else if ( $result['login']['result'] == "Throttled" ) {
-				$this->log( "Throttled! Waiting for " . $result['login']['wait'] . "\n" );
+				Addframe::log( "Throttled! Waiting for " . $result['login']['wait'] . "\n" );
 				sleep( $result['login']['wait'] );
 				return $this->login();
 			} else {
@@ -358,20 +358,4 @@ class Site {
 		}
 		return $result;
 	}
-
-	/**
-	 * Log stuff to the logger.
-	 * By default everything is printed unless the level is DEBUG,
-	 * but that can be overriden by setting $print to true.
-	 * @param string $msg
-	 * @param int $severity
-	 * @param bool $print
-	 */
-	public function log( $msg, $severity = \KLogger::INFO, $print = false ) {
-		Addframe::getLogger()->log( $msg, $severity, \KLogger::NO_ARGUMENTS );
-		if ( $print || $severity != \KLogger::DEBUG ) {
-			echo $msg;
-		}
-	}
-
 }

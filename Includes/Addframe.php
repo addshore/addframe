@@ -30,4 +30,19 @@ class Addframe {
 		return self::$logger;
 	}
 
+	/**
+	 * Log stuff to the logger.
+	 * By default everything is printed unless the level is DEBUG,
+	 * but that can be overriden by setting $print to true.
+	 * @param string $msg
+	 * @param int $severity
+	 * @param bool $print
+	 */
+	public static function log( $msg, $severity = \KLogger::INFO, $print = false ) {
+		Addframe::getLogger()->log( $msg, $severity, \KLogger::NO_ARGUMENTS );
+		if ( $print || $severity != \KLogger::DEBUG ) {
+			echo $msg;
+		}
+	}
+
 }
