@@ -33,17 +33,17 @@ Directory Structure
 -------------
 
 * Configs - For config files
-* Includes - All framework classes and extensions are here
+* Includes - All framework classes and tests are here
 * Scripts - Scripts that use the framework
-* Tests - Tests for the core framework
+* Maintenance - A Selection of scripts to make some work easier
 
 Tests
 -------------
 
 * The framework is tested using PHPUnit tests.
-* The configuration file for the tests can be found at /tests/phpunit.xml
-* The bootstrap file for the tests can be found at /Tests/Bootstrap.php
+* The configuration file for the tests can be found at phpunit.xml
+* The bootstrap file for the tests can be found at phpunit.bootstrap.php
 * On any push, branch or pull request Travis will run all tests
-* If Travis reports failing tests please try to fix them ASAP
+* If Travis reports failing tests please fix them :)
 * https://travis-ci.org/addshore/addwiki/builds
 * When writing new code please add tests for the code!
