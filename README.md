@@ -35,7 +35,7 @@ Directory Structure
 * Configs - For config files
 * Includes - All framework classes and extensions are here
 * Scripts - Scripts that use the framework
-* Tests - Tests for the core framework
+* Includes/Tests - Tests for the core framework
 
 Tests
 -------------
