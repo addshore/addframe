@@ -2,6 +2,10 @@
 
 namespace Addframe\Mediawiki;
 
+/**
+ * Class Generator
+ * @author Legoktm
+ */
 
 class Generator implements \Iterator {
 
