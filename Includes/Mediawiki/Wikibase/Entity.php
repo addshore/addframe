@@ -34,15 +34,10 @@ class Entity extends Page {
 
 	//@todo manipulate statements
 
-	//todo get entities from site and title combo!
-	function __construct( $site, $id = null, $new = null ) {
+	function __construct( $site, $id = null ) {
 		if ( isset ( $id ) ) {
 			//todo this is a valid id
 			$this->id = strtolower( $id );
-		}
-		if ( isset( $new ) ) {
-			$this->new = true;
-			$this->entityType = $new;
 		}
 		$this->site = $site;
 	}
@@ -301,6 +296,10 @@ class Entity extends Page {
 
 		$result = $this->site->api->requestWbCreateClaim( $params );
 		return $result;
+	}
+
+	static function newFromId( $site, $id ){
+		return new static( $site, $id );
 	}
 
 }

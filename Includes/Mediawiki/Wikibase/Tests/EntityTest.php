@@ -15,18 +15,17 @@ class EntityTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider provideValidConstructionValues
 	 */
-	function testCanConstructEntity( $site, $id, $new ){
-		$entity = new Entity( $site , $id , $new );
+	function testCanConstructEntity( $site, $id ){
+		$entity = Entity::newFromId( $site , $id );
 		$this->assertTrue( true, 'Unable to construct a Entity' );
 		$this->assertEquals( strtolower( $id ), $entity->getId() );
 	}
 
 	function provideValidConstructionValues(){
 		$values = array();
-		$values[] = array( $this->getMockSite(), null , null );
-		$values[] = array( $this->getMockSite(), 'q42' , null );
-		$values[] = array( $this->getMockSite(), 'Q100' , null );
-			//@todo add testing for new entities once implemented
+		$values[] = array( $this->getMockSite(), null );
+		$values[] = array( $this->getMockSite(), 'q42' );
+		$values[] = array( $this->getMockSite(), 'Q100' );
 		return $values;
 	}
 
@@ -54,7 +53,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	function getDefaultEntity(){
-		return new Entity( $this->getMockSite(), 'q42' );
+		return Entity::newFromId( $this->getMockSite(), 'q42' );
 	}
 
 	/**

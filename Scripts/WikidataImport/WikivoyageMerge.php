@@ -51,7 +51,7 @@ echo count($ids)." in total...\n";
 foreach ( $ids as $item ) {
 	echo $item."\n";
 
-	$itemOne = $wikidata->newEntityFromEntityId( $item );
+	$itemOne = Entity::newFromId( $wikidata, $item );
 	$itemOne->load();
 	if( $itemOne->isMissing() ){
 		echo "Missing\n";
