@@ -229,7 +229,7 @@ class Page {
 		$result = $this->site->api->doRequest( $q );
 		foreach ( $result['query']['pages'] as $page ) {
 			if ( isset( $page['pageprops']['wikibase_item'] ) ) {
-				$this->entity = new Entity( $this->site->getWikibase(), $page['pageprops']['wikibase_item'] );
+				$this->entity = Entity::newFromId( $this->site->getWikibase(), $page['pageprops']['wikibase_item'] );
 				return $this->entity;
 			}
 		}

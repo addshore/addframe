@@ -7,6 +7,7 @@ use Addframe\Mediawiki\Family;
 use Addframe\Mediawiki\Page;
 use Addframe\Mediawiki\UserLogin;
 use Addframe\Config;
+use Addframe\Mediawiki\Wikibase\Entity;
 
 /**
  * @author Addshore
@@ -25,7 +26,7 @@ $wikidata->login();
 $list = array();
 
 foreach ( $list as $itemId ) {
-	$entity = $wikidata->newEntityFromEntityId( $itemId );
+	$entity = Entity::newFromId( $wikidata, $itemId );
 	$entity->load();
 	foreach ( $entity->getLanguageData() as $siteId => $articleTitle ) {
 		$page = new Page( $wm->getSiteFromSiteid( $siteId ), $articleTitle );

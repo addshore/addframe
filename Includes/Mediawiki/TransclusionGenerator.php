@@ -4,6 +4,7 @@ namespace Addframe\Mediawiki;
 
 /**
  * Generator for pages that have a specific template
+ * @author Legoktm
  */
 class TransclusionGenerator extends Generator {
 	/**

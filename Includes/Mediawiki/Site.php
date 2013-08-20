@@ -203,14 +203,6 @@ class Site {
 		return new User( $this, $username );
 	}
 
-	/**
-	 * @param $id string
-	 * @return Entity
-	 */
-	public function newEntityFromEntityId( $id ) {
-		return new Entity( $this, $id );
-	}
-
 	public function newLogin( $username, $password ) {
 		$this->userlogin = new UserLogin( $username, $password );
 	}
