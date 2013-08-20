@@ -1,9 +1,13 @@
 <?php
 namespace Addframe\Mediawiki;
+
 use Addframe\Mediawiki\Site;
 use Addframe\Mediawiki\Page;
 
-
+/**
+ * @since 0.0.4
+ * @author legoktm
+ */
 
 class PageTest extends \PHPUnit_Framework_TestCase {
 
