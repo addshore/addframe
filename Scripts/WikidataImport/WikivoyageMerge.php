@@ -83,7 +83,7 @@ foreach ( $ids as $item ) {
 		if ( $itemTwo instanceof Entity ) {
 			if( $itemOne->getId() !== $itemTwo->getId() ){
 				$logpage->getText( true );
-				$logpage->wikiText->appendText( "\n* [[".$itemOne->getId().']] can be merged with [['.$itemTwo->getId()."]]" );
+				$logpage->content->appendText( "\n* [[".$itemOne->getId().']] can be merged with [['.$itemTwo->getId()."]]" );
 				$logpage->save( 'Adding possible merge between [['.$itemOne->getId().']] and [['.$itemTwo->getId().']] ', true );
 				break;
 			}

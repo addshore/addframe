@@ -16,7 +16,7 @@ class Page {
 	/** @var string title of Page including namespace */
 	public $title;
 	/** @var TextContent TextContent for page */
-	public $wikiText;
+	public $content;
 	/** @var string pageid for Page */
 	protected $pageid;
 	/** @var array of categories the page is in */
@@ -33,7 +33,7 @@ class Page {
 	public function __construct( $site, $title ) {
 		$this->site = $site;
 		$this->title =  $title;
-		$this->wikiText = new TextContent();
+		$this->content = new TextContent();
 	}
 
 	/**
@@ -138,11 +138,11 @@ class Page {
 	 * @return string
 	 */
 	public function getText( $force = false) {
-		if( $this->wikiText->getText() == null || $force == true ){
+		if( $this->content->getText() == null || $force == true ){
 			Addframe::log( "Loading page " . $this->site->url . " " . $this->title . "\n", \KLogger::DEBUG );
-			$this->wikiText->setText( $this->getSite()->getPageTextFromPageTitle( $this->title ) );
+			$this->content->setText( $this->getSite()->getPageTextFromPageTitle( $this->title ) );
 		}
-		return $this->wikiText->getText();
+		return $this->content->getText();
 	}
 
 	public function getTextWithExpandedTemplates(){
@@ -410,10 +410,10 @@ class Page {
 						$iwPrefix = '(nb|no)';
 					}
 
-					$lengthBefore = $this->wikiText->getLength();
+					$lengthBefore = $this->content->getLength();
 					$removeLink = '/\n ?\[\[' . $iwPrefix . ' ?: ?' . str_replace( ' ', '( |_)', preg_quote( $titleVarient, '/' ) ) . ' ?\]\] ?/';
-					$this->wikiText->removeRegexMatched( $removeLink );
-					if ( $lengthBefore > $this->wikiText->getLength() ) {
+					$this->content->removeRegexMatched( $removeLink );
+					if ( $lengthBefore > $this->content->getLength() ) {
 						$counter = $counter + 1;
 						echo "Removed link! $iwPrefix:$titleVarient\n";
 					}
@@ -426,11 +426,11 @@ class Page {
 
 			if( $this->getNamespace() == 10 ){
 				//Remove empty no include tags
-				$this->wikiText->removeRegexMatched('/<noinclude>\s+?<\/noinclude>/');
+				$this->content->removeRegexMatched('/<noinclude>\s+?<\/noinclude>/');
 			}
 
-		$this->wikiText->removeRegexMatched('/<!-- ?(interwikis?( links?)?|other (wiki|language)s?) ?-->/i');
-		$this->wikiText->trimWhitespace();
+		$this->content->removeRegexMatched('/<!-- ?(interwikis?( links?)?|other (wiki|language)s?) ?-->/i');
+		$this->content->trimWhitespace();
 
 		}
 
