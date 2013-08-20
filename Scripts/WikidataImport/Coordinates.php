@@ -172,7 +172,7 @@ while ( $maxoffset == 0 || $offset <= $maxoffset ){
 						$ref['datavalue'] = array( 'type' => 'wikibase-entityid', 'value' => array( 'entity-type' => 'item', 'numeric-id' => intval( $sources[$page->site->getLanguage()] ) ) );
 						$refJson = '{"' . $ref['property'] . '":[' . json_encode( $ref ) . ']}';
 						//add it
-						$entity->site->requestWbSetReference( array( 'statement' => $result['claim']['id'], 'snaks' => $refJson ) );
+						$entity->site->api->requestWbSetReference( array( 'statement' => $result['claim']['id'], 'snaks' => $refJson ) );
 						break;
 					}
 				}

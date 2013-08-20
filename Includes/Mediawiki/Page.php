@@ -175,7 +175,7 @@ class Page {
 		$q['prop'] = 'info';
 		$q['titles'] = $this->title;
 		$q['inprop'] = 'protected';
-		$result = $this->site->doRequest( $q );
+		$result = $this->site->api->doRequest( $q );
 		foreach( $result['query']['pages'] as $page ){
 			if( isset( $page['protection'] ) ){
 				foreach( $page['protection'] as $protection ){
@@ -207,7 +207,7 @@ class Page {
 		$namespace = $this->getNamespace();
 
 		if ( $namespace != '0' ) {
-			$siteNamespaces = $this->site->requestNamespaces();
+			$siteNamespaces = $this->site->getNamespaces();
 			$normalisedNamespace = $siteNamespaces[ $namespace ][0];
 
 			$explosion = explode( ':', $this->title, 2 );
@@ -225,7 +225,7 @@ class Page {
 		$q['action'] = 'query';
 		$q['prop'] = 'pageprops';
 		$q['titles'] = $this->title;
-		$result = $this->site->doRequest( $q );
+		$result = $this->site->api->doRequest( $q );
 		foreach ( $result['query']['pages'] as $page ) {
 			if ( isset( $page['pageprops']['wikibase_item'] ) ) {
 				$this->entity = new Entity( $this->site->getWikibase(), $page['pageprops']['wikibase_item'] );
@@ -355,7 +355,7 @@ class Page {
 			$param['clshow'] = '!hidden';
 		}
 
-		$result = $this->site->requestPropCategories( $param );
+		$result = $this->site->api->requestPropCategories( $param );
 
 		foreach ( $result->value['query']['pages'] as $x ) {
 			$this->pageid = $x['pageid'];
@@ -366,7 +366,7 @@ class Page {
 
 	public function getCoordinates(){
 		$params['titles'] = $this->title;
-		$result = $this->site->requestPropCoordinates( $params );
+		$result = $this->site->api->requestPropCoordinates( $params );
 		foreach( $result['query']['pages'] as $page ){
 			if(array_key_exists( 'coordinates', $page )){
 				return $page['coordinates'];
@@ -382,7 +382,7 @@ class Page {
 	 */
 	public function save( $summary = null, $minor = false ) {
 		$this->site->log( "Saved page " . $this->title . "\n" );
-		return $this->site->requestEdit( $this->title, $this->getText(), $summary, $minor );
+		return $this->site->doEdit( $this->title, $this->getText(), $summary, $minor );
 	}
 
 	/**
@@ -405,8 +405,8 @@ class Page {
 				$iwPrefix = $linkSite->getIwPrefix();
 				$page = $linkSite->newPageFromTitle( $sitelink['title'] );
 				$titleEnd = $page->getTitleWithoutNamespace();
-				$possibleNamespaces = $linkSite->requestNamespaces();
-				$possibleNamespaces = $possibleNamespaces[ $page->getNamespace ];
+				$possibleNamespaces = $linkSite->getNamespaces();
+				$possibleNamespaces = $possibleNamespaces[ $page->getNamespace() ];
 
 				//@todo this could all be improved with something like getRegexForTitle or  getRegexForInterwikiLink
 				foreach ( $possibleNamespaces as $namespace ) {
@@ -437,7 +437,7 @@ class Page {
 
 		if( count( $this->getInterwikisFromtext() ) == 0 ){
 
-			if( $this->getNamespace == 10 ){
+			if( $this->getNamespace() == 10 ){
 				//Remove empty no include tags
 				$this->wikiText->removeRegexMatched('/<noinclude>\s+?<\/noinclude>/');
 			}

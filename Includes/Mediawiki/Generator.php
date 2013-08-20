@@ -66,7 +66,7 @@ class Generator implements \Iterator {
 		if ( $this->continue !== null ) {
 			$this->params['continue'] = $this->continue;
 		}
-		$data = $this->site->doRequest( $this->params );
+		$data = $this->site->api->doRequest( $this->params );
 		if ( !isset( $data['continue'] ) && $this->continue ) {
 			// We're out of results.
 			$this->done = true;
