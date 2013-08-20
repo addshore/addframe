@@ -322,7 +322,7 @@ class Page {
 		$baseEntity = $this->getEntity();
 		$counter = 0;
 
-		if ( ! $baseEntity instanceof Entity ) {
+		if ( !$baseEntity instanceof Entity ) {
 				return false;
 		}
 		$baseEntity->load();
