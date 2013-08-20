@@ -67,7 +67,7 @@ class Page {
 	 */
 	public function getText( $force = false) {
 		if( $this->wikiText->getText() == null || $force == true ){
-			echo "Loading page " . $this->site->url . " " . $this->title . "\n";
+			$this->site->log( "Loading page " . $this->site->url . " " . $this->title . "\n", \KLogger::DEBUG );
 			$this->wikiText->setText( $this->getSite()->getPageTextFromPageTitle( $this->title ) );
 		}
 		return $this->wikiText->getText();
@@ -309,7 +309,7 @@ class Page {
 	 * @return string
 	 */
 	public function save( $summary = null, $minor = false ) {
-		echo "Saved page " . $this->title . "\n";
+		$this->site->log( "Saved page " . $this->title . "\n" );
 		return $this->site->requestEdit( $this->title, $this->getText(), $summary, $minor );
 	}
 
