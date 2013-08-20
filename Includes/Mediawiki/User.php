@@ -3,7 +3,7 @@
 namespace Addframe\Mediawiki;
 
 /**
- * This class is designed to represet a Site User
+ * This class is designed to represent a Site User
  * @since 0.0.1
  * @author Addshore
  **/
