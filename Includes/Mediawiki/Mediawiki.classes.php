@@ -19,7 +19,6 @@ return call_user_func( function() {
 		'Addframe\Mediawiki\User' => 'User.php',
 		'Addframe\Mediawiki\UserLogin' => 'UserLogin.php',
 		'Addframe\Mediawiki\TextContent' => 'TextContent.php',
-		'Addframe\Mediawiki\WikitextParser' => 'WikitextParser.php',
 	);
 
 	return $classes;
