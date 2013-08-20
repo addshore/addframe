@@ -18,8 +18,6 @@ class Page {
 	public $wikiText;
 	/** @var string pageid for Page */
 	protected $pageid;
-	/** @var string namespace id number eg. 2 */
-	protected $nsid;
 	/** @var array of categories the page is in */
 	protected $categories;
 	/** @var Entity entity that is associated with the page */
@@ -41,13 +39,17 @@ class Page {
 
 	/**
 	 * Lazily fetch info from prop=info
+	 * @param null|string $key of data to get from pageinfo
 	 * @return Array
 	 */
-	public function getInfo() {
+	public function getInfo( $key = null ) {
 		if ( $this->pageinfo === null ) {
 			$this->pageinfo = $this->site->getPageInfo( $this->getTitle() );
 		}
-		return $this->pageinfo;
+		if( is_null( $key ) || !array_key_exists( $key, $this->pageinfo ) ){
+			return $this->pageinfo;
+		}
+		return $this->pageinfo[ $key ];
 	}
 
 	/**
@@ -120,17 +122,6 @@ class Page {
 
 	/**
 	 * @return string
-	 * @deprecated use getNamespace() instead
-	 */
-	public function getNsid() {
-		if( $this->nsid == null ){
-			$this->nsid = $this->site->getNamespaceIdFromTitle( $this->title );
-		}
-		return $this->nsid;
-	}
-
-	/**
-	 * @return string
 	 */
 	public function getPageid() {
 		return $this->pageid;
@@ -170,9 +161,9 @@ class Page {
 	 * @return string The title with the namespace removed if possible
 	 */
 	public function getTitleWithoutNamespace() {
-		$this->getNsid();
+		$namespace = $this->getNamespace();
 
-		if ( $this->nsid != null && $this->nsid != '0' ) {
+		if ( $namespace != null && $namespace != '0' ) {
 			$explode = explode( ':', $this->title, '2' );
 			return $explode[1];
 		}
@@ -213,11 +204,11 @@ class Page {
 	 * @return string Normalise the namespace of the title if possible.
 	 */
 	public function normaliseTitleNamespace() {
-		$this->getNsid();
+		$namespace = $this->getNamespace();
 
-		if ( $this->nsid != '0' ) {
+		if ( $namespace != '0' ) {
 			$siteNamespaces = $this->site->requestNamespaces();
-			$normalisedNamespace = $siteNamespaces[$this->nsid][0];
+			$normalisedNamespace = $siteNamespaces[ $namespace ][0];
 
 			$explosion = explode( ':', $this->title, 2 );
 			$explosion[0] = $normalisedNamespace;
@@ -368,7 +359,6 @@ class Page {
 
 		foreach ( $result->value['query']['pages'] as $x ) {
 			$this->pageid = $x['pageid'];
-			$this->nsid = $x['nsid'];
 			$this->categories = $x['categories'];
 		}
 		return $this->categories;
@@ -416,7 +406,7 @@ class Page {
 				$page = $linkSite->newPageFromTitle( $sitelink['title'] );
 				$titleEnd = $page->getTitleWithoutNamespace();
 				$possibleNamespaces = $linkSite->requestNamespaces();
-				$possibleNamespaces = $possibleNamespaces[$page->getNsid()];
+				$possibleNamespaces = $possibleNamespaces[ $page->getNamespace ];
 
 				//@todo this could all be improved with something like getRegexForTitle or  getRegexForInterwikiLink
 				foreach ( $possibleNamespaces as $namespace ) {
@@ -447,7 +437,7 @@ class Page {
 
 		if( count( $this->getInterwikisFromtext() ) == 0 ){
 
-			if( $this->getNsid() == 10 ){
+			if( $this->getNamespace == 10 ){
 				//Remove empty no include tags
 				$this->wikiText->removeRegexMatched('/<noinclude>\s+?<\/noinclude>/');
 			}
