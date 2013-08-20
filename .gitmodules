@@ -1,0 +1,3 @@
+[submodule "KLogger"]
+	path = KLogger
+	url = https://github.com/katzgrau/KLogger.git
