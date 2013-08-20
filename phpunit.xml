@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- colors don't work on Windows! -->
-<phpunit bootstrap="Tests/Bootstrap.php"
+<phpunit bootstrap="phpunit.bootstrap.php"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
@@ -15,7 +15,7 @@
          verbose="true">
     <testsuites>
         <testsuite name="Addframe Core">
-            <directory suffix="Test.php">Tests</directory>
+            <directory suffix="Test.php">Includes/Tests</directory>
         </testsuite>
         <testsuite name="Addframe Include">
             <directory suffix="Test.php">Includes/*/Tests</directory>
