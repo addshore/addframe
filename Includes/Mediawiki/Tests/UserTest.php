@@ -12,7 +12,7 @@ use Addframe\Mediawiki\User;
  * @author Addshore
  */
 
-class UserLogin extends \PHPUnit_Framework_TestCase {
+class UserTest extends \PHPUnit_Framework_TestCase {
 
 	function provideUserDetails(){
 		return array(
@@ -38,7 +38,7 @@ class UserLogin extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider provideUserDetails
 	 */
 	function testGetUserPage( $username, $site ){
-		$user = new User( $site,$username );
+		$user = new User( $site, $username );
 		$userPage = $user->getUserPage();
 		$this->assertInstanceOf( 'Addframe\Mediawiki\Page', $userPage , 'Did not return instance of Page' );
 		$this->assertEquals( 'User:'.$username, $userPage->getTitle(), 'Did not set the correct Page Title' );
