@@ -84,7 +84,7 @@ class PageTest extends \PHPUnit_Framework_TestCase {
 			array( 'User:Blah', 'User talk:Blah' ),
 			array( 'Main Page', 'Talk:Main Page' ),
 			array( 'MediaWiki:Omg', 'MediaWiki talk:Omg' ),
-			//array( 'Special:Watchlist', '' ), // @todo fix this
+			array( 'Special:Watchlist', 'Special:Watchlist' ),
 		);
 	}
 

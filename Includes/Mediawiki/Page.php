@@ -126,7 +126,9 @@ class Page {
 	 * @return Page
 	 */
 	public function toggleTalkPage() {
-		if ( $this->getNamespace() % 2 == 0 ) {
+		if ( $this->getNamespace() < 0 ) { // Special/Media namespace
+			return $this;
+		} elseif ( $this->getNamespace() % 2 == 0 ) {
 			$ns = $this->getNamespace() + 1; // subject page
 		} else {
 			$ns = $this->getNamespace() - 1; // talk page
