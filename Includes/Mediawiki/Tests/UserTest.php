@@ -82,7 +82,14 @@ class UserTest extends \PHPUnit_Framework_TestCase {
 		$user = new TestUser( $this->getMockSite(), 'Username' );
 		$user->setUserInfo( array( 'editcount' => $count ) );
 		$this->assertEquals( $count, $user->requestEditcount() );
+	}
 
+	function testHasEmailEnabled() {
+		$user = new TestUser( $this->getMockSite(), 'Username' );
+		$user->setUserInfo( array( 'emailable' => '' ) );
+		$this->assertTrue( $user->hasEmailEnabled() );
+		$user->setUserInfo( array( 'blah' => '' ) );
+		$this->assertFalse( $user->hasEmailEnabled() );
 	}
 
 }
