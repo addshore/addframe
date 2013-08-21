@@ -90,6 +90,15 @@ class User {
 	}
 
 	/**
+	 * Helper function to check whether
+	 * a user has a specific right
+	 * @param string $right
+	 */
+	public function hasRight( $right ) {
+		return in_array( $right, $this->requestRights() );
+	}
+
+	/**
 	 * gets a users edit count
 	 * @return int
 	 */

@@ -91,4 +91,15 @@ class UserTest extends \PHPUnit_Framework_TestCase {
 		$this->assertFalse( $user->hasEmailEnabled() );
 	}
 
+	function testUserRights() {
+		$rights = array( 'block', 'protect', 'delete' );
+		$user = new TestUser( $this->getMockSite(), 'Username' );
+		$user->setUserInfo( array( 'rights' => $rights ) );
+		$this->assertEquals( $rights, $user->requestRights() );
+		foreach( $rights as $right ) {
+			$this->assertTrue( $user->hasRight( $right ) );
+		}
+		$this->assertFalse( $user->hasRight( 'electrocute' ) );
+	}
+
 }
