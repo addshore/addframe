@@ -79,5 +79,26 @@ class PageTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals( $pg->getNamespace(), $ns );
 	}
 
+	public static function provideToggleTalkPage() {
+		return array(
+			array( 'User:Blah', 'User talk:Blah' ),
+			array( 'Main Page', 'Talk:Main Page' ),
+			array( 'MediaWiki:Omg', 'MediaWiki talk:Omg' ),
+			//array( 'Special:Watchlist', '' ), // @todo fix this
+		);
+	}
+
+	/**
+	 * @dataProvider provideToggleTalkPage
+	 * @param $first string
+	 * @param $second string
+	 */
+	public function testToggleTalkPage( $first, $second ) {
+		$pg = new Page( $this->site, $first );
+		$pg2 = new Page( $this->site, $second );
+		$this->assertEquals( $pg->toggleTalkPage()->getTitle(), $pg2->getTitle() );
+		$this->assertEquals( $pg2->toggleTalkPage()->getTitle(), $pg->getTitle() );
+	}
+
 
 }

@@ -120,6 +120,22 @@ class Page {
 	}
 
 	/**
+	 * Returns the partner page of the current page.
+	 * If the page is a talk page, return the subject page
+	 * If it's a subject page, return the talk page
+	 * @return Page
+	 */
+	public function toggleTalkPage() {
+		if ( $this->getNamespace() % 2 == 0 ) {
+			$ns = $this->getNamespace() + 1; // subject page
+		} else {
+			$ns = $this->getNamespace() - 1; // talk page
+		}
+		$prefix = $this->site->getNamespaceFromId( $ns );
+		return new Page( $this->site, $prefix . $this->getTitleWithoutNamespace() );
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getPageid() {
