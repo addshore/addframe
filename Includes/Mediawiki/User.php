@@ -52,7 +52,7 @@ class User {
 	 * @return Page object for this users page
 	 */
 	public function getUserPage() {
-		return new Page( $this->site, "User:$this->username" );
+		return new Page( $this->site, "User:$this->username", 2 );
 	}
 
 	/**

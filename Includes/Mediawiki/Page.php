@@ -33,10 +33,12 @@ class Page {
 	/**
 	 * @param Site $site
 	 * @param string $title
+	 * @param int $ns
 	 */
-	public function __construct( $site, $title ) {
+	public function __construct( $site, $title, $ns = null ) {
 		$this->site = $site;
 		$this->title =  $title;
+		$this->ns = $ns;
 		$this->content = new TextContent();
 	}
 
