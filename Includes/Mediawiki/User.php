@@ -105,7 +105,7 @@ class User {
 	 * @return bool
 	 */
 	public function hasEmailEnabled() {
-		return in_array( "emailable", array_keys( $this->fetchUserInfo() ) );
+		$arr = $this->fetchUserInfo();
+		return isset( $arr['emailable'] );
 	}
-
 }
