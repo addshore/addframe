@@ -104,4 +104,12 @@ class Generator implements \Iterator {
 	function valid() {
 		return $this->current() !== null;
 	}
+
+	/**
+	 * Extend the current generator with another one...
+	 * @param Generator $gen
+	 */
+	function extend( $gen ) {
+		$this->res += $gen->res;
+	}
 }

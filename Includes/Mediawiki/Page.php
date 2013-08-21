@@ -25,6 +25,10 @@ class Page {
 	protected $entity;
 	/** @var  Array info from prop=info */
 	protected $pageinfo;
+	/** @var int namespace id */
+	protected $ns;
+	/** @var int pageid */
+	protected $id;
 
 	/**
 	 * @param Site $site
@@ -37,11 +41,38 @@ class Page {
 	}
 
 	/**
+	 * Most generators give us some extra info, so try
+	 * and preload some if we can
+	 * @param Site $site
+	 * @param array $data
+	 * @return Page
+	 */
+	public static function newFromGenerator( $site, $data ) {
+		$pg = new Page( $site, $data['title'] );
+		if ( isset( $data['pageid'] ) ) {
+			$pg->id = $data['pageid'];
+		}
+		if ( isset( $data['ns'] ) ) {
+			$pg->ns = $data['ns'];
+		}
+
+		return $pg;
+	}
+
+	/**
 	 * Lazily fetch info from prop=info
 	 * @param null|string $key of data to get from pageinfo
 	 * @return Array
 	 */
 	public function getInfo( $key = null ) {
+		// Some keys might be pre-populated
+		if ( $key == 'ns' && $this->ns ) {
+			return $this->ns;
+		} elseif ( $key == 'pageid' && $this->id ) {
+			return $this->id;
+		}
+
+
 		if ( $this->pageinfo === null ) {
 			$this->pageinfo = $this->site->getPageInfo( $this->getTitle() );
 		}
@@ -56,8 +87,7 @@ class Page {
 	 * @return int
 	 */
 	public function getId() {
-		$data = $this->getInfo();
-		return $data['pageid'];
+		return $this->getInfo( 'pageid' );
 	}
 
 	/**
@@ -115,8 +145,7 @@ class Page {
 	 * @return int
 	 */
 	public function getNamespace() {
-		$data = $this->getInfo();
-		return $data['ns'];
+		return $this->getInfo( 'ns' );
 	}
 
 	/**
