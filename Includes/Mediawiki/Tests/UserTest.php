@@ -40,6 +40,7 @@ class UserTest extends \PHPUnit_Framework_TestCase {
 	function testGetUserPage( $username, $site ){
 		$user = new User( $site, $username );
 		$userPage = $user->getUserPage();
+		$this->assertEquals( $userPage->getNamespace(), 2 );
 		$this->assertInstanceOf( 'Addframe\Mediawiki\Page', $userPage , 'Did not return instance of Page' );
 		$this->assertEquals( 'User:'.$username, $userPage->getTitle(), 'Did not set the correct Page Title' );
 	}

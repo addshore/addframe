@@ -25,6 +25,6 @@ class TransclusionGenerator extends Generator {
 	 */
 	function current() {
 		$data = parent::current();
-		return new Page( $this->site, $data['title'] );
+		return Page::newFromGenerator( $this->site, $data );
 	}
 }
