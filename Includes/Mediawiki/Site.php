@@ -177,7 +177,7 @@ class Site {
 	}
 
 	public function getPageInfo( $title ) {
-		$data = $this->api->requestSiteinfo( $title );
+		$data = $this->api->requestPageinfo( $title );
 		$data = array_values( $data['query']['pages'] );
 		$data = $data[0];
 		return $data;
