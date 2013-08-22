@@ -56,7 +56,7 @@ class Http {
 	 * @param $data array of data to post key => value
 	 * @return string result of request
 	 */
-	function post( $url, $data ) {
+	public function post( $url, $data ) {
 		curl_setopt( $this->ch, CURLOPT_URL, $url );
 		curl_setopt( $this->ch, CURLOPT_USERAGENT, 'Addframe' );
 		curl_setopt( $this->ch, CURLOPT_ENCODING, "UTF-8" );
@@ -85,7 +85,7 @@ class Http {
 	 * @param $url string url to get
 	 * @return string result of request
 	 */
-	function get( $url ) {
+	public function get( $url ) {
 		curl_setopt( $this->ch, CURLOPT_URL, $url );
 		curl_setopt( $this->ch, CURLOPT_USERAGENT, 'Addframe' );
 		curl_setopt( $this->ch, CURLOPT_ENCODING, "UTF-8" );
