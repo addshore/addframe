@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- colors don't work on Windows! -->
-<phpunit bootstrap="phpunit.bootstrap.php"
-         colors="true"
+<phpunit colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
@@ -14,14 +13,8 @@
          strict="true"
          verbose="true">
     <testsuites>
-        <testsuite name="Addframe Core">
-            <directory suffix="Test.php">Includes/Tests</directory>
-        </testsuite>
-        <testsuite name="Addframe Include">
-            <directory suffix="Test.php">Includes/*/Tests</directory>
-        </testsuite>
-        <testsuite name="Addframe Include Extensions">
-            <directory suffix="Test.php">Includes/*/*/Tests</directory>
+        <testsuite name="Addframe">
+            <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>
 </phpunit>
