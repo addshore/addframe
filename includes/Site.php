@@ -14,8 +14,13 @@ class Site {
 	protected $apiUrl = null;
 	protected $http;
 
-	public function __construct() {
-		$this->http = Http::getDefaultInstance();
+	public function __construct( $http = null ) {
+		if( is_null( $http ) ){
+			$this->http = Http::getDefaultInstance();
+		} else {
+			$this->http = $http;
+		}
+
 	}
 
 	public function setUrl( $url ){
@@ -32,7 +37,7 @@ class Site {
 
 	public function getApiUrl(){
 		if( is_null( $this->apiUrl ) ){
-			$this->getApiUrlFromIndex();
+			$this->getApiUrlFromHomePage();
 		}
 		return $this->apiUrl;
 	}
@@ -43,10 +48,31 @@ class Site {
 		return $site;
 	}
 
-	private function getApiUrlFromIndex() {
+	private function getApiUrlFromHomePage() {
 		if( !is_null( $this->url ) ){
-			//todo get the api url from the url
+
+			$html = $this->http->get( $this->url );
+			preg_match( '/\<link rel=\"EditURI.*?$/im', $html, $scrape1 );
+			if ( ! isset( $scrape1[0] ) ) {
+				throw new \OutOfBoundsException( "Undefined offset when scraping ApiUrl pt1" );
+			}
+			preg_match( '/href=\"([^\"]+)\"/i', $scrape1[0], $scrape2 );
+			if ( ! isset( $scrape2[1] ) ) {
+				throw new \OutOfBoundsException( "Undefined offset when scraping ApiUrl pt2" );
+			}
+
+			$parsedApiUrl = parse_url( $scrape2[1] );
+
+			//Note: The below is back compatability check for the parse_url function
+			if( array_key_exists('host', $parsedApiUrl) ){
+				$this->apiUrl = $parsedApiUrl['host'] . $parsedApiUrl['path'];
+			} else {
+				//pre 5.4.7
+				$this->apiUrl = trim($parsedApiUrl['path'] ,'/');
+			}
+
 		}
+		return $this->apiUrl;
 	}
 
 }
