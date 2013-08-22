@@ -8,6 +8,6 @@ spl_autoload_register( function ( $className ) {
 	}
 
 	if ( array_key_exists( $className, $classes ) ) {
-		include_once __DIR__ . '/' . $classes[$className];
+		include_once __DIR__ . '/includes/' . $classes[$className];
 	}
 } );
