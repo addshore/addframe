@@ -12,4 +12,10 @@ class SiteTest extends PHPUnit_Framework_TestCase {
 		 $this->assertTrue( true );
 	 }
 
+	function testCanSetUrl(){
+		$site = new Site();
+		$site->setUrl( "en.wikipedia.org" );
+		$this->assertEquals( "en.wikipedia.org", $site->getUrl() );
+	}
+
 }
