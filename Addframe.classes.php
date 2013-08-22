@@ -6,6 +6,7 @@ return call_user_func( function() {
 		'Addframe\Http' => 'Http.php',
 
 		'Addframe\Mediawiki\Site' => 'Site.php',
+		'Addframe\Mediawiki\Api' => 'Api.php',
 		'Addframe\Mediawiki\SiteList' => 'SiteList.php',
 	);
 

@@ -12,6 +12,15 @@ class SiteTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider provideUrls
 	 */
+	function testCanGetNewFromUrl( $url ){
+		$site = Site::newFromUrl( $url );
+		$site->setUrl( $url );
+		$this->assertEquals( $url, $site->getUrl() );
+	}
+
+	/**
+	 * @dataProvider provideUrls
+	 */
 	function testCanSetUrl( $url ){
 		$site = new Site();
 		$site->setUrl( $url );

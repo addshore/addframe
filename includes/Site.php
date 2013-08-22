@@ -43,7 +43,7 @@ class Site {
 	}
 
 	public static function newFromUrl( $url ){
-		$site = new Site( new Http() );
+		$site = new Site( );
 		$site->setUrl( $url );
 		return $site;
 	}
