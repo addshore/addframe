@@ -6,32 +6,54 @@ use Addframe\Http;
 
 class ApiRequest {
 
-	private $cacheable = false;
 	private $format = 'php';
-	private $post = false;
-	private $data = array();
+	private $params = array();
 
-	function __construct( $data = array(), $post = false, $format = 'php', $cacheable = false ) {
-		$this->data = $data;
-		$this->post = $post;
+	function __construct( $params = array(), $format = 'php' ) {
+
+		foreach( $params as $param => $value ){
+			if( !$this->acceptsParameter( $param ) ){
+				throw new \UnexpectedValueException( "ApiRequest does not expect parameter {$param}" );
+			}
+			//todo validate the values
+		}
+
+		foreach( $params as $param => $value ) {
+			if ( is_array( $value ) ) {
+				$params[ $param ] = implode( '|', $value );
+			}
+		}
+
+		$this->params = $params;
 		$this->format = $format;
-		$this->cacheable = $cacheable;
 	}
 
 	public function isCacheable(){
-		return $this->cacheable;
+		return false;
 	}
 
 	public function isPost(){
-		return $this->post;
+		return false;
 	}
 
 	public function getFormat(){
 		return $this->format;
 	}
 
-	public function getData(){
-		return $this->data;
+	public function getParameters(){
+		return $this->params;
+	}
+
+	protected function getAllowedParams(){
+		return array();
+	}
+
+	public function acceptsParameter( $parameter ){
+		if( in_array( $parameter, $this->getAllowedParams() ) || $this->getAllowedParams() === array() ){
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

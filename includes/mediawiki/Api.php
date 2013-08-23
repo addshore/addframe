@@ -43,14 +43,6 @@ class Api {
 	public function doRequest( ApiRequest $request ) {
 		$data['format'] = $request->getFormat();
 
-		//@todo this should be done in ApiRequest
-		// Normalize the request data
-		foreach( $data as $param => $value ) {
-			if ( is_array( $value ) ) {
-				$data[ $param ] = implode( '|', $value );
-			}
-		}
-
 		if ( $request->isPost() ) {
 			$result = $this->http->post( $this->getUrl(), $data );
 			return $this->unserializeResult( $result, $request->getFormat() );

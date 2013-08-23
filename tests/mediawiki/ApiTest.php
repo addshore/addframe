@@ -56,10 +56,10 @@ class ApiTest extends PHPUnit_Framework_TestCase{
 			//data, //post
 			array( new ApiRequest()  ),
 			array( new ApiRequest( array( 'param' => 'value' ) ) ),
-			array( new ApiRequest( array( 'param' => 'value' ), true ) ),
-			array( new ApiRequest( array( 'param' => 'value' ), false, 'php', true ) ),
-			array( new ApiRequest( array( 'param' => 'value', 'param2' => 'value2' ), false, 'php', true ) ),
-			array( new ApiRequest( array( 'param' => 'value', 'param2' => 'value2' ), false, 'json', true ) ),
+			array( new ApiRequest( array( 'param' => 'value' ) ) ),
+			array( new ApiRequest( array( 'param' => 'value' ), 'php' ) ),
+			array( new ApiRequest( array( 'param' => 'value', 'param2' => 'value2' ), 'php' ) ),
+			array( new ApiRequest( array( 'param' => 'value', 'param2' => 'value2' ), 'json' ) ),
 		);
 	}
 
