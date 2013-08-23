@@ -1,6 +1,8 @@
 <?php
 
 use Addframe\Mediawiki\Api;
+use Addframe\Mediawiki\ApiRequest;
+use Addframe\TestHttp;
 
 class ApiTest extends PHPUnit_Framework_TestCase{
 
@@ -36,35 +38,28 @@ class ApiTest extends PHPUnit_Framework_TestCase{
 	}
 
 	/**
-	 * @dataProvider provideRequestData
+	 * @dataProvider provideApiRequests
 	 */
-	function testCanDoRequest( $data, $post ){
-		$expected = serialize( array( 'returnKey' => array( 'subKey' => 'return Value' ) ) );
-		$api = new Api( $this->getMockHttp( array( 0 => $expected ) ) );
+	function testCanDoRequest( $request, $expected = 'a:0:{}' ){
+
+		$api = new Api( new TestHttp( $expected ) );
 
 		$api->setUrl( 'hostname' );
-		$result = $api->doRequest( $data, $post );
+		$result = $api->doRequest( $request );
 
 		$this->assertTrue( is_array( $result ) );
 		$this->assertEquals( $expected, serialize( $result ) );
 	}
 
-	function provideRequestData(){
+	function provideApiRequests(){
 		return array(
 			//data, //post
-			array( array( 'key' => 'value' ), null ),
-			array( array( 'key' => 'value' ), array( 'key' => 'value' ) ),
-			array( array(), array( 'key' => 'value' ) ),
+			array( new ApiRequest(), serialize( array( 'key' => 'value', 'key2' => array( 'foo', 'bar' ) ) ) ),
+			array( new ApiRequest( array( 'param' => 'value' ) ), serialize( array( 'key' => 'value' ) ) ),
+			array( new ApiRequest( array( 'param' => 'value' ), true ) ),
+			array( new ApiRequest( array( 'param' => 'value' ), false, 'php', true ) ),
+			array( new ApiRequest( array( 'param' => 'value', 'param2' => 'value2' ), false, 'php', true ) ),
 		);
-	}
-
-	function getMockHttp( $requestResult = array( 0 => '' ) ){
-		$http = $this->getMock( 'Addframe\Http', array('get','post') );
-		foreach( $requestResult as $key => $return ){
-			$http->expects( $this->at( $key ) )->method( 'get' )->will( $this->returnValue( $return ) );
-			$http->expects( $this->at( $key ) )->method( 'post' )->will( $this->returnValue( $return ) );
-		}
-		return $http;
 	}
 
 }
