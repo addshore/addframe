@@ -33,6 +33,26 @@ class SiteInfoRequest extends QueryRequest{
 	}
 }
 
+class LoginRequest extends ApiRequest{
+	function __construct( $lgname = null, $lgpassword = null, $lgdomain = null, $lgtoken = null ) {
+		parent::__construct( array(
+			'action' => 'login',
+			'lgname' => $lgname,
+			'lgpassword' => $lgpassword,
+			'lgdomain' => $lgdomain,
+			'lgtoken' => $lgtoken,
+		), true, CACHE_NONE );
+	}
+}
+
+class LogoutRequest extends ApiRequest{
+	function __construct( ) {
+		parent::__construct( array(
+			'action' => 'logout',
+		), false, CACHE_NONE );
+	}
+}
+
 class TokensRequest extends ApiRequest{
 	function __construct( $type = 'edit' ) {
 		parent::__construct( array(
