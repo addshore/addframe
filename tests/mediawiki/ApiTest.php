@@ -40,26 +40,40 @@ class ApiTest extends PHPUnit_Framework_TestCase{
 	/**
 	 * @dataProvider provideApiRequests
 	 */
-	function testCanDoRequest( $request, $expected = 'a:0:{}' ){
+	function testCanDoRequest( ApiRequest $request ){
+		$expected = array( 'key' => 'value' );
 
-		$api = new Api( new TestHttp( $expected ) );
+		$api = new Api( new TestHttp( $this->encodeData( $expected, $request->getFormat() ) ) );
 
 		$api->setUrl( 'hostname' );
 		$result = $api->doRequest( $request );
 
-		$this->assertTrue( is_array( $result ) );
-		$this->assertEquals( $expected, serialize( $result ) );
+		$this->assertEquals( $expected, $result );
 	}
 
 	function provideApiRequests(){
 		return array(
 			//data, //post
-			array( new ApiRequest(), serialize( array( 'key' => 'value', 'key2' => array( 'foo', 'bar' ) ) ) ),
-			array( new ApiRequest( array( 'param' => 'value' ) ), serialize( array( 'key' => 'value' ) ) ),
+			array( new ApiRequest()  ),
+			array( new ApiRequest( array( 'param' => 'value' ) ) ),
 			array( new ApiRequest( array( 'param' => 'value' ), true ) ),
 			array( new ApiRequest( array( 'param' => 'value' ), false, 'php', true ) ),
 			array( new ApiRequest( array( 'param' => 'value', 'param2' => 'value2' ), false, 'php', true ) ),
+			array( new ApiRequest( array( 'param' => 'value', 'param2' => 'value2' ), false, 'json', true ) ),
 		);
+	}
+
+	protected function encodeData( $data, $format ){
+		switch ( $format ) {
+			case 'php':
+				return serialize( $data );
+				break;
+			case 'json':
+				return json_encode( $data );
+				break;
+		}
+		$this->fail( 'Can not test given data format in api response, see ApiTest::encodeData()' );
+		return '';
 	}
 
 }
