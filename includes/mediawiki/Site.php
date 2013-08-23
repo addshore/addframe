@@ -52,24 +52,15 @@ class Site {
 	private function getApiUrlFromHomePage() {
 		if( !is_null( $this->url ) ){
 
-			$html = $this->http->get( $this->url );
-			preg_match( '/\<link rel=\"EditURI.*?$/im', $html, $scrape1 );
-			if ( ! isset( $scrape1[0] ) ) {
-				throw new \OutOfBoundsException( "Undefined offset when scraping ApiUrl pt1" );
-			}
-			preg_match( '/href=\"([^\"]+)\"/i', $scrape1[0], $scrape2 );
-			if ( ! isset( $scrape2[1] ) ) {
-				throw new \OutOfBoundsException( "Undefined offset when scraping ApiUrl pt2" );
-			}
+			$homePage = New \DOMDocument();
+			$homePage->loadHTML( $this->http->get( $this->url ) );
 
-			$parsedApiUrl = parse_url( $scrape2[1] );
-
-			//Note: The below is back compatability check for the parse_url function
-			if( array_key_exists('host', $parsedApiUrl) ){
-				$this->apiUrl = $parsedApiUrl['host'] . $parsedApiUrl['path'];
-			} else {
-				//pre 5.4.7
-				$this->apiUrl = trim($parsedApiUrl['path'] ,'/');
+			foreach( $homePage->getElementsByTagName( 'link' ) as $element ){
+				if( $element->attributes->getNamedItem('rel')->nodeValue == 'EditURI' ){
+					$rsdUrl = $element->attributes->getNamedItem('href')->nodeValue;
+					$this->apiUrl = str_replace( '?action=rsd', '', $rsdUrl );
+					break;
+				}
 			}
 
 		}

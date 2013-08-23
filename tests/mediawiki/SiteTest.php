@@ -51,15 +51,15 @@ class SiteTest extends PHPUnit_Framework_TestCase {
 
 	function provideGetApiUrl(){
 		$before = '<link rel="search" type="application/opensearchdescription+xml" href="/mediawiki/opensearch_desc.php"'.
-			' title="Local Test Wiki (en-gb)" />'."\n".'<link rel="EditURI" type="application/rsd+xml" href="http://';
+			' title="Local Test Wiki (en-gb)" />'."\n".'<link rel="EditURI" type="application/rsd+xml" href="';
 		$after = '?action=rsd" />'."\n".'<link rel="alternate" type="application/atom+xml" title="Local Test Wiki Atom feed'.
 			'" href="/mediawiki/index.php?title=Special:RecentChanges&amp;feed=atom" />';
 
 		$apiLocations = Array(
-			'localhost/mediawiki/api.php',
-			'en.wikipedia.org/w/api.php',
-			'zh-classic.wikivoyage.org/w/api.php',
-			'127.0.0.1/api.php',
+			'http://localhost/mediawiki/api.php',
+			'https://en.wikipedia.org/w/api.php',
+			'//zh-classic.wikivoyage.org/w/api.php',
+			'http://127.0.0.1/api.php',
 		);
 
 		$toReturn = array();
