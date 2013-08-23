@@ -51,15 +51,30 @@ class Api {
 			}
 		}
 
-		//todo support more decoding methods other than unserialize()
-
 		if ( $request->isPost() ) {
-			$html = $this->http->post( $this->getUrl(), $data );
-			return unserialize( $html );
+			$result = $this->http->post( $this->getUrl(), $data );
+			return $this->unserializeResult( $result, $request->getFormat() );
 		} else {
-			$html = $this->http->get( $this->getUrl() . "?" . http_build_query( $data ) );
-			return unserialize( $html );
+			$result = $this->http->get( $this->getUrl() . "?" . http_build_query( $data ) );
+			return $this->unserializeResult( $result, $request->getFormat() );
 		}
+	}
+
+	private function unserializeResult( $result, $format ) {
+
+		//todo wddx, xml, yaml, rawfm, txt, dbg, dump
+		//todo accept all formatted versions, phpfm, jsonfm
+
+		switch ( $format ) {
+			case 'php':
+				return unserialize( $result );
+				break;
+			case 'json':
+				return json_decode( $result, true );
+				break;
+		}
+
+		throw new \UnexpectedValueException( "Api can not unserialize a result in format '{$format}'" );
 	}
 
 }
