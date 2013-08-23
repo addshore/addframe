@@ -41,32 +41,13 @@ class Api {
 	 * @return Array of the unserialized returning data
 	 */
 	public function doRequest( ApiRequest $request ) {
-		$data['format'] = $request->getFormat();
-
 		if ( $request->isPost() ) {
-			$result = $this->http->post( $this->getUrl(), $data );
-			return $this->unserializeResult( $result, $request->getFormat() );
+			$result = $this->http->post( $this->getUrl(), $request->getParameters() );
+			return unserialize( $result );
 		} else {
-			$result = $this->http->get( $this->getUrl() . "?" . http_build_query( $data ) );
-			return $this->unserializeResult( $result, $request->getFormat() );
+			$result = $this->http->get( $this->getUrl() . "?" . http_build_query( $request->getParameters() ) );
+			return unserialize( $result );
 		}
-	}
-
-	private function unserializeResult( $result, $format ) {
-
-		//todo wddx, xml, yaml, rawfm, txt, dbg, dump
-		//todo accept all formatted versions, phpfm, jsonfm
-
-		switch ( $format ) {
-			case 'php':
-				return unserialize( $result );
-				break;
-			case 'json':
-				return json_decode( $result, true );
-				break;
-		}
-
-		throw new \UnexpectedValueException( "Api can not unserialize a result in format '{$format}'" );
 	}
 
 }

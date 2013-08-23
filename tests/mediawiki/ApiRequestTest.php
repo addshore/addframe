@@ -1,33 +1,37 @@
 <?php
 
-use Addframe\Mediawiki\Api;
 use Addframe\Mediawiki\ApiRequest;
-use Addframe\TestHttp;
+use Addframe\Mediawiki\SiteInfoRequest;
 
 class ApiRequestTest extends PHPUnit_Framework_TestCase{
 
 	/**
 	 * @dataProvider provideConstructionData
 	 */
-	function testCanConstruct( $data = array(), $format = 'php'  ){
-		$request = new ApiRequest( $data, $format );
+	function testCanConstruct( $params = array(), $shouldBePosted = false, $cache = false ){
+		$request = new ApiRequest( $params, $shouldBePosted , $cache );
 		$this->assertInstanceOf( 'Addframe\Mediawiki\ApiRequest', $request );
 
-		$this->assertEquals( $request->getParameters(), $data );
-		$this->assertEquals( $request->getFormat(), $format );
-		$this->assertEquals( $request->isCacheable(), false );
-		$this->assertEquals( $request->isPost(), false );
+		if( !array_key_exists( 'format', $params ) ){
+			$params['format'] = 'php';
+		}
+
+		//check the params
+		$this->assertEquals( $request->getParameters(), $params );
+		//check the defaults
+		$this->assertEquals( $request->isCacheable(), $cache );
+		$this->assertEquals( $request->isPost(), $shouldBePosted );
 	}
 
 	function provideConstructionData(){
 		return array(
-			//data, //post, //format, //cacheable
+			//data, //post, //cacheable
 			array( ),
 			array( array() ),
 			array( array( 'param' => 'value' ) ),
-			array( array( 'param' => 'value' ), 'php', true ),
-			array( array( 'param' => 'value' ), 'json', true ),
-			array( array( 'param' => 'value', 'param2' => 'value2' ), false, 'json' ),
+			array( array( 'param' => 'value' ), true ),
+			array( array( 'param' => 'value' ), true ),
+			array( array( 'param' => 'value', 'param2' => 'value2' ), false ),
 		);
 	}
 

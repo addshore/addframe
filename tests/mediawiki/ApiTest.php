@@ -43,7 +43,7 @@ class ApiTest extends PHPUnit_Framework_TestCase{
 	function testCanDoRequest( ApiRequest $request ){
 		$expected = array( 'key' => 'value' );
 
-		$api = new Api( new TestHttp( $this->encodeData( $expected, $request->getFormat() ) ) );
+		$api = new Api( new TestHttp( serialize( $expected  ) ) );
 
 		$api->setUrl( 'hostname' );
 		$result = $api->doRequest( $request );
@@ -54,26 +54,11 @@ class ApiTest extends PHPUnit_Framework_TestCase{
 	function provideApiRequests(){
 		return array(
 			//data, //post
-			array( new ApiRequest()  ),
+			array( new ApiRequest(), ),
 			array( new ApiRequest( array( 'param' => 'value' ) ) ),
-			array( new ApiRequest( array( 'param' => 'value' ) ) ),
-			array( new ApiRequest( array( 'param' => 'value' ), 'php' ) ),
-			array( new ApiRequest( array( 'param' => 'value', 'param2' => 'value2' ), 'php' ) ),
-			array( new ApiRequest( array( 'param' => 'value', 'param2' => 'value2' ), 'json' ) ),
+			array( new ApiRequest( array( 'param' => 'value', 'format' => 'php' ) ) ),
+			array( new ApiRequest( array( 'param' => 'value', 'param2' => 'value2' ) ) ),
 		);
-	}
-
-	protected function encodeData( $data, $format ){
-		switch ( $format ) {
-			case 'php':
-				return serialize( $data );
-				break;
-			case 'json':
-				return json_encode( $data );
-				break;
-		}
-		$this->fail( 'Can not test given data format in api response, see ApiTest::encodeData()' );
-		return '';
 	}
 
 }
