@@ -12,6 +12,7 @@ class Site {
 
 	protected $url = null;
 	protected $apiUrl = null;
+	/** @var Http  */
 	protected $http;
 
 	public function __construct( $http = null ) {

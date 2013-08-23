@@ -1,6 +1,7 @@
 <?php
 
 use Addframe\Http;
+use Addframe\TestHttp;
 
 class HttpTest extends PHPUnit_Framework_TestCase {
 
@@ -28,7 +29,7 @@ class HttpTest extends PHPUnit_Framework_TestCase {
 	 * @dataProvider provideDataToEncode
 	 */
 	function testEncodeData( $data, $expected ){
-		$http = new Http();
+		$http = new TestHttp();
 		$encodedData = $http->encodeData( $data );
 		$this->assertEquals( $expected, $encodedData );
 	}
@@ -40,6 +41,13 @@ class HttpTest extends PHPUnit_Framework_TestCase {
 			array( array( 'key_12' => 'value spaced' ), 'key_12=value+spaced&' ),
 			array( array( 'chars' => '&&$$""' ), 'chars=%26%26%24%24%22%22&' ),
 		);
+	}
+
+	function testTestHttp(){
+		$testData = '{}';
+		$testHttp = new TestHttp( $testData );
+		$this->assertEquals( $testData, $testHttp->get( 'testurl' ) );
+		$this->assertEquals( $testData, $testHttp->post( 'testurl', array() ) );
 	}
 
 }

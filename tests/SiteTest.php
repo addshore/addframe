@@ -1,6 +1,7 @@
 <?php
 
 use Addframe\Mediawiki\Site;
+use Addframe\TestHttp;
 
 class SiteTest extends PHPUnit_Framework_TestCase {
 
@@ -42,7 +43,8 @@ class SiteTest extends PHPUnit_Framework_TestCase {
 	 * @dataProvider provideGetApiUrl
 	 */
 	function testGetApiUrl( $apiUrl, $mockHtml ){
-		$site = new Site( $this->getMockHttp( $mockHtml ) );
+		$http = new TestHttp( $mockHtml );
+		$site = new Site( $http );
 		$site->setUrl( 'localhost' );
 		$this->assertEquals( $apiUrl, $site->getApiUrl() );
 	}
@@ -62,20 +64,11 @@ class SiteTest extends PHPUnit_Framework_TestCase {
 
 		$toReturn = array();
 		foreach( $apiLocations as $apiUrl ){
-			$toReturn[] = array( $apiUrl, array( 0 => $before.$apiUrl.$after ) );
+			$toReturn[] = array( $apiUrl, $before.$apiUrl.$after );
 		}
 
 		return $toReturn;
 
-	}
-
-	function getMockHttp( $requestResult = array( 0 => '' ) ){
-		$http = $this->getMock( 'Addframe\Http', array('get','post') );
-		foreach( $requestResult as $key => $return ){
-			$http->expects( $this->at( $key ) )->method( 'get' )->will( $this->returnValue( $return ) );
-			$http->expects( $this->at( $key ) )->method( 'post' )->will( $this->returnValue( $return ) );
-		}
-		return $http;
 	}
 
 }

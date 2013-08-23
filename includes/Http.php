@@ -135,3 +135,28 @@ class Http {
 	}
 
 }
+
+
+/**
+ * Class TestHttp, Overrides used methods in HTTP so we can return some default data
+ * @package Addframe
+ */
+class TestHttp extends Http{
+
+	protected $returnData;
+
+	function __construct( $returnData = '' ) {
+		$this->returnData = $returnData;
+	}
+
+	public function post( $url, $data ) {
+		return $this->returnData;
+	}
+
+	public function get( $url ) {
+		return $this->returnData;
+	}
+
+	function __destruct() {}
+
+}
