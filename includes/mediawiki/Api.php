@@ -36,32 +36,28 @@ class Api {
 
 	/**
 	 * Performs a request to the api given the query and post data
-	 * @param Array $data of request
-	 * @param Array|bool $post data of request
+	 * @param ApiRequest $request
 	 * @throws \UnexpectedValueException
 	 * @return Array of the unserialized returning data
 	 */
-	public function doRequest( $data, $post = null ) {
-		if( !is_array( $data ) || ( !is_null( $post ) && !is_array( $post ) ) ){
-			throw new \UnexpectedValueException( 'Array of data expected for Api Request' );
-		}
+	public function doRequest( ApiRequest $request ) {
+		$data['format'] = $request->getFormat();
 
-		$data['format'] = 'php';
-
-		// Normalize some stuff
+		//@todo this should be done in ApiRequest
+		// Normalize the request data
 		foreach( $data as $param => $value ) {
 			if ( is_array( $value ) ) {
 				$data[ $param ] = implode( '|', $value );
 			}
 		}
 
-		$query = "?" . http_build_query( $data );
-		$query = $this->getUrl() . $query;
-		if ( is_null( $post ) ) {
-			$html = $this->http->get( $query );
+		//todo support more decoding methods other than unserialize()
+
+		if ( $request->isPost() ) {
+			$html = $this->http->post( $this->getUrl(), $data );
 			return unserialize( $html );
 		} else {
-			$html = $this->http->post( $query, $post );
+			$html = $this->http->get( $this->getUrl() . "?" . http_build_query( $data ) );
 			return unserialize( $html );
 		}
 	}
