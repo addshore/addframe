@@ -114,4 +114,28 @@ class SiteTest extends PHPUnit_Framework_TestCase {
 		);
 	}
 
+	/**
+	 * @dataProvider provideLogin
+	 */
+	function testLogin( $injectedResult, $expected){
+		if( array_key_exists( 'exception', $expected ) ){
+			$this->setExpectedException( $expected['exception'] );
+		}
+		$site = Site::newFromUrl( 'foobar' );
+		$site->setApi( new TestApi( $injectedResult ) );
+		$result = $site->login( 'foo', 'bar' );
+		$this->assertEquals( $expected['value'], $result );
+	}
+
+	function provideLogin(){
+		return array(
+			array(
+				array( file_get_contents( __DIR__.'/data/login/part1.json' ), file_get_contents( __DIR__.'/data/login/part2.json' ) ),
+				array( 'value' => true ) ),
+			array(
+				array( file_get_contents( __DIR__.'/data/login/wrongtoken.json' ) ),
+				array( 'exception' => 'Exception' ) ),
+		);
+	}
+
 }

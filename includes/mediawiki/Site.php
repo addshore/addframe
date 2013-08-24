@@ -120,4 +120,16 @@ class Site {
 		return null;
 	}
 
+	public function login( $username, $password, $token = null){
+		$request = new LoginRequest( $username, $password, $token );
+		$result = $this->getApi()->doRequest( $request );
+		if( array_key_exists( 'login', $result ) && array_key_exists( 'result', $result['login'] ) && $result['login']['result'] == 'NeedToken' ){
+			return $this->login( $username, $password, $result['login']['token'] );
+		} else if( array_key_exists( 'login', $result ) && array_key_exists( 'result', $result['login'] ) && $result['login']['result'] == 'Success' ){
+			return true;
+		} else if( array_key_exists( 'login', $result ) && array_key_exists( 'result', $result['login'] ) && $result['login']['result'] == 'WrongToken' ){
+			throw new \Exception( "API reported WrongToken when trying to login" );
+		}
+	}
+
 }
