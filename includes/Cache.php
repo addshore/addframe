@@ -34,6 +34,16 @@ class Cache {
 		}
 	}
 
+	public static function age( Cacheable $item ){
+		$age = null;
+		if( self::has( $item ) ){
+			$cacheTime = filectime ( self::getPath( $item ) );
+			$currentTime = time();
+			$age = $currentTime - $cacheTime;
+		}
+		return $age;
+	}
+
 	protected static function getPath( Cacheable $item ){
 		return __DIR__.'/../cache/'.self::$prefix.$item->getHash();
 	}
