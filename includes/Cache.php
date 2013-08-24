@@ -4,6 +4,8 @@ namespace Addframe;
 
 class Cache {
 
+	//todo methods shouldn't has $hash as a param, just $item, they can get the hash from this...
+
 	public static function add( Cacheable $item ){
 		$hash = $item->getHash();
 		$data = $item->getCacheData();

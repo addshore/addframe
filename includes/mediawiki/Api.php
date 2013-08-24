@@ -2,6 +2,7 @@
 
 namespace Addframe\Mediawiki;
 
+use Addframe\Cache;
 use Addframe\Http;
 
 class Api {
@@ -42,18 +43,23 @@ class Api {
 	 */
 	public function doRequest( ApiRequest $request, $getCached = true ) {
 		if( !is_null( $request->cacheFor() ) && $getCached === true ){
-			//todo try to get and return data from the cache
+			if( Cache::has( $request->getHash() ) ){
+				//todo make sure the cache has not expired!
+				$request->setResult( Cache::get( $request->getHash() ) );
+			}
 		}
 
-		if ( $request->isPost() ) {
-			$result = $this->http->post( $this->getUrl(), $request->getParameters() );
-			$request->setResult( json_decode( $result, true ) );
-			return $request->getResult();
-		} else {
-			$result = $this->http->get( $this->getUrl() . "?" . http_build_query( $request->getParameters() ) );
-			$request->setResult( json_decode( $result, true ) );
-			return $request->getResult();
+		if( !isset( $result ) ){
+			if ( $request->isPost() ) {
+				$request->setResult( json_decode( $this->http->post( $this->getUrl(), $request->getParameters() ), true ) );
+			} else {
+				$requestUrl = $this->getUrl() . "?" . http_build_query( $request->getParameters() );
+				$request->setResult( json_decode( $this->http->get( $requestUrl ), true ) );
+			}
+			Cache::add( $request );
 		}
+
+		return $request->getResult();
 	}
 
 }
@@ -73,7 +79,7 @@ class TestApi extends Api{
 		$this->testResult = $returnData;
 	}
 
-	public function doRequest( ApiRequest $request ) {
+	public function doRequest( ApiRequest $request, $getCached = null) {
 		$request->setResult( json_decode( $this->testResult, true ) );
 		return $request->getResult();
 	}

@@ -56,10 +56,6 @@ class ApiRequest implements Cacheable{
 
 	public function setResult( $result ){
 		$this->result = $result;
-
-		if( !is_null( $this->cacheFor() ) ){
-			//todo add the result to the cache
-		}
 	}
 
 	public function getHash(){
