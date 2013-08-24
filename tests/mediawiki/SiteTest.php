@@ -1,6 +1,5 @@
 <?php
 
-use Addframe\Mediawiki\Api;
 use Addframe\Mediawiki\Site;
 use Addframe\Mediawiki\TestApi;
 use Addframe\TestHttp;

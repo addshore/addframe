@@ -9,6 +9,7 @@ namespace Addframe;
  **/
 
 class Http {
+
 	protected $ch;
 	protected $uid;
 	public $cookie_jar;
