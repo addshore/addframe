@@ -33,11 +33,15 @@ class Http {
 		return $vars;
 	}
 
+
+	/**
+	 * @return string the Uid for this http instance
+	 */
 	public function getUid(){
 		return $this->uid;
 	}
 
-	/*
+	/**
 	 * This should generally not be used, get the default instance
 	 */
 	 /* protected */ function __construct() {
@@ -119,6 +123,10 @@ class Http {
 		curl_setopt( $this->ch, CURLOPT_USERPWD, $uname . ":" . $pwd );
 	}
 
+
+	/**
+	 * Get rid of any tokens when we destruct
+	 */
 	function __destruct() {
 		curl_close( $this->ch );
 		@unlink( '/tmp/addframe.cookies.' . $this->uid . '.dat' );
@@ -146,18 +154,30 @@ class TestHttp extends Http{
 
 	protected $returnData;
 
+	/**
+	 * @param string $returnData as a string
+	 */
 	function __construct( $returnData = '' ) {
 		$this->returnData = $returnData;
 	}
 
+	/**
+	 * Returns the data defined in the constructor
+	 */
 	public function post( $url, $data ) {
 		return $this->returnData;
 	}
 
+	/**
+	 * Returns the data defined in the constructor
+	 */
 	public function get( $url ) {
 		return $this->returnData;
 	}
 
+	/**
+	 * Override the main class __destruct method
+	 */
 	function __destruct() {}
 
 }

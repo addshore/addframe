@@ -84,6 +84,9 @@ class TestApi extends Api{
 		$this->testResult = $returnData;
 	}
 
+	/**
+	 * Returns the data defined in the constructor
+	 */
 	public function doRequest( ApiRequest &$request, $getCache = null) {
 		$request->setResult( json_decode( $this->testResult, true ) );
 		return $request->getResult();
