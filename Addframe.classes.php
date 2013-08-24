@@ -13,6 +13,7 @@ return call_user_func( function() {
 		'Addframe\Mediawiki\Api' => 'mediawiki/Api.php',
 		'Addframe\Mediawiki\ApiRequest' => 'mediawiki/ApiRequest.php',
 		'Addframe\Mediawiki\SiteList' => 'mediawiki/SiteList.php',
+		'Addframe\Mediawiki\ResultCache' => 'mediawiki/ResultCache.php',
 	);
 
 	return $classes;
