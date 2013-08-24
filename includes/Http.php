@@ -155,16 +155,19 @@ class TestHttp extends Http{
 	protected $returnData;
 
 	/**
-	 * @param string $returnData as a string
+	 * @param array|string $returnData as a string
 	 */
-	function __construct( $returnData = '' ) {
-		$this->returnData = $returnData;
+	function __construct( $returnData = array( '' ) ) {
+			$this->returnData = $returnData;
 	}
 
 	/**
 	 * Returns the data defined in the constructor
 	 */
 	public function post( $url, $data ) {
+		if( is_array( $this->returnData ) ){
+			return array_shift( $this->returnData );
+		}
 		return $this->returnData;
 	}
 
@@ -172,6 +175,9 @@ class TestHttp extends Http{
 	 * Returns the data defined in the constructor
 	 */
 	public function get( $url ) {
+		if( is_array( $this->returnData ) ){
+			return array_shift( $this->returnData );
+		}
 		return $this->returnData;
 	}
 

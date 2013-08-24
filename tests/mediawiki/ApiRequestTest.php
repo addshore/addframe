@@ -1,7 +1,6 @@
 <?php
 
 use Addframe\Mediawiki\ApiRequest;
-use Addframe\Mediawiki\TestApi;
 
 class ApiRequestTest extends PHPUnit_Framework_TestCase{
 
@@ -35,6 +34,17 @@ class ApiRequestTest extends PHPUnit_Framework_TestCase{
 			array( array( 'param' => 'value' ), true ),
 			array( array( 'param' => 'value', 'param2' => 'value2' ), false ),
 		);
+	}
+
+	function testSetParameter(){
+		$expected = array();
+		$request = new ApiRequest( $expected, false , 0 );
+		$expected = array_merge( $expected, array( 'format' => 'json' ) );
+		$this->assertEquals( $expected, $request->getParameters() );
+
+		$request->setParameter( 'token', '863bb60669575ac8619662ddad5fc2ac+\\' );
+		$expected = array_merge( $expected, array( 'token' => '863bb60669575ac8619662ddad5fc2ac+\\' ) );
+		$this->assertEquals( $expected, $request->getParameters() );
 	}
 
 	function testHash(){
