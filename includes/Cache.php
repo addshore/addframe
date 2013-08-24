@@ -4,44 +4,42 @@ namespace Addframe;
 
 class Cache {
 
-	//todo methods shouldn't has $hash as a param, just $item, they can get the hash from this...
+	static $prefix = 'c_';
 
 	public static function add( Cacheable $item ){
-		$hash = $item->getHash();
-		$data = $item->getCacheData();
-		file_put_contents( self::getPath( $hash ), json_encode( $data ) );
+		file_put_contents( self::getPath( $item ), json_encode( $item->getCacheData() ) );
 		return true;
 	}
 
-	public static function get( $hash ){
-		if( self::has( $hash ) ){
-			return json_decode( file_get_contents( self::getPath( $hash ) ), true );
+	public static function get( Cacheable $item ){
+		if( self::has( $item ) ){
+			return json_decode( file_get_contents( self::getPath( $item ) ), true );
 		}
 		return null;
 	}
 
-	public static function remove( $hash ){
-		if( self::has( $hash ) ){
-			unlink( self::getPath( $hash ) );
+	public static function remove( Cacheable $item ){
+		if( self::has( $item ) ){
+			unlink( self::getPath( $item ) );
 			return true;
 		}
 		return false;
 	}
 
-	public static function has( $hash ){
-		if( file_exists( self::getPath( $hash ) ) ){
+	public static function has( Cacheable $item ){
+		if( file_exists( self::getPath( $item ) ) ){
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	protected static function getPath( $hash ){
-		return __DIR__.'/../cache/c_'.$hash;
+	protected static function getPath( Cacheable $item ){
+		return __DIR__.'/../cache/'.self::$prefix.$item->getHash();
 	}
 
 	public static function clear(){
-		array_map('unlink', glob( self::getPath( '*' ) ) );
+		array_map('unlink', glob( __DIR__.'/../cache/'.self::$prefix.'*' ) );
 	}
 
 }
