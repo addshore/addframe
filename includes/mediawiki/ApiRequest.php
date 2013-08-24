@@ -21,7 +21,7 @@ class ApiRequest {
 	 * @param bool|int $cache should be cache / how long to cache for in mins
 	 */
 	function __construct( $params = array(), $shouldBePosted = false, $cache = CACHE_NONE ) {
-		$params['format'] = 'php';
+		$params['format'] = 'json';
 
 		foreach( $params as $param => $value ) {
 			if ( is_null( $value ) ){

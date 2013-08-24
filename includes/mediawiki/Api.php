@@ -43,10 +43,10 @@ class Api {
 	public function doRequest( ApiRequest $request ) {
 		if ( $request->isPost() ) {
 			$result = $this->http->post( $this->getUrl(), $request->getParameters() );
-			return unserialize( $result );
+			return json_decode( $result, true );
 		} else {
 			$result = $this->http->get( $this->getUrl() . "?" . http_build_query( $request->getParameters() ) );
-			return unserialize( $result );
+			return json_decode( $result, true );
 		}
 	}
 

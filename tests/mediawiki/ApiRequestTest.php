@@ -1,7 +1,6 @@
 <?php
 
 use Addframe\Mediawiki\ApiRequest;
-use Addframe\Mediawiki\SiteInfoRequest;
 
 class ApiRequestTest extends PHPUnit_Framework_TestCase{
 
@@ -14,7 +13,7 @@ class ApiRequestTest extends PHPUnit_Framework_TestCase{
 
 		//force our expected format param..
 		if( !array_key_exists( 'format', $params ) ){
-			$params['format'] = 'php';
+			$params['format'] = 'json';
 		}
 
 		//check the params
