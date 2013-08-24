@@ -1,0 +1,10 @@
+{
+    "warnings": {
+        "tokens": {
+            "*": "Action 'block' is not allowed for the current user\nAction 'delete' is not allowed for the current user\nAction 'email' is not allowed for the current user\nAction 'import' is not allowed for the current user\nAction 'move' is not allowed for the current user\nAction 'options' is not allowed for the current user\nAction 'patrol' is not allowed for the current user\nAction 'protect' is not allowed for the current user\nAction 'unblock' is not allowed for the current user\nAction 'watch' is not allowed for the current user"
+        }
+    },
+    "tokens": {
+        "edittoken": "+\\"
+    }
+}

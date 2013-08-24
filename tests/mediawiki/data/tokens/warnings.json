@@ -1,0 +1,10 @@
+{
+    "warnings": {
+        "tokens": {
+            "*": "Action 'block' is not allowed for the current user"
+        }
+    },
+    "tokens": [
+
+    ]
+}

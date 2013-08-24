@@ -114,7 +114,7 @@ class Site {
 	 */
 	public function getToken( $type = 'edit' ){
 		$apiResult = $this->getApi()->doRequest( new TokensRequest( $type ) );
-		if( array_key_exists( 'tokens', $apiResult ) ){
+		if( array_key_exists( 'tokens', $apiResult ) && array_key_exists( $type.'token', $apiResult['tokens'] )){
 			return $apiResult['tokens'][$type.'token'];
 		}
 		return null;
