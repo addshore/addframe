@@ -5,6 +5,11 @@ namespace Addframe\Mediawiki;
 use Addframe\Cache;
 use Addframe\Http;
 
+/**
+ * Class Api representing a Mediawiki API
+ * @package Addframe\Mediawiki
+ */
+
 class Api {
 
 	private $url;
@@ -13,7 +18,10 @@ class Api {
 	 */
 	private $http;
 
-	function __construct( $http = null ) {
+	/**
+	 * This should generally not be used, use Api::new* instead
+	 */
+	/* protected */ function __construct( $http = null ) {
 		if( is_null( $http ) ){
 			$this->http = Http::getDefaultInstance();
 		} else {
@@ -29,6 +37,11 @@ class Api {
 		return $this->url;
 	}
 
+	/**
+	 * Creates a new API class using the given url
+	 * @param $url string to create the class with
+	 * @return Api
+	 */
 	public static function newFromUrl( $url ){
 		$site = new Api( );
 		$site->setUrl( $url );
@@ -36,10 +49,10 @@ class Api {
 	}
 
 	/**
-	 * Performs a request to the api given the query and post data
+	 * Gets a result for the given API request either by requesting it or using cached data
 	 * @param ApiRequest $request
-	 * @param bool $getCache are we to care about any caching stuff?
-	 * @return Array of the unserialized returning data
+	 * @param bool $getCache do we want to check in the cache for a result?
+	 * @return Array of the unserialized result data
 	 */
 	public function doRequest( ApiRequest &$request, $getCache = true ) {
 		$gotCached = false;
@@ -53,7 +66,7 @@ class Api {
 		}
 
 		if( $getCache === false || $gotCached === false ){
-			if ( $request->isPost() ) {
+			if ( $request->shouldBePosted() ) {
 				$request->setResult( json_decode( $this->http->post( $this->getUrl(), $request->getParameters() ), true ) );
 			} else {
 				$requestUrl = $this->getUrl() . "?" . http_build_query( $request->getParameters() );
@@ -84,6 +97,9 @@ class TestApi extends Api{
 		$this->testResult = $returnData;
 	}
 
+	/**
+	 * Returns the data defined in the constructor
+	 */
 	public function doRequest( ApiRequest &$request, $getCache = null) {
 		$request->setResult( json_decode( $this->testResult, true ) );
 		return $request->getResult();

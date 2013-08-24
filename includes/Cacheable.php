@@ -2,10 +2,14 @@
 
 namespace Addframe;
 
+/**
+ * Interface for Cacheable objects
+ **/
+
 interface Cacheable {
 
 	/**
-	* Returns a hash based on the value of the object.
+	* Returns a hash based on the value of the data to be cached
 	*
 	* @return string
 	*/

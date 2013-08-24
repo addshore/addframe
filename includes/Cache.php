@@ -2,19 +2,34 @@
 
 namespace Addframe;
 
+/**
+ * Class for basic caching of objects in files
+ **/
+
 class Cache {
 
+	/**
+	 * @var string prefix of the cache files created
+	 */
 	static $prefix = 'c_';
 
+	/**
+	 * @param Cacheable $item
+	 * @throws \IOException
+	 */
 	public static function add( Cacheable $item ){
 		$path = self::getPath( $item );
 		$addResult = file_put_contents( $path, json_encode( $item->getCacheData() ) );
 		if( $addResult === false ){
 			throw new \IOException( "Failed to write cache item with name '{$path}'" );
 		}
-		return true;
 	}
 
+	/**
+	 * @param Cacheable $item
+	 * @return mixed|null
+	 * @throws \IOException
+	 */
 	public static function get( Cacheable $item ){
 		if( self::has( $item ) ){
 			$path = self::getPath( $item );
@@ -27,18 +42,24 @@ class Cache {
 		return null;
 	}
 
+	/**
+	 * @param Cacheable $item
+	 * @throws \IOException
+	 */
 	public static function remove( Cacheable $item ){
 		if( self::has( $item ) ){
 			$path = self::getPath( $item );
-			$deleteResult =  unlink( $path );
+			$deleteResult = unlink( $path );
 			if( $deleteResult === false ){
 				throw new \IOException( "Failed to delete cache item with name '{$path}'" );
 			}
-			return $deleteResult;
 		}
-		return false;
 	}
 
+	/**
+	 * @param Cacheable $item
+	 * @return bool
+	 */
 	public static function has( Cacheable $item ){
 		if( file_exists( self::getPath( $item ) ) ){
 			return true;
@@ -47,6 +68,11 @@ class Cache {
 		}
 	}
 
+	/**
+	 * @param Cacheable $item
+	 * @return int|null
+	 * @throws \IOException
+	 */
 	public static function age( Cacheable $item ){
 		$age = null;
 		if( self::has( $item ) ){
@@ -61,10 +87,17 @@ class Cache {
 		return $age;
 	}
 
+	/**
+	 * @param Cacheable $item
+	 * @return string path to the cache file for the item
+	 */
 	protected static function getPath( Cacheable $item ){
 		return __DIR__.'/../cache/'.self::$prefix.$item->getHash();
 	}
 
+	/**
+	 * Removes all current cache files
+	 */
 	public static function clear(){
 		array_map('unlink', glob( __DIR__.'/../cache/'.self::$prefix.'*' ) );
 	}

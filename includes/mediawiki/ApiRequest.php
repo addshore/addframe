@@ -12,11 +12,28 @@ const CACHE_HOUR = 3600;
 const CACHE_MINUTE = 60;
 const CACHE_NONE = 0;
 
+/**
+ * Class ApiRequest representing a single api request
+ * @package Addframe\Mediawiki
+ */
+
 class ApiRequest implements Cacheable{
 
+	/**
+	 * @var null|mixed the result of the request
+	 */
 	protected $result = null;
+	/**
+	 * @var array the parameters of the request
+	 */
 	protected $params = array();
-	protected $cacheFor = CACHE_NONE;
+	/**
+	 * @var int maximum number of seconds to cache a result of this request for
+	 */
+	protected $maxCacheAge = CACHE_NONE;
+	/**
+	 * @var bool should this api request be POSTed?
+	 */
 	protected $shouldBePosted = false;
 
 	/**
@@ -37,10 +54,10 @@ class ApiRequest implements Cacheable{
 
 		$this->params = $params;
 		$this->shouldBePosted = $shouldBePosted;
-		$this->cacheFor = $maxAge;
+		$this->maxCacheAge = $maxAge;
 	}
 
-	public function isPost(){
+	public function shouldBePosted(){
 		return $this->shouldBePosted;
 	}
 
@@ -56,17 +73,26 @@ class ApiRequest implements Cacheable{
 		$this->result = $result;
 	}
 
+	/**
+	 * @see Cacheable::getHash()
+	 */
 	public function getHash(){
 		$hash = sha1( json_encode( $this->params ) );
 		return 'ApiRequest_'.$hash;
 	}
 
+	/**
+	 * @see Cacheable::getCacheData()
+	 */
 	public function getCacheData(){
 		return $this->result;
 	}
 
+	/**
+	 * @see Cacheable::maxCacheAge()
+	 */
 	public function maxCacheAge(){
-		return $this->cacheFor;
+		return $this->maxCacheAge;
 	}
 
 }
