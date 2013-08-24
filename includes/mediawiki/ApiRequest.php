@@ -11,6 +11,7 @@ const CACHE_NONE = false;
 
 class ApiRequest {
 
+	protected $result = null;
 	protected $params = array();
 	protected $cache = CACHE_NONE;
 	protected $shouldBePosted = false;
@@ -46,6 +47,15 @@ class ApiRequest {
 
 	public function getParameters(){
 		return $this->params;
+	}
+
+	public function execute( Api $api ){
+		$this->result = $api->doRequest( $this );
+		return $this->result;
+	}
+
+	public function getResult(){
+		return $this->result;
 	}
 
 }
