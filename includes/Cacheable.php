@@ -2,6 +2,10 @@
 
 namespace Addframe;
 
+/**
+ * Interface for Cacheable objects
+ **/
+
 interface Cacheable {
 
 	/**
