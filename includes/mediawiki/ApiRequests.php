@@ -76,3 +76,65 @@ class TokensRequest extends ApiRequest{
 		), false, CACHE_HOUR );
 	}
 }
+/**
+ * Class EditRequest action=edit
+ */
+class EditRequest extends ApiRequest{
+	function __construct(
+		$title = null,
+		$pageid = null,
+		$section = null,
+		$sectiontitle = null,
+		$text = null,
+		$token = null,
+		$summary = null,
+		$minor = null,
+		$notminor = null,
+		$bot = null,
+		$basetimestamp = null,
+		$starttimestamp = null,
+		$recreate = null,
+		$createonly = null,
+		$nocreate = null,
+		$watch = null,
+		$unwatch = null,
+		$watchlist = null,
+		$md5 = null,
+		$prependtext = null,
+		$appendtext = null,
+		$undo = null,
+		$undoafter = null,
+		$redirect = null,
+		$contentformat = null,
+		$contentmodel = null
+	) {
+		parent::__construct( array(
+			'title' => $title,
+			'pageid' => $pageid,
+			'section' => $section,
+			'sectiontitle' => $sectiontitle,
+			'text' => $text,
+			'token' => $token,
+			'summary' => $summary,
+			'minor' => $minor,
+			'notminor' => $notminor,
+			'bot' => $bot,
+			'basetimestamp' => $basetimestamp,
+			'starttimestamp' => $starttimestamp,
+			'recreate' => $recreate,
+			'createonly' => $createonly,
+			'nocreate' => $nocreate,
+			'watch' => $watch,
+			'unwatch' => $unwatch,
+			'watchlist' => $watchlist,
+			'md5' => $md5,
+			'prependtext' => $prependtext,
+			'appendtext' => $appendtext,
+			'undo' => $undo,
+			'undoafter' => $undoafter,
+			'redirect' => $redirect,
+			'contentformat' => $contentformat,
+			'contentmodel' => $contentmodel
+		), true, CACHE_NONE );
+	}
+}
