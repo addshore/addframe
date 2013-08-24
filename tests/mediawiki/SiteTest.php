@@ -87,11 +87,10 @@ class SiteTest extends PHPUnit_Framework_TestCase {
 
 	function provideGetToken(){
 		return array(
-			array( 'edit', '{"tokens":{"edittoken":"+\\\\"}}', '+\\'),
-			array( 'protect', '{"tokens":{"protecttoken":"+\\\\"}}', '+\\'),
-			array( 'watch', '{"tokens":{"watchtoken":"863bb60669575ac8619662ddad5fc2ac+\\\\"}}', '863bb60669575ac8619662ddad5fc2ac+\\' ),
-			array( 'patrol', '{"tokens":{"patroltoken":"9104118c9a64b875153bbace79da58e8+\\\\"}}', '9104118c9a64b875153bbace79da58e8+\\' ),
-			array( 'foo', '{"warnings":{"tokens":{"*":"Action \'foo\' is not allowed for the current user"}}}', null ),
+			array( 'edit', file_get_contents( __DIR__.'/data/tokens/anonedittoken.json' ), '+\\'),
+			array( 'protect', file_get_contents( __DIR__.'/data/tokens/protecttoken.json' ), '863bb60669575ac8619662ddad5fc2ac+\\'),
+			array( 'watch', file_get_contents( __DIR__.'/data/tokens/watchtoken.json' ), 'A63bb60669575ac8619662ddad5fc2ac+\\' ),
+			array( 'foo', file_get_contents( __DIR__.'/data/tokens/warnings.json' ), null ),
 		);
 	}
 
@@ -106,11 +105,10 @@ class SiteTest extends PHPUnit_Framework_TestCase {
 
 	function provideGetTokenList(){
 		return array(
-			array( '{"tokens":{"edittoken":"+\\\\"}}', array( 'edittoken' => '+\\' ) ),
-			array( '{"tokens":{"protecttoken":"863bb60669575ac8619662ddad5fc2ac+\\\\"}}', array( 'protecttoken' => '863bb60669575ac8619662ddad5fc2ac+\\' ) ),
-			array( '{"tokens":{"protecttoken":"+\\\\","patroltoken":"+\\\\"}}', array( 'protecttoken' => '+\\', 'patroltoken' => '+\\' ) ),
-			array( '{"warnings":{"tokens":{"*":"Action \'foo\' is not allowed for the current user"}}}', array() ),
-			array( '{"warnings":{"tokens":{"*":"Action \'foo\' is not allowed for the current user"}},"tokens":{"edittoken":"+\\\\"}}', array( 'edittoken' => '+\\' ) ),
+			array( file_get_contents( __DIR__.'/data/tokens/anonedittoken.json' ), array( 'edittoken' => '+\\' ) ),
+			array( file_get_contents( __DIR__.'/data/tokens/protecttoken.json' ), array( 'protecttoken' => '863bb60669575ac8619662ddad5fc2ac+\\' ) ),
+			array( file_get_contents( __DIR__.'/data/tokens/warnings.json' ), array() ),
+			array( file_get_contents( __DIR__.'/data/tokens/anoneditandwarnings.json' ) , array( 'edittoken' => '+\\' ) ),
 		);
 	}
 
