@@ -1,6 +1,8 @@
 <?php
 
+use Addframe\Mediawiki\Api;
 use Addframe\Mediawiki\ApiRequest;
+use Addframe\TestHttp;
 
 class ApiRequestTest extends PHPUnit_Framework_TestCase{
 
