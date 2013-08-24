@@ -7,13 +7,14 @@ return call_user_func( function() {
 	$classes = array(
 		'Addframe\TestHttp' => 'Http.php',
 		'Addframe\Http' => 'Http.php',
+		'Addframe\Cache' => 'Cache.php',
+		'Addframe\Cacheable' => 'Cacheable.php',
 
 		'Addframe\Mediawiki\Site' => 'mediawiki/Site.php',
 		'Addframe\Mediawiki\TestApi' => 'mediawiki/Api.php',
 		'Addframe\Mediawiki\Api' => 'mediawiki/Api.php',
 		'Addframe\Mediawiki\ApiRequest' => 'mediawiki/ApiRequest.php',
 		'Addframe\Mediawiki\SiteList' => 'mediawiki/SiteList.php',
-		'Addframe\Mediawiki\ResultCache' => 'mediawiki/ResultCache.php',
 	);
 
 	return $classes;

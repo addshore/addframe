@@ -2,6 +2,7 @@
 
 namespace Addframe\Mediawiki;
 
+use Addframe\Cacheable;
 use Addframe\Http;
 
 const CACHE_WEEK = 10080;
@@ -9,7 +10,7 @@ const CACHE_DAY = 1440;
 const CACHE_HOUR = 60;
 const CACHE_NONE = false;
 
-class ApiRequest {
+class ApiRequest implements Cacheable{
 
 	protected $result = null;
 	protected $params = array();
@@ -37,7 +38,7 @@ class ApiRequest {
 		$this->cache = $cache;
 	}
 
-	public function isCacheable(){
+	public function cacheFor(){
 		return $this->cache;
 	}
 
@@ -64,10 +65,10 @@ class ApiRequest {
 
 	public function getHash(){
 		$hash = sha1( json_encode( $this->params ) );
-		return $hash;
+		return 'ApiRequest_'.$hash;
 	}
 
-	public function cache(){
-
-	}
+	public function getCacheData(){
+		return $this->result;
+}
 }
