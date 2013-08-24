@@ -80,6 +80,14 @@ class Api {
 		return $request->getResult();
 	}
 
+	public function doRequestWithToken( ApiRequest &$request, $tokenType = 'edittoken', $getCache = true ) {
+		//todo the above hackery makes me think api and site should be the same class
+		//todo then we could use getToken('edit') instead...
+		$tokenResult = $this->doRequest( new TokensRequest( $tokenType ), $getCache );
+		$request->setParameter( 'token', $tokenResult['tokens'][$tokenType] );
+		return $this->doRequest( $request, false );
+	}
+
 }
 
 /**
@@ -105,7 +113,11 @@ class TestApi extends Api{
 	 * Returns the data defined in the constructor
 	 */
 	public function doRequest( ApiRequest &$request, $getCache = null) {
-		$testResult = array_shift( $this->testResult );
+		if( is_array( $this->testResult ) ){
+			$testResult = array_shift( $this->testResult );
+		} else {
+			$testResult = $this->testResult;
+		}
 		$request->setResult( json_decode( $testResult, true ) );
 		return $request->getResult();
 	}

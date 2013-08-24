@@ -45,7 +45,7 @@ class HttpTest extends PHPUnit_Framework_TestCase {
 
 	function testTestHttp(){
 		$testData = '{}';
-		$testHttp = new TestHttp( $testData );
+		$testHttp = new TestHttp( array( $testData, $testData ) );
 		$this->assertEquals( $testData, $testHttp->get( 'testurl' ) );
 		$this->assertEquals( $testData, $testHttp->post( 'testurl', array() ) );
 	}

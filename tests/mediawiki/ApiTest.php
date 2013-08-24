@@ -4,7 +4,7 @@ use Addframe\Mediawiki\Api;
 use Addframe\Mediawiki\ApiRequest;
 use Addframe\TestHttp;
 
-class ApiTest extends PHPUnit_Framework_TestCase{
+class ApiTest extends InjectDataTestCase{
 
 	function testCanConstruct( ){
 		$api = new Api( );
@@ -44,6 +44,20 @@ class ApiTest extends PHPUnit_Framework_TestCase{
 		$http = new TestHttp( $expected );
 		$api = new Api( $http );
 		$result = $api->doRequest( $request, false );
+		$this->assertEquals( json_decode( $expected, false ), $result );
+	}
+
+	/**
+	 * @dataProvider provideApiRequests
+	 */
+	function testCanDoRequestWithToken( ApiRequest $request, $expected = '[]' ){
+		$http = new TestHttp( array( $this->getData( 'tokens/anonedittoken.json' ) , $expected ) );
+		$api = new Api( $http );
+
+		$this->assertArrayNotHasKey( 'token', $request->getParameters() );
+
+		$result = $api->doRequestWithToken( $request, 'edittoken' , false );
+		$this->assertArrayHasKey( 'token', $request->getParameters() );
 		$this->assertEquals( json_decode( $expected, false ), $result );
 	}
 

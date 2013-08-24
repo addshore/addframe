@@ -65,6 +65,10 @@ class ApiRequest implements Cacheable{
 		return $this->params;
 	}
 
+	public function setParameter( $param, $value ) {
+		$this->params[ $param ] = $value;
+	}
+
 	public function getResult(){
 		return $this->result;
 	}
