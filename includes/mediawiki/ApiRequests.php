@@ -81,7 +81,6 @@ class EditRequest extends ApiRequest{
 		$createonly = null,
 		$nocreate = null,
 		$watchlist = null,
-		$md5 = null,
 		$prependtext = null,
 		$appendtext = null,
 		$undo = null,
@@ -91,6 +90,11 @@ class EditRequest extends ApiRequest{
 		$contentmodel = null
 	) {
 		$action = 'edit';
+		if( !is_null( $text ) ){
+			$md5 = md5( $text );
+		} else if( !is_null( $prependtext ) && !is_null( $appendtext ) ) {
+			$md5 = md5( $prependtext . $appendtext );
+		}
 		parent::__construct( get_defined_vars(), true, CACHE_NONE );
 	}
 }
