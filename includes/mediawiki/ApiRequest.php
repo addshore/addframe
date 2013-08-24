@@ -58,4 +58,8 @@ class ApiRequest {
 		return $this->result;
 	}
 
+	public function getHash(){
+		$hash = sha1( json_encode( $this->params ) );
+		return $hash;
+	}
 }
