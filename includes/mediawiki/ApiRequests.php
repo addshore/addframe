@@ -28,14 +28,8 @@ class SiteInfoRequest extends QueryRequest{
 		$sinumberingroup = null,
 		$siinlanguagecode = null
 	) {
-		parent::__construct( array(
-			'meta' => 'siteinfo',
-			'siprop' => $siprop,
-			'sifilteriw' => $sifilteriw,
-			'sishowalldb' => $sishowalldb,
-			'sinumberingroup' => $sinumberingroup,
-			'siinlanguagecode' => $siinlanguagecode,
-		), false, CACHE_WEEK );
+		$meta = 'siteinfo';
+		parent::__construct( get_defined_vars(), false, CACHE_WEEK );
 	}
 }
 
@@ -44,13 +38,8 @@ class SiteInfoRequest extends QueryRequest{
  */
 class LoginRequest extends ApiRequest{
 	function __construct( $lgname = null, $lgpassword = null, $lgtoken = null, $lgdomain = null ) {
-		parent::__construct( array(
-			'action' => 'login',
-			'lgname' => $lgname,
-			'lgpassword' => $lgpassword,
-			'lgdomain' => $lgdomain,
-			'lgtoken' => $lgtoken,
-		), true, CACHE_NONE );
+		$action = 'login';
+		parent::__construct( get_defined_vars(), true, CACHE_NONE );
 	}
 }
 
@@ -59,9 +48,7 @@ class LoginRequest extends ApiRequest{
  */
 class LogoutRequest extends ApiRequest{
 	function __construct( ) {
-		parent::__construct( array(
-			'action' => 'logout',
-		), false, CACHE_NONE );
+		parent::__construct( array( 'action' => 'logout' ), false, CACHE_NONE );
 	}
 }
 
@@ -70,10 +57,8 @@ class LogoutRequest extends ApiRequest{
  */
 class TokensRequest extends ApiRequest{
 	function __construct( $type = 'edit' ) {
-		parent::__construct( array(
-			'action' => 'tokens',
-			'type' => $type,
-		), false, CACHE_HOUR );
+		$action = 'tokens';
+		parent::__construct( get_defined_vars(), false, CACHE_HOUR );
 	}
 }
 /**
@@ -108,33 +93,7 @@ class EditRequest extends ApiRequest{
 		$contentformat = null,
 		$contentmodel = null
 	) {
-		parent::__construct( array(
-			'title' => $title,
-			'pageid' => $pageid,
-			'section' => $section,
-			'sectiontitle' => $sectiontitle,
-			'text' => $text,
-			'token' => $token,
-			'summary' => $summary,
-			'minor' => $minor,
-			'notminor' => $notminor,
-			'bot' => $bot,
-			'basetimestamp' => $basetimestamp,
-			'starttimestamp' => $starttimestamp,
-			'recreate' => $recreate,
-			'createonly' => $createonly,
-			'nocreate' => $nocreate,
-			'watch' => $watch,
-			'unwatch' => $unwatch,
-			'watchlist' => $watchlist,
-			'md5' => $md5,
-			'prependtext' => $prependtext,
-			'appendtext' => $appendtext,
-			'undo' => $undo,
-			'undoafter' => $undoafter,
-			'redirect' => $redirect,
-			'contentformat' => $contentformat,
-			'contentmodel' => $contentmodel
-		), true, CACHE_NONE );
+		$action = 'edit';
+		parent::__construct( get_defined_vars(), true, CACHE_NONE );
 	}
 }
