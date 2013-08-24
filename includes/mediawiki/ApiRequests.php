@@ -9,8 +9,8 @@ use Addframe\Mediawiki\ApiRequest;
  */
 
 class QueryRequest extends ApiRequest{
-	function __construct( $params = array(), $shouldBePosted = false, $cache = CACHE_NONE ){
-		parent::__construct( array_merge( array( 'action' => 'query' ), $params ), $shouldBePosted, $cache );
+	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE ){
+		parent::__construct( array_merge( array( 'action' => 'query' ), $params ), $shouldBePosted, $maxAge );
 	}
 }
 

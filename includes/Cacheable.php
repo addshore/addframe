@@ -18,4 +18,11 @@ interface Cacheable {
 	 */
 	public function getCacheData();
 
+	/**
+	 * Returns the maximum time to cache the data for in seconds
+	 *
+	 * @return int minutes
+	 */
+	public function maxCacheAge();
+
 }
