@@ -40,24 +40,22 @@ class ApiTest extends PHPUnit_Framework_TestCase{
 	/**
 	 * @dataProvider provideApiRequests
 	 */
-	function testCanDoRequest( ApiRequest $request ){
-		$expected = array( 'key' => 'value' );
-
-		$api = new Api( new TestHttp( json_encode( $expected  ) ) );
-
-		$api->setUrl( 'hostname' );
+	function testCanDoRequest( $request, $expected = '' ){
+		$http = new TestHttp( $expected );
+		$api = new Api( $http );
 		$result = $api->doRequest( $request );
-
-		$this->assertEquals( $expected, $result );
+		$this->assertEquals( json_decode( $expected, false ), $result );
 	}
 
 	function provideApiRequests(){
 		return array(
-			//data, //post
-			array( new ApiRequest(), ),
-			array( new ApiRequest( array( 'param' => 'value' ) ) ),
-			array( new ApiRequest( array( 'param' => 'value', 'format' => 'php' ) ) ),
-			array( new ApiRequest( array( 'param' => 'value', 'param2' => 'value2' ) ) ),
+			array( new Addframe\Mediawiki\ApiRequest() ),
+			array( new Addframe\Mediawiki\ApiRequest( array( 'param' => 'value' ) ) ),
+			array( new Addframe\Mediawiki\ApiRequest( array( 'param' => 'value', 'format' => 'php' ) ) ),
+			array( new Addframe\Mediawiki\ApiRequest( array( 'param' => 'value', 'param2' => 'value2' ) ) ),
+			array( new Addframe\Mediawiki\LogoutRequest(), '[]' ),
+			array( new Addframe\Mediawiki\TokensRequest(), '{"tokens":{"edittoken":"+\\"}}' ),
+			array( new Addframe\Mediawiki\TokensRequest( 'watch' ), '{"tokens":{"watchtoken":"863bb60669575ac8619662ddad5fc2ac+\\"}}' ),
 		);
 	}
 
