@@ -49,6 +49,3 @@ class ApiRequest {
 	}
 
 }
-
-//Include all core ApiRequests
-include_once( __DIR__.'/ApiRequests.php' );
