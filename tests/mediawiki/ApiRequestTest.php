@@ -12,6 +12,7 @@ class ApiRequestTest extends PHPUnit_Framework_TestCase{
 		$request = new ApiRequest( $params, $shouldBePosted , $cache );
 		$this->assertInstanceOf( 'Addframe\Mediawiki\ApiRequest', $request );
 
+		//force our expected format param..
 		if( !array_key_exists( 'format', $params ) ){
 			$params['format'] = 'php';
 		}
