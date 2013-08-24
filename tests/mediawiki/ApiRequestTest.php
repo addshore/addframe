@@ -50,4 +50,16 @@ class ApiRequestTest extends PHPUnit_Framework_TestCase{
 		$this->assertEquals( array(), $request->getResult() );
 	}
 
+	function testHash(){
+		$request1 = new ApiRequest( array() );
+		$request2 = new ApiRequest( array() );
+		$this->assertEquals( $request1->getHash(), $request2->getHash() );
+		$request1 = new ApiRequest( array( 'value' ) );
+		$request2 = new ApiRequest( array() );
+		$this->assertNotEquals( $request1->getHash(), $request2->getHash() );
+		$request1 = new ApiRequest( array( 'key' => 'SomeLongValues?afg?2rq' ) );
+		$request2 = new ApiRequest( array() );
+		$this->assertNotEquals( $request1->getHash(), $request2->getHash() );
+	}
+
 }
