@@ -47,10 +47,9 @@ class SiteTest extends PHPUnit_Framework_TestCase {
 
 		$site = new Site( $http );
 		$site->setUrl( 'localhost' );
-		$site->getApiFromHomePage();
 
-		$this->assertInstanceOf( 'Addframe\Mediawiki\Api', $site->api );
-		$this->assertEquals( $apiUrl, $site->api->getUrl() );
+		$this->assertInstanceOf( 'Addframe\Mediawiki\Api', $site->getApi() );
+		$this->assertEquals( $apiUrl, $site->getApi()->getUrl() );
 	}
 
 	function provideGetApiUrl(){
