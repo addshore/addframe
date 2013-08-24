@@ -4,6 +4,7 @@
  * Include the entrance file
  */
 require_once( __DIR__.'/../Addframe.php' );
+require_once( __DIR__.'/mediawiki/InjectDataTestCase.php' );
 
 /**
  * Over ride the default cache prefix
