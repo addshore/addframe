@@ -50,11 +50,6 @@ class ApiRequest implements Cacheable{
 		return $this->params;
 	}
 
-	public function execute( Api $api ){
-		$this->result = $api->doRequest( $this );
-		return $this->result;
-	}
-
 	public function getResult(){
 		return $this->result;
 	}

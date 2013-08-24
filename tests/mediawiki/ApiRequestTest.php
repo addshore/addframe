@@ -37,19 +37,6 @@ class ApiRequestTest extends PHPUnit_Framework_TestCase{
 		);
 	}
 
-	/**
-	 * @dataProvider provideConstructionData
-	 */
-	function testExecute( $params = array(), $shouldBePosted = false, $cache = false  ){
-		$request = new ApiRequest( $params, $shouldBePosted , $cache );
-		$api = new TestApi( '[]' );
-
-		$result = $request->execute( $api );
-		$this->assertNotNull( $request->getResult() );
-		$this->assertEquals( array(), $result );
-		$this->assertEquals( array(), $request->getResult() );
-	}
-
 	function testHash(){
 		$request1 = new ApiRequest( array() );
 		$request2 = new ApiRequest( array() );
