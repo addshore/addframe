@@ -4,7 +4,7 @@ use Addframe\Mediawiki\Site;
 use Addframe\Mediawiki\TestApi;
 use Addframe\TestHttp;
 
-class SiteTest extends PHPUnit_Framework_TestCase {
+class SiteTest extends InjectDataTestCase {
 
 	function testCanConstruct(){
 		$site = new Site();
@@ -87,10 +87,10 @@ class SiteTest extends PHPUnit_Framework_TestCase {
 
 	function provideGetToken(){
 		return array(
-			array( 'edit', file_get_contents( __DIR__.'/data/tokens/anonedittoken.json' ), '+\\'),
-			array( 'protect', file_get_contents( __DIR__.'/data/tokens/protecttoken.json' ), '863bb60669575ac8619662ddad5fc2ac+\\'),
-			array( 'watch', file_get_contents( __DIR__.'/data/tokens/watchtoken.json' ), 'A63bb60669575ac8619662ddad5fc2ac+\\' ),
-			array( 'foo', file_get_contents( __DIR__.'/data/tokens/warnings.json' ), null ),
+			array( 'edit', $this->getData( 'tokens/anonedittoken.json' ), '+\\'),
+			array( 'protect', $this->getData( 'tokens/protecttoken.json' ), '863bb60669575ac8619662ddad5fc2ac+\\'),
+			array( 'watch', $this->getData( 'tokens/watchtoken.json' ), 'A63bb60669575ac8619662ddad5fc2ac+\\' ),
+			array( 'foo', $this->getData( 'tokens/warnings.json' ), null ),
 		);
 	}
 
@@ -105,10 +105,10 @@ class SiteTest extends PHPUnit_Framework_TestCase {
 
 	function provideGetTokenList(){
 		return array(
-			array( file_get_contents( __DIR__.'/data/tokens/anonedittoken.json' ), array( 'edittoken' => '+\\' ) ),
-			array( file_get_contents( __DIR__.'/data/tokens/protecttoken.json' ), array( 'protecttoken' => '863bb60669575ac8619662ddad5fc2ac+\\' ) ),
-			array( file_get_contents( __DIR__.'/data/tokens/warnings.json' ), array() ),
-			array( file_get_contents( __DIR__.'/data/tokens/anoneditandwarnings.json' ) , array( 'edittoken' => '+\\' ) ),
+			array( $this->getData( 'tokens/anonedittoken.json' ), array( 'edittoken' => '+\\' ) ),
+			array( $this->getData( 'tokens/protecttoken.json' ), array( 'protecttoken' => '863bb60669575ac8619662ddad5fc2ac+\\' ) ),
+			array( $this->getData( 'tokens/warnings.json' ), array() ),
+			array( $this->getData( 'tokens/anoneditandwarnings.json' ) , array( 'edittoken' => '+\\' ) ),
 		);
 	}
 
