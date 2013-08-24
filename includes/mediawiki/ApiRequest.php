@@ -8,7 +8,7 @@ use Addframe\Http;
 const CACHE_WEEK = 10080;
 const CACHE_DAY = 1440;
 const CACHE_HOUR = 60;
-const CACHE_NONE = false;
+const CACHE_NONE = null;
 
 class ApiRequest implements Cacheable{
 
@@ -56,6 +56,10 @@ class ApiRequest implements Cacheable{
 
 	public function setResult( $result ){
 		$this->result = $result;
+
+		if( !is_null( $this->cacheFor() ) ){
+			//todo add the result to the cache
+		}
 	}
 
 	public function getHash(){

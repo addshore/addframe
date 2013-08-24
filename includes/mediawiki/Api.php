@@ -37,10 +37,14 @@ class Api {
 	/**
 	 * Performs a request to the api given the query and post data
 	 * @param ApiRequest $request
-	 * @throws \UnexpectedValueException
+	 * @param bool $getCached
 	 * @return Array of the unserialized returning data
 	 */
-	public function doRequest( ApiRequest $request ) {
+	public function doRequest( ApiRequest $request, $getCached = true ) {
+		if( !is_null( $request->cacheFor() ) && $getCached === true ){
+			//todo try to get and return data from the cache
+		}
+
 		if ( $request->isPost() ) {
 			$result = $this->http->post( $this->getUrl(), $request->getParameters() );
 			$request->setResult( json_decode( $result, true ) );
