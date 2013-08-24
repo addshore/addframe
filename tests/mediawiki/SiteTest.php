@@ -2,6 +2,7 @@
 
 use Addframe\Mediawiki\Api;
 use Addframe\Mediawiki\Site;
+use Addframe\Mediawiki\TestApi;
 use Addframe\TestHttp;
 
 class SiteTest extends PHPUnit_Framework_TestCase {
@@ -73,6 +74,25 @@ class SiteTest extends PHPUnit_Framework_TestCase {
 
 		return $toReturn;
 
+	}
+
+	/**
+	 * @dataProvider provideGetTokens
+	 */
+	function testGetTokens( $type = 'edit', $json, $expected){
+		$site = Site::newFromUrl( 'foobar' );
+		$site->setApi( new TestApi( $json ) );
+		$token = $site->getToken( $type );
+		$this->assertEquals( $expected, $token );
+	}
+
+	function provideGetTokens(){
+		return array(
+			array( 'edit', '{"tokens":{"edittoken":"+\\\\"}}', '+\\'),
+			array( 'protect', '{"tokens":{"protecttoken":"+\\\\"}}', '+\\'),
+			array( 'watch', '{"tokens":{"watchtoken":"863bb60669575ac8619662ddad5fc2ac+\\\\"}}', '863bb60669575ac8619662ddad5fc2ac+\\' ),
+			array( 'patrol', '{"tokens":{"patroltoken":"9104118c9a64b875153bbace79da58e8+\\\\"}}', '9104118c9a64b875153bbace79da58e8+\\' ),
+		);
 	}
 
 }
