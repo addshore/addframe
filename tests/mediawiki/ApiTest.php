@@ -43,7 +43,7 @@ class ApiTest extends PHPUnit_Framework_TestCase{
 	function testCanDoRequest( ApiRequest $request ){
 		$expected = array( 'key' => 'value' );
 
-		$api = new Api( new TestHttp( serialize( $expected  ) ) );
+		$api = new Api( new TestHttp( json_encode( $expected  ) ) );
 
 		$api->setUrl( 'hostname' );
 		$result = $api->doRequest( $request );

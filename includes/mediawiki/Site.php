@@ -10,10 +10,15 @@ use Addframe\Http;
 
 class Site {
 
+	/** @var string  */
 	protected $url = null;
+	/** @var string  */
 	protected $apiUrl = null;
 	/** @var Http  */
 	protected $http;
+
+	/** @var Api  */
+	public $api = null;
 
 	public function __construct( $http = null ) {
 		if( is_null( $http ) ){
@@ -32,15 +37,8 @@ class Site {
 		return $this->url;
 	}
 
-	public function setApiUrl( $url ){
-		$this->apiUrl = $url;
-	}
-
-	public function getApiUrl(){
-		if( is_null( $this->apiUrl ) ){
-			$this->getApiUrlFromHomePage();
-		}
-		return $this->apiUrl;
+	public function getApi(){
+		return $this->api;
 	}
 
 	public static function newFromUrl( $url ){
@@ -49,7 +47,7 @@ class Site {
 		return $site;
 	}
 
-	private function getApiUrlFromHomePage() {
+	public function getApiFromHomePage() {
 		if( !is_null( $this->url ) ){
 
 			$homePage = New \DOMDocument();
@@ -58,13 +56,14 @@ class Site {
 			foreach( $homePage->getElementsByTagName( 'link' ) as $element ){
 				if( $element->attributes->getNamedItem('rel')->nodeValue == 'EditURI' ){
 					$rsdUrl = $element->attributes->getNamedItem('href')->nodeValue;
-					$this->apiUrl = str_replace( '?action=rsd', '', $rsdUrl );
-					break;
+					$apiUrl = str_replace( '?action=rsd', '', $rsdUrl );
+					$this->api = Api::newFromUrl( $apiUrl );
+					return true;
 				}
 			}
 
 		}
-		return $this->apiUrl;
+		return false;
 	}
 
 }
