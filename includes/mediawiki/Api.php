@@ -42,14 +42,15 @@ class Api {
 	 * @return Array of the unserialized returning data
 	 */
 	public function doRequest( ApiRequest $request, $getCached = true ) {
-		if( !is_null( $request->cacheFor() ) && $getCached === true ){
-			if( Cache::has( $request->getHash() ) ){
-				//todo make sure the cache has not expired!
-				$request->setResult( Cache::get( $request->getHash() ) );
+		if( !is_null( $request->maxCacheAge() ) && $getCached === true ){
+			if( Cache::has( $request ) ){
+				if( Cache::age( $request) < $request->maxCacheAge() ){
+					$request->setResult( Cache::get( $request ) );
+				}
 			}
 		}
 
-		if( !isset( $result ) ){
+		if( is_null( $request->getResult() ) ){
 			if ( $request->isPost() ) {
 				$request->setResult( json_decode( $this->http->post( $this->getUrl(), $request->getParameters() ), true ) );
 			} else {
