@@ -9,7 +9,7 @@ use Addframe\Http;
 const CACHE_WEEK = 604800;
 const CACHE_DAY = 86400;
 const CACHE_HOUR = 3600;
-const CACHE_MINUTE = 60; 
+const CACHE_MINUTE = 60;
 const CACHE_NONE = null;
 
 class ApiRequest implements Cacheable{
