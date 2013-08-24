@@ -43,10 +43,12 @@ class Api {
 	public function doRequest( ApiRequest $request ) {
 		if ( $request->isPost() ) {
 			$result = $this->http->post( $this->getUrl(), $request->getParameters() );
-			return json_decode( $result, true );
+			$request->setResult( json_decode( $result, true ) );
+			return $request->getResult();
 		} else {
 			$result = $this->http->get( $this->getUrl() . "?" . http_build_query( $request->getParameters() ) );
-			return json_decode( $result, true );
+			$request->setResult( json_decode( $result, true ) );
+			return $request->getResult();
 		}
 	}
 
@@ -68,7 +70,8 @@ class TestApi extends Api{
 	}
 
 	public function doRequest( ApiRequest $request ) {
-		return json_decode( $this->testResult, true );
+		$request->setResult( json_decode( $this->testResult, true ) );
+		return $request->getResult();
 	}
 
 }
