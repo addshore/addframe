@@ -43,7 +43,7 @@ class SiteInfoRequest extends QueryRequest{
  * Class LoginRequest action=login
  */
 class LoginRequest extends ApiRequest{
-	function __construct( $lgname = null, $lgpassword = null, $lgdomain = null, $lgtoken = null ) {
+	function __construct( $lgname = null, $lgpassword = null, $lgtoken = null, $lgdomain = null ) {
 		parent::__construct( array(
 			'action' => 'login',
 			'lgname' => $lgname,
@@ -73,6 +73,6 @@ class TokensRequest extends ApiRequest{
 		parent::__construct( array(
 			'action' => 'tokens',
 			'type' => $type,
-		), false, CACHE_NONE );
+		), false, CACHE_HOUR );
 	}
 }

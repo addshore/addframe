@@ -1,0 +1,10 @@
+{
+    "login": {
+        "result": "Success",
+        "lguserid": 1,
+        "lgusername": "Admin",
+        "lgtoken": "3c34ff371ad057672ebcb05d87259cad",
+        "cookieprefix": "my_wiki",
+        "sessionid": "5ddef76332169ca6d68d534cdf7ba111"
+    }
+}
