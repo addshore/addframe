@@ -47,6 +47,11 @@ class ApiTest extends PHPUnit_Framework_TestCase{
 		$this->assertEquals( json_decode( $expected, false ), $result );
 	}
 
+	/**
+	 * There is no real reason to provide all possible requests here as they all extend ApiRequest
+	 * Generally if the first few succeed so will the rest..
+	 * todo we could have a list of possible api requests somewhere and iterate over them all with their default values
+	 **/
 	function provideApiRequests(){
 		return array(
 			array( new Addframe\Mediawiki\ApiRequest() ),
