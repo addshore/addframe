@@ -12,13 +12,10 @@ class Site {
 
 	/** @var string  */
 	protected $url = null;
-	/** @var string  */
-	protected $apiUrl = null;
 	/** @var Http  */
 	protected $http;
-
 	/** @var Api  */
-	public $api = null;
+	protected $api = null;
 
 	public function __construct( $http = null ) {
 		if( is_null( $http ) ){
@@ -38,6 +35,9 @@ class Site {
 	}
 
 	public function getApi(){
+		if( is_null( $this->api ) ){
+			$this->getApiFromHomePage();
+		}
 		return $this->api;
 	}
 
@@ -67,7 +67,7 @@ class Site {
 	}
 
 	public function getToken( $type = 'edit' ){
-		$apiResult = $this->api->doRequest( new TokensRequest( $type ) );
+		$apiResult = $this->getApi()->doRequest( new TokensRequest( $type ) );
 		return $apiResult['tokens'][$type.'token'];
 	}
 
