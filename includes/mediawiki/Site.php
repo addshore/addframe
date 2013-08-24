@@ -34,6 +34,10 @@ class Site {
 		return $this->url;
 	}
 
+	public function setApi( $api ){
+		$this->api = $api;
+	}
+
 	public function getApi(){
 		if( is_null( $this->api ) ){
 			$this->getApiFromHomePage();
@@ -67,7 +71,9 @@ class Site {
 	}
 
 	public function getToken( $type = 'edit' ){
-		$apiResult = $this->getApi()->doRequest( new TokensRequest( $type ) );
+		$api = $this->getApi();
+		$request = new TokensRequest( $type );
+		$apiResult = $api->doRequest( $request );
 		return $apiResult['tokens'][$type.'token'];
 	}
 

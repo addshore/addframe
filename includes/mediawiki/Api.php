@@ -51,3 +51,24 @@ class Api {
 	}
 
 }
+
+/**
+ * Class TestApi, Overrides used methods in Api so we can return some default data
+ * @package Addframe
+ */
+class TestApi extends Api{
+
+	protected $testResult;
+
+	/**
+	 * @param string $returnData in json form
+	 */
+	function __construct( $returnData = '' ) {
+		$this->testResult = $returnData;
+	}
+
+	public function doRequest( ApiRequest $request ) {
+		return json_decode( $this->testResult, true );
+	}
+
+}
