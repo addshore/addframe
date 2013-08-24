@@ -14,9 +14,8 @@ class Site {
 	protected $url = null;
 	/** @var Http  */
 	protected $http;
-
 	/** @var Api  */
-	public $api = null;
+	protected $api = null;
 
 	public function __construct( $http = null ) {
 		if( is_null( $http ) ){
