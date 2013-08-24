@@ -5,9 +5,11 @@ namespace Addframe\Mediawiki;
 use Addframe\Cacheable;
 use Addframe\Http;
 
-const CACHE_WEEK = 10080;
-const CACHE_DAY = 1440;
-const CACHE_HOUR = 60;
+// Some default cache lengths in seconds
+const CACHE_WEEK = 604800;
+const CACHE_DAY = 86400;
+const CACHE_HOUR = 3600;
+const CACHE_MINUTE = 60; 
 const CACHE_NONE = null;
 
 class ApiRequest implements Cacheable{
@@ -20,9 +22,9 @@ class ApiRequest implements Cacheable{
 	/**
 	 * @param array $params Parameters for the api request
 	 * @param bool $shouldBePosted Should be we a HTTP POST?
-	 * @param bool|int $cache should be cache / how long to cache for in mins
+	 * @param bool|int $maxAge should be cache / how long to cache for in mins
 	 */
-	function __construct( $params = array(), $shouldBePosted = false, $cache = CACHE_NONE ) {
+	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE ) {
 		$params['format'] = 'json';
 
 		foreach( $params as $param => $value ) {
@@ -35,11 +37,7 @@ class ApiRequest implements Cacheable{
 
 		$this->params = $params;
 		$this->shouldBePosted = $shouldBePosted;
-		$this->cache = $cache;
-	}
-
-	public function cacheFor(){
-		return $this->cache;
+		$this->cache = $maxAge;
 	}
 
 	public function isPost(){
@@ -65,5 +63,10 @@ class ApiRequest implements Cacheable{
 
 	public function getCacheData(){
 		return $this->result;
-}
+	}
+
+	public function maxCacheAge(){
+		return $this->cache;
+	}
+
 }
