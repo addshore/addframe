@@ -38,26 +38,28 @@ class Api {
 	/**
 	 * Performs a request to the api given the query and post data
 	 * @param ApiRequest $request
-	 * @param bool $cacheOn are we to care about any caching stuff?
+	 * @param bool $getCache are we to care about any caching stuff?
 	 * @return Array of the unserialized returning data
 	 */
-	public function doRequest( ApiRequest $request, $cacheOn = true ) {
-		if( !is_null( $request->maxCacheAge() ) && $cacheOn === true ){
+	public function doRequest( ApiRequest &$request, $getCache = true ) {
+		$gotCached = false;
+		if( $getCache === true && $request->maxCacheAge() > 0 ){
 			if( Cache::has( $request ) ){
-				if( Cache::age( $request) < $request->maxCacheAge() ){
+				if( Cache::age( $request ) < $request->maxCacheAge() ){
 					$request->setResult( Cache::get( $request ) );
+					$gotCached = true;
 				}
 			}
 		}
 
-		if( is_null( $request->getResult() ) ){
+		if( $getCache === false || $gotCached === false ){
 			if ( $request->isPost() ) {
 				$request->setResult( json_decode( $this->http->post( $this->getUrl(), $request->getParameters() ), true ) );
 			} else {
 				$requestUrl = $this->getUrl() . "?" . http_build_query( $request->getParameters() );
 				$request->setResult( json_decode( $this->http->get( $requestUrl ), true ) );
 			}
-			if( $cacheOn === true ){
+			if( $gotCached === false && $request->maxCacheAge() > 0 ){
 				Cache::add( $request );
 			}
 		}
@@ -82,7 +84,7 @@ class TestApi extends Api{
 		$this->testResult = $returnData;
 	}
 
-	public function doRequest( ApiRequest $request, $cacheOn = null) {
+	public function doRequest( ApiRequest &$request, $getCache = null) {
 		$request->setResult( json_decode( $this->testResult, true ) );
 		return $request->getResult();
 	}

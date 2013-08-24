@@ -64,4 +64,51 @@ class ApiTest extends PHPUnit_Framework_TestCase{
 		);
 	}
 
+	function testCachedResultCanBeIgnored(){
+		$request = new Addframe\Mediawiki\ApiRequest( array( 'test' => 'testGettingCachedResultWorks' ), false, 100 );
+		\Addframe\Cache::remove( $request ); //remove if it is already there
+
+		//do our first request to get some data and cache it
+		$api = new Api( new TestHttp( json_encode( array( 'RESULT 1' ) ) ) );
+		$api->doRequest( $request );
+		$this->assertEquals( array( 'RESULT 1' ) , $request->getResult() );
+
+		//change the result the api would provide, we will still get the cached data
+		$api = new Api( new TestHttp( json_encode( array( 'NEW RESULT' ) ) ) );
+		$api->doRequest( $request );
+		$this->assertEquals( array( 'RESULT 1' ) , $request->getResult() );
+
+		//force to ignore any cache and make sure we get the cached data
+		$api->doRequest( $request, false );
+		$this->assertEquals( array( 'NEW RESULT' ) , $request->getResult() );
+
+		//make sure the cache now holds the new data
+		$api->doRequest( $request );
+		$this->assertEquals( array( 'NEW RESULT' ) , $request->getResult() );
+	}
+
+	function testCachedResultExpires(){
+		$request = new Addframe\Mediawiki\ApiRequest( array( 'test' => 'testCachedResultExpires' ), false, 2 );
+		\Addframe\Cache::remove( $request ); //remove if it is already there
+
+		//do our first request to get some data and cache it
+		$api = new Api( new TestHttp( json_encode( array( 'RESULT 1' ) ) ) );
+		$api->doRequest( $request );
+		$this->assertEquals( array( 'RESULT 1' ) , $request->getResult() );
+
+		//change the result the api would provide, we will still get the cached data
+		$api = new Api( new TestHttp( json_encode( array( 'NEW RESULT' ) ) ) );
+		$api->doRequest( $request );
+		$this->assertEquals( array( 'RESULT 1' ) , $request->getResult() );
+
+		//sleep until the cache expires
+		while( \Addframe\Cache::age( $request ) < $request->maxCacheAge() ){
+			sleep(1);
+		}
+
+		//we should now get the new data!
+		$api->doRequest( $request );
+		$this->assertEquals( array( 'NEW RESULT' ) , $request->getResult() );
+	}
+
 }

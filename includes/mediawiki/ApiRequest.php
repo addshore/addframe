@@ -10,19 +10,19 @@ const CACHE_WEEK = 604800;
 const CACHE_DAY = 86400;
 const CACHE_HOUR = 3600;
 const CACHE_MINUTE = 60;
-const CACHE_NONE = null;
+const CACHE_NONE = 0;
 
 class ApiRequest implements Cacheable{
 
 	protected $result = null;
 	protected $params = array();
-	protected $cache = CACHE_NONE;
+	protected $cacheFor = CACHE_NONE;
 	protected $shouldBePosted = false;
 
 	/**
 	 * @param array $params Parameters for the api request
 	 * @param bool $shouldBePosted Should be we a HTTP POST?
-	 * @param bool|int $maxAge should be cache / how long to cache for in mins
+	 * @param bool|int $maxAge should be cache / how long to cache for in seconds
 	 */
 	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE ) {
 		$params['format'] = 'json';
@@ -37,7 +37,7 @@ class ApiRequest implements Cacheable{
 
 		$this->params = $params;
 		$this->shouldBePosted = $shouldBePosted;
-		$this->cache = $maxAge;
+		$this->cacheFor = $maxAge;
 	}
 
 	public function isPost(){
@@ -66,7 +66,7 @@ class ApiRequest implements Cacheable{
 	}
 
 	public function maxCacheAge(){
-		return $this->cache;
+		return $this->cacheFor;
 	}
 
 }
