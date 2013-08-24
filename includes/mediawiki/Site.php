@@ -70,11 +70,21 @@ class Site {
 		return false;
 	}
 
+	public function getTokenList(){
+		$availibeTokens = 'block|delete|edit|email|import|move|options|patrol|protect|unblock|watch';
+		$apiResult = $this->getApi()->doRequest( new TokensRequest( $availibeTokens ) );
+		if( array_key_exists( 'tokens', $apiResult ) ){
+			return $apiResult['tokens'];
+		}
+		return array();
+	}
+
 	public function getToken( $type = 'edit' ){
-		$api = $this->getApi();
-		$request = new TokensRequest( $type );
-		$apiResult = $api->doRequest( $request );
-		return $apiResult['tokens'][$type.'token'];
+		$apiResult = $this->getApi()->doRequest( new TokensRequest( $type ) );
+		if( array_key_exists( 'tokens', $apiResult ) ){
+			return $apiResult['tokens'][$type.'token'];
+		}
+		return null;
 	}
 
 }

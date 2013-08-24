@@ -77,21 +77,41 @@ class SiteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @dataProvider provideGetTokens
+	 * @dataProvider provideGetToken
 	 */
-	function testGetTokens( $type = 'edit', $json, $expected){
+	function testGetToken( $type = 'edit', $json, $expected){
 		$site = Site::newFromUrl( 'foobar' );
 		$site->setApi( new TestApi( $json ) );
 		$token = $site->getToken( $type );
 		$this->assertEquals( $expected, $token );
 	}
 
-	function provideGetTokens(){
+	function provideGetToken(){
 		return array(
 			array( 'edit', '{"tokens":{"edittoken":"+\\\\"}}', '+\\'),
 			array( 'protect', '{"tokens":{"protecttoken":"+\\\\"}}', '+\\'),
 			array( 'watch', '{"tokens":{"watchtoken":"863bb60669575ac8619662ddad5fc2ac+\\\\"}}', '863bb60669575ac8619662ddad5fc2ac+\\' ),
 			array( 'patrol', '{"tokens":{"patroltoken":"9104118c9a64b875153bbace79da58e8+\\\\"}}', '9104118c9a64b875153bbace79da58e8+\\' ),
+			array( 'foo', '{"warnings":{"tokens":{"*":"Action \'foo\' is not allowed for the current user"}}}', null ),
+		);
+	}
+
+	/**
+	 * @dataProvider provideGetTokenList
+	 */
+	function testGetTokenList( $json, $expected){
+		$site = Site::newFromUrl( 'foobar' );
+		$site->setApi( new TestApi( $json ) );
+		$this->assertEquals( $expected, $site->getTokenList() );
+	}
+
+	function provideGetTokenList(){
+		return array(
+			array( '{"tokens":{"edittoken":"+\\\\"}}', array( 'edittoken' => '+\\' ) ),
+			array( '{"tokens":{"protecttoken":"863bb60669575ac8619662ddad5fc2ac+\\\\"}}', array( 'protecttoken' => '863bb60669575ac8619662ddad5fc2ac+\\' ) ),
+			array( '{"tokens":{"protecttoken":"+\\\\","patroltoken":"+\\\\"}}', array( 'protecttoken' => '+\\', 'patroltoken' => '+\\' ) ),
+			array( '{"warnings":{"tokens":{"*":"Action \'foo\' is not allowed for the current user"}}}', array() ),
+			array( '{"warnings":{"tokens":{"*":"Action \'foo\' is not allowed for the current user"}},"tokens":{"edittoken":"+\\\\"}}', array( 'edittoken' => '+\\' ) ),
 		);
 	}
 
