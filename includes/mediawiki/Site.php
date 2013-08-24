@@ -11,14 +11,23 @@ use Addframe\Http;
 
 class Site {
 
-	/** @var string  */
+	/**
+	 * @var string the url to the root of the site
+	 */
 	protected $url = null;
-	/** @var Http  */
+	/**
+	 * @var Http object to use for connecting to the site
+	 */
 	protected $http;
-	/** @var Api  */
+	/**
+	 * @var Api object to use for connecting to the site api
+	 */
 	protected $api = null;
 
-	public function __construct( $http = null ) {
+	/**
+	 * This should generally not be used, use Site::new* instead
+	 */
+	/* protected */ public function __construct( $http = null ) {
 		if( is_null( $http ) ){
 			$this->http = Http::getDefaultInstance();
 		} else {
@@ -39,6 +48,11 @@ class Site {
 		$this->api = $api;
 	}
 
+	/**
+	 * Gets the Api object for the site
+	 * If the Api is not yet defined we will try to get it from the home page
+	 * @return Api|null
+	 */
 	public function getApi(){
 		if( is_null( $this->api ) ){
 			$this->getApiFromHomePage();
@@ -46,12 +60,21 @@ class Site {
 		return $this->api;
 	}
 
+	/**
+	 * Creates a new Site class using the given url
+	 * @param $url string to create the class with
+	 * @return Site
+	 */
 	public static function newFromUrl( $url ){
 		$site = new Site( );
 		$site->setUrl( $url );
 		return $site;
 	}
 
+	/**
+	 * Gets the location of the API using the EditURI link tag on a mediawiki homepage
+	 * @return bool true if successful
+	 */
 	public function getApiFromHomePage() {
 		if( !is_null( $this->url ) ){
 
@@ -71,6 +94,10 @@ class Site {
 		return false;
 	}
 
+	/**
+	 * Gets a list of all availible tokens
+	 * @return array of all available tokens
+	 */
 	public function getTokenList(){
 		$availibeTokens = 'block|delete|edit|email|import|move|options|patrol|protect|unblock|watch';
 		$apiResult = $this->getApi()->doRequest( new TokensRequest( $availibeTokens ) );
@@ -80,6 +107,11 @@ class Site {
 		return array();
 	}
 
+	/**
+	 * Get a single action token
+	 * @param string $type type of token to get
+	 * @return null|string the token of type requested
+	 */
 	public function getToken( $type = 'edit' ){
 		$apiResult = $this->getApi()->doRequest( new TokensRequest( $type ) );
 		if( array_key_exists( 'tokens', $apiResult ) ){
