@@ -20,7 +20,7 @@ class ApiRequestTest extends PHPUnit_Framework_TestCase{
 		//check the params
 		$this->assertEquals( $params, $request->getParameters() );
 		//check the defaults
-		$this->assertEquals( $cache, $request->isCacheable() );
+		$this->assertEquals( $cache, $request->cacheFor() );
 		$this->assertEquals( $shouldBePosted,  $request->isPost() );
 		$this->assertEquals( null, $request->getResult() );
 	}
