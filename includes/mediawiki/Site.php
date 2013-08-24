@@ -66,4 +66,9 @@ class Site {
 		return false;
 	}
 
+	public function getToken( $type = 'edit' ){
+		$apiResult = $this->api->doRequest( new TokensRequest( $type ) );
+		return $apiResult['tokens'][$type.'token'];
+	}
+
 }
