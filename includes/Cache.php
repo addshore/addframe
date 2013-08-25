@@ -97,9 +97,15 @@ class Cache {
 
 	/**
 	 * Removes all current cache files
+	 * @throws \IOException
 	 */
 	public static function clear(){
-		array_map('unlink', glob( __DIR__.'/../cache/'.self::$prefix.'*' ) );
+		try{
+			array_map('unlink', glob( __DIR__.'/../cache/'.self::$prefix.'*' ) );
+		} catch( \Exception $e ){
+			throw new \IOException( "Failed to clear cache" );
+		}
+
 	}
 
 }
