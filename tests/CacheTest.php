@@ -8,6 +8,11 @@
 use Addframe\Mediawiki\ApiRequest;
 use Addframe\Cache;
 
+/**
+ * Class CacheTest
+ * @covers Addframe\Cache
+ */
+
 class CacheTest extends PHPUnit_Framework_TestCase{
 
 	function testCacheTrip(){
