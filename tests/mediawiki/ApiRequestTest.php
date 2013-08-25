@@ -41,6 +41,58 @@ class ApiRequestTest extends PHPUnit_Framework_TestCase{
 		);
 	}
 
+	/**
+	 * @dataProvider provideConstructionWithParamAsArray
+	 */
+	function testConstructionWithParamAsArray( $params, $expected ){
+		$expected['format'] = 'json';
+		$request = new ApiRequest( $params );
+		$this->assertEquals( $expected, $request->getParameters() );
+
+	}
+
+	function provideConstructionWithParamAsArray(){
+		return array(
+			//params, expected
+			array(
+				array( 'param' => array( 'val1', 'val2' ) ),
+				array( 'param' => 'val1|val2' ),
+			),
+			array(
+				array( 'param' => array( 'val1', 'val2', 'val3', 'val4' ) ),
+				array( 'param' => 'val1|val2|val3|val4' ),
+			),
+			array(
+				array( 'param' => array( 'val1', 'val2' ), 'another' => array( 'aa1', 'aa2' ) ),
+				array( 'param' => 'val1|val2', 'another' => 'aa1|aa2' ),
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider provideConstructionWithParamAsNull
+	 */
+	function testConstructionWithParamAsNull( $params, $expected ){
+		$expected['format'] = 'json';
+		$request = new ApiRequest( $params );
+		$this->assertEquals( $expected, $request->getParameters() );
+
+	}
+
+	function provideConstructionWithParamAsNull(){
+		return array(
+			//params, expected
+			array(
+				array( 'param' => 'val', 'another' => null ),
+				array( 'param' => 'val' ),
+			),
+			array(
+				array( 'param' => null, 'another' => 'val' ),
+				array( 'another' => 'val' ),
+			),
+		);
+	}
+
 	function testSetParameter(){
 		$expected = array();
 		$request = new ApiRequest( $expected, false , 0 );
@@ -50,6 +102,20 @@ class ApiRequestTest extends PHPUnit_Framework_TestCase{
 		$request->setParameter( 'token', '863bb60669575ac8619662ddad5fc2ac+\\' );
 		$expected = array_merge( $expected, array( 'token' => '863bb60669575ac8619662ddad5fc2ac+\\' ) );
 		$this->assertEquals( $expected, $request->getParameters() );
+	}
+
+	function testSetResult(){
+		$expected = array( 'testSetResult' );
+		$request = new ApiRequest();
+		$request->setResult( $expected );
+		$this->assertEquals( $expected, $request->getResult() );
+	}
+
+	function testGetCacheData(){
+		$expected = array( 'testGetCacheData' );
+		$request = new ApiRequest();
+		$request->setResult( $expected );
+		$this->assertEquals( $expected, $request->getCacheData() );
 	}
 
 	function testHash(){
