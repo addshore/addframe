@@ -53,6 +53,8 @@ class HttpTest extends PHPUnit_Framework_TestCase {
 		$http = new Http();
 		$getResult = $http->get( 'http://afsdhyugijohgyuahjicnakjnfvagag.djfakggas' );
 		$this->assertFalse( $getResult );
+		$getResult = $http->post( 'http://afsdhyugijohgyuahjicnakjnfvagag.djfakggas', array() );
+		$this->assertFalse( $getResult );
 	}
 
 	function testTestHttpWithArray(){
