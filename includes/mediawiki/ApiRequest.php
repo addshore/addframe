@@ -36,25 +36,55 @@ class ApiRequest implements Cacheable{
 	 */
 	protected $shouldBePosted = false;
 
+	protected $allowedParams = array();
+
 	/**
 	 * @param array $params Parameters for the api request
 	 * @param bool $shouldBePosted Should be we a HTTP POST?
 	 * @param bool|int $maxAge should be cache / how long to cache for in seconds
 	 */
 	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE ) {
-		$params['format'] = 'json';
+		// Only restrict params if a child class has said we should
+		// This means that this class can be used to perform requests with ANY params
+		if( count( $this->allowedParams ) !== 0 ){
+			$this->addAllowedParams( array( 'format' ) );
+		}
 
-		foreach( $params as $param => $value ) {
-			if ( is_null( $value ) ){
-				unset( $params[ $param ] );
-			} else if ( is_array( $value ) ) {
-				$params[ $param ] = implode( '|', $value );
+		$this->addParams( array( 'format' => 'json' ) );
+
+		if( is_array( $params ) ){
+			foreach( $params as $param => $value ) {
+				if ( is_array( $value ) ) {
+					$params[ $param ] = implode( '|', $value );
+				}
 			}
 		}
 
-		$this->params = $params;
+		$this->addParams( $params );
+		$this->stripBadParams();
+
 		$this->shouldBePosted = $shouldBePosted;
 		$this->maxCacheAge = $maxAge;
+	}
+
+	protected function addParams( $params ) {
+		if( is_array( $params ) ){
+			foreach( $params as $param => $value ){
+				$this->params[ $param ] = $value;
+			}
+		}
+	}
+
+	protected function addAllowedParams( $params ) {
+		$this->allowedParams = array_merge( $this->allowedParams, $params );
+	}
+
+	protected function stripBadParams(){
+		foreach( $this->params as $param => $value ){
+			if ( is_null( $value ) || ( !empty( $this->allowedParams ) && !in_array( $param, $this->allowedParams ) ) ){
+				unset( $this->params[ $param ] );
+			}
+		}
 	}
 
 	public function shouldBePosted(){

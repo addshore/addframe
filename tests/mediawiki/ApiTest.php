@@ -79,9 +79,8 @@ class ApiTest extends InjectDataTestCase{
 			array( new Addframe\Mediawiki\ApiRequest( array( 'param' => 'value' ) ) ),
 			array( new Addframe\Mediawiki\ApiRequest( array( 'param' => 'value', 'format' => 'php' ) ) ),
 			array( new Addframe\Mediawiki\ApiRequest( array( 'param' => 'value', 'param2' => 'value2' ) ) ),
-			array( new Addframe\Mediawiki\LogoutRequest(), '[]' ),
-			array( new Addframe\Mediawiki\TokensRequest(), '{"tokens":{"edittoken":"+\\"}}' ),
-			array( new Addframe\Mediawiki\TokensRequest( 'watch' ), '{"tokens":{"watchtoken":"863bb60669575ac8619662ddad5fc2ac+\\"}}' ),
+			array( new Addframe\Mediawiki\ApiRequest(), '[]' ),
+			array( new Addframe\Mediawiki\ApiRequest(), '{"tokens":{"watchtoken":"863bb60669575ac8619662ddad5fc2ac+\\"}}' ),
 		);
 	}
 

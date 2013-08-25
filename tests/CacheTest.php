@@ -60,7 +60,7 @@ class CacheTest extends PHPUnit_Framework_TestCase{
 	}
 
 	function getRandomRequest(){
-		$request = new ApiRequest( array( rand( 0, 99999999 ) ) );
+		$request = new \Addframe\Mediawiki\ApiRequest( array( 'test' => rand( 0, 99999999 ) ) );
 		$request->setResult( array( 'Note' => 'This cached result was generated in a test' ) );
 		return $request;
 	}

@@ -32,12 +32,11 @@ class ApiRequestTest extends PHPUnit_Framework_TestCase{
 	function provideConstructionData(){
 		return array(
 			//data, //post, //cacheable
-			array( ),
 			array( array() ),
-			array( array( 'param' => 'value' ) ),
-			array( array( 'param' => 'value' ), true ),
-			array( array( 'param' => 'value' ), true ),
-			array( array( 'param' => 'value', 'param2' => 'value2' ), false ),
+			array( array( 'param' => 'provideConstructionData' ) ),
+			array( array( 'param' => 'provideConstructionData' ), true ),
+			array( array( 'param' => 'provideConstructionData' ), true ),
+			array( array( 'param' => 'provideConstructionData', 'param2' => 'value2' ), false ),
 		);
 	}
 
@@ -122,7 +121,7 @@ class ApiRequestTest extends PHPUnit_Framework_TestCase{
 		$request1 = new ApiRequest( array() );
 		$request2 = new ApiRequest( array() );
 		$this->assertEquals( $request1->getHash(), $request2->getHash() );
-		$request1 = new ApiRequest( array( 'value' ) );
+		$request1 = new ApiRequest( array( 'key' => 'value' ) );
 		$request2 = new ApiRequest( array() );
 		$this->assertNotEquals( $request1->getHash(), $request2->getHash() );
 		$request1 = new ApiRequest( array( 'key' => 'SomeLongValues?afg?2rq' ) );
