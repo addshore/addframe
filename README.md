@@ -45,5 +45,5 @@ Tests
 * The bootstrap file for the tests can be found at phpunit.bootstrap.php
 * On any push, branch or pull request Travis will run all tests
 * If Travis reports failing tests please fix them :)
-* https://travis-ci.org/addshore/addwiki/builds
+* https://travis-ci.org/addwiki/addframe/builds
 * When writing new code please add tests for the code!
