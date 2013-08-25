@@ -65,36 +65,13 @@ class TokensRequest extends ApiRequest{
  * Class EditRequest action=edit
  */
 class EditRequest extends ApiRequest{
-	function __construct(
-		$title = null,
-		$pageid = null,
-		$section = null,
-		$sectiontitle = null,
-		$text = null,
-		$token = null,
-		$summary = null,
-		$minor = null,
-		$bot = null,
-		$basetimestamp = null,
-		$starttimestamp = null,
-		$recreate = null,
-		$createonly = null,
-		$nocreate = null,
-		$watchlist = null,
-		$prependtext = null,
-		$appendtext = null,
-		$undo = null,
-		$undoafter = null,
-		$redirect = null,
-		$contentformat = null,
-		$contentmodel = null
-	) {
-		$action = 'edit';
+	function __construct( $params = array() ) {
+		$params['action'] = 'edit';
 		if( !is_null( $text ) ){
-			$md5 = md5( $text );
-		} else if( !is_null( $prependtext ) && !is_null( $appendtext ) ) {
-			$md5 = md5( $prependtext . $appendtext );
+			$params['md5'] = md5( $text );
+		} else if( !is_null( $params['prependtext'] ) && !is_null( $params['appendtext'] ) ) {
+			$params['md5'] = md5( $params['prependtext'] . $params['appendtext'] );
 		}
-		parent::__construct( get_defined_vars(), true, CACHE_NONE );
+		parent::__construct( $params, true, CACHE_NONE );
 	}
 }
