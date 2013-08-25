@@ -157,7 +157,7 @@ class TestHttp extends Http{
 	/**
 	 * @param array|string $returnData as a string
 	 */
-	function __construct( $returnData = array( '' ) ) {
+	function __construct( $returnData = '' ) {
 			$this->returnData = $returnData;
 	}
 
