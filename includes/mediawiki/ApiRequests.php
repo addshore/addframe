@@ -67,9 +67,10 @@ class TokensRequest extends ApiRequest{
 class EditRequest extends ApiRequest{
 	function __construct( $params = array() ) {
 		$params['action'] = 'edit';
-		if( !is_null( $text ) ){
-			$params['md5'] = md5( $text );
-		} else if( !is_null( $params['prependtext'] ) && !is_null( $params['appendtext'] ) ) {
+		if( array_key_exists( 'text', $params ) && !is_null( $params['text'] ) ){
+			$params['md5'] = md5( $params['text'] );
+		} else if( array_key_exists( 'prependtext', $params ) && array_key_exists( 'appendtext', $params )
+			&& !is_null( $params['prependtext'] ) && !is_null( $params['appendtext'] ) ) {
 			$params['md5'] = md5( $params['prependtext'] . $params['appendtext'] );
 		}
 		parent::__construct( $params, true, CACHE_NONE );
