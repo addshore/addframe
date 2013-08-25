@@ -3,6 +3,11 @@
 use Addframe\Http;
 use Addframe\TestHttp;
 
+/**
+ * Class HttpTest
+ * @covers Addframe\Http
+ */
+
 class HttpTest extends PHPUnit_Framework_TestCase {
 
 	function testCanGetDefaultInstance(){

@@ -4,6 +4,11 @@ use Addframe\Mediawiki\Site;
 use Addframe\Mediawiki\TestApi;
 use Addframe\TestHttp;
 
+/**
+ * Class SiteTest
+ * @covers Addframe\Mediawiki\Site
+ */
+
 class SiteTest extends InjectDataTestCase {
 
 	function testCanConstruct(){

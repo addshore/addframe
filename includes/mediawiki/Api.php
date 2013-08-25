@@ -57,11 +57,15 @@ class Api {
 	public function doRequest( ApiRequest &$request, $getCache = true ) {
 		$gotCached = false;
 		if( $getCache === true && $request->maxCacheAge() > 0 ){
+			try{
 			if( Cache::has( $request ) ){
 				if( Cache::age( $request ) < $request->maxCacheAge() ){
 					$request->setResult( Cache::get( $request ) );
 					$gotCached = true;
 				}
+			}
+			} catch( \IOException $e ){
+				//log that caching had an error!
 			}
 		}
 

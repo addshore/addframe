@@ -5,6 +5,7 @@ use Addframe\Mediawiki\SiteList;
 /**
  * Tests for the SiteList class.
  * @author Addshore
+ * @covers Addframe\Mediawiki\SiteList
  */
 class SiteListTest extends PHPUnit_Framework_TestCase {
 

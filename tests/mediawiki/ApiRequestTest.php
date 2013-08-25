@@ -2,6 +2,11 @@
 
 use Addframe\Mediawiki\ApiRequest;
 
+/**
+ * Class ApiRequestTest
+ * @covers Addframe\Mediawiki\ApiRequest
+ */
+
 class ApiRequestTest extends PHPUnit_Framework_TestCase{
 
 	/**
