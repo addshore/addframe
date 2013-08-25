@@ -29,13 +29,12 @@ class ApiRequestsTest extends PHPUnit_Framework_TestCase{
 
 	function provideConstructionData(){
 		$paramArray = array( 'param' => 'value');
-		$paramString = 'paramValue';
 		return array(
 			array( 'QueryRequest', $paramArray ),
-			array( 'SiteInfoRequest', $paramString),
-			array( 'LoginRequest', $paramString),
+			array( 'SiteInfoRequest', $paramArray),
+			array( 'LoginRequest', $paramArray),
 			array( 'LogoutRequest', null),
-			array( 'TokensRequest', $paramString),
+			array( 'TokensRequest', $paramArray),
 			array( 'EditRequest', $paramArray),
 		);
 	}

@@ -13,7 +13,8 @@ use Addframe\Mediawiki\ApiRequest;
  */
 class QueryRequest extends ApiRequest{
 	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE ){
-		parent::__construct( array_merge( array( 'action' => 'query' ), $params ), $shouldBePosted, $maxAge );
+		$this->addParams( array( 'action' => 'query' ) );
+		parent::__construct( $params, $shouldBePosted, $maxAge );
 	}
 }
 
@@ -21,15 +22,10 @@ class QueryRequest extends ApiRequest{
  * Class SiteInfoRequest meta=siteinfo
  */
 class SiteInfoRequest extends QueryRequest{
-	function __construct(
-		$siprop = 'general',
-		$sifilteriw = null,
-		$sishowalldb = null,
-		$sinumberingroup = null,
-		$siinlanguagecode = null
-	) {
-		$meta = 'siteinfo';
-		parent::__construct( get_defined_vars(), false, CACHE_WEEK );
+	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_WEEK ) {
+		$this->addParams( array( 'meta' => 'siteinfo' ) );
+		$this->addAllowedParams( array( 'meta', 'siprop', 'sifilteriw', 'sishowalldb', 'sinumberingroup', 'siinlanguagecode' ) );
+		parent::__construct( $params, $shouldBePosted, $maxAge );
 	}
 }
 
@@ -37,9 +33,10 @@ class SiteInfoRequest extends QueryRequest{
  * Class LoginRequest action=login
  */
 class LoginRequest extends ApiRequest{
-	function __construct( $lgname = null, $lgpassword = null, $lgtoken = null, $lgdomain = null ) {
-		$action = 'login';
-		parent::__construct( get_defined_vars(), true, CACHE_NONE );
+	function __construct( $params = array(), $shouldBePosted = true, $maxAge = CACHE_NONE ) {
+		$this->addParams( array( 'action' => 'login' ) );
+		$this->addAllowedParams( array( 'action', 'lgname', 'lgpassword', 'lgtoken', 'lgdomain' ) );
+		parent::__construct( $params, $shouldBePosted, $maxAge );
 	}
 }
 
@@ -47,8 +44,10 @@ class LoginRequest extends ApiRequest{
  * Class LogoutRequest action=logout
  */
 class LogoutRequest extends ApiRequest{
-	function __construct( ) {
-		parent::__construct( array( 'action' => 'logout' ), false, CACHE_NONE );
+	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE  ) {
+		$this->addParams( array( 'action' => 'login' ) );
+		$this->addAllowedParams( array( 'action' ) );
+		parent::__construct( $params, $shouldBePosted, $maxAge );
 	}
 }
 
@@ -56,23 +55,28 @@ class LogoutRequest extends ApiRequest{
  * Class TokensRequest action=tokens
  */
 class TokensRequest extends ApiRequest{
-	function __construct( $type = 'edit' ) {
-		$action = 'tokens';
-		parent::__construct( get_defined_vars(), false, CACHE_HOUR );
+	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_HOUR ) {
+		$this->addParams( array( 'action' => 'tokens', 'type' => 'edit' ) );
+		$this->addAllowedParams( array( 'action', 'type' ) );
+		parent::__construct( $params, $shouldBePosted, $maxAge );
 	}
 }
 /**
  * Class EditRequest action=edit
  */
 class EditRequest extends ApiRequest{
-	function __construct( $params = array() ) {
-		$params['action'] = 'edit';
+	function __construct( $params = array(), $shouldBePosted = true, $maxAge = CACHE_NONE ) {
+		$this->addParams( array( 'action' => 'edit' ) );
+		$this->addAllowedParams( array( 'action', 'title', 'pageid', 'section', 'sectiontitle', 'text',
+			'token', 'summary', 'minor', 'notminor', 'bot', 'basetimestamp', 'starttimestamp',
+			'recreate', 'createonly', 'nocreate', 'watch', 'unwatch', 'watchlist', 'md5', 'prependtext',
+			'appendtext', 'undo', 'undoafter', 'redirect', 'contentformat', 'contentmodel' ) );
 		if( array_key_exists( 'text', $params ) && !is_null( $params['text'] ) ){
 			$params['md5'] = md5( $params['text'] );
 		} else if( array_key_exists( 'prependtext', $params ) && array_key_exists( 'appendtext', $params )
 			&& !is_null( $params['prependtext'] ) && !is_null( $params['appendtext'] ) ) {
 			$params['md5'] = md5( $params['prependtext'] . $params['appendtext'] );
 		}
-		parent::__construct( $params, true, CACHE_NONE );
+		parent::__construct( $params, $shouldBePosted, $maxAge );
 	}
 }
