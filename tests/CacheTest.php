@@ -45,15 +45,18 @@ class CacheTest extends PHPUnit_Framework_TestCase{
 
 		// remove the first result and make sure the second is still there
 		Cache::remove( $request1 );
-		$this->assertFalse( Cache::has( $request1 ) );//todo fix removing of cached results
+		$this->assertFalse( Cache::has( $request1 ) );
 		$this->assertTrue( Cache::has( $request2 ) );
 		$this->assertEquals( $request2->getResult(), Cache::get( $request2 ) );
 
 		// clear the cache and assert neither result is there
 		Cache::clear();
-		$this->assertFalse( Cache::has( $request1 ) );//todo fix removing of cached results
-		$this->assertFalse( Cache::has( $request2 ) );//todo fix removing of cached results
+		$this->assertFalse( Cache::has( $request1 ) );
+		$this->assertFalse( Cache::has( $request2 ) );
 
+		//assert get returns null if the file doesn't exist..
+		$this->assertNull( Cache::get( $request1 ) );
+		$this->assertNull( Cache::get( $request2 ) );
 	}
 
 	function getRandomRequest(){
