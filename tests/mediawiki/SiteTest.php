@@ -80,6 +80,11 @@ class SiteTest extends InjectDataTestCase {
 
 	}
 
+	function testGetApiFromHomeReturnsFalseOnNoUrl(){
+		$site = new Site();
+		$this->assertFalse( $site->getApiFromHomePage() );
+	}
+
 	/**
 	 * @dataProvider provideGetToken
 	 */
