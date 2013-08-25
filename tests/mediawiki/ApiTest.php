@@ -2,11 +2,13 @@
 
 use Addframe\Mediawiki\Api;
 use Addframe\Mediawiki\ApiRequest;
+use Addframe\Mediawiki\TestApi;
 use Addframe\TestHttp;
 
 /**
  * Class ApiTest
  * @covers Addframe\Mediawiki\Api
+ * @covers Addframe\Mediawiki\TestApi
  */
 
 class ApiTest extends InjectDataTestCase{
@@ -128,6 +130,35 @@ class ApiTest extends InjectDataTestCase{
 		//we should now get the new data!
 		$api->doRequest( $request );
 		$this->assertEquals( array( 'NEW RESULT' ) , $request->getResult() );
+	}
+
+	function testTestApiWithArray(){
+		$expected1 = array( 'testTestApi array1' );
+		$expected2 = array( 'testTestApi array2' );
+		$testApi = new TestApi( array( json_encode( $expected1 ), json_encode( $expected2 ) ) );
+		$request = new Addframe\Mediawiki\ApiRequest();
+
+		$result = $testApi->doRequest( $request, false );
+		$this->assertEquals( $expected1, $result );
+		$this->assertEquals( $expected1, $request->getResult() );
+
+		$result = $testApi->doRequest( $request, false );
+		$this->assertEquals( $expected2, $result );
+		$this->assertEquals( $expected2, $request->getResult() );
+	}
+
+	function testTestApiWithString(){
+		$expected = array( 'testTestApi string' );
+		$testApi = new TestApi( json_encode( $expected ) );
+
+		$request = new Addframe\Mediawiki\ApiRequest();
+		$result = $testApi->doRequest( $request, false );
+		$this->assertEquals( $expected, $result );
+		$this->assertEquals( $expected, $request->getResult() );
+
+		$result = $testApi->doRequest( $request, false );
+		$this->assertEquals( $expected, $result );
+		$this->assertEquals( $expected, $request->getResult() );
 	}
 
 }

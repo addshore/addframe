@@ -100,27 +100,23 @@ class Api {
  */
 class TestApi extends Api{
 
-	protected $testResult;
+	protected $returnData;
 
 	/**
 	 * @param array|string $returnData array of data to return in json form
 	 */
-	function __construct( $returnData = array( '' ) ) {
-		if( is_string( $returnData ) ){
-			$this->testResult = array( $returnData );
-		} else {
-			$this->testResult = $returnData;
-		}
+	function __construct( $returnData = '' ) {
+			$this->returnData = $returnData;
 	}
 
 	/**
 	 * Returns the data defined in the constructor
 	 */
 	public function doRequest( ApiRequest &$request, $getCache = null) {
-		if( is_array( $this->testResult ) ){
-			$testResult = array_shift( $this->testResult );
+		if( is_array( $this->returnData ) ){
+			$testResult = array_shift( $this->returnData );
 		} else {
-			$testResult = $this->testResult;
+			$testResult = $this->returnData;
 		}
 		$request->setResult( json_decode( $testResult, true ) );
 		return $request->getResult();
