@@ -22,6 +22,24 @@ class SiteListTest extends PHPUnit_Framework_TestCase {
 			get_class( $site ) . ' is of wrong class, expecting '.$sites->getObjectType() );
 	}
 
+	/**
+	 * @dataProvider provideUnstorableValues
+	 */
+	public function testExceptionOnWrongType( $data ){
+		$this->setExpectedException( 'InvalidArgumentException' );
+		$sites = new SiteList();
+		$sites->append( $data );
+	}
+
+	function provideUnstorableValues(){
+		return array(
+			array( array() ),
+			array( 'imastring' ),
+			array( 123 ),
+			array( new Exception() ),
+		);
+	}
+
 	public function testSiteList(){
 		$sites = new SiteList();
 
