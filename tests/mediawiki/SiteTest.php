@@ -9,7 +9,7 @@ use Addframe\TestHttp;
  * @covers Addframe\Mediawiki\Site
  */
 
-class SiteTest extends MediawikiTestCase {
+class SiteTest extends MediawikiTestCase{
 
 	function testCanConstruct(){
 		$site = new Site();

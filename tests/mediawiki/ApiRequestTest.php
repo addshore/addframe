@@ -7,7 +7,7 @@ use Addframe\Mediawiki\ApiRequest;
  * @covers Addframe\Mediawiki\ApiRequest
  */
 
-class ApiRequestTest extends DefaultTestCase{
+class ApiRequestTest extends MediawikiTestCase{
 
 	/**
 	 * @dataProvider provideConstructionData
