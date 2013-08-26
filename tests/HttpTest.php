@@ -49,11 +49,11 @@ class HttpTest extends DefaultTestCase {
 		);
 	}
 
-	function testGettingNonExistantUrlReturnsFalse(){
+	function testGettingInvalidUrlReturnsFalse(){
 		$http = new Http();
-		$getResult = $http->get( 'http://afsdhyugijohgyuahjicnakjnfvagag.djfakggas' );
+		$getResult = $http->get( '2387ry389t32u89tu*(&$HE98rh98' );
 		$this->assertFalse( $getResult );
-		$getResult = $http->post( 'http://afsdhyugijohgyuahjicnakjnfvagag.djfakggas', array() );
+		$getResult = $http->post( '2387ry389t32u89tu*(&$HE98rh98', array() );
 		$this->assertFalse( $getResult );
 	}
 
