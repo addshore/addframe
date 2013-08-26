@@ -12,18 +12,10 @@ use Addframe\Logger;
 
 class LoggerTest extends DefaultTestCase{
 
-	protected static $logLabel = 'testLog';
-
-	static function getExpectedPath( ){
-		return __DIR__.'/../log/'.self::$logLabel.'/'.date( 'Y-m-d' ) . '.txt';
-	}
-	static function getFile( ){
-		return file_get_contents( self::getExpectedPath() );
-	}
-
 	protected function setUp() {
 		parent::setUp();
 
+		//Delete any files that already exist
 		if( file_exists( self::getExpectedPath( self::$logLabel ) ) ){
 			unlink( self::getExpectedPath( self::$logLabel ) );
 		}
@@ -33,10 +25,37 @@ class LoggerTest extends DefaultTestCase{
 	protected function tearDown() {
 		parent::tearDown();
 
+		//Make the logger close the files
 		Logger::_destruct();
+
+		//Delete the files
+		if( file_exists( self::getExpectedPath( self::$logLabel ) ) ){
+			unlink( self::getExpectedPath( self::$logLabel ) );
+		}
+
 	}
 
-	//Tests are below this line ---------------
+	public static function tearDownAfterClass(){
+		parent::tearDownAfterClass();
+
+		//Delete the logger folder we created
+		if( file_exists( __DIR__.'/../log/'.self::$logLabel ) ){
+			rmdir( __DIR__.'/../log/'.self::$logLabel );
+		}
+
+	}
+
+	//Tests are below this line -----------------------------------
+
+	protected static $logLabel = 'testLog';
+
+	static function getExpectedPath( ){
+		return __DIR__.'/../log/'.self::$logLabel.'/'.date( 'Y-m-d' ) . '.txt';
+	}
+
+	static function getFile( ){
+		return file_get_contents( self::getExpectedPath() );
+	}
 
 	function testAllLogMethodsInDebug(){
 		$this->assertFileNotExists( self::getExpectedPath( self::$logLabel ) );
