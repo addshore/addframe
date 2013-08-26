@@ -4,7 +4,6 @@ namespace Addframe\Mediawiki;
 
 /**
  * Class SiteList
- * @package Addframe\Mediawiki
  * @license GNU GPL v2+
  * @author Jeroen De Dauw < jeroendedauw@gmail.com >
  * @author Addshore

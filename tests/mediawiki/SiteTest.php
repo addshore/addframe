@@ -59,11 +59,13 @@ class SiteTest extends MediawikiTestCase{
 	}
 
 	function provideGetApiUrl(){
+		//a section of html from below and after the api url..
 		$before = '<link rel="search" type="application/opensearchdescription+xml" href="/mediawiki/opensearch_desc.php"'.
 			' title="Local Test Wiki (en-gb)" />'."\n".'<link rel="EditURI" type="application/rsd+xml" href="';
 		$after = '?action=rsd" />'."\n".'<link rel="alternate" type="application/atom+xml" title="Local Test Wiki Atom feed'.
 			'" href="/mediawiki/index.php?title=Special:RecentChanges&amp;feed=atom" />';
 
+		//a few different possible api locations
 		$apiLocations = Array(
 			'http://localhost/mediawiki/api.php',
 			'https://en.wikipedia.org/w/api.php',
@@ -71,13 +73,12 @@ class SiteTest extends MediawikiTestCase{
 			'http://127.0.0.1/api.php',
 		);
 
+		//construct and return an array of possible chunks of html combining the above
 		$toReturn = array();
 		foreach( $apiLocations as $apiUrl ){
 			$toReturn[] = array( $apiUrl, $before.$apiUrl.$after );
 		}
-
 		return $toReturn;
-
 	}
 
 	function testGetApiFromHomeReturnsFalseOnNoUrl(){

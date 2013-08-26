@@ -155,10 +155,8 @@ class Http {
 
 }
 
-
 /**
  * Class TestHttp, Overrides used methods in HTTP so we can return some default data
- * @package Addframe
  */
 class TestHttp extends Http{
 

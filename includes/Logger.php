@@ -12,6 +12,11 @@ namespace Addframe;
  * @version 0.2.0
  *
  * @author Addshore ( Modified for use with Addframe )
+ *
+ * @todo currently this class keeps log files open (see further comment below)
+ * 		this is bad if we want to run multiple scripts at the same time!
+ * 		We should think of a better way of handling this.
+ * 		maybe there is a nice way to efficiently append a line to a file..
  */
 
 class Logger {

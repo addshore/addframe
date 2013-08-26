@@ -5,8 +5,7 @@ namespace Addframe\Mediawiki;
 use Addframe\Http;
 
 /**
- * Class Site - Represents a mediawiki site
- * @package Addframe\Mediawiki
+ * Class Site - Represents a Mediawiki site
  */
 
 class Site {
@@ -36,14 +35,23 @@ class Site {
 
 	}
 
+	/**
+	 * @param $url string url of the site
+	 */
 	public function setUrl( $url ){
 		$this->url = $url;
 	}
 
+	/**
+	 * @return null|string current set url for the site
+	 */
 	public function getUrl(){
 		return $this->url;
 	}
 
+	/**
+	 * @param $api Api
+	 */
 	public function setApi( $api ){
 		$this->api = $api;
 	}
@@ -95,7 +103,7 @@ class Site {
 	}
 
 	/**
-	 * Gets a list of all availible tokens
+	 * Gets a list of all available tokens
 	 * @return array of all available tokens
 	 */
 	public function getTokenList(){
@@ -120,6 +128,14 @@ class Site {
 		return null;
 	}
 
+	/**
+	 * Log in to the site
+	 * @param $username string username to log in with
+	 * @param $password string password to log in with
+	 * @param null $token token to log in with (if none is set we will get one within)
+	 * @return bool|null success of the login (null if unknown)
+	 * @throws \Exception
+	 */
 	public function login( $username, $password, $token = null){
 		$request = new LoginRequest( $username, $password, $token );
 		$result = $this->getApi()->doRequest( $request );
@@ -130,6 +146,8 @@ class Site {
 		} else if( array_key_exists( 'login', $result ) && array_key_exists( 'result', $result['login'] ) && $result['login']['result'] == 'WrongToken' ){
 			throw new \Exception( "API reported WrongToken when trying to login" );
 		}
+		return null;
+		//todo catch all other possible errors for logging in
 	}
 
 }

@@ -3,7 +3,10 @@
 namespace Addframe;
 
 /**
- * Class for basic caching of objects in files
+ * Class for basic caching
+ *
+ * This allows caching of data from Cachable objects
+ * the data is identified by a hash from the object
  **/
 
 class Cache {
@@ -89,7 +92,7 @@ class Cache {
 
 	/**
 	 * @param Cacheable $item
-	 * @return string path to the cache file for the item
+	 * @return string Path to the cache file for the item
 	 */
 	protected static function getPath( Cacheable $item ){
 		return __DIR__.'/../cache/'.self::$prefix.$item->getHash();
