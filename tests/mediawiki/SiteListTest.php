@@ -7,7 +7,7 @@ use Addframe\Mediawiki\SiteList;
  * @author Addshore
  * @covers Addframe\Mediawiki\SiteList
  */
-class SiteListTest extends PHPUnit_Framework_TestCase {
+class SiteListTest extends DefaultTestCase {
 
 	public function testGetObjectType() {
 		$sites = new SiteList();

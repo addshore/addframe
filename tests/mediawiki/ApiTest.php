@@ -11,7 +11,7 @@ use Addframe\TestHttp;
  * @covers Addframe\Mediawiki\TestApi
  */
 
-class ApiTest extends InjectDataTestCase{
+class ApiTest extends MediawikiTestCase{
 
 	function testCanConstruct( ){
 		$api = new Api( );
