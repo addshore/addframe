@@ -43,9 +43,9 @@ class HttpTest extends DefaultTestCase {
 	function provideDataToEncode(){
 		return array(
 			//to encode, //encoded
-			array( array( 'key' => 'value' ), 'key=value&' ),
-			array( array( 'key_12' => 'value spaced' ), 'key_12=value+spaced&' ),
-			array( array( 'chars' => '&&$$""' ), 'chars=%26%26%24%24%22%22&' ),
+			array( array( 'key' => 'value' ), 'key=value' ),
+			array( array( 'key_12' => 'value spaced' ), 'key_12=value+spaced' ),
+			array( array( 'chars' => '&&$$""' ), 'chars=%26%26%24%24%22%22' ),
 		);
 	}
 

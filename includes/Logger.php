@@ -257,6 +257,10 @@ class Logger {
 	 * @return void
 	 */
 	public static function writeLine( $line, $label = 'log' ) {
+		if ( self::$isSetup === false ) {
+			self::setup();
+		}
+
 		if( !array_key_exists( $label, self::$fileHandles ) || !array_key_exists( $label, self::$severityThresholds ) ){
 			throw new \UnexpectedValueException ( "Log file for label {$label} has not bee setup" );
 		}

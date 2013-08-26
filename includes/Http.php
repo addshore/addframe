@@ -30,7 +30,7 @@ class Http {
 				$vars .= $this->encodeData( $value, $keyprefix . $key . $keypostfix . urlencode( "[" ), urlencode( "]" ) ); else
 				$vars .= $keyprefix . $key . $keypostfix . "=" . urlencode( $value ) . "&";
 		}
-		return $vars;
+		return trim( $vars , '&' );
 	}
 
 
@@ -82,8 +82,14 @@ class Http {
 		curl_setopt( $this->ch, CURLOPT_CONNECTTIMEOUT, 10 );
 		curl_setopt( $this->ch, CURLOPT_POST, 1 );
 		curl_setopt( $this->ch, CURLOPT_POSTFIELDS, $data );
-		$data = curl_exec( $this->ch );
-		return $data;
+		$result = curl_exec( $this->ch );
+		if( curl_errno ( $this->ch ) === 0 ){
+			return $result;
+		} else {
+			//todo catch timeout and retry
+			Logger::logError( 'Http post curl unexpected error code '.curl_errno ( $this->ch )." for {$url}?".self::encodeData($data) );
+			return false;
+		}
 	}
 
 	/**
@@ -110,8 +116,14 @@ class Http {
 		curl_setopt( $this->ch, CURLOPT_TIMEOUT, 30 );
 		curl_setopt( $this->ch, CURLOPT_CONNECTTIMEOUT, 10 );
 		curl_setopt( $this->ch, CURLOPT_HTTPGET, 1 );
-		$data = curl_exec( $this->ch );
-		return $data;
+		$result = curl_exec( $this->ch );
+		if( curl_errno ( $this->ch ) === 0 ){
+			return $result;
+		} else {
+			//todo cacth timeout and retry
+			Logger::logError( 'Http get curl unexpected error code '.curl_errno ( $this->ch )." for {$url}" );
+			return false;
+		}
 	}
 
 	/**
