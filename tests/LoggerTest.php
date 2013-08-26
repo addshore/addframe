@@ -109,7 +109,9 @@ class LoggerTest extends DefaultTestCase{
 		}
 		$this->assertFileNotExists( self::getExpectedPath( self::$logLabel ) );
 
-		Logger::setupLog( self::$logLabel, Logger::OFF );
+		Logger::setDefaultSeverityThreshold( Logger::OFF );
+
+		Logger::setupLog( self::$logLabel );
 		$this->assertFileExists( self::getExpectedPath( self::$logLabel ) );
 
 		$testString = "testAllLogMethodsInDebug";

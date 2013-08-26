@@ -57,6 +57,7 @@ class Logger {
 	 * @var LoggerDestructor
 	 */
 	private static $destructorInstance;
+	private static $defaultSeverityThreshold = Logger::INFO;
 
 	/**
 	 * Class init
@@ -93,6 +94,10 @@ class Logger {
 		self::$isSetup = false;
 	}
 
+	public static function setDefaultSeverityThreshold( $severity ){
+		self::$defaultSeverityThreshold = $severity;
+	}
+
 	/**
 	 * setupLog
 	 *
@@ -101,11 +106,15 @@ class Logger {
 	 * @throws \IOException
 	 * @return Logger
 	 */
-	public static function setupLog( $label = 'log', $severity = Logger::INFO ) {
+	public static function setupLog( $label = 'log', $severity = null ) {
 		if ( ! array_key_exists( $label, self::$fileHandles ) ) {
 
 			if ( self::$isSetup === false ) {
 				self::setup();
+			}
+
+			if( is_null( $severity ) ){
+				$severity = self::$defaultSeverityThreshold;
 			}
 
 			if ( $label === 'log' ) {
