@@ -1,16 +1,14 @@
 <?php
 
-/**
- * This test will take 2+ seconds due to sleeps included
- * todo would be nice to split this test up a bit...
- */
-
 use Addframe\Mediawiki\ApiRequest;
 use Addframe\Cache;
 
 /**
  * Class CacheTest
  * @covers Addframe\Cache
+ *
+ * This test will take 2+ seconds due to sleeps included
+ * todo we should probably split this test up a bit rather than having 1 big test method
  */
 
 class CacheTest extends DefaultTestCase{
@@ -59,6 +57,11 @@ class CacheTest extends DefaultTestCase{
 		$this->assertNull( Cache::get( $request2 ) );
 	}
 
+	/**
+	 * Gets an API request using a random number as a param value
+	 * This means the request should have a vaguely unique hash compared to others used in this test
+	 * @return ApiRequest
+	 */
 	function getRandomRequest(){
 		$request = new \Addframe\Mediawiki\ApiRequest( array( 'test' => rand( 0, 99999999 ) ) );
 		$request->setResult( array( 'Note' => 'This cached result was generated in a test' ) );
