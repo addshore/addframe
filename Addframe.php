@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe;
+
 spl_autoload_register( function ( $className ) {
 	static $classes = false;
 

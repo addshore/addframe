@@ -8,6 +8,7 @@ return call_user_func( function() {
 		'Addframe\Http' => 'Http.php',
 		'Addframe\Cache' => 'Cache.php',
 		'Addframe\Cacheable' => 'Cacheable.php',
+		'Addframe\Logger' => 'Logger.php',
 
 		'Addframe\Mediawiki\Site' => 'mediawiki/Site.php',
 		'Addframe\Mediawiki\Api' => 'mediawiki/Api.php',
