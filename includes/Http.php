@@ -18,17 +18,15 @@ class Http {
 
 	/**
 	 * @param $data array of data to be encoded
-	 * @param string $keyprefix
-	 * @param string $keypostfix
 	 * @return null|string
 	 */
-	public function encodeData( $data, $keyprefix = "", $keypostfix = "" ) {
+	public function encodeData( $data ) {
 		assert( is_array( $data ) );
 		$vars = null;
 		foreach ( $data as $key => $value ) {
 			if ( is_array( $value ) )
-				$vars .= $this->encodeData( $value, $keyprefix . $key . $keypostfix . urlencode( "[" ), urlencode( "]" ) ); else
-				$vars .= $keyprefix . $key . $keypostfix . "=" . urlencode( $value ) . "&";
+				$vars .= $this->encodeData( $value, $key . urlencode( "[" ), urlencode( "]" ) ); else
+				$vars .= $key . "=" . urlencode( $value ) . "&";
 		}
 		return trim( $vars , '&' );
 	}
