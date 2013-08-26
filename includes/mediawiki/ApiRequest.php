@@ -14,7 +14,6 @@ const CACHE_NONE = 0;
 
 /**
  * Class ApiRequest representing a single api request
- * @package Addframe\Mediawiki
  */
 
 class ApiRequest implements Cacheable{
@@ -44,16 +43,20 @@ class ApiRequest implements Cacheable{
 	 * @param bool|int $maxAge should be cache / how long to cache for in seconds
 	 */
 	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE ) {
-		// Only restrict params if a child class has said we should
-		// This means that this class can be used to perform requests with ANY params
+
+		// Only restrict params if a child class has said we should (ie we have some allowed params already set)
+		// This means that this class can be used to perform requests with ANY params if it is not extended
 		if( count( $this->allowedParams ) !== 0 ){
 			$this->addAllowedParams( array( 'format' ) );
 		}
 
+		// Mediawiki is apparently moving towards json only, so lets just use it...
 		$this->addParams( array( 'format' => 'json' ) );
+
 
 		if( is_array( $params ) ){
 			foreach( $params as $param => $value ) {
+				// If one of the param values is an array, implode it to the form used by the api
 				if ( is_array( $value ) ) {
 					$params[ $param ] = implode( '|', $value );
 				}
@@ -61,24 +64,38 @@ class ApiRequest implements Cacheable{
 		}
 
 		$this->addParams( $params );
-		$this->stripBadParams();
-
 		$this->shouldBePosted = $shouldBePosted;
 		$this->maxCacheAge = $maxAge;
 	}
 
+	/**
+	 * Add each param to our array
+	 * We don't want to set the array to $params in case other params have already been set (hence 'add' not 'set')
+	 * @param $params array
+	 */
 	protected function addParams( $params ) {
 		if( is_array( $params ) ){
 			foreach( $params as $param => $value ){
 				$this->params[ $param ] = $value;
 			}
 		}
+		$this->stripBadParams();
 	}
 
+	/**
+	 * Add paramaters that are allowed to an array to be used in later validation / tidyup
+	 * @param $params array
+	 */
 	protected function addAllowedParams( $params ) {
 		$this->allowedParams = array_merge( $this->allowedParams, $params );
 	}
 
+	/**
+	 * Remove null or not allowed params
+	 * In a perfect world we shouldn't remove null params as they can be used for bot flags etc
+	 * for now we will just have to set the bot flag to '1' instead
+	 * todo now that the higherlevel requests accept an array of params we can likely allow null params again
+	 */
 	protected function stripBadParams(){
 		foreach( $this->params as $param => $value ){
 			if ( is_null( $value ) || ( !empty( $this->allowedParams ) && !in_array( $param, $this->allowedParams ) ) ){
@@ -87,22 +104,39 @@ class ApiRequest implements Cacheable{
 		}
 	}
 
+	/**
+	 * @return bool should this request be posted
+	 */
 	public function shouldBePosted(){
 		return $this->shouldBePosted;
 	}
 
+	/**
+	 * @return array of set parameters
+	 */
 	public function getParameters(){
 		return $this->params;
 	}
 
+	/**
+	 * @param $param string param name
+	 * @param $value string param value
+	 * todo setting a param should check if value is an array and put it into a form used by the api
+	 */
 	public function setParameter( $param, $value ) {
 		$this->params[ $param ] = $value;
 	}
 
+	/**
+	 * @return mixed|null the result of the request
+	 */
 	public function getResult(){
 		return $this->result;
 	}
 
+	/**
+	 * @param $result mixed the result of the request (used to register the result)
+	 */
 	public function setResult( $result ){
 		$this->result = $result;
 	}

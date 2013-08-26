@@ -6,12 +6,20 @@ use Addframe\Mediawiki\ApiRequest;
 
 /**
  * This file contains classes for all api functions in the core of mediawiki
+ *
+ * These classes should all be derived from ApiRequest
+ * These classes should 'only' contain a constructor
+ *
+ * These constructors should:
+ * - specify the default POST and CACHE params
+ * - add any api request params it can / should
  */
 
 /**
  * Class QueryRequest action=query
  */
 class QueryRequest extends ApiRequest{
+
 	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE ){
 		$this->addParams( array( 'action' => 'query' ) );
 		parent::__construct( $params, $shouldBePosted, $maxAge );
@@ -22,6 +30,7 @@ class QueryRequest extends ApiRequest{
  * Class SiteInfoRequest meta=siteinfo
  */
 class SiteInfoRequest extends QueryRequest{
+
 	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_WEEK ) {
 		$this->addParams( array( 'meta' => 'siteinfo' ) );
 		$this->addAllowedParams( array( 'meta', 'siprop', 'sifilteriw', 'sishowalldb', 'sinumberingroup', 'siinlanguagecode' ) );
@@ -33,6 +42,7 @@ class SiteInfoRequest extends QueryRequest{
  * Class LoginRequest action=login
  */
 class LoginRequest extends ApiRequest{
+
 	function __construct( $params = array(), $shouldBePosted = true, $maxAge = CACHE_NONE ) {
 		$this->addParams( array( 'action' => 'login' ) );
 		$this->addAllowedParams( array( 'action', 'lgname', 'lgpassword', 'lgtoken', 'lgdomain' ) );
@@ -44,6 +54,7 @@ class LoginRequest extends ApiRequest{
  * Class LogoutRequest action=logout
  */
 class LogoutRequest extends ApiRequest{
+
 	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE  ) {
 		$this->addParams( array( 'action' => 'login' ) );
 		$this->addAllowedParams( array( 'action' ) );
@@ -55,6 +66,7 @@ class LogoutRequest extends ApiRequest{
  * Class TokensRequest action=tokens
  */
 class TokensRequest extends ApiRequest{
+
 	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_HOUR ) {
 		$this->addParams( array( 'action' => 'tokens', 'type' => 'edit' ) );
 		$this->addAllowedParams( array( 'action', 'type' ) );
@@ -65,12 +77,15 @@ class TokensRequest extends ApiRequest{
  * Class EditRequest action=edit
  */
 class EditRequest extends ApiRequest{
+
 	function __construct( $params = array(), $shouldBePosted = true, $maxAge = CACHE_NONE ) {
 		$this->addParams( array( 'action' => 'edit' ) );
-		$this->addAllowedParams( array( 'action', 'title', 'pageid', 'section', 'sectiontitle', 'text',
-			'token', 'summary', 'minor', 'notminor', 'bot', 'basetimestamp', 'starttimestamp',
-			'recreate', 'createonly', 'nocreate', 'watch', 'unwatch', 'watchlist', 'md5', 'prependtext',
-			'appendtext', 'undo', 'undoafter', 'redirect', 'contentformat', 'contentmodel' ) );
+		$this->addAllowedParams(
+			array( 'action', 'title', 'pageid', 'section', 'sectiontitle', 'text', 'token', 'summary', 'minor',
+				'notminor', 'bot', 'basetimestamp', 'starttimestamp', 'recreate', 'createonly', 'nocreate', 'watch',
+				'unwatch', 'watchlist', 'md5', 'prependtext', 'appendtext', 'undo', 'undoafter', 'redirect',
+				'contentformat', 'contentmodel' ) );
+
 		if( array_key_exists( 'text', $params ) && !is_null( $params['text'] ) ){
 			$params['md5'] = md5( $params['text'] );
 		} else if( array_key_exists( 'prependtext', $params ) && array_key_exists( 'appendtext', $params )

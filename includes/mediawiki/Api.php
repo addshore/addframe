@@ -8,7 +8,6 @@ use Addframe\Logger;
 
 /**
  * Class Api representing a Mediawiki API
- * @package Addframe\Mediawiki
  */
 
 class Api {
@@ -30,10 +29,16 @@ class Api {
 		}
 	}
 
+	/**
+	 * @param $url string
+	 */
 	public function setUrl( $url ) {
 		$this->url = $url;
 	}
 
+	/**
+	 * @return mixed string
+	 */
 	public function getUrl() {
 		return $this->url;
 	}
@@ -89,9 +94,21 @@ class Api {
 		return $request->getResult();
 	}
 
+	/**
+	 * Do a request with a token
+	 * @param ApiRequest $request
+	 * @param string $tokenType
+	 * @param bool $getCache
+	 * @return Array
+	 */
 	public function doRequestWithToken( ApiRequest &$request, $tokenType = 'edittoken', $getCache = true ) {
-		//todo the above hackery makes me think api and site should be the same class
+		//todo the below hackery makes me think api and site should be the same class
 		//todo then we could use getToken('edit') instead...
+
+		/**
+		 * getting the tokens in this way should be okay as caching should mean that we
+		 * do not actually make a new request to the api for a token each time...
+		 */
 		$tokenResult = $this->doRequest( new TokensRequest( $tokenType ), $getCache );
 		$request->setParameter( 'token', $tokenResult['tokens'][$tokenType] );
 		return $this->doRequest( $request, false );
@@ -101,7 +118,6 @@ class Api {
 
 /**
  * Class TestApi, Overrides used methods in Api so we can return some default data
- * @package Addframe
  */
 class TestApi extends Api{
 
