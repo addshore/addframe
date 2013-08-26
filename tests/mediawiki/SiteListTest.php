@@ -7,7 +7,7 @@ use Addframe\Mediawiki\SiteList;
  * @author Addshore
  * @covers Addframe\Mediawiki\SiteList
  */
-class SiteListTest extends DefaultTestCase {
+class SiteListTest extends MediawikiTestCase{
 
 	public function testGetObjectType() {
 		$sites = new SiteList();

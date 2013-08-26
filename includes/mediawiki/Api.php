@@ -4,6 +4,7 @@ namespace Addframe\Mediawiki;
 
 use Addframe\Cache;
 use Addframe\Http;
+use Addframe\Logger;
 
 /**
  * Class Api representing a Mediawiki API
@@ -65,7 +66,7 @@ class Api {
 				}
 			}
 			} catch( \IOException $e ){
-				//log that caching had an error!
+				Logger::logError( $e->getMessage() );
 			}
 		}
 
@@ -77,7 +78,11 @@ class Api {
 				$request->setResult( json_decode( $this->http->get( $requestUrl ), true ) );
 			}
 			if( $gotCached === false && $request->maxCacheAge() > 0 ){
-				Cache::add( $request );
+				try{
+					Cache::add( $request );
+				} catch( \IOException $e ){
+					Logger::logError( $e->getMessage() );
+				}
 			}
 		}
 

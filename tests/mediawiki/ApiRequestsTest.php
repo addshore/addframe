@@ -9,7 +9,7 @@
  * @covers Addframe\Mediawiki\TokensRequest
  * @covers Addframe\Mediawiki\EditRequest
  */
-class ApiRequestsTest extends DefaultTestCase{
+class ApiRequestsTest extends MediawikiTestCase{
 
 	/**
 	 * @dataProvider provideConstructionData
