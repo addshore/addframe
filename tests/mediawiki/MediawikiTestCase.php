@@ -1,10 +1,9 @@
 <?php
 
-
 /**
- * Class InjectDataTestCase adding some extra functions
+ * Class MediawikiTestCase adding some extra functions
  */
-class InjectDataTestCase extends PHPUnit_Framework_TestCase {
+class MediawikiTestCase extends DefaultTestCase {
 
 	/**
 	 * @param $path string of data to get

@@ -13,7 +13,7 @@ use Addframe\Cache;
  * @covers Addframe\Cache
  */
 
-class CacheTest extends PHPUnit_Framework_TestCase{
+class CacheTest extends DefaultTestCase{
 
 	function testCacheTrip(){
 		// setup 2 requests

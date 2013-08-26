@@ -7,7 +7,7 @@ use Addframe\Mediawiki\ApiRequest;
  * @covers Addframe\Mediawiki\ApiRequest
  */
 
-class ApiRequestTest extends PHPUnit_Framework_TestCase{
+class ApiRequestTest extends DefaultTestCase{
 
 	/**
 	 * @dataProvider provideConstructionData

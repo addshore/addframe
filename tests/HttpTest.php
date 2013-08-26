@@ -9,7 +9,7 @@ use Addframe\TestHttp;
  * @covers Addframe\TestHttp
  */
 
-class HttpTest extends PHPUnit_Framework_TestCase {
+class HttpTest extends DefaultTestCase {
 
 	function testCanGetDefaultInstance(){
 		$http = Http::getDefaultInstance();
