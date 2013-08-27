@@ -31,8 +31,8 @@ class LoggerTest extends DefaultTestCase{
 	protected function tearDown() {
 		parent::tearDown();
 
-		//Make the logger close the files
-		Logger::_destruct();
+		//Make the logger resets
+		Logger::_reset();
 
 		//Delete the files
 		if( file_exists( self::getExpectedPath( self::$logLabel ) ) ){

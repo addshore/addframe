@@ -13,10 +13,6 @@ namespace Addframe;
  *
  * @author Addshore ( Modified for use with Addframe )
  *
- * @todo currently this class keeps log files open (see further comment below)
- * 		this is bad if we want to run multiple scripts at the same time!
- * 		We should think of a better way of handling this.
- * 		maybe there is a nice way to efficiently append a line to a file..
  */
 
 class Logger {
@@ -52,30 +48,21 @@ class Logger {
 	 */
 	private static $severityThresholds = array();
 	/**
-	 * This holds the file handle for logs identified by label
+	 * This holds the file paths for logs identified by label
 	 * @var resource[]
 	 */
-	private static $fileHandles = array();
+	private static $filePaths = array();
 	/**
 	 * This is the default severityThreshold for newly created logs
 	 * @var int
 	 */
 	private static $defaultSeverityThreshold = Logger::INFO;
-	/**
-	 * Destructor instance
-	 * @var LoggerDestructor
-	 */
-	private static $destructorInstance;
 
 	/**
 	 * Get the class ready to use, Called automatically from within this class
 	 */
 	private static function setup() {
 		if ( self::$isSetup === false ) {
-
-			//get the instance we will use for deconstruction
-			if ( null === self::$destructorInstance )
-				self::$destructorInstance = new LoggerDestructor();
 
 			//set up our log directory
 			self::$logDirectory = __DIR__ . '/../log';
@@ -91,15 +78,11 @@ class Logger {
 	}
 
 	/**
-	 * Class destructor, closes all files and resets any changed vars
+	 * Resets Class defaults, resets any changed vars
 	 */
-	public static function _destruct() {
-		foreach ( self::$fileHandles as $handle ) {
-			fclose( $handle );
-		}
-		self::$fileHandles = array();
+	public static function _reset() {
+		self::$filePaths = array();
 		self::$severityThresholds = array();
-		self::$destructorInstance = null;
 		self::$isSetup = false;
 	}
 
@@ -119,7 +102,7 @@ class Logger {
 	 * @throws \IOException
 	 */
 	public static function setupLog( $label = 'log', $severity = null ) {
-		if ( ! array_key_exists( $label, self::$fileHandles ) ) {
+		if ( ! array_key_exists( $label, self::$filePaths ) ) {
 
 			//make sure the class is ready
 			if ( self::$isSetup === false ) {
@@ -135,22 +118,28 @@ class Logger {
 			if ( $label === 'log' ) {
 				$logFilePath = self::$logDirectory . '/' . date( 'Y-m-d' ) . '.txt';
 			} else {
-				if ( ! file_exists( self::$logDirectory . '/' . $label ) ) {
-					mkdir( self::$logDirectory . '/' . $label, 0777, true );
+				$logFileDirectory = self::$logDirectory . '/' . $label;
+				if ( ! file_exists( $logFileDirectory ) ) {
+					if( mkdir( $logFileDirectory, 0777, true ) === false ){
+						throw new \IOException( 'Failed to make directory ' . $logFileDirectory );
+					}
 				}
-				$logFilePath = self::$logDirectory . '/' . $label . '/' . date( 'Y-m-d' ) . '.txt';
+				$logFilePath = $logFileDirectory . '/' . date( 'Y-m-d' ) . '.txt';
 			}
 
-			if ( file_exists( $logFilePath ) && ! is_writable( $logFilePath ) ) {
-				throw new \IOException( "Can not write to log path {$logFilePath}" );
+			//create the log file if it doesn't exist (even if we end up not using it)
+			if ( !file_exists( $logFilePath ) ){
+				if( file_put_contents( $logFilePath, '', FILE_APPEND ) === false ){
+					throw new \IOException( "Can not create log path {$logFilePath}" );
+				}
 			}
 
-			if ( ( $fileHandle = fopen( $logFilePath, 'a' ) ) ) {
+			if ( !( file_exists( $logFilePath ) && ! is_writable( $logFilePath ) ) ) {
 				//register this log
 				self::$severityThresholds[$label] = $severity;
-				self::$fileHandles[$label] = $fileHandle;
+				self::$filePaths[$label] = $logFilePath;
 			} else {
-				throw new \IOException( "Can not open log path {$logFilePath}" );
+				throw new \IOException( "Can not write to log path {$logFilePath}" );
 			}
 		}
 	}
@@ -171,7 +160,7 @@ class Logger {
 		}
 
 		//make sure the log is ready
-		if( !array_key_exists( $label, self::$fileHandles ) || !array_key_exists( $label, self::$severityThresholds ) ){
+		if( !array_key_exists( $label, self::$filePaths ) || !array_key_exists( $label, self::$severityThresholds ) ){
 			throw new \UnexpectedValueException ( "Log file for label {$label} has not bee setup" );
 		}
 
@@ -289,7 +278,7 @@ class Logger {
 	private static function writeLine( $line, $label = 'log' ) {
 		//make sure logging is not turned off
 		if ( self::$severityThresholds[ $label ] !== self::OFF ) {
-			if ( fwrite( self::$fileHandles[$label], $line ) === false ) {
+			if ( file_put_contents(self::$filePaths[ $label ], $line, FILE_APPEND) === false ) {
 				throw new \IOException( "Failed to write log to the log file for label {$label}" );
 			}
 		}
@@ -325,15 +314,5 @@ class Logger {
 			default:
 				return "$time - LOG -->";
 		}
-	}
-}
-
-/**
- * Class LoggerDestructor
- * This is used to destruct the above class
- */
-class LoggerDestructor {
-	public function __destruct() {
-		Logger::_destruct();
 	}
 }
