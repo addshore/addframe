@@ -2,6 +2,10 @@
 
 namespace Addframe;
 
+if( function_exists( 'mb_internal_encoding' ) ) {
+	mb_internal_encoding( "UTF-8" );
+}
+
 spl_autoload_register( function ( $className ) {
 	static $classes = false;
 
