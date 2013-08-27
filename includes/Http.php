@@ -81,7 +81,10 @@ class Http {
 		curl_setopt( $this->ch, CURLOPT_CONNECTTIMEOUT, 10 );
 		curl_setopt( $this->ch, CURLOPT_POST, 1 );
 		curl_setopt( $this->ch, CURLOPT_POSTFIELDS, $data );
+
+		Logger::logDebug( "HTTP post {$url}?".self::encodeData($data) );
 		$result = curl_exec( $this->ch );
+
 		if( curl_errno ( $this->ch ) === 0 ){
 			return $result;
 		// todo the below repeated attempts are not tested
@@ -118,7 +121,10 @@ class Http {
 		curl_setopt( $this->ch, CURLOPT_TIMEOUT, 30 );
 		curl_setopt( $this->ch, CURLOPT_CONNECTTIMEOUT, 10 );
 		curl_setopt( $this->ch, CURLOPT_HTTPGET, 1 );
+
+		Logger::logDebug( "HTTP get {$url}" );
 		$result = curl_exec( $this->ch );
+
 		if( curl_errno ( $this->ch ) === 0 ){
 			return $result;
 		// todo the below repeated attempts are not tested
