@@ -61,37 +61,46 @@ class Api {
 	 * @return Array of the unserialized result data
 	 */
 	public function doRequest( ApiRequest &$request, $getCache = true ) {
-		$gotCached = false;
+		$result = null;
+
+		//try to get a cached value if we should
 		if( $getCache === true && $request->maxCacheAge() > 0 ){
 			try{
-			if( Cache::has( $request ) ){
-				if( Cache::age( $request ) < $request->maxCacheAge() ){
-					$request->setResult( Cache::get( $request ) );
-					$gotCached = true;
+				if( Cache::has( $request ) ){
+					if( Cache::age( $request ) < $request->maxCacheAge() ){
+						$result = Cache::get( $request );
+						$request->setResult( $result );
+						return $result;
+					}
 				}
-			}
 			} catch( \IOException $e ){
 				Logger::logError( $e->getMessage() );
 			}
 		}
 
-		if( $getCache === false || $gotCached === false ){
-			if ( $request->shouldBePosted() ) {
-				$request->setResult( json_decode( $this->http->post( $this->getUrl(), $request->getParameters() ), true ) );
-			} else {
-				$requestUrl = $this->getUrl() . "?" . http_build_query( $request->getParameters() );
-				$request->setResult( json_decode( $this->http->get( $requestUrl ), true ) );
-			}
-			if( $gotCached === false && $request->maxCacheAge() > 0 ){
-				try{
-					Cache::add( $request );
-				} catch( \IOException $e ){
-					Logger::logError( $e->getMessage() );
-				}
+		//otherwise do a real request
+		if ( $request->shouldBePosted() ) {
+			$requestUrl = $this->getUrl();
+			$httpResponse = $this->http->post( $requestUrl, $request->getParameters() );
+			$result = json_decode( $httpResponse, true );
+			$request->setResult( $result );
+		} else {
+			$requestUrl = $this->getUrl() . "?" . http_build_query( $request->getParameters() );
+			$httpResponse = $this->http->get( $requestUrl );
+			$result = json_decode( $httpResponse, true );
+			$request->setResult( $result );
+		}
+
+		//try to cache the new request if we want to
+		if( $request->maxCacheAge() > 0 ){
+			try{
+				Cache::add( $request );
+			} catch( \IOException $e ){
+				Logger::logError( $e->getMessage() );
 			}
 		}
 
-		return $request->getResult();
+		return $result;
 	}
 
 	/**
