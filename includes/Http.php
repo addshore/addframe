@@ -57,9 +57,10 @@ class Http {
 	/**
 	 * @param $url string url of request
 	 * @param $data array of data to post key => value
+	 * @param int $attempts
 	 * @return string result of request
 	 */
-	public function post( $url, $data ) {
+	public function post( $url, $data, $attempts = 3 ) {
 		curl_setopt( $this->ch, CURLOPT_URL, $url );
 		curl_setopt( $this->ch, CURLOPT_USERAGENT, 'Addframe' );
 		curl_setopt( $this->ch, CURLOPT_ENCODING, "UTF-8" );
@@ -83,8 +84,10 @@ class Http {
 		$result = curl_exec( $this->ch );
 		if( curl_errno ( $this->ch ) === 0 ){
 			return $result;
+		// todo the below repeated attempts are not tested
+		} else if( curl_errno ( $this->ch ) === 28 && $attempts > 0 ) { //timeout
+			return $this->post( $url, $data, $attempts - 1 );
 		} else {
-			//todo catch timeout and retry
 			Logger::logError( 'Http post curl unexpected error code '.curl_errno ( $this->ch )." for {$url}?".self::encodeData($data) );
 			return false;
 		}
@@ -92,9 +95,10 @@ class Http {
 
 	/**
 	 * @param $url string url to get
+	 * @param int $attempts maximum number of attempts to make
 	 * @return string result of request
 	 */
-	public function get( $url ) {
+	public function get( $url, $attempts = 3 ) {
 		curl_setopt( $this->ch, CURLOPT_URL, $url );
 		curl_setopt( $this->ch, CURLOPT_USERAGENT, 'Addframe' );
 		curl_setopt( $this->ch, CURLOPT_ENCODING, "UTF-8" );
@@ -117,8 +121,10 @@ class Http {
 		$result = curl_exec( $this->ch );
 		if( curl_errno ( $this->ch ) === 0 ){
 			return $result;
+		// todo the below repeated attempts are not tested
+		} else if( curl_errno ( $this->ch ) === 28 && $attempts > 0 ) { // timeout
+			return $this->get( $url, $attempts - 1 );
 		} else {
-			//todo cacth timeout and retry
 			Logger::logError( 'Http get curl unexpected error code '.curl_errno ( $this->ch )." for {$url}" );
 			return false;
 		}
@@ -172,7 +178,7 @@ class TestHttp extends Http{
 	/**
 	 * Returns the data defined in the constructor
 	 */
-	public function post( $url, $data ) {
+	public function post( $url, $data, $attempts = 3 ) {
 		if( is_array( $this->returnData ) ){
 			return array_shift( $this->returnData );
 		}
@@ -182,7 +188,7 @@ class TestHttp extends Http{
 	/**
 	 * Returns the data defined in the constructor
 	 */
-	public function get( $url ) {
+	public function get( $url, $attempts = 3 ) {
 		if( is_array( $this->returnData ) ){
 			return array_shift( $this->returnData );
 		}
