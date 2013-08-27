@@ -1,0 +1,6 @@
+{
+    "error": {
+        "code": "badtoken",
+        "info": "Invalid token"
+    }
+}

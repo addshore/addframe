@@ -84,13 +84,29 @@ class ApiTest extends MediawikiTestCase{
 		);
 	}
 
-	function testApiExceptions(){
-		$this->setExpectedException( '\Addframe\Mediawiki\ApiUsageException' );
-		$code = 'notoken';
+	function provideErrorCodes(){
+		$codes = array( 'badtoken', 'notoken' );
+		$return = array();
+		foreach( $codes as $code ){
+			$return[] = array( $code );
+		}
+		return $return;
+	}
+
+	/**
+	 * @dataProvider provideErrorCodes
+	 */
+	function testApiExceptions( $code ){
 		$http = new TestHttp( $this->getData( "errors/{$code}.json" ) );
 		$api = new Api( $http );
-
-		$result = $api->doRequest( new ApiRequest() );
+		try{
+			$api->doRequest( new ApiRequest() );
+			$this->fail( "Failed to throw ApiUsageException with errorcode {$code}" );
+		} catch ( \Addframe\Mediawiki\ApiUsageException $e ){
+			$this->assertEquals( $code, $e->getCodeString() );
+			$this->assertNotEmpty( $e->getMessage() );
+			$this->assertNotEmpty( $e->__tostring() );
+		}
 	}
 
 	function testCachedResultCanBeIgnored(){
