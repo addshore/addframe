@@ -1,0 +1,6 @@
+{
+    "error": {
+        "code": "badformat",
+        "info": "The requested format application/vnd.php.serialized is not supported for content model  wikitext used by Foo"
+    }
+}

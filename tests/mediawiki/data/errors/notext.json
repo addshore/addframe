@@ -1,0 +1,6 @@
+{
+    "error": {
+        "code": "notext",
+        "info": "One of the text, appendtext, prependtext and undo parameters must be set"
+    }
+}

@@ -84,26 +84,26 @@ class ApiTest extends MediawikiTestCase{
 		);
 	}
 
-	function provideErrorCodes(){
-		$codes = array( 'badtoken', 'notoken' );
+	function provideErrorCodeFiles(){
 		$return = array();
-		foreach( $codes as $code ){
+		foreach( scandir( __DIR__ . '/data/errors' ) as $code ){
+			if( $code !== '.' && $code !== '..' )
 			$return[] = array( $code );
 		}
 		return $return;
 	}
 
 	/**
-	 * @dataProvider provideErrorCodes
+	 * @dataProvider provideErrorCodeFiles
 	 */
-	function testApiExceptions( $code ){
-		$http = new TestHttp( $this->getData( "errors/{$code}.json" ) );
+	function testApiExceptions( $file ){
+		$http = new TestHttp( $this->getData( "errors/{$file}" ) );
 		$api = new Api( $http );
 		try{
 			$api->doRequest( new ApiRequest() );
-			$this->fail( "Failed to throw ApiUsageException with errorcode {$code}" );
+			$this->fail( "Failed to throw ApiUsageException with errorcode {$file}" );
 		} catch ( \Addframe\Mediawiki\ApiUsageException $e ){
-			$this->assertEquals( $code, $e->getCodeString() );
+			$this->assertEquals( str_replace( '.json', '', $file ), $e->getCodeString() );
 			$this->assertNotEmpty( $e->getMessage() );
 			$this->assertNotEmpty( $e->__tostring() );
 		}

@@ -1,0 +1,6 @@
+{
+    "error": {
+        "code": "missingparam",
+        "info": "One of the parameters title, pageid is required"
+    }
+}

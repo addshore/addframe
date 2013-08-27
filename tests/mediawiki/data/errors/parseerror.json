@@ -1,0 +1,6 @@
+{
+    "error": {
+        "code": "parseerror",
+        "info": "Failed to parse application/json content for wikibase-item model: failed to deserialize"
+    }
+}
