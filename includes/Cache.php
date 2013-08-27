@@ -40,6 +40,7 @@ class Cache {
 			if( $getResult === false ){
 				throw new \IOException( "Failed to get cache item with name '{$path}'" );
 			}
+			Logger::logDebug( "CACHE get {$path}" );
 			return json_decode( $getResult, true );
 		}
 		return null;
