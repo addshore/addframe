@@ -47,7 +47,7 @@ class ApiTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideApiRequests
 	 */
-	function testCanDoRequest( $request, $expected = '' ){
+	function testCanDoRequest( $request, $expected = '[]' ){
 		$http = new TestHttp( $expected );
 		$api = new Api( $http );
 		$result = $api->doRequest( $request, false );
