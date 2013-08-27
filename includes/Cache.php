@@ -1,6 +1,7 @@
 <?php
 
 namespace Addframe;
+use Exception;
 
 /**
  * Class for basic caching
@@ -18,27 +19,27 @@ class Cache {
 
 	/**
 	 * @param Cacheable $item
-	 * @throws \IOException
+	 * @throws CacheException
 	 */
 	public static function add( Cacheable $item ){
 		$path = self::getPath( $item );
 		$addResult = file_put_contents( $path, json_encode( $item->getCacheData() ),LOCK_EX );
 		if( $addResult === false ){
-			throw new \IOException( "Failed to write cache item with name '{$path}'" );
+			throw new CacheException( "Failed to write cache item with name '{$path}'" );
 		}
 	}
 
 	/**
 	 * @param Cacheable $item
 	 * @return mixed|null
-	 * @throws \IOException
+	 * @throws CacheException
 	 */
 	public static function get( Cacheable $item ){
 		if( self::has( $item ) ){
 			$path = self::getPath( $item );
 			$getResult = file_get_contents( $path );
 			if( $getResult === false ){
-				throw new \IOException( "Failed to get cache item with name '{$path}'" );
+				throw new CacheException( "Failed to get cache item with name '{$path}'" );
 			}
 			Logger::logDebug( "CACHE get {$path}" );
 			return json_decode( $getResult, true );
@@ -48,14 +49,14 @@ class Cache {
 
 	/**
 	 * @param Cacheable $item
-	 * @throws \IOException
+	 * @throws CacheException
 	 */
 	public static function remove( Cacheable $item ){
 		if( self::has( $item ) ){
 			$path = self::getPath( $item );
 			$deleteResult = unlink( $path );
 			if( $deleteResult === false ){
-				throw new \IOException( "Failed to delete cache item with name '{$path}'" );
+				throw new CacheException( "Failed to delete cache item with name '{$path}'" );
 			}
 		}
 	}
@@ -75,7 +76,7 @@ class Cache {
 	/**
 	 * @param Cacheable $item
 	 * @return int|null
-	 * @throws \IOException
+	 * @throws CacheException
 	 */
 	public static function age( Cacheable $item ){
 		$age = null;
@@ -83,7 +84,7 @@ class Cache {
 			$path =  self::getPath( $item );
 			$cacheTime = filemtime ( $path );
 			if( $cacheTime === false ){
-				throw new \IOException( "Failed to get age of cache item with name '{$path}'" );
+				throw new CacheException( "Failed to get age of cache item with name '{$path}'" );
 			}
 			$currentTime = time();
 			$age = $currentTime - $cacheTime;
@@ -101,15 +102,22 @@ class Cache {
 
 	/**
 	 * Removes all current cache files
-	 * @throws \IOException
+	 * @throws CacheException
 	 */
 	public static function clear(){
 		try{
 			array_map('unlink', glob( __DIR__.'/../cache/'.self::$prefix.'*' ) );
 		} catch( \Exception $e ){
-			throw new \IOException( "Failed to clear cache" );
+			throw new CacheException( "Failed to clear cache", 0, $e );
 		}
 
 	}
+
+}
+
+/**
+ * Class CacheException
+ */
+class CacheException extends \Exception {
 
 }
