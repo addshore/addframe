@@ -144,10 +144,10 @@ class Site {
 		} else if( array_key_exists( 'login', $result ) && array_key_exists( 'result', $result['login'] ) && $result['login']['result'] == 'Success' ){
 			return true;
 		} else if( array_key_exists( 'login', $result ) && array_key_exists( 'result', $result['login'] ) && $result['login']['result'] == 'WrongToken' ){
-			throw new \Exception( "API reported WrongToken when trying to login" );
+			return false;
 		}
-		return null;
 		//todo catch all other possible errors for logging in
+		return null;
 	}
 
 }

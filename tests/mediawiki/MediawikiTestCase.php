@@ -8,15 +8,19 @@ class MediawikiTestCase extends DefaultTestCase {
 	/**
 	 * @param $path string of data to get
 	 * @throws UnexpectedValueException
+	 * @throws FileNotFoundException
 	 * @return string data from path
 	 */
 	protected function getData( $path ){
 		$path =  __DIR__.'/data/'.$path;
-		$data = file_get_contents( $path );
+
+		if( ! ( $data = file_get_contents( $path ) ) ){
+			throw new FileNotFoundException( "No data file (you should define it) from {$path}" );
+		}
 
 		//If there is no data throw an exception, we should define data!
 		if( is_null( $data ) || $data === false || !is_string( $data ) || empty( $data ) ){
-			throw new UnexpectedValueException( "No data got (you should define it) from {$path}, '{$data}'" );
+			throw new UnexpectedValueException( "Bad test data in file {$path}, '{$data}'" );
 		}
 
 		return $data;
