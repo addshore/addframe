@@ -84,6 +84,15 @@ class ApiTest extends MediawikiTestCase{
 		);
 	}
 
+	function testApiExceptions(){
+		$this->setExpectedException( '\Addframe\Mediawiki\ApiUsageException' );
+		$code = 'notoken';
+		$http = new TestHttp( $this->getData( "errors/{$code}.json" ) );
+		$api = new Api( $http );
+
+		$result = $api->doRequest( new ApiRequest() );
+	}
+
 	function testCachedResultCanBeIgnored(){
 		$request = new Addframe\Mediawiki\ApiRequest( array( 'test' => 'testGettingCachedResultWorks' ), false, 100 );
 		\Addframe\Cache::remove( $request ); //remove if it is already there

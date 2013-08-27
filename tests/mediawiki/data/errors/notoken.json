@@ -1,0 +1,6 @@
+{
+    "error": {
+        "code": "notoken",
+        "info": "The token parameter must be set"
+    }
+}
