@@ -22,7 +22,7 @@ class Cache {
 	 */
 	public static function add( Cacheable $item ){
 		$path = self::getPath( $item );
-		$addResult = file_put_contents( $path, json_encode( $item->getCacheData() ) );
+		$addResult = file_put_contents( $path, json_encode( $item->getCacheData() ),LOCK_EX );
 		if( $addResult === false ){
 			throw new \IOException( "Failed to write cache item with name '{$path}'" );
 		}
