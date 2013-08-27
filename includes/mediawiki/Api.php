@@ -58,6 +58,8 @@ class Api {
 	 * Gets a result for the given API request either by requesting it or using cached data
 	 * @param ApiRequest $request
 	 * @param bool $getCache do we want to check in the cache for a result?
+	 * @throws ApiUsageException
+	 * @throws \UnexpectedValueException
 	 * @return Array of the unserialized result data
 	 */
 	public function doRequest( ApiRequest &$request, $getCache = true ) {
@@ -70,7 +72,6 @@ class Api {
 					if( Cache::age( $request ) < $request->maxCacheAge() ){
 						$result = Cache::get( $request );
 						$request->setResult( $result );
-						return $result;
 					}
 				}
 			} catch( \IOException $e ){
@@ -79,25 +80,33 @@ class Api {
 		}
 
 		//otherwise do a real request
-		if ( $request->shouldBePosted() ) {
-			$requestUrl = $this->getUrl();
-			$httpResponse = $this->http->post( $requestUrl, $request->getParameters() );
-			$result = json_decode( $httpResponse, true );
-			$request->setResult( $result );
-		} else {
-			$requestUrl = $this->getUrl() . "?" . http_build_query( $request->getParameters() );
-			$httpResponse = $this->http->get( $requestUrl );
-			$result = json_decode( $httpResponse, true );
-			$request->setResult( $result );
+		if( is_null( $result ) ){
+			if ( $request->shouldBePosted() ) {
+				$requestUrl = $this->getUrl();
+				$httpResponse = $this->http->post( $requestUrl, $request->getParameters() );
+				$result = json_decode( $httpResponse, true );
+				$request->setResult( $result );
+			} else {
+				$requestUrl = $this->getUrl() . "?" . http_build_query( $request->getParameters() );
+				$httpResponse = $this->http->get( $requestUrl );
+				$result = json_decode( $httpResponse, true );
+				$request->setResult( $result );
+			}
+
+			//try to cache the new request if we want to
+			if( $request->maxCacheAge() > 0 ){
+				try{
+					Cache::add( $request );
+				} catch( \IOException $e ){
+					Logger::logError( $e->getMessage() );
+				}
+			}
 		}
 
-		//try to cache the new request if we want to
-		if( $request->maxCacheAge() > 0 ){
-			try{
-				Cache::add( $request );
-			} catch( \IOException $e ){
-				Logger::logError( $e->getMessage() );
-			}
+		if( !is_array( $result ) ){
+			throw new \UnexpectedValueException( 'Api result should be an array, instead is ' . print_r( $result ) );
+		} else if( array_key_exists( 'error', $result ) ){
+			throw new ApiUsageException( $result['error'] );
 		}
 
 		return $result;
@@ -120,15 +129,59 @@ class Api {
 		 */
 		$tokenResult = $this->doRequest( new TokensRequest( $tokenType ), $getCache );
 		$request->setParameter( 'token', $tokenResult['tokens'][$tokenType] );
-		$result = $this->doRequest( $request, false );
 
-		if( array_key_exists( 'error', $result ) && array_key_exists( 'code', $result['error'] ) ){
-			if( $result['error']['code'] == 'badtoken' || $result['error']['code'] == 'notoken'){
-				Logger::logWarn( 'Api request with token failed due to ' . $result['error']['code'] . ', ' . $result['error']['info'] );
+		try{
+			return $this->doRequest( $request, false );
+		} catch( ApiUsageException $e ){
+			$code = $e->getCodeString();
+			if( $code == 'badtoken' || $code == 'notoken' ){
+				Logger::logWarn( 'ApiUsageException' . $e->__toString() );
 			}
 		}
+		return null;
+	}
 
-		return $result;
+}
+
+/**
+ * Class ApiUsageException
+ */
+class ApiUsageException extends \Exception{
+
+	private $mCodestr = '';
+
+	/**
+	 * @param array $errorArray errorArray from the API (containing 'code' and 'message' elements)
+	 */
+	public function __construct( $errorArray ) {
+		$this->mCodestr = $errorArray['code'];
+		$message = $errorArray['info'];
+
+		parent::__construct( $message, 0 );
+	}
+
+	/**
+	 * @return string error code
+	 */
+	public function getCodeString() {
+		return $this->mCodestr;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getMessageArray() {
+		return array(
+			'code' => $this->mCodestr,
+			'info' => $this->getMessage()
+		);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function __toString() {
+		return "{$this->getCodeString()}: {$this->getMessage()}";
 	}
 
 }
