@@ -3,6 +3,7 @@
 namespace Addframe\Mediawiki;
 
 use Addframe\Cache;
+use Addframe\CacheException;
 use Addframe\Http;
 use Addframe\Logger;
 
@@ -74,7 +75,7 @@ class Api {
 						$request->setResult( $result );
 					}
 				}
-			} catch( \IOException $e ){
+			} catch( CacheException $e ){
 				Logger::logError( $e->getMessage() );
 			}
 		}
@@ -97,7 +98,7 @@ class Api {
 			if( $request->maxCacheAge() > 0 ){
 				try{
 					Cache::add( $request );
-				} catch( \IOException $e ){
+				} catch( CacheException $e ){
 					Logger::logError( $e->getMessage() );
 				}
 			}
