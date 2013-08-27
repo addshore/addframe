@@ -51,7 +51,7 @@ class ApiTest extends MediawikiTestCase{
 		$http = new TestHttp( $expected );
 		$api = new Api( $http );
 		$result = $api->doRequest( $request, false );
-		$this->assertEquals( json_decode( $expected, false ), $result );
+		$this->assertEquals( json_decode( $expected, true ), $result );
 	}
 
 	/**
@@ -65,7 +65,7 @@ class ApiTest extends MediawikiTestCase{
 
 		$result = $api->doRequestWithToken( $request, 'edittoken' , false );
 		$this->assertArrayHasKey( 'token', $request->getParameters() );
-		$this->assertEquals( json_decode( $expected, false ), $result );
+		$this->assertEquals( json_decode( $expected, true ), $result );
 	}
 
 	/**
@@ -80,7 +80,7 @@ class ApiTest extends MediawikiTestCase{
 			array( new Addframe\Mediawiki\ApiRequest( array( 'param' => 'value', 'format' => 'php' ) ) ),
 			array( new Addframe\Mediawiki\ApiRequest( array( 'param' => 'value', 'param2' => 'value2' ) ) ),
 			array( new Addframe\Mediawiki\ApiRequest(), '[]' ),
-			array( new Addframe\Mediawiki\ApiRequest(), '{"tokens":{"watchtoken":"863bb60669575ac8619662ddad5fc2ac+\\"}}' ),
+			array( new Addframe\Mediawiki\ApiRequest(), $this->getData( 'tokens/watchtoken.json' ) ),
 		);
 	}
 

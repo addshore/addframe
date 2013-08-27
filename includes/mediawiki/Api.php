@@ -120,7 +120,15 @@ class Api {
 		 */
 		$tokenResult = $this->doRequest( new TokensRequest( $tokenType ), $getCache );
 		$request->setParameter( 'token', $tokenResult['tokens'][$tokenType] );
-		return $this->doRequest( $request, false );
+		$result = $this->doRequest( $request, false );
+
+		if( array_key_exists( 'error', $result ) && array_key_exists( 'code', $result['error'] ) ){
+			if( $result['error']['code'] == 'badtoken' || $result['error']['code'] == 'notoken'){
+				Logger::logWarn( 'Api request with token failed due to ' . $result['error']['code'] . ', ' . $result['error']['info'] );
+			}
+		}
+
+		return $result;
 	}
 
 }
