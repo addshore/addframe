@@ -86,9 +86,9 @@ class ApiTest extends MediawikiTestCase{
 
 	function provideErrorCodeFiles(){
 		$return = array();
-		foreach( scandir( __DIR__ . '/data/errors' ) as $code ){
-			if( $code !== '.' && $code !== '..' )
-			$return[] = array( $code );
+		foreach( scandir( __DIR__ . '/data/errors' ) as $file ){
+			if( substr( $file, -5 ) === '.json' )
+			$return[] = array( $file );
 		}
 		return $return;
 	}
