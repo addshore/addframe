@@ -41,8 +41,10 @@ class ApiRequest implements Cacheable{
 	 * @param array $params Parameters for the api request
 	 * @param bool $shouldBePosted Should be we a HTTP POST?
 	 * @param bool|int $maxAge should be cache / how long to cache for in seconds
+	 * @param array $allowedParams optional set of parameters to limit the request to
 	 */
-	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE ) {
+	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE, $allowedParams = array() ) {
+		$this->addAllowedParams( $allowedParams );
 
 		// Only restrict params if a child class has said we should (ie we have some allowed params already set)
 		// This means that this class can be used to perform requests with ANY params if it is not extended
