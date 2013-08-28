@@ -58,6 +58,7 @@ class Http {
 	 * @param $url string url of request
 	 * @param $data array of data to post key => value
 	 * @param int $attempts
+	 * @throws HttpException
 	 * @return string result of request
 	 */
 	public function post( $url, $data, $attempts = 3 ) {
@@ -91,14 +92,14 @@ class Http {
 		} else if( curl_errno ( $this->ch ) === 28 && $attempts > 0 ) { //timeout
 			return $this->post( $url, $data, $attempts - 1 );
 		} else {
-			Logger::logError( 'Http post curl unexpected error code '.curl_errno ( $this->ch )." for {$url}?".self::encodeData($data) );
-			return false;
+			throw new HttpException( 'Http post curl unexpected error code '.curl_errno ( $this->ch )." for {$url}?".self::encodeData($data) );
 		}
 	}
 
 	/**
 	 * @param $url string url to get
 	 * @param int $attempts maximum number of attempts to make
+	 * @throws HttpException
 	 * @return string result of request
 	 */
 	public function get( $url, $attempts = 3 ) {
@@ -131,8 +132,7 @@ class Http {
 		} else if( curl_errno ( $this->ch ) === 28 && $attempts > 0 ) { // timeout
 			return $this->get( $url, $attempts - 1 );
 		} else {
-			Logger::logError( 'Http get curl unexpected error code '.curl_errno ( $this->ch )." for {$url}" );
-			return false;
+			throw new HttpException( 'Http get curl unexpected error code '.curl_errno ( $this->ch )." for {$url}" );
 		}
 	}
 
@@ -164,6 +164,13 @@ class Http {
 		}
 		return self::$defaultInstance;
 	}
+
+}
+
+/**
+ * Class HttpException
+ */
+class HttpException extends \Exception {
 
 }
 

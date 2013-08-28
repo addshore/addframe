@@ -5,6 +5,7 @@ namespace Addframe\Mediawiki;
 use Addframe\Cache;
 use Addframe\CacheException;
 use Addframe\Http;
+use Addframe\HttpException;
 use Addframe\Logger;
 
 /**
@@ -82,16 +83,20 @@ class Api {
 
 		//otherwise do a real request
 		if( is_null( $result ) ){
-			if ( $request->shouldBePosted() ) {
-				$requestUrl = $this->getUrl();
-				$httpResponse = $this->http->post( $requestUrl, $request->getParameters() );
-				$result = json_decode( $httpResponse, true );
-				$request->setResult( $result );
-			} else {
-				$requestUrl = $this->getUrl() . "?" . http_build_query( $request->getParameters() );
-				$httpResponse = $this->http->get( $requestUrl );
-				$result = json_decode( $httpResponse, true );
-				$request->setResult( $result );
+			try{
+				if ( $request->shouldBePosted() ) {
+					$requestUrl = $this->getUrl();
+					$httpResponse = $this->http->post( $requestUrl, $request->getParameters() );
+					$result = json_decode( $httpResponse, true );
+					$request->setResult( $result );
+				} else {
+					$requestUrl = $this->getUrl() . "?" . http_build_query( $request->getParameters() );
+					$httpResponse = $this->http->get( $requestUrl );
+					$result = json_decode( $httpResponse, true );
+					$request->setResult( $result );
+				}
+			} catch( HttpException $e ){
+				Logger::logError( $e->getMessage() );
 			}
 
 			//try to cache the new request if we want to
