@@ -56,7 +56,7 @@ class LoginRequest extends ApiRequest{
 class LogoutRequest extends ApiRequest{
 
 	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE  ) {
-		$this->addParams( array( 'action' => 'login' ) );
+		$this->addParams( array( 'action' => 'logout' ) );
 		$this->addAllowedParams( array( 'action' ) );
 		parent::__construct( $params, $shouldBePosted, $maxAge );
 	}
@@ -88,6 +88,11 @@ class EditRequest extends ApiRequest{
 
 		if( array_key_exists( 'text', $params ) && !is_null( $params['text'] ) ){
 			$params['md5'] = md5( $params['text'] );
+		/**
+		 * todo, see if the below handeling is correct..
+		 * The MD5 hash of the text parameter, or the prependtext and appendtext parameters concatenated.
+		 * todo this could mean even if one is empty the md5 can be used with the concatenated strings
+		 */
 		} else if( array_key_exists( 'prependtext', $params ) && array_key_exists( 'appendtext', $params )
 			&& !is_null( $params['prependtext'] ) && !is_null( $params['appendtext'] ) ) {
 			$params['md5'] = md5( $params['prependtext'] . $params['appendtext'] );
