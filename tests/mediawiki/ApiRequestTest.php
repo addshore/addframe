@@ -16,9 +16,17 @@ class ApiRequestTest extends MediawikiTestCase{
 		$request = new ApiRequest( $params, $shouldBePosted , $cache );
 		$this->assertInstanceOf( 'Addframe\Mediawiki\ApiRequest', $request );
 
-		//force our expected format param..
+		//Sort out our expected params
 		if( !array_key_exists( 'format', $params ) ){
 			$params['format'] = 'json';
+		}
+		foreach( $params as $param => $value ) {
+			if ( is_array( $value ) ) {
+				$params[ $param ] = implode( '|', $value );
+			}
+			if( is_null( $value ) ){
+				unset( $params[$param] );
+			}
 		}
 
 		//check the params
@@ -37,58 +45,12 @@ class ApiRequestTest extends MediawikiTestCase{
 			array( array( 'param' => 'provideConstructionData' ), true ),
 			array( array( 'param' => 'provideConstructionData' ), true ),
 			array( array( 'param' => 'provideConstructionData', 'param2' => 'value2' ), false ),
-		);
-	}
-
-	/**
-	 * @dataProvider provideConstructionWithParamAsArray
-	 */
-	function testConstructionWithParamAsArray( $params, $expected ){
-		$expected['format'] = 'json';
-		$request = new ApiRequest( $params );
-		$this->assertEquals( $expected, $request->getParameters() );
-
-	}
-
-	function provideConstructionWithParamAsArray(){
-		return array(
-			//params, expected
-			array(
-				array( 'param' => array( 'val1', 'val2' ) ),
-				array( 'param' => 'val1|val2' ),
-			),
-			array(
-				array( 'param' => array( 'val1', 'val2', 'val3', 'val4' ) ),
-				array( 'param' => 'val1|val2|val3|val4' ),
-			),
-			array(
-				array( 'param' => array( 'val1', 'val2' ), 'another' => array( 'aa1', 'aa2' ) ),
-				array( 'param' => 'val1|val2', 'another' => 'aa1|aa2' ),
-			),
-		);
-	}
-
-	/**
-	 * @dataProvider provideConstructionWithParamAsNull
-	 */
-	function testConstructionWithParamAsNull( $params, $expected ){
-		$expected['format'] = 'json';
-		$request = new ApiRequest( $params );
-		$this->assertEquals( $expected, $request->getParameters() );
-
-	}
-
-	function provideConstructionWithParamAsNull(){
-		return array(
-			//params, expected
-			array(
-				array( 'param' => 'val', 'another' => null ),
-				array( 'param' => 'val' ),
-			),
-			array(
-				array( 'param' => null, 'another' => 'val' ),
-				array( 'another' => 'val' ),
-			),
+			array( array( 'param' => array( 'val1', 'val2' ) ) ),
+			array( array( 'param' => array( 'val1', 'val2', 'val3', 'val4' ) ) ),
+			array( array( 'param' => array( 'val1', 'val2' ), 'another' => array( 'aa1', 'aa2' ) ) ),
+			//todo the two below test cases may be able to be remove now that all params are not automatically added..
+			array( array( 'param' => 'val', 'another' => null ) ),
+			array( array( 'param' => null, 'another' => 'val' ) ),
 		);
 	}
 
