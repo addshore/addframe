@@ -32,8 +32,8 @@ class QueryRequest extends ApiRequest{
 class SiteInfoRequest extends QueryRequest{
 
 	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_WEEK ) {
-		$this->addParams( array( 'meta' => 'siteinfo' ) );
 		$this->addAllowedParams( array( 'meta', 'siprop', 'sifilteriw', 'sishowalldb', 'sinumberingroup', 'siinlanguagecode' ) );
+		$this->addParams( array( 'meta' => 'siteinfo' ) );
 		parent::__construct( $params, $shouldBePosted, $maxAge );
 	}
 }
@@ -44,8 +44,8 @@ class SiteInfoRequest extends QueryRequest{
 class LoginRequest extends ApiRequest{
 
 	function __construct( $params = array(), $shouldBePosted = true, $maxAge = CACHE_NONE ) {
-		$this->addParams( array( 'action' => 'login' ) );
 		$this->addAllowedParams( array( 'action', 'lgname', 'lgpassword', 'lgtoken', 'lgdomain' ) );
+		$this->addParams( array( 'action' => 'login' ) );
 		parent::__construct( $params, $shouldBePosted, $maxAge );
 	}
 }
@@ -56,8 +56,8 @@ class LoginRequest extends ApiRequest{
 class LogoutRequest extends ApiRequest{
 
 	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE  ) {
-		$this->addParams( array( 'action' => 'logout' ) );
 		$this->addAllowedParams( array( 'action' ) );
+		$this->addParams( array( 'action' => 'logout' ) );
 		parent::__construct( $params, $shouldBePosted, $maxAge );
 	}
 }
@@ -68,8 +68,8 @@ class LogoutRequest extends ApiRequest{
 class TokensRequest extends ApiRequest{
 
 	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_HOUR ) {
-		$this->addParams( array( 'action' => 'tokens', 'type' => 'edit' ) );
 		$this->addAllowedParams( array( 'action', 'type' ) );
+		$this->addParams( array( 'action' => 'tokens', 'type' => 'edit' ) );
 		parent::__construct( $params, $shouldBePosted, $maxAge );
 	}
 }
@@ -79,12 +79,12 @@ class TokensRequest extends ApiRequest{
 class EditRequest extends ApiRequest{
 
 	function __construct( $params = array(), $shouldBePosted = true, $maxAge = CACHE_NONE ) {
-		$this->addParams( array( 'action' => 'edit' ) );
 		$this->addAllowedParams(
 			array( 'action', 'title', 'pageid', 'section', 'sectiontitle', 'text', 'token', 'summary', 'minor',
 				'notminor', 'bot', 'basetimestamp', 'starttimestamp', 'recreate', 'createonly', 'nocreate', 'watch',
 				'unwatch', 'watchlist', 'md5', 'prependtext', 'appendtext', 'undo', 'undoafter', 'redirect',
 				'contentformat', 'contentmodel' ) );
+		$this->addParams( array( 'action' => 'edit' ) );
 
 		if( array_key_exists( 'text', $params ) && !is_null( $params['text'] ) ){
 			$params['md5'] = md5( $params['text'] );
