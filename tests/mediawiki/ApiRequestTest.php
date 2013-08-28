@@ -24,9 +24,6 @@ class ApiRequestTest extends MediawikiTestCase{
 			if ( is_array( $value ) ) {
 				$params[ $param ] = implode( '|', $value );
 			}
-			if( is_null( $value ) ){
-				unset( $params[$param] );
-			}
 		}
 
 		//check the params
@@ -48,7 +45,6 @@ class ApiRequestTest extends MediawikiTestCase{
 			array( array( 'param' => array( 'val1', 'val2' ) ) ),
 			array( array( 'param' => array( 'val1', 'val2', 'val3', 'val4' ) ) ),
 			array( array( 'param' => array( 'val1', 'val2' ), 'another' => array( 'aa1', 'aa2' ) ) ),
-			//todo the two below test cases may be able to be remove now that all params are not automatically added..
 			array( array( 'param' => 'val', 'another' => null ) ),
 			array( array( 'param' => null, 'another' => 'val' ) ),
 		);

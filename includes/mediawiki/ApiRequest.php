@@ -83,7 +83,7 @@ class ApiRequest implements Cacheable{
 	}
 
 	/**
-	 * Add paramaters that are allowed to an array to be used in later validation / tidyup
+	 * Add parameters that are allowed to an array to be used in later validation / tidy up
 	 * @param $params array
 	 */
 	protected function addAllowedParams( $params ) {
@@ -91,14 +91,11 @@ class ApiRequest implements Cacheable{
 	}
 
 	/**
-	 * Remove null or not allowed params
-	 * In a perfect world we shouldn't remove null params as they can be used for bot flags etc
-	 * for now we will just have to set the bot flag to '1' instead
-	 * todo now that the higherlevel requests accept an array of params we can likely allow null params again
+	 * Remove null not allowed params
 	 */
 	protected function stripBadParams(){
 		foreach( $this->params as $param => $value ){
-			if ( is_null( $value ) || ( !empty( $this->allowedParams ) && !in_array( $param, $this->allowedParams ) ) ){
+			if ( !empty( $this->allowedParams ) && !in_array( $param, $this->allowedParams ) ){
 				unset( $this->params[ $param ] );
 			}
 		}
