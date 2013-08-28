@@ -79,7 +79,6 @@ class ApiRequest implements Cacheable{
 				$this->params[ $param ] = $value;
 			}
 		}
-		$this->stripBadParams();
 	}
 
 	/**
@@ -112,6 +111,7 @@ class ApiRequest implements Cacheable{
 	 * @return array of set parameters
 	 */
 	public function getParameters(){
+		$this->stripBadParams();
 		return $this->params;
 	}
 
