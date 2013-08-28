@@ -87,4 +87,20 @@ class ApiRequestTest extends MediawikiTestCase{
 		$this->assertNotEquals( $request1->getHash(), $request2->getHash() );
 	}
 
+	function testApiRequestOnlyStripsBadParamsWhenRequested(){
+		$request = new ApiRequest();
+		$request->setParameter( 'blub', 'bloo' );
+		$params = $request->getParameters();
+		$this->assertArrayHasKey( 'blub', $params );
+		$this->assertEquals( 'bloo', $params['blub'] );
+
+		$request = new ApiRequest( array(), false, 0, array( 'blub' ) );
+		$request->setParameter( 'blub', 'bloo' );
+		$request->setParameter( 'fail', 'foo' );
+		$params = $request->getParameters();
+		$this->assertArrayHasKey( 'blub', $params );
+		$this->assertEquals( 'bloo', $params['blub'] );
+		$this->assertArrayNotHasKey( 'fail', $params );
+	}
+
 }
