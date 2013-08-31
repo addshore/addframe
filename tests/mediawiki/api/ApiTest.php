@@ -99,8 +99,8 @@ class ApiTest extends MediawikiTestCase{
 		$api = new Api( $http );
 		try{
 			$api->doRequest( new Request() );
-			$this->fail( "Failed to throw ApiUsageException with errorcode {$file}" );
-		} catch ( \Addframe\Mediawiki\ApiUsageException $e ){
+			$this->fail( "Failed to throw UsageException with errorcode {$file}" );
+		} catch ( \Addframe\Mediawiki\Api\UsageException $e ){
 			$this->assertEquals( str_replace( '.json', '', $file ), $e->getCodeString() );
 			$this->assertNotEmpty( $e->getMessage() );
 			$this->assertNotEmpty( $e->__tostring() );

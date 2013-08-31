@@ -9,6 +9,7 @@ use Addframe\HttpException;
 use Addframe\Logger;
 use Addframe\Mediawiki\Api\Request;
 use Addframe\Mediawiki\Api\TokensRequest;
+use Addframe\Mediawiki\Api\UsageException;
 
 /**
  * Class Api representing a Mediawiki API
@@ -62,7 +63,7 @@ class Api {
 	 * Gets a result for the given API request either by requesting it or using cached data
 	 * @param Request $request
 	 * @param bool $getCache do we want to check in the cache for a result?
-	 * @throws ApiUsageException
+	 * @throws UsageException
 	 * @throws \UnexpectedValueException
 	 * @return Array of the unserialized result data
 	 */
@@ -114,7 +115,7 @@ class Api {
 		if( !is_array( $result ) ){
 			throw new \UnexpectedValueException( 'Api result should be an array, instead is ' . print_r( $result ) );
 		} else if( array_key_exists( 'error', $result ) ){
-			throw new ApiUsageException( $result['error'] );
+			throw new UsageException( $result['error'] );
 		}
 
 		return $result;
@@ -140,56 +141,13 @@ class Api {
 
 		try{
 			return $this->doRequest( $request, false );
-		} catch( ApiUsageException $e ){
+		} catch( UsageException $e ){
 			$code = $e->getCodeString();
 			if( $code == 'badtoken' || $code == 'notoken' ){
-				Logger::logWarn( 'ApiUsageException' . $e->__toString() );
+				Logger::logWarn( 'UsageException' . $e->__toString() );
 			}
 		}
 		return null;
-	}
-
-}
-
-/**
- * Class ApiUsageException
- */
-class ApiUsageException extends \Exception{
-
-	private $mCodestr = '';
-
-	/**
-	 * @param array $errorArray errorArray from the API (containing 'code' and 'message' elements)
-	 */
-	public function __construct( $errorArray ) {
-		$this->mCodestr = $errorArray['code'];
-		$message = $errorArray['info'];
-
-		parent::__construct( $message, 0 );
-	}
-
-	/**
-	 * @return string error code
-	 */
-	public function getCodeString() {
-		return $this->mCodestr;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getMessageArray() {
-		return array(
-			'code' => $this->mCodestr,
-			'info' => $this->getMessage()
-		);
-	}
-
-	/**
-	 * @return string
-	 */
-	public function __toString() {
-		return "{$this->getCodeString()}: {$this->getMessage()}";
 	}
 
 }
