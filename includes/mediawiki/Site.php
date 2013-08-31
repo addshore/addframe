@@ -112,7 +112,7 @@ class Site {
 	 */
 	public function getTokenList(){
 		$availibeTokens = 'block|delete|edit|email|import|move|options|patrol|protect|unblock|watch';
-		$apiResult = $this->getApi()->doRequest( new TokensRequest( $availibeTokens ) );
+		$apiResult = $this->getApi()->doRequest( new TokensRequest( array( 'type' => $availibeTokens ) ) );
 		if( array_key_exists( 'tokens', $apiResult ) ){
 			return $apiResult['tokens'];
 		}
@@ -141,7 +141,11 @@ class Site {
 	 * @throws \Exception
 	 */
 	public function login( $username, $password, $token = null){
-		$request = new LoginRequest( $username, $password, $token );
+		$params = array( 'lguser' => $username, 'lgpassword' => $password );
+		if( !is_null( $token ) ){
+			$params['lgtoken'] = $token;
+		}
+		$request = new LoginRequest( $params );
 		$result = $this->getApi()->doRequest( $request );
 		if( array_key_exists( 'login', $result ) && array_key_exists( 'result', $result['login'] ) && $result['login']['result'] == 'NeedToken' ){
 			return $this->login( $username, $password, $result['login']['token'] );

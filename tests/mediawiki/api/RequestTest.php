@@ -12,7 +12,7 @@ class ApiRequestTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideConstructionData
 	 */
-	function testCanConstruct( $params = array(), $shouldBePosted = false, $cache = false ){
+	function testCanConstruct( $params = array(), $shouldBePosted = false, $cache = 0 ){
 		$request = new Request( $params, $shouldBePosted , $cache );
 		$this->assertInstanceOf( 'Addframe\Mediawiki\Api\Request', $request );
 

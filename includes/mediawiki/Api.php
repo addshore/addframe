@@ -138,7 +138,7 @@ class Api {
 		 * do not actually make a new request to the api for a token each time...
 		 */
 		try{
-			$tokenResult = $this->doRequest( new TokensRequest( $tokenType ), $getCache );
+			$tokenResult = $this->doRequest( new TokensRequest( array( 'type' => $tokenType ) ), $getCache );
 			$request->setParameter( 'token', $tokenResult['tokens'][$tokenType] );
 			return $this->doRequest( $request, false );
 		} catch( UsageException $e ){
