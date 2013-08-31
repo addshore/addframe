@@ -126,6 +126,7 @@ class Api {
 	 * @param Request $request
 	 * @param string $tokenType
 	 * @param bool $getCache
+	 * @throws UsageException
 	 * @return Array
 	 */
 	public function doRequestWithToken( Request &$request, $tokenType = 'edittoken', $getCache = true ) {
@@ -136,15 +137,16 @@ class Api {
 		 * getting the tokens in this way should be okay as caching should mean that we
 		 * do not actually make a new request to the api for a token each time...
 		 */
-		$tokenResult = $this->doRequest( new TokensRequest( $tokenType ), $getCache );
-		$request->setParameter( 'token', $tokenResult['tokens'][$tokenType] );
-
 		try{
+			$tokenResult = $this->doRequest( new TokensRequest( $tokenType ), $getCache );
+			$request->setParameter( 'token', $tokenResult['tokens'][$tokenType] );
 			return $this->doRequest( $request, false );
 		} catch( UsageException $e ){
 			$code = $e->getCodeString();
 			if( $code == 'badtoken' || $code == 'notoken' ){
 				Logger::logWarn( 'UsageException' . $e->__toString() );
+			} else {
+				throw $e;
 			}
 		}
 		return null;

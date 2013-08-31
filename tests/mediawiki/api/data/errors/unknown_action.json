@@ -1,0 +1,6 @@
+{
+    "error": {
+        "code": "unknown_action",
+        "info": "Unrecognized value for parameter 'action': blub"
+    }
+}
