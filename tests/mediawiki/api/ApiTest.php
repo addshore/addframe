@@ -67,6 +67,30 @@ class ApiTest extends MediawikiTestCase{
 	}
 
 	/**
+	 * @dataProvider provideApiRequests
+	 * NOTE: We don't actually receive an exception, just null (the exception is handled before the result is passed back)
+	 */
+	function testDoRequestWithTokenHandlesBadToken( Request $request ){
+		$http = new TestHttp( array( $this->getTestApiData( 'tokens/anonedittoken.json' ) , $this->getTestApiData( 'errors/badtoken.json' ) ) );
+		$api = new Api( $http );
+
+		$this->assertArrayNotHasKey( 'token', $request->getParameters() );
+		$result = $api->doRequestWithToken( $request, 'edittoken' , false );
+		$this->assertNull( $result );
+	}
+
+	/**
+	 * @dataProvider provideApiRequests
+	 */
+	function testDoRequestWithTokenPassesOtherExceptions( Request $request ){
+		$this->setExpectedException( '\Addframe\Mediawiki\Api\UsageException' );
+		$http = new TestHttp( array( $this->getTestApiData( 'errors/missingparam.json' ) ) );
+		$api = new Api( $http );
+		$this->assertArrayNotHasKey( 'token', $request->getParameters() );
+		$api->doRequestWithToken( $request, 'edittoken' , false );
+	}
+
+	/**
 	 * There is no real reason to provide all possible requests here as they all extend Request
 	 * Generally if the first few succeed so will the rest..
 	 * todo we could have a list of possible api requests somewhere and iterate over them all with their default values
@@ -76,7 +100,7 @@ class ApiTest extends MediawikiTestCase{
 			array( new Request() ),
 			array( new Request( array( 'param' => 'value' ) ) ),
 			array( new Request( array( 'param' => 'value', 'format' => 'php' ) ) ),
-			array( new Request( array( 'param' => 'value', 'param2' => 'value2' ) ) ),
+			array( new Request( array( 'param' => 'value', 'param2' => 'value2' ), true ) ),
 			array( new Request(), '[]' ),
 			array( new Request(), $this->getTestApiData( 'tokens/watchtoken.json' ) ),
 		);
@@ -95,16 +119,10 @@ class ApiTest extends MediawikiTestCase{
 	 * @dataProvider provideErrorCodeFiles
 	 */
 	function testApiExceptions( $file ){
+		$this->setExpectedException( '\Addframe\Mediawiki\Api\UsageException' );
 		$http = new TestHttp( $this->getTestApiData( "errors/{$file}" ) );
 		$api = new Api( $http );
-		try{
-			$api->doRequest( new Request() );
-			$this->fail( "Failed to throw UsageException with errorcode {$file}" );
-		} catch ( \Addframe\Mediawiki\Api\UsageException $e ){
-			$this->assertEquals( str_replace( '.json', '', $file ), $e->getCodeString() );
-			$this->assertNotEmpty( $e->getMessage() );
-			$this->assertNotEmpty( $e->__tostring() );
-		}
+		$api->doRequest( new Request() );
 	}
 
 	function testCachedResultCanBeIgnored(){
