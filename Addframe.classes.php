@@ -27,6 +27,8 @@ return call_user_func( function() {
 		'Addframe\Mediawiki\Api\QueryRequest' => 'mediawiki/api/QueryRequest.php',
 		'Addframe\Mediawiki\Api\SiteinfoRequest' => 'mediawiki/api/SiteinfoRequest.php',
 		'Addframe\Mediawiki\Api\TokensRequest' => 'mediawiki/api/TokensRequest.php',
+		'Addframe\Mediawiki\Api\RevisionsRequest' => 'mediawiki/api/RevisionsRequest.php',
+		'Addframe\Mediawiki\Api\UserinfoRequest' => 'mediawiki/api/UserinfoRequest.php',
 
 		//SiteMatrix
 		'Addframe\Mediawiki\Family' => 'mediawiki/Family.php',
