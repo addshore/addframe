@@ -42,8 +42,14 @@ class Request implements Cacheable{
 	 * @param bool $shouldBePosted Should be we a HTTP POST?
 	 * @param bool|int $maxAge should be cache / how long to cache for in seconds
 	 * @param array $allowedParams optional set of parameters to limit the request to
+	 * @throws \UnexpectedValueException
 	 */
 	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE, $allowedParams = array() ) {
+		//make sure our construction params are correct
+		if( !is_array( $params ) || !is_bool( $shouldBePosted ) || !is_int( $maxAge ) || !is_array( $allowedParams ) ){
+			throw new \UnexpectedValueException( 'Request construction params are not of the correct types' );
+		}
+
 		$this->addAllowedParams( $allowedParams );
 
 		// Only restrict params if a child class has said we should (ie we have some allowed params already set)
