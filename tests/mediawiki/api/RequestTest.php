@@ -1,10 +1,10 @@
 <?php
 
-use Addframe\Mediawiki\ApiRequest;
+use Addframe\Mediawiki\Api\Request;
 
 /**
  * Class ApiRequestTest
- * @covers Addframe\Mediawiki\ApiRequest
+ * @covers Addframe\Mediawiki\Api\Request
  */
 
 class ApiRequestTest extends MediawikiTestCase{
@@ -13,8 +13,8 @@ class ApiRequestTest extends MediawikiTestCase{
 	 * @dataProvider provideConstructionData
 	 */
 	function testCanConstruct( $params = array(), $shouldBePosted = false, $cache = false ){
-		$request = new ApiRequest( $params, $shouldBePosted , $cache );
-		$this->assertInstanceOf( 'Addframe\Mediawiki\ApiRequest', $request );
+		$request = new Request( $params, $shouldBePosted , $cache );
+		$this->assertInstanceOf( 'Addframe\Mediawiki\Api\Request', $request );
 
 		//Sort out our expected params
 		if( !array_key_exists( 'format', $params ) ){
@@ -52,7 +52,7 @@ class ApiRequestTest extends MediawikiTestCase{
 
 	function testSetParameter(){
 		$expected = array();
-		$request = new ApiRequest( $expected, false , 0 );
+		$request = new Request( $expected, false , 0 );
 		$expected = array_merge( $expected, array( 'format' => 'json' ) );
 		$this->assertEquals( $expected, $request->getParameters() );
 
@@ -63,38 +63,38 @@ class ApiRequestTest extends MediawikiTestCase{
 
 	function testSetResult(){
 		$expected = array( 'testSetResult' );
-		$request = new ApiRequest();
+		$request = new Request();
 		$request->setResult( $expected );
 		$this->assertEquals( $expected, $request->getResult() );
 	}
 
 	function testGetCacheData(){
 		$expected = array( 'testGetCacheData' );
-		$request = new ApiRequest();
+		$request = new Request();
 		$request->setResult( $expected );
 		$this->assertEquals( $expected, $request->getCacheData() );
 	}
 
 	function testHash(){
-		$request1 = new ApiRequest( array() );
-		$request2 = new ApiRequest( array() );
+		$request1 = new Request( array() );
+		$request2 = new Request( array() );
 		$this->assertEquals( $request1->getHash(), $request2->getHash() );
-		$request1 = new ApiRequest( array( 'key' => 'value' ) );
-		$request2 = new ApiRequest( array() );
+		$request1 = new Request( array( 'key' => 'value' ) );
+		$request2 = new Request( array() );
 		$this->assertNotEquals( $request1->getHash(), $request2->getHash() );
-		$request1 = new ApiRequest( array( 'key' => 'SomeLongValues?afg?2rq' ) );
-		$request2 = new ApiRequest( array() );
+		$request1 = new Request( array( 'key' => 'SomeLongValues?afg?2rq' ) );
+		$request2 = new Request( array() );
 		$this->assertNotEquals( $request1->getHash(), $request2->getHash() );
 	}
 
 	function testApiRequestOnlyStripsBadParamsWhenRequested(){
-		$request = new ApiRequest();
+		$request = new Request();
 		$request->setParameter( 'blub', 'bloo' );
 		$params = $request->getParameters();
 		$this->assertArrayHasKey( 'blub', $params );
 		$this->assertEquals( 'bloo', $params['blub'] );
 
-		$request = new ApiRequest( array(), false, 0, array( 'blub' ) );
+		$request = new Request( array(), false, 0, array( 'blub' ) );
 		$request->setParameter( 'blub', 'bloo' );
 		$request->setParameter( 'fail', 'foo' );
 		$params = $request->getParameters();

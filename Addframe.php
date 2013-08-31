@@ -21,8 +21,3 @@ spl_autoload_register( function ( $className ) {
 //todo it would be good to also echo the date of the current revision
 echo "Running Addframe, branch '" . GitInfo::currentBranch() . "', commit '" . GitInfo::headSHA1() . "'\n";
 GitInfo::destruct();
-
-//Include all core ApiRequests
-//todo we should create a Mediawiki entry script that includes the line below
-//todo it should also contain its own autoloader and class list (probably)
-include_once( __DIR__.'/includes/mediawiki/ApiRequests.php' );

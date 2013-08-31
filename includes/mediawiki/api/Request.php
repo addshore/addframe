@@ -1,6 +1,6 @@
 <?php
 
-namespace Addframe\Mediawiki;
+namespace Addframe\Mediawiki\Api;
 
 use Addframe\Cacheable;
 use Addframe\Http;
@@ -13,10 +13,10 @@ const CACHE_MINUTE = 60;
 const CACHE_NONE = 0;
 
 /**
- * Class ApiRequest representing a single api request
+ * Class Request representing a single api request
  */
 
-class ApiRequest implements Cacheable{
+class Request implements Cacheable{
 
 	/**
 	 * @var null|mixed the result of the request

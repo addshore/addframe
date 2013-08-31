@@ -1,14 +1,12 @@
 <?php
 
 use Addframe\Mediawiki\Api;
-use Addframe\Mediawiki\ApiRequest;
-use Addframe\Mediawiki\TestApi;
+use Addframe\Mediawiki\Api\Request;
 use Addframe\TestHttp;
 
 /**
  * Class ApiTest
  * @covers Addframe\Mediawiki\Api
- * @covers Addframe\Mediawiki\TestApi
  */
 
 class ApiTest extends MediawikiTestCase{
@@ -57,8 +55,8 @@ class ApiTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideApiRequests
 	 */
-	function testCanDoRequestWithToken( ApiRequest $request, $expected = '[]' ){
-		$http = new TestHttp( array( $this->getData( 'tokens/anonedittoken.json' ) , $expected ) );
+	function testCanDoRequestWithToken( Request $request, $expected = '[]' ){
+		$http = new TestHttp( array( $this->getTestApiData( 'tokens/anonedittoken.json' ) , $expected ) );
 		$api = new Api( $http );
 
 		$this->assertArrayNotHasKey( 'token', $request->getParameters() );
@@ -69,18 +67,18 @@ class ApiTest extends MediawikiTestCase{
 	}
 
 	/**
-	 * There is no real reason to provide all possible requests here as they all extend ApiRequest
+	 * There is no real reason to provide all possible requests here as they all extend Request
 	 * Generally if the first few succeed so will the rest..
 	 * todo we could have a list of possible api requests somewhere and iterate over them all with their default values
 	 **/
 	function provideApiRequests(){
 		return array(
-			array( new Addframe\Mediawiki\ApiRequest() ),
-			array( new Addframe\Mediawiki\ApiRequest( array( 'param' => 'value' ) ) ),
-			array( new Addframe\Mediawiki\ApiRequest( array( 'param' => 'value', 'format' => 'php' ) ) ),
-			array( new Addframe\Mediawiki\ApiRequest( array( 'param' => 'value', 'param2' => 'value2' ) ) ),
-			array( new Addframe\Mediawiki\ApiRequest(), '[]' ),
-			array( new Addframe\Mediawiki\ApiRequest(), $this->getData( 'tokens/watchtoken.json' ) ),
+			array( new Request() ),
+			array( new Request( array( 'param' => 'value' ) ) ),
+			array( new Request( array( 'param' => 'value', 'format' => 'php' ) ) ),
+			array( new Request( array( 'param' => 'value', 'param2' => 'value2' ) ) ),
+			array( new Request(), '[]' ),
+			array( new Request(), $this->getTestApiData( 'tokens/watchtoken.json' ) ),
 		);
 	}
 
@@ -97,10 +95,10 @@ class ApiTest extends MediawikiTestCase{
 	 * @dataProvider provideErrorCodeFiles
 	 */
 	function testApiExceptions( $file ){
-		$http = new TestHttp( $this->getData( "errors/{$file}" ) );
+		$http = new TestHttp( $this->getTestApiData( "errors/{$file}" ) );
 		$api = new Api( $http );
 		try{
-			$api->doRequest( new ApiRequest() );
+			$api->doRequest( new Request() );
 			$this->fail( "Failed to throw ApiUsageException with errorcode {$file}" );
 		} catch ( \Addframe\Mediawiki\ApiUsageException $e ){
 			$this->assertEquals( str_replace( '.json', '', $file ), $e->getCodeString() );
@@ -110,7 +108,7 @@ class ApiTest extends MediawikiTestCase{
 	}
 
 	function testCachedResultCanBeIgnored(){
-		$request = new Addframe\Mediawiki\ApiRequest( array( 'test' => 'testGettingCachedResultWorks' ), false, 100 );
+		$request = new Request( array( 'test' => 'testGettingCachedResultWorks' ), false, 100 );
 		\Addframe\Cache::remove( $request ); //remove if it is already there
 
 		//do our first request to get some data and cache it
@@ -133,7 +131,7 @@ class ApiTest extends MediawikiTestCase{
 	}
 
 	function testCachedResultExpires(){
-		$request = new Addframe\Mediawiki\ApiRequest( array( 'test' => 'testCachedResultExpires' ), false, 2 );
+		$request = new Request( array( 'test' => 'testCachedResultExpires' ), false, 2 );
 		\Addframe\Cache::remove( $request ); //remove if it is already there
 
 		//do our first request to get some data and cache it
@@ -154,35 +152,6 @@ class ApiTest extends MediawikiTestCase{
 		//we should now get the new data!
 		$api->doRequest( $request );
 		$this->assertEquals( array( 'NEW RESULT' ) , $request->getResult() );
-	}
-
-	function testTestApiWithArray(){
-		$expected1 = array( 'testTestApi array1' );
-		$expected2 = array( 'testTestApi array2' );
-		$testApi = new TestApi( array( json_encode( $expected1 ), json_encode( $expected2 ) ) );
-		$request = new Addframe\Mediawiki\ApiRequest();
-
-		$result = $testApi->doRequest( $request, false );
-		$this->assertEquals( $expected1, $result );
-		$this->assertEquals( $expected1, $request->getResult() );
-
-		$result = $testApi->doRequest( $request, false );
-		$this->assertEquals( $expected2, $result );
-		$this->assertEquals( $expected2, $request->getResult() );
-	}
-
-	function testTestApiWithString(){
-		$expected = array( 'testTestApi string' );
-		$testApi = new TestApi( json_encode( $expected ) );
-
-		$request = new Addframe\Mediawiki\ApiRequest();
-		$result = $testApi->doRequest( $request, false );
-		$this->assertEquals( $expected, $result );
-		$this->assertEquals( $expected, $request->getResult() );
-
-		$result = $testApi->doRequest( $request, false );
-		$this->assertEquals( $expected, $result );
-		$this->assertEquals( $expected, $request->getResult() );
 	}
 
 }
