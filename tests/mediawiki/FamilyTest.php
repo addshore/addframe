@@ -78,9 +78,6 @@ class FamilyTest extends MediawikiTestCase{
 			array( 'fishbowl',
 				array( 'rs.wikimedia.org' ),
 				array( 'foo', 'kr.wikipedia.org', 'office.wikimedia.org', 'en.wikipedia.org' ) ),
-			array( 'foo',
-				array( ),
-				array( 'en.wikipedia.org','kr.wikipedia.org', 'office.wikimedia.org', 'en.wikipedia.org' ) ),
 			array( array( 'active', 'closed' ),
 				array( 'en.wikipedia.org', 'kr.wikipedia.org' ),
 				array( 'foo', 'office.wikimedia.org', 'rs.wikimedia.org' ) ),
@@ -105,6 +102,37 @@ class FamilyTest extends MediawikiTestCase{
 		foreach( $hasnt as $url ){
 			$this->assertFalse( $partialSiteList->hasSite( $url ) );
 		}
+	}
+
+	function provideFilterTypes(){
+		return array(
+			array( 'closed' ),
+			array( 'private' ),
+			array( 'fishbowl' ),
+			array( 'active' ),
+			array( 'ACTIVE' ),
+		);
+	}
+
+	/**
+	 * @dataProvider provideFilterTypes
+	 */
+	function testGetSiteListFiltersWhenEmpty( $type ){
+		$expectedJson = $this->getTestApiData( 'sitematrix/empty.json' );
+		$family = new Family();
+		$family->setApi( new TestApi( $expectedJson ) );
+
+		$partialSiteList = $family->getSiteList( $type );
+		$this->assertInstanceOf( 'Addframe\Mediawiki\SiteList', $partialSiteList );
+		$this->assertEquals( 0, $partialSiteList->count() );
+	}
+
+	function testGetSiteListWithBadFilter( ){
+		$this->setExpectedException( '\UnexpectedValueException' );
+		$expectedJson = $this->getTestApiData( 'sitematrix/empty.json' );
+		$family = new Family();
+		$family->setApi( new TestApi( $expectedJson ) );
+		$family->getSiteList( 'Foo' );
 	}
 
 }
