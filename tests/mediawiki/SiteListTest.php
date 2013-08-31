@@ -1,4 +1,5 @@
 <?php
+
 use Addframe\Mediawiki\Site;
 use Addframe\Mediawiki\SiteList;
 

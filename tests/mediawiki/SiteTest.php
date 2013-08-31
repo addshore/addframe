@@ -98,10 +98,10 @@ class SiteTest extends MediawikiTestCase{
 
 	function provideGetToken(){
 		return array(
-			array( 'edit', $this->getData( 'tokens/anonedittoken.json' ), '+\\'),
-			array( 'protect', $this->getData( 'tokens/protecttoken.json' ), '863bb60669575ac8619662ddad5fc2ac+\\'),
-			array( 'watch', $this->getData( 'tokens/watchtoken.json' ), 'A63bb60669575ac8619662ddad5fc2ac+\\' ),
-			array( 'foo', $this->getData( 'tokens/warnings.json' ), null ),
+			array( 'edit', $this->getTestApiData( 'tokens/anonedittoken.json' ), '+\\'),
+			array( 'protect', $this->getTestApiData( 'tokens/protecttoken.json' ), '863bb60669575ac8619662ddad5fc2ac+\\'),
+			array( 'watch', $this->getTestApiData( 'tokens/watchtoken.json' ), 'A63bb60669575ac8619662ddad5fc2ac+\\' ),
+			array( 'foo', $this->getTestApiData( 'tokens/warnings.json' ), null ),
 		);
 	}
 
@@ -116,10 +116,10 @@ class SiteTest extends MediawikiTestCase{
 
 	function provideGetTokenList(){
 		return array(
-			array( $this->getData( 'tokens/anonedittoken.json' ), array( 'edittoken' => '+\\' ) ),
-			array( $this->getData( 'tokens/protecttoken.json' ), array( 'protecttoken' => '863bb60669575ac8619662ddad5fc2ac+\\' ) ),
-			array( $this->getData( 'tokens/warnings.json' ), array() ),
-			array( $this->getData( 'tokens/anoneditandwarnings.json' ) , array( 'edittoken' => '+\\' ) ),
+			array( $this->getTestApiData( 'tokens/anonedittoken.json' ), array( 'edittoken' => '+\\' ) ),
+			array( $this->getTestApiData( 'tokens/protecttoken.json' ), array( 'protecttoken' => '863bb60669575ac8619662ddad5fc2ac+\\' ) ),
+			array( $this->getTestApiData( 'tokens/warnings.json' ), array() ),
+			array( $this->getTestApiData( 'tokens/anoneditandwarnings.json' ) , array( 'edittoken' => '+\\' ) ),
 		);
 	}
 
@@ -135,9 +135,9 @@ class SiteTest extends MediawikiTestCase{
 
 	function provideLogin(){
 		return array(
-			array( array( $this->getData( 'login/part1.json' ), $this->getData( 'login/part2.json' ) ), true ),
-			array( array( $this->getData( 'login/part1.json' ), $this->getData( 'login/wrongtoken.json' ) ), false ),
-			array( $this->getData( 'login/wrongtoken.json' ), false ),
+			array( array( $this->getTestApiData( 'login/part1.json' ), $this->getTestApiData( 'login/part2.json' ) ), true ),
+			array( array( $this->getTestApiData( 'login/part1.json' ), $this->getTestApiData( 'login/wrongtoken.json' ) ), false ),
+			array( $this->getTestApiData( 'login/wrongtoken.json' ), false ),
 		);
 	}
 

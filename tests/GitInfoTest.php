@@ -1,7 +1,5 @@
 <?php
 
-namespace Addframe\tests;
-
 use Addframe\GitInfo;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-use Addframe\Mediawiki\ApiRequest;
+use Addframe\Mediawiki\Api\Request;
 use Addframe\Cache;
 
 /**
@@ -60,10 +60,10 @@ class CacheTest extends DefaultTestCase{
 	/**
 	 * Gets an API request using a random number as a param value
 	 * This means the request should have a vaguely unique hash compared to others used in this test
-	 * @return ApiRequest
+	 * @return Request
 	 */
 	function getRandomRequest(){
-		$request = new \Addframe\Mediawiki\ApiRequest( array( 'test' => rand( 0, 99999999 ) ) );
+		$request = new Request( array( 'test' => rand( 0, 99999999 ) ) );
 		$request->setResult( array( 'Note' => 'This cached result was generated in a test' ) );
 		return $request;
 	}

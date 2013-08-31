@@ -7,6 +7,8 @@ use Addframe\CacheException;
 use Addframe\Http;
 use Addframe\HttpException;
 use Addframe\Logger;
+use Addframe\Mediawiki\Api\Request;
+use Addframe\Mediawiki\Api\TokensRequest;
 
 /**
  * Class Api representing a Mediawiki API
@@ -58,13 +60,13 @@ class Api {
 
 	/**
 	 * Gets a result for the given API request either by requesting it or using cached data
-	 * @param ApiRequest $request
+	 * @param Request $request
 	 * @param bool $getCache do we want to check in the cache for a result?
 	 * @throws ApiUsageException
 	 * @throws \UnexpectedValueException
 	 * @return Array of the unserialized result data
 	 */
-	public function doRequest( ApiRequest &$request, $getCache = true ) {
+	public function doRequest( Request &$request, $getCache = true ) {
 		$result = null;
 
 		//try to get a cached value if we should
@@ -120,12 +122,12 @@ class Api {
 
 	/**
 	 * Do a request with a token
-	 * @param ApiRequest $request
+	 * @param Request $request
 	 * @param string $tokenType
 	 * @param bool $getCache
 	 * @return Array
 	 */
-	public function doRequestWithToken( ApiRequest &$request, $tokenType = 'edittoken', $getCache = true ) {
+	public function doRequestWithToken( Request &$request, $tokenType = 'edittoken', $getCache = true ) {
 		//todo the below hackery makes me think api and site should be the same class
 		//todo then we could use getToken('edit') instead...
 
@@ -209,7 +211,7 @@ class TestApi extends Api{
 	/**
 	 * Returns the data defined in the constructor
 	 */
-	public function doRequest( ApiRequest &$request, $getCache = null) {
+	public function doRequest( Request &$request, $getCache = null) {
 		if( is_array( $this->returnData ) ){
 			$testResult = array_shift( $this->returnData );
 		} else {
