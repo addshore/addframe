@@ -19,29 +19,29 @@ class SiteTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideUrls
 	 */
-	function testCanGetNewFromUrl( $url ){
+	function testCanGetNewFromUrl( $url, $expect ){
 		$site = Site::newFromUrl( $url );
 		$site->setUrl( $url );
-		$this->assertEquals( $url, $site->getUrl() );
+		$this->assertEquals( $expect, $site->getUrl() );
 	}
 
 	/**
 	 * @dataProvider provideUrls
 	 */
-	function testCanSetUrl( $url ){
+	function testCanSetUrl( $url, $expect ){
 		$site = new Site();
 		$site->setUrl( $url );
-		$this->assertEquals( $url, $site->getUrl() );
+		$this->assertEquals( $expect, $site->getUrl() );
 	}
 
 	function provideUrls(){
 		return array(
-			array( 'localhost/mediawiki' ),
-			array( '//127.0.0.1/' ),
-			array( 'en.wikipedia.org/wiki' ),
-			array( 'http://de.wikipedia.org/wiki/' ),
-			array( 'https://es.wikipedia.org/wiki' ),
-			array( '//pt.imawiki.org' ),
+			array( 'localhost/mediawiki', 'localhost/mediawiki' ),
+			array( '//127.0.0.1/', '127.0.0.1' ),
+			array( 'en.wikipedia.org/wiki' , 'en.wikipedia.org/wiki' ),
+			array( 'http://de.wikipedia.org/wiki/', 'de.wikipedia.org/wiki' ),
+			array( 'https://es.wikipedia.org/wiki' , 'es.wikipedia.org/wiki' ),
+			array( '//pt.imawiki.org' , 'pt.imawiki.org'),
 		);
 	}
 

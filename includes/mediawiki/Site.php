@@ -42,6 +42,7 @@ class Site {
 	 * @param $url string url of the site
 	 */
 	public function setUrl( $url ){
+		$url = trim( str_replace( array('http://','https://','//'), '', $url ), '/');
 		$this->url = $url;
 	}
 

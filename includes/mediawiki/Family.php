@@ -94,7 +94,7 @@ class Family extends Site {
 	 */
 	protected function addSiteFromSitematrixSite( $site ) {
 		if( array_key_exists( 'url', $site ) ){
-			$site['url'] = str_replace( array('http://','https://','//'), '', $site['url'] );
+			$site['url'] = trim( str_replace( array('http://','https://','//'), '', $site['url'] ), '/');
 			$this->siteList->append( Site::newFromUrl( $site['url'] ) );
 			$this->addIndexForSitematrixSite( $site );
 		}
