@@ -3,6 +3,7 @@
 namespace Addframe\Mediawiki;
 
 use Addframe\Http;
+use Addframe\Mediawiki\Api;
 use Addframe\Mediawiki\Api\LoginRequest;
 use Addframe\Mediawiki\Api\TokensRequest;
 

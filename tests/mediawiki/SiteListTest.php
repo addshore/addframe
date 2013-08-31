@@ -41,11 +41,21 @@ class SiteListTest extends MediawikiTestCase{
 		);
 	}
 
+	public function testSiteListFromArray(){
+		$siteArray = array( Site::newFromUrl( 'localhost' ), Site::newFromUrl( 'en.wikipedia.org' ) );
+		$siteList = SiteList::newFromArray( $siteArray );
+		$this->assertEquals( 2, $siteList->count() );
+		/** @var $site Site */
+		foreach( $siteArray as $site ){
+			$this->assertTrue( $siteList->hasSite( $site->getUrl() ) );
+		}
+	}
+
 	public function testSiteList(){
 		$sites = new SiteList();
 
 		$siteOne = Site::newFromUrl( 'localhost' );
-		$siteTwo = Site::newFromUrl( 'http://en.wikipedia.org/wiki' );
+		$siteTwo = Site::newFromUrl( 'en.wikipedia.org' );
 
 		$this->assertFalse( $sites->hasSite( $siteOne->getUrl() ) );
 		$this->assertTrue( $sites->isEmpty() );
@@ -72,7 +82,7 @@ class SiteListTest extends MediawikiTestCase{
 		$this->assertFalse( $sites->isEmpty() );
 		$this->assertEquals( 1, count( $sites ) );
 
-		$sites->removeSite( 'http://en.wikipedia.org/wiki' );
+		$sites->removeSite( 'en.wikipedia.org' );
 		$this->assertTrue( $sites->isEmpty() );
 		$this->assertEquals( 0, count( $sites ) );
 	}
