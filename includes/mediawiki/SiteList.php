@@ -200,4 +200,16 @@ class SiteList extends \ArrayObject {
 		return $this->offsetGet( $this->byUrl[$url] );
 	}
 
+	/**
+	 * @param $sites Site[]
+	 * @return SiteList
+	 */
+	public static function newFromArray( $sites ){
+		$siteList = new SiteList( );
+		foreach( $sites as $site ){
+			$siteList->append( $site );
+		}
+		return $siteList;
+	}
+
 }
