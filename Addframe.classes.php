@@ -19,6 +19,7 @@ return call_user_func( function() {
 
 		//core api
 		'Addframe\Mediawiki\Api' => 'mediawiki/Api.php',
+		'Addframe\Mediawiki\Api\UsageException' => 'mediawiki/api/UsageException.php',
 		'Addframe\Mediawiki\Api\Request' => 'mediawiki/api/Request.php',
 		'Addframe\Mediawiki\Api\EditRequest' => 'mediawiki/api/EditRequest.php',
 		'Addframe\Mediawiki\Api\LoginRequest' => 'mediawiki/api/LoginRequest.php',
