@@ -21,13 +21,18 @@ class Family extends Site {
 	 */
 	/* protected */ public function __construct( $http = null ) {
 		$this->siteList = new SiteList();
-		$this->siteIndex = array();
+		$this->siteIndex = array( 'closed' => array(), 'private' => array(), 'fishbowl' => array(), 'active' => array() );
 		parent::__construct( $http );
 	}
 
 	/**
 	 * Gets the sitelist for the family
 	 * @param null|string|string[] $filter types of site to return in the sitelist (closed|private|fishbowl|active)
+	 *  - active - Full read and write access
+	 *  - closed - No write access, full read access
+	 *  - private - Read and write restricted
+	 *  - fishbowl - Restricted write access, full read access
+	 * @throws \UnexpectedValueException
 	 * @return SiteList
 	 */
 	public function getSiteList( $filter = null ){
@@ -43,11 +48,18 @@ class Family extends Site {
 			}
 			$partialSiteList = new SiteList();
 			foreach( $filter as $filterBy ){
+
+				$filterBy = strtolower( $filterBy );
+				if( !in_array( $filterBy, array( 'closed', 'private', 'fishbowl', 'active' ) ) ){
+					throw new \UnexpectedValueException( "{$filterBy} not allowed, Filter options must be one of (closed|private|fishbowl|active)" );
+				}
+
 				if( array_key_exists( $filterBy, $this->siteIndex ) ){
 					foreach( $this->siteIndex[$filterBy] as $siteUrl ){
 						$partialSiteList->append( $this->siteList->getSite( $siteUrl ) );
 					}
 				}
+
 			}
 			return $partialSiteList;
 		}
