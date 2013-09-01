@@ -16,6 +16,7 @@ return call_user_func( function() {
 		//core
 		'Addframe\Mediawiki\Site' => 'mediawiki/Site.php',
 		'Addframe\Mediawiki\SiteList' => 'mediawiki/SiteList.php',
+		'Addframe\Mediawiki\User' => 'mediawiki/User.php',
 
 		//core api
 		'Addframe\Mediawiki\Api' => 'mediawiki/Api.php',
@@ -29,6 +30,7 @@ return call_user_func( function() {
 		'Addframe\Mediawiki\Api\TokensRequest' => 'mediawiki/api/TokensRequest.php',
 		'Addframe\Mediawiki\Api\RevisionsRequest' => 'mediawiki/api/RevisionsRequest.php',
 		'Addframe\Mediawiki\Api\UserinfoRequest' => 'mediawiki/api/UserinfoRequest.php',
+		'Addframe\Mediawiki\Api\UsersRequest' => 'mediawiki/api/UsersRequest.php',
 
 		//SiteMatrix
 		'Addframe\Mediawiki\Family' => 'mediawiki/Family.php',
