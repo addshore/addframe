@@ -170,4 +170,14 @@ class SiteTest extends MediawikiTestCase{
 		);
 	}
 
+	function testLogout(){
+		$site = Site::newFromUrl( 'foobar' );
+		$api = new TestApi( '[]' );
+		$site->setApi( $api );
+		$result = $site->logout();
+
+		$this->assertTrue( $result );
+		$this->assertEquals( 1, count( $api->completeRequests ) );
+	}
+
 }

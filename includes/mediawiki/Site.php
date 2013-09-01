@@ -159,4 +159,13 @@ class Site {
 		return null;
 	}
 
+	/**
+	 * Log out of the site
+	 * @returns bool always true
+	 */
+	public function logout(){
+		$this->getApi()->doRequest( new Api\LogoutRequest() );
+		return true;
+	}
+
 }
