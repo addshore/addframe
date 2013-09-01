@@ -97,4 +97,18 @@ class UserTest extends MediawikiTestCase {
 		$user = $this->provideAdminUserWithSite();
 		$this->assertTrue( is_array( $user->getRights() ) );
 	}
+
+	function testGetUserPage(){
+		$user = $this->provideAdminUserWithSite();
+		$page = $user->getUserPage();
+		$this->assertInstanceOf( 'Addframe\Mediawiki\Page', $page );
+		$this->assertEquals( 'User:Admin', $page->getTitle() );
+	}
+
+	function testGetUserTalkPage(){
+		$user = $this->provideAdminUserWithSite();
+		$page = $user->getUserTalkPage();
+		$this->assertInstanceOf( 'Addframe\Mediawiki\Page', $page );
+		$this->assertEquals( 'User talk:Admin', $page->getTitle() );
+	}
 }
