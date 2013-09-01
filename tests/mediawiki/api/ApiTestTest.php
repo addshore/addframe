@@ -37,4 +37,25 @@ class TestApiTest extends DefaultTestCase{
 		$this->assertEquals( $expected, $request->getResult() );
 	}
 
+	function testTestApiHoldsResults(){
+		$testApi = new TestApi( '[]' );
+
+		$request1 = new Request( array( 'label' => 'unique1' ) );
+		$request2 = new Request( array( 'label' => 'unique2' ) );
+
+		$this->assertFalse( in_array( $request1, $testApi->completeRequests ) );
+		$this->assertEquals( 0, count( $testApi->completeRequests ) );
+
+		$testApi->doRequest( $request1, false );
+		$this->assertTrue( in_array( $request1, $testApi->completeRequests ) );
+		$this->assertEquals( 1, count( $testApi->completeRequests ) );
+
+		$testApi->doRequest( $request2, false );
+		$this->assertTrue( in_array( $request2, $testApi->completeRequests ) );
+		$this->assertEquals( 2, count( $testApi->completeRequests ) );
+
+		$this->assertEquals( $request1, $testApi->completeRequests[0] );
+		$this->assertEquals( $request2, $testApi->completeRequests[1] );
+	}
+
 }
