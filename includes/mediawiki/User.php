@@ -166,6 +166,22 @@ class User {
 	}
 
 	/**
+	 * @return Page
+	 */
+	public function getUserPage(){
+		//todo also set the namespace..
+		return Page::newFromTitle( 'User:' . $this->name, $this->getSite() );
+	}
+
+	/**
+	 * @return Page
+	 */
+	public function getUserTalkPage(){
+		//todo also set the namespace..
+		return Page::newFromTitle( 'User talk:' . $this->name, $this->getSite() );
+	}
+
+	/**
 	 * @param $name string of the user
 	 * @param Site $site
 	 * @return User
