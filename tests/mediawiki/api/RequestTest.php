@@ -12,8 +12,8 @@ class ApiRequestTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideConstructionData
 	 */
-	function testCanConstruct( $params = array(), $shouldBePosted = false, $cache = 0 ){
-		$request = new Request( $params, $shouldBePosted , $cache );
+	function testCanConstruct( $params = array(), $shouldBePosted = false, $cache = 0, $allowedParams = array() ){
+		$request = new Request( $params, $shouldBePosted , $cache, $allowedParams);
 		$this->assertInstanceOf( 'Addframe\Mediawiki\Api\Request', $request );
 
 		//Sort out our expected params
@@ -47,6 +47,30 @@ class ApiRequestTest extends MediawikiTestCase{
 			array( array( 'param' => array( 'val1', 'val2' ), 'another' => array( 'aa1', 'aa2' ) ) ),
 			array( array( 'param' => 'val', 'another' => null ) ),
 			array( array( 'param' => null, 'another' => 'val' ) ),
+			array( array(), true, 5, array() ),
+		);
+	}
+
+	/**
+	 * @dataProvider provideBadConstructionData
+	 */
+	function testConstructionWithBadData( $params , $shouldBePosted , $cache, $allowedParams ){
+		$this->setExpectedException( 'UnexpectedValueException' );
+		$request = new Request( $params, $shouldBePosted , $cache, $allowedParams);
+	}
+
+	function provideBadConstructionData(){
+		return array(
+			//data, //post, //cacheable, //allowedParams
+			array( null, null, null, null ),
+			array( array(), array(), array(), array() ),
+			array( 'str', 'str', 'str', 'str' ),
+			array( false, false, false, false ),
+			array( 5, 5, 5, 5 ),
+			array( 'fail' , true, 5, array() ),
+			array( array(), 'fail', 5, array() ),
+			array( array(), true, 'fail', array() ),
+			array( array(), true, 5, 'fail' ),
 		);
 	}
 
