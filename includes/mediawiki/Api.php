@@ -159,7 +159,14 @@ class Api {
  */
 class TestApi extends Api{
 
+	/**
+	 * @var array|string the store of data to return from the api
+	 */
 	protected $returnData;
+	/**
+	 * @var Request[] of requests the api has made (this can be used to check params)
+	 */
+	public $completeRequests = array();
 
 	/**
 	 * @param array|string $returnData array of data to return in json form
@@ -172,6 +179,7 @@ class TestApi extends Api{
 	 * Returns the data defined in the constructor
 	 */
 	public function doRequest( Request &$request, $getCache = null) {
+		$this->completeRequests[] = $request;
 		if( is_array( $this->returnData ) ){
 			$testResult = array_shift( $this->returnData );
 		} else {

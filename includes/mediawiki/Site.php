@@ -125,7 +125,8 @@ class Site {
 	 * @return null|string the token of type requested
 	 */
 	public function getToken( $type = 'edit' ){
-		$apiResult = $this->getApi()->doRequest( new TokensRequest() );
+		$request = new TokensRequest( array( 'type' => $type ) );
+		$apiResult = $this->getApi()->doRequest( $request );
 		if( array_key_exists( 'tokens', $apiResult ) && array_key_exists( $type.'token', $apiResult['tokens'] )){
 			return $apiResult['tokens'][$type.'token'];
 		}
@@ -141,7 +142,7 @@ class Site {
 	 * @throws \Exception
 	 */
 	public function login( $username, $password, $token = null){
-		$params = array( 'lguser' => $username, 'lgpassword' => $password );
+		$params = array( 'lgname' => $username, 'lgpassword' => $password );
 		if( !is_null( $token ) ){
 			$params['lgtoken'] = $token;
 		}

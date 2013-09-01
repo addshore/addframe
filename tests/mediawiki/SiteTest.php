@@ -91,9 +91,15 @@ class SiteTest extends MediawikiTestCase{
 	 */
 	function testGetToken( $type = 'edit', $json, $expected){
 		$site = Site::newFromUrl( 'foobar' );
-		$site->setApi( new TestApi( $json ) );
+		$api = new TestApi( $json );
+		$site->setApi( $api );
 		$token = $site->getToken( $type );
+
 		$this->assertEquals( $expected, $token );
+		$this->assertEquals( 1, count( $api->completeRequests ) );
+		$params = $api->completeRequests[0]->getParameters();
+		$this->assertArrayHasKey( 'type', $params );
+		$this->assertEquals( $type, $params['type'] );
 	}
 
 	function provideGetToken(){
@@ -110,8 +116,15 @@ class SiteTest extends MediawikiTestCase{
 	 */
 	function testGetTokenList( $json, $expected){
 		$site = Site::newFromUrl( 'foobar' );
-		$site->setApi( new TestApi( $json ) );
-		$this->assertEquals( $expected, $site->getTokenList() );
+		$api = new TestApi( $json );
+		$site->setApi( $api );
+		$tokenlist = $site->getTokenList();
+
+		$this->assertEquals( $expected, $tokenlist );
+		$this->assertEquals( 1, count( $api->completeRequests ) );
+		$params = $api->completeRequests[0]->getParameters();
+		$this->assertArrayHasKey( 'type', $params );
+		$this->assertEquals( 'block|delete|edit|email|import|move|options|patrol|protect|unblock|watch', $params['type'] );
 	}
 
 	function provideGetTokenList(){
@@ -126,18 +139,34 @@ class SiteTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideLogin
 	 */
-	function testLogin( $injectedResult, $expected){
+	function testLogin( $injectedResult, $expected ){
 		$site = Site::newFromUrl( 'foobar' );
-		$site->setApi( new TestApi( $injectedResult ) );
+		$api = new TestApi( $injectedResult );
+		$site->setApi( $api );
 		$result = $site->login( 'foo', 'bar' );
-		$this->assertEquals( $expected, $result );
+
+		$this->assertEquals( $expected['result'], $result );
+		$this->assertEquals( $expected['requests'], count( $api->completeRequests ) );
+		foreach( $api->completeRequests as $request ){
+			$params = $request->getParameters();
+			$this->assertArrayHasKey( 'lgname', $params );
+			$this->assertEquals( 'foo', $params['lgname'] );
+			$this->assertArrayHasKey( 'lgpassword', $params );
+			$this->assertEquals( 'bar', $params['lgpassword'] );
+		}
 	}
 
 	function provideLogin(){
 		return array(
-			array( array( $this->getTestApiData( 'login/part1.json' ), $this->getTestApiData( 'login/part2.json' ) ), true ),
-			array( array( $this->getTestApiData( 'login/part1.json' ), $this->getTestApiData( 'login/wrongtoken.json' ) ), false ),
-			array( $this->getTestApiData( 'login/wrongtoken.json' ), false ),
+			array(
+				array( $this->getTestApiData( 'login/part1.json' ), $this->getTestApiData( 'login/part2.json' ) ),
+				array( 'result' => true, 'requests' => 2 ) ),
+			array(
+				array( $this->getTestApiData( 'login/part1.json' ), $this->getTestApiData( 'login/wrongtoken.json' ) ),
+				array( 'result' => false, 'requests' => 2 ) ),
+			array(
+				$this->getTestApiData( 'login/wrongtoken.json' ),
+				array( 'result' => false, 'requests' => 1 ) ),
 		);
 	}
 
