@@ -159,4 +159,22 @@ class Site {
 		return null;
 	}
 
+	/**
+	 * Log out of the site
+	 * @returns bool always true
+	 */
+	public function logout(){
+		$this->getApi()->doRequest( new Api\LogoutRequest() );
+		return true;
+	}
+
+	/**
+	 * @param $username string username
+	 * @return User with the given username on this site
+	 */
+	public function getUser( $username ){
+		$user = User::newFromUsername( $username, $this );
+		return $user;
+	}
+
 }

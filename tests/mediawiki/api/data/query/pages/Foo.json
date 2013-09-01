@@ -1,0 +1,26 @@
+{
+    "query": {
+        "pages": {
+            "4": {
+                "pageid": 4,
+                "ns": 0,
+                "title": "Foo",
+                "contentmodel": "wikitext",
+                "pagelanguage": "en",
+                "touched": "2013-09-01T09:46:15Z",
+                "lastrevid": 87,
+                "counter": 3,
+                "length": 13,
+                "protection": [
+
+                ],
+                "notificationtimestamp": "",
+                "fullurl": "http://localhost/mediawiki/index.php/Foo",
+                "editurl": "http://localhost/mediawiki/index.php?title=Foo&action=edit",
+                "readable": "",
+                "preload": "",
+                "displaytitle": "Foo"
+            }
+        }
+    }
+}

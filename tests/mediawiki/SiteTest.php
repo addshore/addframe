@@ -170,4 +170,21 @@ class SiteTest extends MediawikiTestCase{
 		);
 	}
 
+	function testLogout(){
+		$site = Site::newFromUrl( 'foobar' );
+		$api = new TestApi( '[]' );
+		$site->setApi( $api );
+		$result = $site->logout();
+
+		$this->assertTrue( $result );
+		$this->assertEquals( 1, count( $api->completeRequests ) );
+	}
+
+	function testGetUser(){
+		$site = new Site();
+		$user = $site->getUser( 'Foo' );
+		$this->assertInstanceOf( '\Addframe\Mediawiki\User', $user );
+		$this->assertEquals( 'Foo', $user->getName() );
+	}
+
 }
