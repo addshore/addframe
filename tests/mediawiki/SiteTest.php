@@ -180,4 +180,11 @@ class SiteTest extends MediawikiTestCase{
 		$this->assertEquals( 1, count( $api->completeRequests ) );
 	}
 
+	function testGetUser(){
+		$site = new Site();
+		$user = $site->getUser( 'Foo' );
+		$this->assertInstanceOf( '\Addframe\Mediawiki\User', $user );
+		$this->assertEquals( 'Foo', $user->getName() );
+	}
+
 }

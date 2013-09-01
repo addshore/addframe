@@ -168,4 +168,13 @@ class Site {
 		return true;
 	}
 
+	/**
+	 * @param $username string username
+	 * @return User with the given username on this site
+	 */
+	public function getUser( $username ){
+		$user = User::newFromUsername( $username, $this );
+		return $user;
+	}
+
 }
