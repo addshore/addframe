@@ -12,6 +12,7 @@ return call_user_func( function() {
 		'Addframe\Cacheable' => 'Cacheable.php',
 		'Addframe\Logger' => 'Logger.php',
 		'Addframe\GitInfo' => 'GitInfo.php',
+		'Addframe\ConfigParser' => 'ConfigParser.php',
 
 		//core
 		'Addframe\Mediawiki\Site' => 'mediawiki/Site.php',
