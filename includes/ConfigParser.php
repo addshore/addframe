@@ -85,7 +85,7 @@ class ConfigParser {
 		if( $key == "" ){
 			return $this->config;
 		} else {
-			return $this->config[ strtoupper( $key ) ];
+			return $this->config[ $key ];
 		}
 	}
 }
