@@ -30,8 +30,12 @@ class ConfigParser {
 	function __construct( $environment = "default" ) {
 
 		$configDefault = parse_ini_file( __DIR__ . '/../LocalSettings.default.ini', true );
-		$config = parse_ini_file( __DIR__ . '/../LocalSettings.ini', true );
-		$config = array_merge( $configDefault, $config );
+		if( file_exists( __DIR__ . '/../LocalSettings.ini' ) ){
+			$config = parse_ini_file( __DIR__ . '/../LocalSettings.ini', true );
+			$config = array_merge( $configDefault, $config );
+		} else {
+			$config = $configDefault;
+		}
 
 		// default specific
 		if( array_key_exists( "default",$config ) ){
