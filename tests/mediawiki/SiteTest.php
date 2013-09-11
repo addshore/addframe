@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe\Test;
+
 use Addframe\Mediawiki\Site;
 use Addframe\Mediawiki\TestApi;
 use Addframe\TestHttp;

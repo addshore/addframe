@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe\Test;
+
 /**
  * Class UsersRequestTest
  * @covers Addframe\Mediawiki\Api\UsersRequest

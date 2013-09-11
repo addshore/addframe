@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe\Test;
+
 use Addframe\Mediawiki\Site;
 use Addframe\Mediawiki\SiteList;
 
@@ -37,7 +39,7 @@ class SiteListTest extends MediawikiTestCase{
 			array( array() ),
 			array( 'imastring' ),
 			array( 123 ),
-			array( new Exception() ),
+			array( new \Exception() ),
 		);
 	}
 

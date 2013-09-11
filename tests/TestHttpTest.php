@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe\Test;
+
 use Addframe\TestHttp;
 
 class TestHttpTest extends DefaultTestCase{

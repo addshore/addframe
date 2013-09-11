@@ -1,9 +1,11 @@
 <?php
 
+namespace Addframe\Test;
+
 /**
  * Class DefaultTestCase
  */
-class DefaultTestCase extends PHPUnit_Framework_TestCase {
+class DefaultTestCase extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * @see PHPUnit_Framework_TestCase::tearDownAfterClass()

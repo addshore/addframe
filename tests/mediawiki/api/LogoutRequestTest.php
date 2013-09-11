@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe\Test;
+
 /**
  * Class LogoutRequestTest
  * @covers Addframe\Mediawiki\Api\LogoutRequest
