@@ -10,7 +10,7 @@ require_once( __DIR__.'/../Addframe.php' );
  * todo make an autoloader here so we dont have to specify everything
  */
 require_once( __DIR__.'/DefaultTestCase.php' );
-require_once( __DIR__.'/mediawiki/MediawikiTestCase.php' );
+require_once( __DIR__ . '/Mediawiki/MediawikiTestCase.php' );
 
 /**
  * Turn default logging off

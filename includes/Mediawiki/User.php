@@ -3,6 +3,8 @@
 namespace Addframe\Mediawiki;
 
 use Addframe\Logger;
+use Addframe\Mediawiki\Api\UsersRequest;
+use UnexpectedValueException;
 
 class User {
 
@@ -121,11 +123,11 @@ class User {
 
 	/**
 	 * @param $site Site
-	 * @throws \UnexpectedValueException
+	 * @throws UnexpectedValueException
 	 */
 	public function setSite( $site ) {
 		if( !$site instanceof Site ){
-			throw new \UnexpectedValueException( 'User site can only be set to an instance of site' );
+			throw new UnexpectedValueException( 'User site can only be set to an instance of site' );
 		}
 		$this->site = $site;
 	}
@@ -136,7 +138,7 @@ class User {
 	 */
 	public function getSite(){
 		if( !$this->site instanceof Site ){
-			throw new \UnexpectedValueException( 'User must have a site before the site can be used' );
+			throw new UnexpectedValueException( 'User must have a site before the site can be used' );
 		}
 		return $this->site;
 	}
@@ -146,7 +148,7 @@ class User {
 	 */
 	public function load(){
 		try{
-			$request = new Api\UsersRequest( array( 'ususers' => $this->getName() ) );
+			$request = new UsersRequest( array( 'ususers' => $this->getName() ) );
 			$result = $this->getSite()->getApi()->doRequest( $request );
 			$result = $result['query']['users'][0];
 			//todo factor the below out into setFromArray()??
@@ -159,7 +161,7 @@ class User {
 			$this->rights = $result['rights'];
 			$this->gender = $result['gender'];
 			return true;
-		} catch ( \UnexpectedValueException $e ){
+		} catch ( UnexpectedValueException $e ){
 			Logger::logError( "Cannot load user details for {$this->name} as no Site is defined" );
 			return false;
 		}

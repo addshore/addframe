@@ -2,6 +2,8 @@
 
 namespace Addframe;
 
+use Exception;
+
 /**
  * Configuration INI files will be created in this order
  * 1 => DEFAULT Section values assigned
@@ -30,8 +32,12 @@ class ConfigParser {
 	function __construct( $environment = "default" ) {
 
 		$configDefault = parse_ini_file( __DIR__ . '/../LocalSettings.default.ini', true );
-		$config = parse_ini_file( __DIR__ . '/../LocalSettings.ini', true );
-		$config = array_merge( $configDefault, $config );
+		if( file_exists( __DIR__ . '/../LocalSettings.ini' ) ){
+			$config = parse_ini_file( __DIR__ . '/../LocalSettings.ini', true );
+			$config = array_merge( $configDefault, $config );
+		} else {
+			$config = $configDefault;
+		}
 
 		// default specific
 		if( array_key_exists( "default",$config ) ){
@@ -48,7 +54,7 @@ class ConfigParser {
 	 * @param $environment
 	 * @param $config
 	 * @param array $path
-	 * @throws \Exception
+	 * @throws Exception
 	 * @return array
 	 */
 	private function loadEnvironment( $environment, $config, &$path=array() ) {
@@ -62,7 +68,7 @@ class ConfigParser {
 		}
 
 		if( !array_key_exists( $environment, $config ) ){
-			throw new \Exception( "No such environment {$environment} defined in LocalSettings" );
+			throw new Exception( "No such environment {$environment} defined in LocalSettings" );
 		}
 
 		if( array_key_exists( "EXTENDS", $config[$environment] ) ) {

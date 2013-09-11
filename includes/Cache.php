@@ -1,6 +1,7 @@
 <?php
 
 namespace Addframe;
+
 use Exception;
 
 /**
@@ -97,7 +98,7 @@ class Cache {
 	 * @return string Path to the cache file for the item
 	 */
 	protected static function getPath( Cacheable $item ){
-		return __DIR__.'/../cache/'.self::$prefix.$item->getHash();
+		return __DIR__ . '/../cache/' . self::$prefix.$item->getHash();
 	}
 
 	/**
@@ -107,7 +108,7 @@ class Cache {
 	public static function clear(){
 		try{
 			array_map('unlink', glob( __DIR__.'/../cache/'.self::$prefix.'*' ) );
-		} catch( \Exception $e ){
+		} catch( Exception $e ){
 			throw new CacheException( "Failed to clear cache", 0, $e );
 		}
 
@@ -118,6 +119,6 @@ class Cache {
 /**
  * Class CacheException
  */
-class CacheException extends \Exception {
+class CacheException extends Exception {
 
 }

@@ -3,6 +3,8 @@
 namespace Addframe\Mediawiki;
 
 use Addframe\Logger;
+use Addframe\Mediawiki\Api\InfoRequest;
+use UnexpectedValueException;
 
 class Page {
 
@@ -75,11 +77,11 @@ class Page {
 
 	/**
 	 * @param $site Site
-	 * @throws \UnexpectedValueException
+	 * @throws UnexpectedValueException
 	 */
 	public function setSite( $site ) {
 		if( !$site instanceof Site ){
-			throw new \UnexpectedValueException( 'User site can only be set to an instance of site' );
+			throw new UnexpectedValueException( 'User site can only be set to an instance of site' );
 		}
 		$this->site = $site;
 	}
@@ -90,7 +92,7 @@ class Page {
 	 */
 	public function getSite(){
 		if( !$this->site instanceof Site ){
-			throw new \UnexpectedValueException( 'User must have a site before the site can be used' );
+			throw new UnexpectedValueException( 'User must have a site before the site can be used' );
 		}
 		return $this->site;
 	}
@@ -190,7 +192,7 @@ class Page {
 	 */
 	public function load() {
 		try{
-			$request = new Api\InfoRequest( array( 'titles' => $this->getTitle() ) );
+			$request = new InfoRequest( array( 'titles' => $this->getTitle() ) );
 			$result = $this->getSite()->getApi()->doRequest( $request );
 			$result = array_shift( $result['query']['pages'] );
 			//todo factor the below out into setFromArray()??
@@ -212,7 +214,7 @@ class Page {
 //			$this->preload = $result['preload'];
 			$this->displaytitle = $result['displaytitle'];
 			return true;
-		} catch ( \UnexpectedValueException $e ){
+		} catch ( UnexpectedValueException $e ){
 			Logger::logError( "Cannot load page details for {$this->title} as no Site is defined" );
 			return false;
 		}

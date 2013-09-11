@@ -2,6 +2,8 @@
 
 namespace Addframe\Mediawiki;
 
+use InvalidArgumentException;
+
 /**
  * Class SiteList
  * @license GNU GPL v2+
@@ -64,11 +66,11 @@ class SiteList extends \ArrayObject {
 	 * @param mixed $index
 	 * @param mixed $value
 	 *
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	protected function setElement( $index, $value ) {
 		if ( !$this->hasValidType( $value ) ) {
-			throw new \InvalidArgumentException(
+			throw new InvalidArgumentException(
 				'Can only add ' . $this->getObjectType() . ' implementing objects to ' . get_called_class() . '.'
 			);
 		}
