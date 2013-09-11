@@ -48,9 +48,10 @@ class ConfigParser {
 	 * @param $environment
 	 * @param $config
 	 * @param array $path
+	 * @throws \Exception
 	 * @return array
 	 */
-	private function loadEnvironment( $environment,$config, &$path=array() ) {
+	private function loadEnvironment( $environment, $config, &$path=array() ) {
 		// prevent case where a->b and b->a (infinite loop)
 		if( in_array( $environment, $path ) ){
 			// item already parsed, return from the function
@@ -58,6 +59,10 @@ class ConfigParser {
 		} else {
 			// add to path and continue
 			array_push( $path, $environment );
+		}
+
+		if( !array_key_exists( $environment, $config ) ){
+			throw new \Exception( "No such environment {$environment} defined in LocalSettings" );
 		}
 
 		if( array_key_exists( "EXTENDS", $config[$environment] ) ) {
