@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe\Test;
+
 use Addframe\Mediawiki\Api\Request;
 use Addframe\Cache;
 

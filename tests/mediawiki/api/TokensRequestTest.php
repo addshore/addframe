@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe\Test;
+
 /**
  * Class TokensRequestTest
  * @covers Addframe\Mediawiki\Api\TokensRequest

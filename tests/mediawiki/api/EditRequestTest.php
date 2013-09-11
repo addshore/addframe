@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe\Test;
+
 /**
  * Class EditRequestTest
  * @covers Addframe\Mediawiki\Api\EditRequest

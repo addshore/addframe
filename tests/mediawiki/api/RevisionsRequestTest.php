@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe\Test;
+
 /**
  * Class RevisionsRequestTest
  * @covers Addframe\Mediawiki\Api\RevisionsRequest

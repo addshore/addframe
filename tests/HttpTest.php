@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe\Test;
+
 use Addframe\Http;
 use Addframe\TestHttp;
 

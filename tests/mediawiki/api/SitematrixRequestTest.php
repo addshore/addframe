@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe\Test;
+
 /**
  * Class SitematrixRequestTest
  * @covers Addframe\Mediawiki\Api\SitematrixRequest

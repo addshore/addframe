@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe\Test;
+
 /**
  * Class InfoRequestTest
  * @covers Addframe\Mediawiki\Api\InfoRequest

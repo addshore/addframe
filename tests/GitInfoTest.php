@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe\Test;
+
 use Addframe\GitInfo;
 
 /**
@@ -7,7 +9,7 @@ use Addframe\GitInfo;
  * @covers \Addframe\GitInfo
  */
 
-class GitInfoTest extends \DefaultTestCase {
+class GitInfoTest extends DefaultTestCase {
 
 	function testSinglton(){
 		$this->assertInstanceOf( '\Addframe\GitInfo',GitInfo::repo() );

@@ -1,5 +1,7 @@
 <?php
 
+namespace Addframe\Test;
+
 use Addframe\Mediawiki\Family;
 use Addframe\Mediawiki\TestApi;
 
