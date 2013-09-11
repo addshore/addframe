@@ -6,6 +6,7 @@ The framework is currently under development (feel free to hack along)!
 
 If you have feature requests please file a bug.
 
+###### Badges
 
 * Status: [![Build Status](https://travis-ci.org/addwiki/addframe.png)](https://travis-ci.org/addwiki/addframe)
 * Coverage: [![Code Coverage](https://scrutinizer-ci.com/g/addwiki/addframe/badges/coverage.png?s=acd9971d5448361270f4e30c6f6c5ddf53b76fe3)](https://scrutinizer-ci.com/g/addwiki/addframe/)
