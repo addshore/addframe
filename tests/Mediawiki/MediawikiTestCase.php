@@ -14,7 +14,7 @@ class MediawikiTestCase extends DefaultTestCase {
 	 * @return string data from path
 	 */
 	protected function getTestApiData( $path ){
-		$path =  __DIR__.'/api/data/'.$path;
+		$path =  __DIR__.'/Api/data/'.$path;
 
 		if( ! ( $data = file_get_contents( $path ) ) ){
 			throw new \FileNotFoundException( "No data file (you should define it) from {$path}" );
