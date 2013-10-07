@@ -2,6 +2,9 @@
 
 namespace Addframe;
 
+use IOException;
+use UnexpectedValueException;
+
 /**
  * A light, permissions-checking logging class.
  *
@@ -99,7 +102,7 @@ class Logger {
 	 * @param string $label Label of the log
 	 * @param null|int $severity
 	 * @param int $severity
-	 * @throws \IOException
+	 * @throws IOException
 	 */
 	public static function setupLog( $label = 'log', $severity = null ) {
 		if ( ! array_key_exists( $label, self::$filePaths ) ) {
@@ -121,7 +124,7 @@ class Logger {
 				$logFileDirectory = self::$logDirectory . '/' . $label;
 				if ( ! file_exists( $logFileDirectory ) ) {
 					if( mkdir( $logFileDirectory, 0777, true ) === false ){
-						throw new \IOException( 'Failed to make directory ' . $logFileDirectory );
+						throw new IOException( 'Failed to make directory ' . $logFileDirectory );
 					}
 				}
 				$logFilePath = $logFileDirectory . '/' . date( 'Y-m-d' ) . '.txt';
@@ -130,7 +133,7 @@ class Logger {
 			//create the log file if it doesn't exist (even if we end up not using it)
 			if ( !file_exists( $logFilePath ) ){
 				if( file_put_contents( $logFilePath, '', FILE_APPEND ) === false ){
-					throw new \IOException( "Can not create log path {$logFilePath}" );
+					throw new IOException( "Can not create log path {$logFilePath}" );
 				}
 			}
 
@@ -139,7 +142,7 @@ class Logger {
 				self::$severityThresholds[$label] = $severity;
 				self::$filePaths[$label] = $logFilePath;
 			} else {
-				throw new \IOException( "Can not write to log path {$logFilePath}" );
+				throw new IOException( "Can not write to log path {$logFilePath}" );
 			}
 		}
 	}
@@ -151,7 +154,7 @@ class Logger {
 	 * @param string $line Text to add to the log
 	 * @param integer $severity Severity level of log message (use constants)
 	 * @param string $label Label of the log to log to
-	 * @throws \UnexpectedValueException
+	 * @throws UnexpectedValueException
 	 */
 	public static function log( $line, $severity = Logger::INFO, $label = 'log' ) {
 		//make sure we are setup
@@ -161,7 +164,7 @@ class Logger {
 
 		//make sure the log is ready
 		if( !array_key_exists( $label, self::$filePaths ) || !array_key_exists( $label, self::$severityThresholds ) ){
-			throw new \UnexpectedValueException ( "Log file for label {$label} has not bee setup" );
+			throw new UnexpectedValueException ( "Log file for label {$label} has not bee setup" );
 		}
 
 		//make sure we should actually be logging
@@ -272,14 +275,14 @@ class Logger {
 	 *
 	 * @param string $line Line to write to the log
 	 * @param string $label Label of the log to log to
-	 * @throws \UnexpectedValueException
-	 * @throws \IOException
+	 * @throws UnexpectedValueException
+	 * @throws IOException
 	 */
 	private static function writeLine( $line, $label = 'log' ) {
 		//make sure logging is not turned off
 		if ( self::$severityThresholds[ $label ] !== self::OFF ) {
 			if ( file_put_contents(self::$filePaths[ $label ], $line, FILE_APPEND) === false ) {
-				throw new \IOException( "Failed to write log to the log file for label {$label}" );
+				throw new IOException( "Failed to write log to the log file for label {$label}" );
 			}
 		}
 	}

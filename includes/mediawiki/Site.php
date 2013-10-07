@@ -5,7 +5,9 @@ namespace Addframe\Mediawiki;
 use Addframe\Http;
 use Addframe\Mediawiki\Api;
 use Addframe\Mediawiki\Api\LoginRequest;
+use Addframe\Mediawiki\Api\LogoutRequest;
 use Addframe\Mediawiki\Api\TokensRequest;
+use DOMDocument;
 
 /**
  * Class Site - Represents a Mediawiki site
@@ -90,7 +92,7 @@ class Site {
 	public function getApiFromHomePage() {
 		if( !is_null( $this->url ) ){
 
-			$homePage = New \DOMDocument();
+			$homePage = New DOMDocument();
 			$homePage->loadHTML( $this->http->get( $this->url ) );
 
 			foreach( $homePage->getElementsByTagName( 'link' ) as $element ){
@@ -164,7 +166,7 @@ class Site {
 	 * @returns bool always true
 	 */
 	public function logout(){
-		$this->getApi()->doRequest( new Api\LogoutRequest() );
+		$this->getApi()->doRequest( new LogoutRequest() );
 		return true;
 	}
 

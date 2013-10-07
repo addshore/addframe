@@ -10,6 +10,7 @@ use Addframe\Logger;
 use Addframe\Mediawiki\Api\Request;
 use Addframe\Mediawiki\Api\TokensRequest;
 use Addframe\Mediawiki\Api\UsageException;
+use UnexpectedValueException;
 
 /**
  * Class Api representing a Mediawiki API
@@ -64,7 +65,7 @@ class Api {
 	 * @param Request $request
 	 * @param bool $getCache do we want to check in the cache for a result?
 	 * @throws UsageException
-	 * @throws \UnexpectedValueException
+	 * @throws UnexpectedValueException
 	 * @return Array of the unserialized result data
 	 */
 	public function doRequest( Request &$request, $getCache = true ) {
@@ -113,7 +114,7 @@ class Api {
 		}
 
 		if( !is_array( $result ) ){
-			throw new \UnexpectedValueException( 'Api result should be an array, instead is ' . print_r( $result ) );
+			throw new UnexpectedValueException( 'Api result should be an array, instead is ' . print_r( $result ) );
 		} else if( array_key_exists( 'error', $result ) ){
 			throw new UsageException( $result['error'] );
 		}

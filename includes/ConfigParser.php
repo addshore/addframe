@@ -2,6 +2,8 @@
 
 namespace Addframe;
 
+use Exception;
+
 /**
  * Configuration INI files will be created in this order
  * 1 => DEFAULT Section values assigned
@@ -52,7 +54,7 @@ class ConfigParser {
 	 * @param $environment
 	 * @param $config
 	 * @param array $path
-	 * @throws \Exception
+	 * @throws Exception
 	 * @return array
 	 */
 	private function loadEnvironment( $environment, $config, &$path=array() ) {
@@ -66,7 +68,7 @@ class ConfigParser {
 		}
 
 		if( !array_key_exists( $environment, $config ) ){
-			throw new \Exception( "No such environment {$environment} defined in LocalSettings" );
+			throw new Exception( "No such environment {$environment} defined in LocalSettings" );
 		}
 
 		if( array_key_exists( "EXTENDS", $config[$environment] ) ) {
