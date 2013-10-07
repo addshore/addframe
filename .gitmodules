@@ -1,3 +1,9 @@
 [submodule "modules/WikibaseDataModel"]
 	path = modules/WikibaseDataModel
 	url = https://github.com/wikimedia/mediawiki-extensions-WikibaseDataModel.git
+[submodule "modules/DataValues"]
+	path = modules/DataValues
+	url = https://github.com/wikimedia/mediawiki-extensions-DataValues.git
+[submodule "modules/Diff"]
+	path = modules/Diff
+	url = https://github.com/wikimedia/mediawiki-extensions-Diff.git
