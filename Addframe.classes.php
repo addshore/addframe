@@ -15,33 +15,33 @@ return call_user_func( function() {
 		'Addframe\ConfigParser' => 'ConfigParser.php',
 
 		//core
-		'Addframe\Mediawiki\Site' => 'mediawiki/Site.php',
-		'Addframe\Mediawiki\SiteList' => 'mediawiki/SiteList.php',
-		'Addframe\Mediawiki\User' => 'mediawiki/User.php',
-		'Addframe\Mediawiki\Page' => 'mediawiki/Page.php',
+		'Addframe\Mediawiki\Site' => 'Mediawiki/Site.php',
+		'Addframe\Mediawiki\SiteList' => 'Mediawiki/SiteList.php',
+		'Addframe\Mediawiki\User' => 'Mediawiki/User.php',
+		'Addframe\Mediawiki\Page' => 'Mediawiki/Page.php',
 
 		//core api
-		'Addframe\Mediawiki\Api' => 'mediawiki/Api.php',
-		'Addframe\Mediawiki\Api\UsageException' => 'mediawiki/api/UsageException.php',
-		'Addframe\Mediawiki\Api\Request' => 'mediawiki/api/Request.php',
-		'Addframe\Mediawiki\Api\EditRequest' => 'mediawiki/api/EditRequest.php',
-		'Addframe\Mediawiki\Api\LoginRequest' => 'mediawiki/api/LoginRequest.php',
-		'Addframe\Mediawiki\Api\LogoutRequest' => 'mediawiki/api/LogoutRequest.php',
-		'Addframe\Mediawiki\Api\QueryRequest' => 'mediawiki/api/QueryRequest.php',
-		'Addframe\Mediawiki\Api\SiteinfoRequest' => 'mediawiki/api/SiteinfoRequest.php',
-		'Addframe\Mediawiki\Api\TokensRequest' => 'mediawiki/api/TokensRequest.php',
-		'Addframe\Mediawiki\Api\RevisionsRequest' => 'mediawiki/api/RevisionsRequest.php',
-		'Addframe\Mediawiki\Api\UserinfoRequest' => 'mediawiki/api/UserinfoRequest.php',
-		'Addframe\Mediawiki\Api\UsersRequest' => 'mediawiki/api/UsersRequest.php',
-		'Addframe\Mediawiki\Api\InfoRequest' => 'mediawiki/api/InfoRequest.php',
+		'Addframe\Mediawiki\Api' => 'Mediawiki/Api.php',
+		'Addframe\Mediawiki\Api\UsageException' => 'Mediawiki/Api/UsageException.php',
+		'Addframe\Mediawiki\Api\Request' => 'Mediawiki/Api/Request.php',
+		'Addframe\Mediawiki\Api\EditRequest' => 'Mediawiki/Api/EditRequest.php',
+		'Addframe\Mediawiki\Api\LoginRequest' => 'Mediawiki/Api/LoginRequest.php',
+		'Addframe\Mediawiki\Api\LogoutRequest' => 'Mediawiki/Api/LogoutRequest.php',
+		'Addframe\Mediawiki\Api\QueryRequest' => 'Mediawiki/Api/QueryRequest.php',
+		'Addframe\Mediawiki\Api\SiteinfoRequest' => 'Mediawiki/Api/SiteinfoRequest.php',
+		'Addframe\Mediawiki\Api\TokensRequest' => 'Mediawiki/Api/TokensRequest.php',
+		'Addframe\Mediawiki\Api\RevisionsRequest' => 'Mediawiki/Api/RevisionsRequest.php',
+		'Addframe\Mediawiki\Api\UserinfoRequest' => 'Mediawiki/Api/UserinfoRequest.php',
+		'Addframe\Mediawiki\Api\UsersRequest' => 'Mediawiki/Api/UsersRequest.php',
+		'Addframe\Mediawiki\Api\InfoRequest' => 'Mediawiki/Api/InfoRequest.php',
 
 		//SiteMatrix
-		'Addframe\Mediawiki\Family' => 'mediawiki/Family.php',
-		'Addframe\Mediawiki\Api\SitematrixRequest' => 'mediawiki/api/SitematrixRequest.php',
+		'Addframe\Mediawiki\Family' => 'Mediawiki/Family.php',
+		'Addframe\Mediawiki\Api\SitematrixRequest' => 'Mediawiki/Api/SitematrixRequest.php',
 
 		//test
 		'Addframe\TestHttp' => 'Http.php',
-		'Addframe\Mediawiki\TestApi' => 'mediawiki/Api.php',
+		'Addframe\Mediawiki\TestApi' => 'Mediawiki/Api.php',
 
 	);
 
