@@ -1,0 +1,3 @@
+[submodule "modules/WikibaseDataModel"]
+	path = modules/WikibaseDataModel
+	url = git@github.com:wikimedia/mediawiki-extensions-WikibaseDataModel.git
