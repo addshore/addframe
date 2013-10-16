@@ -4,9 +4,6 @@ namespace Addframe\Mediawiki;
 
 use UnexpectedValueException;
 
-/**
- * //TODO TEST
- */
 class Revisions {
 
 	/** @var Revision[] */
@@ -44,6 +41,10 @@ class Revisions {
 
 	public function hasRevision( Revision $revision ){
 		return $this->hasRevisionWithId( $revision->getRevId() );
+	}
+
+	public function count(){
+		return count($this->revisions);
 	}
 
 	/**
