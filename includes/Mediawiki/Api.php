@@ -172,7 +172,7 @@ class TestApi extends Api{
 	/**
 	 * @param array|string $returnData array of data to return in json form
 	 */
-	function __construct( $returnData = '' ) {
+	public function __construct( $returnData = '' ) {
 			$this->returnData = $returnData;
 	}
 

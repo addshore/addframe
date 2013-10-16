@@ -7,7 +7,7 @@ namespace Addframe\Mediawiki\Api;
  */
 class SiteinfoRequest extends QueryRequest{
 
-	function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_WEEK ) {
+	public function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_WEEK ) {
 
 		$this->addAllowedParams( array( 'meta', 'siprop', 'sifilteriw', 'sishowalldb', 'sinumberingroup', 'siinlanguagecode' ) );
 		$this->addParams( array( 'meta' => 'siteinfo' ) );
