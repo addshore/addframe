@@ -83,9 +83,11 @@ class SiteTest extends MediawikiTestCase{
 		return $toReturn;
 	}
 
-	public function testGetApiFromHomeReturnsFalseOnNoUrl(){
+	public function testGetApiFromHomeFailsWithNoUrl(){
+		//todo better exception..
+		$this->setExpectedException( 'Exception' );
 		$site = new Site();
-		$this->assertFalse( $site->getApiFromHomePage() );
+		$site->getApiFromHomePage();
 	}
 
 	/**

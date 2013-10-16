@@ -118,7 +118,7 @@ class Api {
 			throw new UnexpectedValueException( 'Api result should be an array, instead is ' . print_r( $result ) );
 		} else if( array_key_exists( 'error', $result ) ){
 			$exception = new UsageException( $result['error'] );
-			Logger::logWarn( 'UsageException' . $exception->__toString() );
+			Logger::logWarn( 'UsageException ' . $exception->__toString() );
 			throw $exception;
 		}
 
