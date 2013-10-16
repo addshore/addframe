@@ -3,14 +3,7 @@
 /**
  * Include the entrance file
  */
-require_once( __DIR__.'/../Addframe.php' );
-
-/**
- * And classes that are only used in testing
- * todo make an autoloader here so we dont have to specify everything
- */
-require_once( __DIR__.'/DefaultTestCase.php' );
-require_once( __DIR__ . '/Mediawiki/MediawikiTestCase.php' );
+require_once( __DIR__ . '/../../Addframe.php' );
 
 /**
  * Turn default logging off
