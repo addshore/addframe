@@ -9,6 +9,8 @@ use Addframe\Cache;
  * Class CacheTest
  * @covers Addframe\Cache
  *
+ * @group medium
+ *
  * This test will take 2+ seconds due to sleeps included
  * todo we should probably split this test up a bit rather than having 1 big test method
  */

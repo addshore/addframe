@@ -5,6 +5,9 @@ namespace Addframe\Test\Integration;
 use Addframe\Http;
 use Addframe\Mediawiki\Revision;
 
+/**
+ * @group medium
+ */
 class EditTest extends MediawikiTestCase {
 
 	public function testEdit() {
