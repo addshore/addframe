@@ -54,13 +54,13 @@ class HttpTest extends DefaultTestCase {
 	function testGettingInvalidUrlReturnsFalse(){
 		$this->setExpectedException( '\Addframe\HttpException' );
 		$http = new Http();
-		$getResult = $http->get( '2387ry389t32u89tu*(&$HE98rh98' );
+		$http->get( '2387ry389t32u89tu*(&$HE98rh98' );
 	}
 
 	function testPostingInvalidUrlReturnsFalse(){
 		$this->setExpectedException( '\Addframe\HttpException' );
 		$http = new Http();
-		$getResult = $http->post( '2387ry389t32u89tu*(&$HE98rh98', array() );
+		$http->post( '2387ry389t32u89tu*(&$HE98rh98', array() );
 	}
 
 }

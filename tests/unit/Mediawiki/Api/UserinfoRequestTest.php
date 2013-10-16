@@ -2,6 +2,8 @@
 
 namespace Addframe\Test;
 
+use Addframe\Mediawiki\Api\UserinfoRequest;
+
 /**
  * Class UserinfoRequestTest
  * @covers Addframe\Mediawiki\Api\UserinfoRequest
@@ -16,7 +18,7 @@ class UserinfoRequestTest extends MediawikiTestCase {
 	}
 
 	function testSitematrixRequest(){
-		$query = new \Addframe\Mediawiki\Api\UserinfoRequest();
+		$query = new UserinfoRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'meta', $params );
 		$this->assertEquals( 'userinfo', $params['meta'] );

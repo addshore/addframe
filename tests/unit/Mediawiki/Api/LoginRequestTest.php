@@ -2,6 +2,8 @@
 
 namespace Addframe\Test;
 
+use Addframe\Mediawiki\Api\LoginRequest;
+
 /**
  * Class LoginRequestTest
  * @covers Addframe\Mediawiki\Api\LoginRequest
@@ -16,7 +18,7 @@ class LoginRequestTest extends MediawikiTestCase {
 	}
 
 	function testLoginRequest(){
-		$query = new \Addframe\Mediawiki\Api\LoginRequest();
+		$query = new LoginRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'action', $params );
 		$this->assertEquals( 'login', $params['action'] );

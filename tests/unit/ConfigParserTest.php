@@ -32,7 +32,7 @@ class ConfigParserTest extends DefaultTestCase {
 
 	function testExceptionOnBadEnvironment(){
 		$this->setExpectedException( 'Exception' );
-		$configParser = new ConfigParser( 'qwertyuiopasdfghje' );
+		new ConfigParser( 'qwertyuiopasdfghje' );
 	}
 
 }

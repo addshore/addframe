@@ -87,7 +87,7 @@ class Page {
 	}
 
 	/**
-	 * @throws \Exception
+	 * @throws UnexpectedValueException
 	 * @return Site
 	 */
 	public function getSite(){

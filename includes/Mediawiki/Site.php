@@ -6,7 +6,6 @@ use Addframe\Http;
 use Addframe\Mediawiki\Api;
 use Addframe\Mediawiki\Api\LoginRequest;
 use Addframe\Mediawiki\Api\LogoutRequest;
-use Addframe\Mediawiki\Api\Request;
 use Addframe\Mediawiki\Api\TokensRequest;
 use Addframe\Mediawiki\Api\UserinfoRequest;
 use DOMDocument;
@@ -180,7 +179,7 @@ class Site {
 	 * @todo unittest
 	 */
 	public function isLoggedIn(){
-		$result = $this->getApi()->doRequest( new UserinfoRequest( ) );
+		$result = $this->getApi()->doRequest( new UserinfoRequest( array(), false, 0 ) );
 		if( array_key_exists( 'anon', $result['query']['userinfo'] ) || $result['query']['userinfo']['id'] = 0 ){
 			return false;
 		} else if( array_key_exists( 'name', $result['query']['userinfo'] ) ){

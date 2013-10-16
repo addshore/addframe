@@ -2,6 +2,8 @@
 
 namespace Addframe\Test;
 
+use Addframe\Mediawiki\Api\QueryRequest;
+
 /**
  * Class QueryRequestTest
  * @covers Addframe\Mediawiki\Api\QueryRequest
@@ -16,7 +18,7 @@ class QueryRequestTest extends MediawikiTestCase {
 	}
 
 	function testQueryRequest(){
-		$query = new \Addframe\Mediawiki\Api\QueryRequest();
+		$query = new QueryRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'action', $params );
 		$this->assertEquals( 'query', $params['action'] );

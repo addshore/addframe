@@ -2,6 +2,8 @@
 
 namespace Addframe\Test;
 
+use Addframe\Cache;
+
 /**
  * Class DefaultTestCase
  */
@@ -15,7 +17,7 @@ class DefaultTestCase extends \PHPUnit_Framework_TestCase {
 		 * Clear the cache between each test class (just in case there is stuff in there)
 		 * Generally if stuff needs to remain cached it only needs to remain within the same test class
 		 */
-		\Addframe\Cache::clear();
+		Cache::clear();
 	}
 
 }

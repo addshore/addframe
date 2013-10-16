@@ -3,6 +3,7 @@
 namespace Addframe\Mediawiki;
 use Addframe\Http;
 use Addframe\Mediawiki\Api\SitematrixRequest;
+use UnexpectedValueException;
 
 /**
  * Class Family, representing a sitematrix of sites
@@ -32,7 +33,7 @@ class Family extends Site {
 	 *  - closed - No write access, full read access
 	 *  - private - Read and write restricted
 	 *  - fishbowl - Restricted write access, full read access
-	 * @throws \UnexpectedValueException
+	 * @throws UnexpectedValueException
 	 * @return SiteList
 	 */
 	public function getSiteList( $filter = null ){
@@ -51,7 +52,7 @@ class Family extends Site {
 
 				$filterBy = strtolower( $filterBy );
 				if( !in_array( $filterBy, array( 'closed', 'private', 'fishbowl', 'active' ) ) ){
-					throw new \UnexpectedValueException( "{$filterBy} not allowed, Filter options must be one of (closed|private|fishbowl|active)" );
+					throw new UnexpectedValueException( "{$filterBy} not allowed, Filter options must be one of (closed|private|fishbowl|active)" );
 				}
 
 				if( array_key_exists( $filterBy, $this->siteIndex ) ){

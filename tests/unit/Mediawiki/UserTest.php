@@ -34,7 +34,7 @@ class UserTest extends MediawikiTestCase {
 
 	function testLoadWithBadSite(){
 		$this->setExpectedException( '\UnexpectedValueException' );
-		$user = User::newFromUsername( 'Admin', 'foo');
+		User::newFromUsername( 'Admin', 'foo' );
 	}
 
 	function provideAdminUserWithSite(){

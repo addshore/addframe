@@ -2,6 +2,7 @@
 
 namespace Addframe\Test;
 
+use Addframe\Cache;
 use Addframe\Mediawiki\Api;
 use Addframe\Mediawiki\Api\Request;
 use Addframe\TestHttp;
@@ -129,7 +130,7 @@ class ApiTest extends MediawikiTestCase{
 
 	function testCachedResultCanBeIgnored(){
 		$request = new Request( array( 'test' => 'testGettingCachedResultWorks' ), false, 100 );
-		\Addframe\Cache::remove( $request ); //remove if it is already there
+		Cache::remove( $request ); //remove if it is already there
 
 		//do our first request to get some data and cache it
 		$api = new Api( new TestHttp( json_encode( array( 'RESULT 1' ) ) ) );
@@ -152,7 +153,7 @@ class ApiTest extends MediawikiTestCase{
 
 	function testCachedResultExpires(){
 		$request = new Request( array( 'test' => 'testCachedResultExpires' ), false, 2 );
-		\Addframe\Cache::remove( $request ); //remove if it is already there
+		Cache::remove( $request ); //remove if it is already there
 
 		//do our first request to get some data and cache it
 		$api = new Api( new TestHttp( json_encode( array( 'RESULT 1' ) ) ) );
@@ -165,7 +166,7 @@ class ApiTest extends MediawikiTestCase{
 		$this->assertEquals( array( 'RESULT 1' ) , $request->getResult() );
 
 		//sleep until the cache expires
-		while( \Addframe\Cache::age( $request ) < $request->maxCacheAge() ){
+		while( Cache::age( $request ) < $request->maxCacheAge() ){
 			sleep(1);
 		}
 

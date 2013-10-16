@@ -58,7 +58,7 @@ class ApiRequestTest extends MediawikiTestCase{
 	 */
 	function testConstructionWithBadData( $params , $shouldBePosted , $cache, $allowedParams ){
 		$this->setExpectedException( 'UnexpectedValueException' );
-		$request = new Request( $params, $shouldBePosted , $cache, $allowedParams);
+		new Request( $params, $shouldBePosted , $cache, $allowedParams);
 	}
 
 	function provideBadConstructionData(){
