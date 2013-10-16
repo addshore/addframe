@@ -2,6 +2,8 @@
 
 namespace Addframe\Test;
 
+use Addframe\Mediawiki\Api\InfoRequest;
+
 /**
  * Class InfoRequestTest
  * @covers Addframe\Mediawiki\Api\InfoRequest
@@ -16,7 +18,7 @@ class InfoRequestTest extends MediawikiTestCase {
 	}
 
 	function testInfoRequest(){
-		$query = new \Addframe\Mediawiki\Api\InfoRequest();
+		$query = new InfoRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'prop', $params );
 		$this->assertEquals( 'info', $params['prop'] );

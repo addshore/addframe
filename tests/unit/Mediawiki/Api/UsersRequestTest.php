@@ -2,6 +2,8 @@
 
 namespace Addframe\Test;
 
+use Addframe\Mediawiki\Api\UsersRequest;
+
 /**
  * Class UsersRequestTest
  * @covers Addframe\Mediawiki\Api\UsersRequest
@@ -16,7 +18,7 @@ class UsersRequestTest extends MediawikiTestCase {
 	}
 
 	function testUsersRequest(){
-		$query = new \Addframe\Mediawiki\Api\UsersRequest();
+		$query = new UsersRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'list', $params );
 		$this->assertEquals( 'users', $params['list'] );

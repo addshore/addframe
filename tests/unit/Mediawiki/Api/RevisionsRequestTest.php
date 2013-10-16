@@ -2,6 +2,8 @@
 
 namespace Addframe\Test;
 
+use Addframe\Mediawiki\Api\RevisionsRequest;
+
 /**
  * Class RevisionsRequestTest
  * @covers Addframe\Mediawiki\Api\RevisionsRequest
@@ -16,7 +18,7 @@ class RevisionsRequestTest extends MediawikiTestCase {
 	}
 
 	function testRevisionsRequest(){
-		$query = new \Addframe\Mediawiki\Api\RevisionsRequest();
+		$query = new RevisionsRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'prop', $params );
 		$this->assertEquals( 'revisions', $params['prop'] );

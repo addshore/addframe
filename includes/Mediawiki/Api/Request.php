@@ -32,7 +32,8 @@ class Request implements Cacheable{
 	protected $allowedParams = array();
 
 	/**
-	 * @deprecated Please used this as a fluid interface instead
+	 * This is also a fluid interface (see the bottom of this method)
+	 *
 	 * @param array $params Parameters for the api request
 	 * @param bool $shouldPost Should be we a HTTP POST?
 	 * @param bool|int $maxAge should be cache / how long to cache for in seconds
@@ -42,7 +43,7 @@ class Request implements Cacheable{
 	public function __construct( $params = array(), $shouldPost = false, $maxAge = CACHE_NONE, $allowedParams = array() ) {
 		//make sure our construction params are correct
 		if( !is_array( $params ) || !is_bool( $shouldPost ) || !is_int( $maxAge ) || !is_array( $allowedParams ) ){
-			throw new \UnexpectedValueException( 'Request construction params are not of the correct types' );
+			throw new UnexpectedValueException( 'Request construction params are not of the correct types' );
 		}
 
 		$this->addAllowedParams( $allowedParams );

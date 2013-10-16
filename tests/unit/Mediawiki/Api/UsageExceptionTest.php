@@ -2,6 +2,8 @@
 
 namespace Addframe\Test;
 
+use Addframe\Mediawiki\Api\UsageException;
+
 /**
  * Class UsageExceptionTest
  * @covers Addframe\Mediawiki\Api\UsageException
@@ -9,7 +11,7 @@ namespace Addframe\Test;
 class UsageExceptionTest extends MediawikiTestCase {
 
 	function throwUsageException( $array ){
-		throw new \Addframe\Mediawiki\Api\UsageException( $array );
+		throw new UsageException( $array );
 	}
 
 	function testUsageException(){
@@ -17,7 +19,7 @@ class UsageExceptionTest extends MediawikiTestCase {
 
 		try{
 			$this->throwUsageException( $array );
-		} catch( \Addframe\Mediawiki\Api\UsageException $e ){
+		} catch( UsageException $e ){
 			$this->assertInstanceOf( 'Addframe\Mediawiki\Api\UsageException', $e );
 			$this->assertEquals( $array['code'], $e->getCodeString() );
 			$this->assertEquals( $array, $e->getMessageArray() );

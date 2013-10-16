@@ -2,6 +2,8 @@
 
 namespace Addframe\Test;
 
+use Addframe\Mediawiki\Api\SiteinfoRequest;
+
 /**
  * Class SiteinfoRequestTest
  * @covers Addframe\Mediawiki\Api\SiteinfoRequest
@@ -16,7 +18,7 @@ class SiteinfoRequestTest extends MediawikiTestCase {
 	}
 
 	function testSiteInfoRequest(){
-		$query = new \Addframe\Mediawiki\Api\SiteinfoRequest();
+		$query = new SiteinfoRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'meta', $params );
 		$this->assertEquals( 'siteinfo', $params['meta'] );

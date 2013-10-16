@@ -2,6 +2,8 @@
 
 namespace Addframe\Test;
 
+use Addframe\Mediawiki\Api\SitematrixRequest;
+
 /**
  * Class SitematrixRequestTest
  * @covers Addframe\Mediawiki\Api\SitematrixRequest
@@ -16,7 +18,7 @@ class SitematrixRequestTest extends MediawikiTestCase {
 	}
 
 	function testSitematrixRequest(){
-		$query = new \Addframe\Mediawiki\Api\SitematrixRequest();
+		$query = new SitematrixRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'action', $params );
 		$this->assertEquals( 'sitematrix', $params['action'] );

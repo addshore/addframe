@@ -2,6 +2,8 @@
 
 namespace Addframe\Test;
 
+use Addframe\Mediawiki\Api\TokensRequest;
+
 /**
  * Class TokensRequestTest
  * @covers Addframe\Mediawiki\Api\TokensRequest
@@ -16,14 +18,14 @@ class TokensRequestTest extends MediawikiTestCase {
 	}
 
 	function testTokensRequest(){
-		$query = new \Addframe\Mediawiki\Api\TokensRequest();
+		$query = new TokensRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'action', $params );
 		$this->assertEquals( 'tokens', $params['action'] );
 		$this->assertArrayHasKey( 'type', $params );
 		$this->assertEquals( 'edit', $params['type'] );
 
-		$query = new \Addframe\Mediawiki\Api\TokensRequest( array( 'type' => 'protect' ) );
+		$query = new TokensRequest( array( 'type' => 'protect' ) );
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'action', $params );
 		$this->assertEquals( 'tokens', $params['action'] );
