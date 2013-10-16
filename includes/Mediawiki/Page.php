@@ -189,6 +189,7 @@ class Page {
 
 	/**
 	 * Load the page information
+	 * todo catch non existant pages in some way...
 	 */
 	public function load() {
 		try{
