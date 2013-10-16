@@ -28,7 +28,7 @@ class PageTest extends MediawikiTestCase{
 
 	public function testLoadWithNoSite(){
 		$page = Page::newFromTitle( 'Foo' );
-		$this->assertFalse( $page->load() );
+		$this->assertFalse( $page->loadInfo() );
 	}
 
 	public function testLoadWithBadSite(){
@@ -47,7 +47,7 @@ class PageTest extends MediawikiTestCase{
 	public function testLoadWithSite(){
 		$page = $this->provideFooPageWithSite();
 
-		$this->assertTrue( $page->load() );
+		$this->assertTrue( $page->loadInfo() );
 
 		$this->assertEquals( 'Foo', $page->getTitle() );
 		$this->assertEquals( 0, $page->getNs() );

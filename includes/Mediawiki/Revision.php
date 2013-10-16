@@ -7,6 +7,7 @@ use Addframe\Mediawiki\Api\RevisionsRequest;
 
 /**
  * Representation of a page version.
+ * @TODO test all logic in here
  */
 class Revision {
 
@@ -80,6 +81,36 @@ class Revision {
 		//$this->title = $result['title'];
 
 		return true;
+	}
+
+	/**
+	 * @return int revisionid
+	 */
+	public function getRevId(){
+		if( !is_int( $this->revid ) ){
+			$this->load();
+		}
+		return $this->revid;
+	}
+
+	/**
+	 * @param Page $page
+	 * @return Revision
+	 */
+	public static function newFromPage( Page $page ){
+		$revision = new Revision();
+		$revision->page = $page;
+		return $revision;
+	}
+
+	/**
+	 * @param int $revid
+	 * @return Revision
+	 */
+	public static function newFromRevId( $revid ){
+		$revision = new Revision();
+		$revision->revid = $revid;
+		return $revision;
 	}
 
 }
