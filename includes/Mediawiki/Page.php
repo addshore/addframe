@@ -35,6 +35,8 @@ class Page {
 	protected $protection;
 	/** @var string */
 	protected $displaytitle;
+	/** @var array */
+	protected $revisions = array();
 
 	/**
 	 * @return string
@@ -48,7 +50,7 @@ class Page {
 	 */
 	public function getId() {
 		if( !isset( $this->id ) ){
-			$this->load();
+			$this->loadInfo();
 		}
 		return $this->id;
 	}
@@ -78,7 +80,7 @@ class Page {
 	public function isMissing(){
 		//todo unit test
 		if( !is_bool( $this->missing ) ){
-			$this->load();
+			$this->loadInfo();
 		}
 		return $this->missing;
 	}
@@ -88,7 +90,7 @@ class Page {
 	 */
 	public function getContentmodel() {
 		if( !isset( $this->contentmodel ) ){
-			$this->load();
+			$this->loadInfo();
 		}
 		return $this->contentmodel;
 	}
@@ -98,7 +100,7 @@ class Page {
 	 */
 	public function getCounter() {
 		if( !isset( $this->counter ) ){
-			$this->load();
+			$this->loadInfo();
 		}
 		return $this->counter;
 	}
@@ -108,7 +110,7 @@ class Page {
 	 */
 	public function getDisplaytitle() {
 		if( !isset( $this->displaytitle ) ){
-			$this->load();
+			$this->loadInfo();
 		}
 		return $this->displaytitle;
 	}
@@ -118,7 +120,7 @@ class Page {
 	 */
 	public function getLastrevid() {
 		if( !isset( $this->lastrevid ) ){
-			$this->load();
+			$this->loadInfo();
 		}
 		return $this->lastrevid;
 	}
@@ -128,7 +130,7 @@ class Page {
 	 */
 	public function getLength() {
 		if( !isset( $this->length ) ){
-			$this->load();
+			$this->loadInfo();
 		}
 		return $this->length;
 	}
@@ -138,7 +140,7 @@ class Page {
 	 */
 	public function getPagelanguage() {
 		if( !isset( $this->pagelanguage ) ){
-			$this->load();
+			$this->loadInfo();
 		}
 		return $this->pagelanguage;
 	}
@@ -148,7 +150,7 @@ class Page {
 	 */
 	public function getProtection() {
 		if( !isset( $this->protection ) ){
-			$this->load();
+			$this->loadInfo();
 		}
 		return $this->protection;
 	}
@@ -158,7 +160,7 @@ class Page {
 	 */
 	public function getTouched() {
 		if( !isset( $this->touched ) ){
-			$this->load();
+			$this->loadInfo();
 		}
 		return $this->touched;
 	}
@@ -168,15 +170,20 @@ class Page {
 	 */
 	public function getNs() {
 		if( !isset( $this->ns ) ){
-			$this->load();
+			$this->loadInfo();
 		}
 		return $this->ns;
+	}
+
+	public function load(){
+		$this->loadInfo();
+		$this->loadRevision();
 	}
 
 	/**
 	 * Load the page information
 	 */
-	public function load() {
+	public function loadInfo() {
 		try{
 			$request = new InfoRequest( array( 'titles' => $this->getTitle() ) );
 			$result = $this->getSite()->getApi()->doRequest( $request );
@@ -210,6 +217,47 @@ class Page {
 			Logger::logError( "Cannot load page details for {$this->title} as no Site is defined" );
 			return false;
 		}
+	}
+
+	//todo test
+	public function getCurrentRevision(){
+		return $this->getRevision( null );
+	}
+
+	/**
+	 * @param int|null $revid A revid OR null to get the most recent revision
+	 * @return Revision
+	 * @todo test
+	 */
+	public function getRevision( $revid = null ){
+		if( $revid === null ){
+			$revid = $this->getLastrevid();
+		}
+
+		if( !array_key_exists( $revid, $this->revisions ) ){
+			$revision = Revision::newFromRevId( $revid );
+			$this->addRevision( $revision );
+		}
+		return $this->revisions[$revid];
+	}
+
+	/**
+	 * @param null|Revision $revision If no revision is set we will get the most recent
+	 * @return Revision
+	 * @todo test
+	 */
+	public function loadRevision( $revision = null ){
+		if( $revision === null ){
+			$revision = Revision::newFromPage( $this );
+		}
+		$revision->load();
+		$this->addRevision( $revision );
+		return $revision;
+	}
+
+	//todo test
+	public function addRevision( Revision $revision ){
+		$this->revisions[$revision->getRevId()] = $revision;
 	}
 
 	/**
