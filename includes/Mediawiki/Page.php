@@ -3,7 +3,9 @@
 namespace Addframe\Mediawiki;
 
 use Addframe\Logger;
+use Addframe\Mediawiki\Api\EditRequest;
 use Addframe\Mediawiki\Api\InfoRequest;
+use Exception;
 use UnexpectedValueException;
 
 class Page {
@@ -116,10 +118,12 @@ class Page {
 	}
 
 	/**
+	 * @param bool $ignoreCached
 	 * @return int
+	 * @todo instead of ignoreCached we should use a different way to get the newest revision...
 	 */
-	public function getLastrevid() {
-		if( !isset( $this->lastrevid ) ){
+	public function getLastrevid( $ignoreCached = false ) {
+		if( !isset( $this->lastrevid ) || $ignoreCached ){
 			$this->loadInfo();
 		}
 		return $this->lastrevid;
@@ -219,6 +223,30 @@ class Page {
 		}
 	}
 
+	//todo potentially use a newRevision class here?
+	//todo test
+	public function saveNewRevision( Revision $revision ){
+		$request = new EditRequest();
+		//todo try to set pageid if title is not availible
+		$request->setParameter( 'title', $this->getTitle() );
+		$request->setParameter( 'text', $revision->getContent() );
+		$request->setParameter( 'summary', $revision->getComment() );
+
+		//todo minor
+		//todo bot? does this below in revision?
+		//todo basetimestamp , use baserevision?
+
+		$result = $this->getSite()->getApi()->doRequestWithToken( $request, 'edit', false );//TODO false is needed here.. caching edit tokens needs to be fixed...
+		$result = array_shift( $result );
+		if( $result['result'] === 'Success' ){
+			$revision->setRevId( $result['newrevid'] );
+			//todo also set new timestamp, contentmodel,oldrevid?
+			$this->addRevision( $revision );
+			return true;
+		}
+		throw new Exception( 'Save failed in ' . __CLASS__ . ' ' .__METHOD__ . ': ' . serialize( $result ) );
+	}
+
 	//todo test
 	public function getCurrentRevision(){
 		return $this->getRevision( null );
@@ -231,11 +259,11 @@ class Page {
 	 */
 	public function getRevision( $revid = null ){
 		if( $revid === null ){
-			$revid = $this->getLastrevid();
+			$revid = $this->getLastrevid( true );
 		}
 
 		if( !array_key_exists( $revid, $this->revisions ) ){
-			$revision = Revision::newFromRevId( $revid );
+			$revision = Revision::newFromRevId( $revid, $this );
 			$this->addRevision( $revision );
 		}
 		return $this->revisions[$revid];
@@ -257,6 +285,7 @@ class Page {
 
 	//todo test
 	public function addRevision( Revision $revision ){
+		//todo throw exception is no revid is set..
 		$this->revisions[$revision->getRevId()] = $revision;
 	}
 

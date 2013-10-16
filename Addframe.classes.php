@@ -19,6 +19,7 @@ return call_user_func( function() {
 		'Addframe\Mediawiki\SiteList' => 'Mediawiki/SiteList.php',
 		'Addframe\Mediawiki\User' => 'Mediawiki/User.php',
 		'Addframe\Mediawiki\Page' => 'Mediawiki/Page.php',
+		'Addframe\Mediawiki\Revision' => 'Mediawiki/Revision.php',
 
 		//core api
 		'Addframe\Mediawiki\Api' => 'Mediawiki/Api.php',

@@ -64,22 +64,22 @@ class ApiTest extends MediawikiTestCase{
 
 		$this->assertArrayNotHasKey( 'token', $request->getParameters() );
 
-		$result = $api->doRequestWithToken( $request, 'edittoken' , false );
+		$result = $api->doRequestWithToken( $request, 'edit' , false );
 		$this->assertArrayHasKey( 'token', $request->getParameters() );
 		$this->assertEquals( json_decode( $expected, true ), $result );
 	}
 
 	/**
 	 * @dataProvider provideApiRequests
-	 * NOTE: We don't actually receive an exception, just null (the exception is handled before the result is passed back)
 	 */
-	public function testDoRequestWithTokenHandlesBadToken( Request $request ){
+	//todo decide when we should handle api errors of all kinds..
+	public function testDoRequestWithTokenHandlesBadTokenThrowsException( Request $request ){
+		$this->setExpectedException( '\Addframe\Mediawiki\Api\UsageException' );
 		$http = new TestHttp( array( $this->getTestApiData( 'tokens/anonedittoken.json' ) , $this->getTestApiData( 'errors/badtoken.json' ) ) );
 		$api = new Api( $http );
 
 		$this->assertArrayNotHasKey( 'token', $request->getParameters() );
-		$result = $api->doRequestWithToken( $request, 'edittoken' , false );
-		$this->assertNull( $result );
+		$api->doRequestWithToken( $request, 'edit' , false );
 	}
 
 	/**
@@ -90,7 +90,7 @@ class ApiTest extends MediawikiTestCase{
 		$http = new TestHttp( array( $this->getTestApiData( 'errors/missingparam.json' ) ) );
 		$api = new Api( $http );
 		$this->assertArrayNotHasKey( 'token', $request->getParameters() );
-		$api->doRequestWithToken( $request, 'edittoken' , false );
+		$api->doRequestWithToken( $request, 'edit' , false );
 	}
 
 	/**
