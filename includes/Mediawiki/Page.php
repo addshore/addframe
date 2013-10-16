@@ -8,58 +8,32 @@ use UnexpectedValueException;
 
 class Page {
 
-	/**
-	 * @var string page title
-	 * todo this should be an object
-	 */
+	//todo this should be an object
+	/** @var string page title */
 	protected $title;
-	/**
-	 * @var Site of the user
-	 */
+	/** @var Site of the user */
 	protected $site;
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	protected $ns;
-	/**
-	 * @var int pageid
-	 */
+	/** @var int pageid */
 	protected $id;
-	/**
-	 * @var bool is the page missing?
-	 */
+	/** @var bool|null is the page missing? */
 	protected $missing;
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $contentmodel;
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $pagelanguage;
-	/**
-	 * @var string date the page was last touched
-	 */
+	/** @var string date the page was last touched */
 	protected $touched;
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	protected $lastrevid;
-	/**
-	 * @var int //todo work out what this is...
-	 */
+	/** @var int //todo work out what this is... */
 	protected $counter;
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	protected $length;
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected $protection;
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $displaytitle;
 
 	/**

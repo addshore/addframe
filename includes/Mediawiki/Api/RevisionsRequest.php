@@ -15,6 +15,7 @@ class RevisionsRequest extends QueryRequest{
 			'rvdifftotext', 'rvcontentformat' ) );
 
 		$this->addParams( array( 'prop' => 'revisions' ) );
+		$this->addParams( array( 'rvprop' => 'ids|flags|timestamp|user|userid|size|sha1|contentmodel|comment|parsedcomment|content|tags' ) );
 
 		parent::__construct( $params, $shouldPost, $maxAge);
 	}
