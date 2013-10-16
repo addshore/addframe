@@ -1,15 +1,11 @@
 <?php
 
-namespace Addframe\Test;
+namespace Addframe\Test\Integration;
 
 use Addframe\Http;
 use Addframe\Mediawiki\Site;
 
-class SiteTest extends \PHPUnit_Framework_TestCase {
-
-	public function newSite(){
-		return Site::newFromUrl( SITEURL );
-	}
+class SiteTest extends MediawikiTestCase {
 
 	public function testUrls() {
 		$site = $this->newSite();
@@ -20,7 +16,10 @@ class SiteTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testLoginLogout() {
-		$site = $this->newSite();
+		//We should NOT use the ->newsite() method here
+		$site = Site::newFromUrl( SITEURL );
+
+		$site->logout();
 		$this->assertFalse( $site->isLoggedIn(), 'Failed to assert we were logged out to start' );
 
 		$this->assertTrue( $site->login( SITEUSER, SITEPASS ), 'Failed to log into site' );

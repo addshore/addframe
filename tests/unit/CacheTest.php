@@ -1,6 +1,6 @@
 <?php
 
-namespace Addframe\Test;
+namespace Addframe\Test\Unit;
 
 use Addframe\Mediawiki\Api\Request;
 use Addframe\Cache;
