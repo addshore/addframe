@@ -1,6 +1,6 @@
 <?php
 
-namespace Addframe\Test;
+namespace Addframe\Test\Integration;
 
 /**
  * This test class simply checks to make sure the webserver is where we expect it to be

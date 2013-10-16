@@ -12,6 +12,12 @@ require_once( __DIR__ . '/../bootstrap.php' );
 \Addframe\Cache::$prefix = 'it_';
 
 /**
+ * And classes that are only used in testing
+ * todo make an autoloader here so we dont have to specify everything
+ */
+require_once( __DIR__ . '/Mediawiki/MediawikiTestCase.php' );
+
+/**
  * Define a site location to be used in integration tests
  */
 define( "SITEURL", "http://localhost/wiki/index.php" );
