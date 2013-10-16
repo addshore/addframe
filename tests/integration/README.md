@@ -11,5 +11,5 @@ To run these tests you must have a local install of mediawiki
     - Entry Point   = 'http://localhost/wiki/index.php'
 
  - Test account:
-    - User          = 'test'
+    - User          = 'Test'
     - Password      = 'integration'

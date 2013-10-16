@@ -6,8 +6,12 @@ use Addframe\Http;
 use Addframe\Mediawiki\Api;
 use Addframe\Mediawiki\Api\LoginRequest;
 use Addframe\Mediawiki\Api\LogoutRequest;
+use Addframe\Mediawiki\Api\Request;
 use Addframe\Mediawiki\Api\TokensRequest;
+use Addframe\Mediawiki\Api\UserinfoRequest;
 use DOMDocument;
+use Exception;
+use UnexpectedValueException;
 
 /**
  * Class Site - Represents a Mediawiki site
@@ -141,7 +145,7 @@ class Site {
 	 * @param $password string password to log in with
 	 * @param null $token token to log in with (if none is set we will get one within)
 	 * @return bool|null success of the login (null if unknown)
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function login( $username, $password, $token = null){
 		$params = array( 'lgname' => $username, 'lgpassword' => $password );
@@ -163,11 +167,26 @@ class Site {
 
 	/**
 	 * Log out of the site
-	 * @returns bool always true
+	 * @return bool always true
 	 */
 	public function logout(){
 		$this->getApi()->doRequest( new LogoutRequest() );
 		return true;
+	}
+
+	/**
+	 * @throws UnexpectedValueException
+	 * @return bool is a user logged into the site?
+	 * @todo unittest
+	 */
+	public function isLoggedIn(){
+		$result = $this->getApi()->doRequest( new UserinfoRequest( array(), false, 0 ) );
+		if( array_key_exists( 'anon', $result['query']['userinfo'] ) || $result['query']['userinfo']['id'] = 0 ){
+			return false;
+		} else if( array_key_exists( 'name', $result['query']['userinfo'] ) ){
+			return $result['query']['userinfo']['name'];
+		}
+		throw new UnexpectedValueException( 'UserinfoRequest in ' . __METHOD__ . 'did not return as expected' );
 	}
 
 	/**
