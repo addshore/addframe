@@ -26,6 +26,10 @@ class Page {
 	 */
 	protected $id;
 	/**
+	 * @var bool is the page missing?
+	 */
+	protected $missing;
+	/**
 	 * @var string
 	 */
 	protected $contentmodel;
@@ -95,6 +99,14 @@ class Page {
 			throw new UnexpectedValueException( 'User must have a site before the site can be used' );
 		}
 		return $this->site;
+	}
+
+	public function isMissing(){
+		//todo unit test
+		if( !is_bool( $this->missing ) ){
+			$this->load();
+		}
+		return $this->missing;
 	}
 
 	/**
@@ -189,31 +201,36 @@ class Page {
 
 	/**
 	 * Load the page information
-	 * todo catch non existant pages in some way...
 	 */
 	public function load() {
 		try{
 			$request = new InfoRequest( array( 'titles' => $this->getTitle() ) );
 			$result = $this->getSite()->getApi()->doRequest( $request );
 			$result = array_shift( $result['query']['pages'] );
-			//todo factor the below out into setFromArray()??
-			$this->id = $result['pageid'];
+
+			if( array_key_exists( 'missing', $result ) ){
+				$this->missing = true;
+			} else {
+				$this->missing = false;
+				$this->id = $result['pageid'];
+				$this->touched = $result['touched'];
+				$this->lastrevid = $result['lastrevid'];
+				$this->counter = $result['counter'];
+				$this->length = $result['length'];
+			}
 			$this->ns = $result['ns'];
 			$this->title = $result['title'];
 			$this->contentmodel = $result['contentmodel'];
 			$this->pagelanguage = $result['pagelanguage'];
-			$this->touched = $result['touched'];
-			$this->lastrevid = $result['lastrevid'];
-			$this->counter = $result['counter'];
-			$this->length = $result['length'];
 			$this->protection = $result['protection'];
+			$this->displaytitle = $result['displaytitle'];
 			//todo work out if the below commented out values are needed for anything...
 //			$this->notificationtimestamp = $result['notificationtimestamp'];
 //			$this->fullurl = $result['fullurl'];
 //			$this->editurl = $result['editurl'];
 //			$this->readable = $result['readable'];
 //			$this->preload = $result['preload'];
-			$this->displaytitle = $result['displaytitle'];
+
 			return true;
 		} catch ( UnexpectedValueException $e ){
 			Logger::logError( "Cannot load page details for {$this->title} as no Site is defined" );

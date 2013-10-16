@@ -197,4 +197,13 @@ class Site {
 		return $user;
 	}
 
+	/**
+	 * @param $title
+	 * @return Page
+	 */
+	public function getPage( $title ){
+		$page = Page::newFromTitle( $title, $this );
+		return $page;
+	}
+
 }
