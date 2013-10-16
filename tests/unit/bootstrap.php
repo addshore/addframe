@@ -1,9 +1,15 @@
 <?php
 
 /**
- * Include the entrance file
+ * Include the main bootstrap
  */
-require_once( __DIR__ . '/../../Addframe.php' );
+require_once( __DIR__ . '/../bootstrap.php' );
+
+/**
+ * Over ride the default cache prefix
+ * This makes sure none of our test data messes up any real data
+ */
+\Addframe\Cache::$prefix = 'ut_';
 
 /**
  * And classes that are only used in testing
@@ -11,15 +17,3 @@ require_once( __DIR__ . '/../../Addframe.php' );
  */
 require_once( __DIR__ . '/DefaultTestCase.php' );
 require_once( __DIR__ . '/Mediawiki/MediawikiTestCase.php' );
-
-/**
- * Turn default logging off
- * This makes sure we don't spoil logs we actually use..
- */
-\Addframe\Logger::setDefaultSeverityThreshold( \Addframe\Logger::OFF );
-
-/**
- * Over ride the default cache prefix
- * This makes sure none of our test data messes up any real data
- */
-\Addframe\Cache::$prefix = 't_';
