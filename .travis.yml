@@ -28,6 +28,7 @@ install:
   - php maintenance/update.php --quick
 
 before_script:
+  - chmod -R 777 /home/travis/build/www
   - cd /home/travis/build/addwiki/addframe
 
 script:
