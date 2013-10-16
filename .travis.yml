@@ -1,9 +1,37 @@
 language: php
+
 php:
   - 5.4
   - 5.3
 
-script: phpunit --configuration phpunit.xml
+before_install:
+  - cd /home/travis/build
+  - mkdir www
+  - sudo apt-get update
+  - sudo apt-get install apache2
+  - sudo a2enmod actions
+  - sudo a2enmod rewrite
+  - echo "export PATH=/home/vagrant/.phpenv/bin:$PATH" | sudo tee -a /etc/apache2/envvars > /dev/null
+  - echo "$(curl -fsSL https://gist.github.com/roderik/16d751c979fdeb5a14e3/raw/gistfile1.txt)" | sudo tee /etc/apache2/conf.d/phpconfig > /dev/null
+  - echo "$(curl -fsSL https://gist.github.com/roderik/2eb301570ed4a1f4c33d/raw/gistfile1.txt)" | sed -e "s,PATH,`pwd`/www,g" | sudo tee /etc/apache2/sites-available/default > /dev/null
+  - sudo service apache2 restart
+
+install:
+  - cd /home/travis/build/www
+  - git clone https://gerrit.wikimedia.org/r/p/mediawiki/core.git wiki --depth 1
+  - cd wiki
+  - php maintenance/install.php --dbtype sqlite --dbuser root --dbname its_a_mw --dbpath $(pwd) --pass nyan TravisWiki admin
+  - cd extensions
+  # Install extensions...
+  - cd -
+  - php maintenance/update.php --quick
+
+before_script:
+  - cd /home/travis/build/addwiki/addframe
+
+script:
+  - phpunit --configuration tests/unit.xml
+  - phpunit --configuration tests/integration.xml
 
 notifications:
   irc:

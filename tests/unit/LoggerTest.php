@@ -50,8 +50,8 @@ class LoggerTest extends DefaultTestCase{
 		parent::tearDownAfterClass();
 
 		//Delete the logger folder we created
-		if( file_exists( __DIR__.'/../log/'.self::$logLabel ) ){
-			rmdir( __DIR__.'/../log/'.self::$logLabel );
+		if( file_exists( __DIR__.'/../../log/'.self::$logLabel ) ){
+			rmdir( __DIR__.'/../../log/'.self::$logLabel );
 		}
 
 	}
@@ -67,7 +67,7 @@ class LoggerTest extends DefaultTestCase{
 	 * @return string fullpath location
 	 */
 	static function getExpectedPath( ){
-		return __DIR__.'/../log/'.self::$logLabel.'/'.date( 'Y-m-d' ) . '.txt';
+		return __DIR__.'/../../log/'.self::$logLabel.'/'.date( 'Y-m-d' ) . '.txt';
 	}
 
 	/**
