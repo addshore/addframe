@@ -7,13 +7,14 @@ php:
 before_install:
   - cd /home/travis/build
   - mkdir www
+  - mkdir log
   - sudo apt-get update
   - sudo apt-get install apache2
   - sudo a2enmod actions
   - sudo a2enmod rewrite
   - echo "export PATH=/home/vagrant/.phpenv/bin:$PATH" | sudo tee -a /etc/apache2/envvars > /dev/null
   - echo "$(curl -fsSL https://gist.github.com/roderik/16d751c979fdeb5a14e3/raw/gistfile1.txt)" | sudo tee /etc/apache2/conf.d/phpconfig > /dev/null
-  - echo "$(curl -fsSL https://gist.github.com/roderik/2eb301570ed4a1f4c33d/raw/gistfile1.txt)" | sed -e "s,PATH,`pwd`/www,g" | sudo tee /etc/apache2/sites-available/default > /dev/null
+  - echo "$(curl -fsSL https://gist.github.com/addshore/7012119/raw/1ac2ee8f257e2959ae592f5ab3f166f42d839457/gistfile1.txt)" | sed -e "s,PATH,`pwd`/www,g" | sudo tee /etc/apache2/sites-available/default > /dev/null
   - sudo service apache2 restart
 
 install:
@@ -32,6 +33,9 @@ before_script:
 script:
   - phpunit --configuration tests/unit.xml
   - phpunit --configuration tests/integration.xml
+
+after_failure:
+  - cat /home/travis/build/log/error.log
 
 notifications:
   irc:
