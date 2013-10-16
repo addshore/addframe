@@ -180,7 +180,7 @@ class Site {
 	 * @todo unittest
 	 */
 	public function isLoggedIn(){
-		$result = $this->getApi()->doRequest( new UserinfoRequest( array(), false, 0 ) );
+		$result = $this->getApi()->doRequest( new UserinfoRequest( ) );
 		if( array_key_exists( 'anon', $result['query']['userinfo'] ) || $result['query']['userinfo']['id'] = 0 ){
 			return false;
 		} else if( array_key_exists( 'name', $result['query']['userinfo'] ) ){
