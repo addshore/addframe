@@ -7,7 +7,7 @@ namespace Addframe\Mediawiki\Api;
  */
 class UsersRequest extends QueryRequest{
 
-	public function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_MINUTE ) {
+	public function __construct( $params = array(), $shouldPost = false, $maxAge = CACHE_MINUTE ) {
 
 		$this->addAllowedParams( array( 'list', 'usprop', 'ususers', 'ustoken' ) );
 		$this->addParams( array(
@@ -15,7 +15,7 @@ class UsersRequest extends QueryRequest{
 			'usprop' => 'blockinfo|groups|implicitgroups|rights|editcount|registration|emailable|gender'
 		) );
 
-		parent::__construct( $params, $shouldBePosted, $maxAge);
+		parent::__construct( $params, $shouldPost, $maxAge);
 	}
 
 }

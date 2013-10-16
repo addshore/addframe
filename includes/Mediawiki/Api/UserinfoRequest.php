@@ -8,12 +8,12 @@ namespace Addframe\Mediawiki\Api;
  */
 class UserinfoRequest extends QueryRequest{
 
-	public function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE ) {
+	public function __construct( $params = array(), $shouldPost = false, $maxAge = CACHE_NONE ) {
 
 		$this->addAllowedParams( array( 'meta', 'uiprop' ) );
 		$this->addParams( array( 'meta' => 'userinfo' ) );
 
-		parent::__construct( $params, $shouldBePosted, $maxAge);
+		parent::__construct( $params, $shouldPost, $maxAge);
 	}
 
 }

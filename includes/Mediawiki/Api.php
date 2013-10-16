@@ -88,7 +88,7 @@ class Api {
 		//otherwise do a real request
 		if( is_null( $result ) ){
 			try{
-				if ( $request->shouldBePosted() ) {
+				if ( $request->shouldPost() ) {
 					$requestUrl = $this->getUrl();
 					$httpResponse = $this->http->post( $requestUrl, $request->getParameters() );
 					$result = json_decode( $httpResponse, true );

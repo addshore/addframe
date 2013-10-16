@@ -4,6 +4,7 @@ namespace Addframe\Mediawiki\Api;
 
 use Addframe\Cacheable;
 use Addframe\Http;
+use UnexpectedValueException;
 
 /**
  * Class Request representing a single api request
@@ -31,15 +32,16 @@ class Request implements Cacheable{
 	protected $allowedParams = array();
 
 	/**
+	 * @deprecated Please used this as a fluid interface instead
 	 * @param array $params Parameters for the api request
-	 * @param bool $shouldBePosted Should be we a HTTP POST?
+	 * @param bool $shouldPost Should be we a HTTP POST?
 	 * @param bool|int $maxAge should be cache / how long to cache for in seconds
 	 * @param array $allowedParams optional set of parameters to limit the request to
-	 * @throws \UnexpectedValueException
+	 * @throws UnexpectedValueException
 	 */
-	public function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE, $allowedParams = array() ) {
+	public function __construct( $params = array(), $shouldPost = false, $maxAge = CACHE_NONE, $allowedParams = array() ) {
 		//make sure our construction params are correct
-		if( !is_array( $params ) || !is_bool( $shouldBePosted ) || !is_int( $maxAge ) || !is_array( $allowedParams ) ){
+		if( !is_array( $params ) || !is_bool( $shouldPost ) || !is_int( $maxAge ) || !is_array( $allowedParams ) ){
 			throw new \UnexpectedValueException( 'Request construction params are not of the correct types' );
 		}
 
@@ -51,10 +53,6 @@ class Request implements Cacheable{
 			$this->addAllowedParams( array( 'format' ) );
 		}
 
-		// Mediawiki is apparently moving towards json only, so lets just use it...
-		$this->addParams( array( 'format' => 'json' ) );
-
-
 		if( is_array( $params ) ){
 			foreach( $params as $param => $value ) {
 				// If one of the param values is an array, implode it to the form used by the api
@@ -64,15 +62,18 @@ class Request implements Cacheable{
 			}
 		}
 
-		$this->addParams( $params );
-		$this->shouldBePosted = $shouldBePosted;
-		$this->maxCacheAge = $maxAge;
+		return $this
+			->addParams( array( 'format' => 'json' ) ) // always use json
+			->addParams( $params )
+			->setShouldPost( $shouldPost )
+			->setCacheAge( $maxAge ) ;
 	}
 
 	/**
 	 * Add each param to our array
 	 * We don't want to set the array to $params in case other params have already been set (hence 'add' not 'set')
 	 * @param $params array
+	 * @return $this
 	 */
 	protected function addParams( $params ) {
 		if( is_array( $params ) ){
@@ -80,14 +81,35 @@ class Request implements Cacheable{
 				$this->params[ $param ] = $value;
 			}
 		}
+		return $this;
+	}
+
+	/**
+	 * @param $bool bool Should be we a HTTP POST?
+	 * @return $this
+	 */
+	public function setShouldPost( $bool ){
+		$this->shouldBePosted = $bool;
+		return $this;
+	}
+
+	/**
+	 * @param $age int should be cache / how long to cache for in seconds
+	 * @return $this
+	 */
+	public function setCacheAge( $age ){
+		$this->maxCacheAge = $age;
+		return $this;
 	}
 
 	/**
 	 * Add parameters that are allowed to an array to be used in later validation / tidy up
 	 * @param $params array
+	 * @return $this
 	 */
 	protected function addAllowedParams( $params ) {
 		$this->allowedParams = array_merge( $this->allowedParams, $params );
+		return $this;
 	}
 
 	/**
@@ -104,7 +126,7 @@ class Request implements Cacheable{
 	/**
 	 * @return bool should this request be posted
 	 */
-	public function shouldBePosted(){
+	public function shouldPost(){
 		return $this->shouldBePosted;
 	}
 

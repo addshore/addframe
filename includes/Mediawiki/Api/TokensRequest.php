@@ -7,11 +7,11 @@ namespace Addframe\Mediawiki\Api;
  */
 class TokensRequest extends Request{
 
-	public function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_HOUR ) {
+	public function __construct( $params = array(), $shouldPost = false, $maxAge = CACHE_HOUR ) {
 
 		$this->addAllowedParams( array( 'action', 'type' ) );
 		$this->addParams( array( 'action' => 'tokens', 'type' => 'edit' ) );
 
-		parent::__construct( $params, $shouldBePosted, $maxAge );
+		parent::__construct( $params, $shouldPost, $maxAge );
 	}
 }

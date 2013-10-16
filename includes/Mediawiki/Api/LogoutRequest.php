@@ -7,11 +7,11 @@ namespace Addframe\Mediawiki\Api;
  */
 class LogoutRequest extends Request{
 
-	public function __construct( $params = array(), $shouldBePosted = false, $maxAge = CACHE_NONE  ) {
+	public function __construct( $params = array(), $shouldPost = false, $maxAge = CACHE_NONE  ) {
 
 		$this->addAllowedParams( array( 'action' ) );
 		$this->addParams( array( 'action' => 'logout' ) );
 
-		parent::__construct( $params, $shouldBePosted, $maxAge );
+		parent::__construct( $params, $shouldPost, $maxAge );
 	}
 }

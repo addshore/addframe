@@ -7,7 +7,7 @@ namespace Addframe\Mediawiki\Api;
  */
 class EditRequest extends Request{
 
-	public function __construct( $params = array(), $shouldBePosted = true, $maxAge = CACHE_NONE ) {
+	public function __construct( $params = array(), $shouldPost = true, $maxAge = CACHE_NONE ) {
 
 		$this->addAllowedParams(
 			array( 'action', 'title', 'pageid', 'section', 'sectiontitle', 'text', 'token', 'summary', 'minor',
@@ -34,6 +34,6 @@ class EditRequest extends Request{
 			$params['md5'] = md5( $params['prependtext'] . $params['appendtext'] );
 		}
 
-		parent::__construct( $params, $shouldBePosted, $maxAge );
+		parent::__construct( $params, $shouldPost, $maxAge );
 	}
 }
