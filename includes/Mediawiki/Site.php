@@ -90,13 +90,15 @@ class Site {
 
 	/**
 	 * Gets the location of the API using the EditURI link tag on a mediawiki homepage
+	 * @throws Exception
 	 * @return bool true if successful
 	 */
 	public function getApiFromHomePage() {
 		if( !is_null( $this->url ) ){
 
+			$html = $this->http->get( $this->url );
 			$homePage = New DOMDocument();
-			$homePage->loadHTML( $this->http->get( $this->url ) );
+			$homePage->loadHTML( $html );
 
 			foreach( $homePage->getElementsByTagName( 'link' ) as $element ){
 				if( $element->attributes->getNamedItem('rel')->nodeValue == 'EditURI' ){
@@ -106,9 +108,9 @@ class Site {
 					return true;
 				}
 			}
-
+			throw new Exception( __METHOD__ . ' can not get api url from home page : ' . $html );
 		}
-		return false;
+		throw new Exception( __METHOD__ . ' can not get api with no url set' );
 	}
 
 	/**

@@ -8,12 +8,15 @@ namespace Addframe\Mediawiki\Api;
 class UsageException extends \Exception{
 
 	private $mCodestr = '';
+	private $mExtrastr = '';
 
 	/**
 	 * @param array $errorArray errorArray from the API (containing 'code' and 'message' elements)
+	 * @param string $extra extra infomation (maybe a serilized object to look at)
 	 */
-	public function __construct( $errorArray ) {
+	public function __construct( $errorArray, $extra = '' ) {
 		$this->mCodestr = $errorArray['code'];
+		$this->mExtrastr = $extra;
 		$message = $errorArray['code'] . ': ' . $errorArray['info'];
 
 		parent::__construct( $message, 0 );
@@ -40,7 +43,11 @@ class UsageException extends \Exception{
 	 * @return string
 	 */
 	public function __toString() {
-		return $this->getMessage();
+		$msg = $this->getMessage();
+		if( !$this->mExtrastr === '' ){
+			$msg .= ': ' . $this->mExtrastr;
+		}
+		return $msg;
 	}
 
 }
