@@ -161,7 +161,7 @@ class Site {
 			return false;
 		}
 		//todo catch all other possible errors for logging in
-		return null;
+		throw new Exception( 'Unknown error ' . __CLASS__ . ' ' . __METHOD__ . ': ' . serialize( $result ) );
 	}
 
 	/**

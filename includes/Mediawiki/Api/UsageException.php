@@ -14,7 +14,7 @@ class UsageException extends \Exception{
 	 */
 	public function __construct( $errorArray ) {
 		$this->mCodestr = $errorArray['code'];
-		$message = $errorArray['info'];
+		$message = $errorArray['code'] . ': ' . $errorArray['info'];
 
 		parent::__construct( $message, 0 );
 	}
@@ -40,7 +40,7 @@ class UsageException extends \Exception{
 	 * @return string
 	 */
 	public function __toString() {
-		return "{$this->getCodeString()}: {$this->getMessage()}";
+		return $this->getMessage();
 	}
 
 }

@@ -22,7 +22,8 @@ class UsageExceptionTest extends MediawikiTestCase {
 		} catch( UsageException $e ){
 			$this->assertInstanceOf( 'Addframe\Mediawiki\Api\UsageException', $e );
 			$this->assertEquals( $array['code'], $e->getCodeString() );
-			$this->assertEquals( $array, $e->getMessageArray() );
+			$this->assertContains( $array['code'], $e->getMessage() );
+			$this->assertContains( $array['info'], $e->getMessage() );
 			$this->assertContains( $array['code'], $e->__tostring() );
 			$this->assertContains( $array['info'], $e->__tostring() );
 		}
