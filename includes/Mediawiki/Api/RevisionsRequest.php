@@ -7,7 +7,7 @@ namespace Addframe\Mediawiki\Api;
  */
 class RevisionsRequest extends QueryRequest{
 
-	public function __construct( $params = array(), $shouldBePosted = true, $maxAge = CACHE_NONE ) {
+	public function __construct( $params = array(), $shouldPost = true, $maxAge = CACHE_NONE ) {
 
 		$this->addAllowedParams( array( 'prop', 'rvprop', 'rvlimit', 'rvstartid', 'rvendid',
 			'rvstarts', 'rvend', 'rvdir', 'rvuser', 'rvexcludeuser', 'rvtag', 'rvexpandtemplates',
@@ -16,7 +16,7 @@ class RevisionsRequest extends QueryRequest{
 
 		$this->addParams( array( 'prop' => 'revisions' ) );
 
-		parent::__construct( $params, $shouldBePosted, $maxAge);
+		parent::__construct( $params, $shouldPost, $maxAge);
 	}
 
 }
