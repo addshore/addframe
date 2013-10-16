@@ -2,7 +2,6 @@
 
 namespace Addframe\Mediawiki;
 
-use LogicException;
 use UnexpectedValueException;
 
 /**
@@ -13,19 +12,24 @@ class Revisions {
 	/** @var Revision[] */
 	protected $revisions;
 
-	function __construct( $data ) {
+	/**
+	 * @param null|Revisions[]|Revision $data
+	 *
+	 * @throws UnexpectedValueException
+	 */
+	function __construct( $data = null ) {
 		$this->revisions = array();
 		if( is_array( $data ) ){
 			foreach( $data as $rev ){
 				if( $rev instanceof Revision ){
 					$this->add( $rev );
 				} else {
-					throw new UnexpectedValueException( 'Array should contains only instances of Revision' );
+					throw new UnexpectedValueException( 'Array should contain only instances of Revision' );
 				}
 			}
 		} else if ( $data instanceof Revision ){
 			$this->add( $data );
-		} else {
+		} else if ( !$data === null ) {
 			throw new UnexpectedValueException( 'Revisions should be constructed with a Revision of array of Revisions' );
 		}
 	}
@@ -54,6 +58,7 @@ class Revisions {
 	}
 
 	public function add( Revision $revision ){
+		//todo throw exception is no revid is set..
 		$this->revisions[ $revision->getRevId() ] = $revision;
 	}
 

@@ -37,8 +37,12 @@ class Page {
 	protected $protection;
 	/** @var string */
 	protected $displaytitle;
-	/** @var array */
-	protected $revisions = array();
+	/** @var Revisions */
+	protected $revisions;
+
+	function __construct() {
+		$this->revisions = new Revisions();
+	}
 
 	/**
 	 * @return string
@@ -241,7 +245,7 @@ class Page {
 		if( $result['result'] === 'Success' ){
 			$revision->setRevId( $result['newrevid'] );
 			//todo also set new timestamp, contentmodel,oldrevid?
-			$this->addRevision( $revision );
+			$this->revisions->add( $revision );
 			return true;
 		}
 		throw new Exception( 'Save failed in ' . __CLASS__ . ' ' .__METHOD__ . ': ' . serialize( $result ) );
@@ -262,11 +266,13 @@ class Page {
 			$revid = $this->getLastrevid( true );
 		}
 
-		if( !array_key_exists( $revid, $this->revisions ) ){
+		if( !$this->revisions->hasRevisionWithId( $revid ) ){
 			$revision = Revision::newFromRevId( $revid, $this );
-			$this->addRevision( $revision );
+			$this->revisions->add( $revision );
+			return $revision;
+		} else {
+			return $this->revisions->get( $revid );
 		}
-		return $this->revisions[$revid];
 	}
 
 	/**
@@ -279,14 +285,8 @@ class Page {
 			$revision = Revision::newFromPage( $this );
 		}
 		$revision->load();
-		$this->addRevision( $revision );
+		$this->revisions->add( $revision );
 		return $revision;
-	}
-
-	//todo test
-	public function addRevision( Revision $revision ){
-		//todo throw exception is no revid is set..
-		$this->revisions[$revision->getRevId()] = $revision;
 	}
 
 	/**
