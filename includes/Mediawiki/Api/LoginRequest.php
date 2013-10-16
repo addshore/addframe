@@ -7,7 +7,7 @@ namespace Addframe\Mediawiki\Api;
  */
 class LoginRequest extends Request{
 
-	function __construct( $params = array(), $shouldBePosted = true, $maxAge = CACHE_NONE ) {
+	public function __construct( $params = array(), $shouldBePosted = true, $maxAge = CACHE_NONE ) {
 
 		$this->addAllowedParams( array( 'action', 'lgname', 'lgpassword', 'lgtoken', 'lgdomain' ) );
 		$this->addParams( array( 'action' => 'login' ) );

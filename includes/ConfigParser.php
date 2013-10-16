@@ -29,7 +29,7 @@ class ConfigParser {
 	/**
 	 * @param string $environment given environment to load
 	 */
-	function __construct( $environment = "default" ) {
+	public function __construct( $environment = "default" ) {
 
 		$configDefault = parse_ini_file( __DIR__ . '/../LocalSettings.default.ini', true );
 		if( file_exists( __DIR__ . '/../LocalSettings.ini' ) ){
