@@ -5,13 +5,6 @@ namespace Addframe\Mediawiki\Api;
 use Addframe\Cacheable;
 use Addframe\Http;
 
-// Some default cache lengths in seconds
-const CACHE_WEEK = 604800;
-const CACHE_DAY = 86400;
-const CACHE_HOUR = 3600;
-const CACHE_MINUTE = 60;
-const CACHE_NONE = 0;
-
 /**
  * Class Request representing a single api request
  */

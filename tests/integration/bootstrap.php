@@ -15,5 +15,5 @@ require_once( __DIR__ . '/../bootstrap.php' );
  * Define a site location to be used in integration tests
  */
 define( "SITEURL", "http://localhost/wiki/index.php" );
-define( "SITEUSER", "test" );
+define( "SITEUSER", "Test" );
 define( "SITEPASS", "integration" );
