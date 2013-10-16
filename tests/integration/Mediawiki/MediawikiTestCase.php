@@ -6,17 +6,25 @@ use Addframe\Mediawiki\Site;
 
 class MediawikiTestCase extends \PHPUnit_Framework_TestCase {
 
-	protected $site;
+	/** @var Site|null */
+	protected $site = null;
+	/** @var bool */
 	protected $siteIsLoggedIn = false;
 
+	/**
+	 * @param bool $logIn
+	 * @return Site
+	 */
 	public function newSite( $logIn = true ) {
 		if( !$this->site instanceof Site ){
 			$this->site = Site::newFromUrl( SITEURL );
 		}
 		if( $logIn && !$this->siteIsLoggedIn ){
 			$this->site->login( SITEUSER, SITEPASS );
-		} else if( $this->siteIsLoggedIn ) {
+			$this->siteIsLoggedIn = true;
+		} else if( !$logIn || $this->siteIsLoggedIn ) {
 			$this->site->logout();
+			$this->siteIsLoggedIn = false;
 		}
 		return $this->site;
 	}
