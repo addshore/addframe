@@ -20,6 +20,7 @@ return call_user_func( function() {
 		'Addframe\Mediawiki\User' => 'Mediawiki/User.php',
 		'Addframe\Mediawiki\Page' => 'Mediawiki/Page.php',
 		'Addframe\Mediawiki\Revision' => 'Mediawiki/Revision.php',
+		'Addframe\Mediawiki\Revisions' => 'Mediawiki/Revisions.php',
 
 		//core api
 		'Addframe\Mediawiki\Api' => 'Mediawiki/Api.php',
