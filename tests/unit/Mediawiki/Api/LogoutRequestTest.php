@@ -10,13 +10,13 @@ use Addframe\Mediawiki\Api\LogoutRequest;
  */
 class LogoutRequestTest extends MediawikiTestCase {
 
-	function testCanConstruct( ){
+	public function testCanConstruct( ){
 		$class = '\Addframe\Mediawiki\Api\LogoutRequest';
 		$object = new $class();
 		$this->assertInstanceOf( $class, $object );
 	}
 
-	function testLogoutRequest(){
+	public function testLogoutRequest(){
 		$query = new LogoutRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'action', $params );

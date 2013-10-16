@@ -10,14 +10,14 @@ use Addframe\Mediawiki\Api\SiteinfoRequest;
  */
 class SiteinfoRequestTest extends MediawikiTestCase {
 
-	function testCanConstruct( ){
+	public function testCanConstruct( ){
 		$class = '\Addframe\Mediawiki\Api\SiteinfoRequest';
 		$object = new $class();
 		$this->assertInstanceOf( $class, $object );
 
 	}
 
-	function testSiteInfoRequest(){
+	public function testSiteInfoRequest(){
 		$query = new SiteinfoRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'meta', $params );

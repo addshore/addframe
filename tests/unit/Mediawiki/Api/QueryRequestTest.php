@@ -10,14 +10,14 @@ use Addframe\Mediawiki\Api\QueryRequest;
  */
 class QueryRequestTest extends MediawikiTestCase {
 
-	function testCanConstruct( ){
+	public function testCanConstruct( ){
 		$class = '\Addframe\Mediawiki\Api\QueryRequest';
 		$object = new $class();
 		$this->assertInstanceOf( $class, $object );
 
 	}
 
-	function testQueryRequest(){
+	public function testQueryRequest(){
 		$query = new QueryRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'action', $params );

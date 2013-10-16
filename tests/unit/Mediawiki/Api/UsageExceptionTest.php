@@ -10,11 +10,11 @@ use Addframe\Mediawiki\Api\UsageException;
  */
 class UsageExceptionTest extends MediawikiTestCase {
 
-	function throwUsageException( $array ){
+	public function throwUsageException( $array ){
 		throw new UsageException( $array );
 	}
 
-	function testUsageException(){
+	public function testUsageException(){
 		$array = array( 'code' => 'imacode', 'info' => 'imsomeinfo' );
 
 		try{

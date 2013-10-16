@@ -10,14 +10,14 @@ use Addframe\Mediawiki\Api\SitematrixRequest;
  */
 class SitematrixRequestTest extends MediawikiTestCase {
 
-	function testCanConstruct( ){
+	public function testCanConstruct( ){
 		$class = '\Addframe\Mediawiki\Api\SitematrixRequest';
 		$object = new $class();
 		$this->assertInstanceOf( $class, $object );
 
 	}
 
-	function testSitematrixRequest(){
+	public function testSitematrixRequest(){
 		$query = new SitematrixRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'action', $params );
