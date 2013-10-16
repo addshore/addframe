@@ -21,6 +21,7 @@ class WebserverTest extends \PHPUnit_Framework_TestCase {
 		$builder[] = 'http://localhost';
 		$builder[] = 'http://localhost/wiki/index.php';
 		$builder[] = 'http://localhost/wiki/api.php';
+		$builder[] = SITEURL;
 
 		$urls = array();
 		foreach( $builder as $url ){

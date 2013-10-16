@@ -16,3 +16,8 @@ require_once( __DIR__ . '/../../Addframe.php' );
  * This makes sure none of our test data messes up any real data
  */
 \Addframe\Cache::$prefix = 't_';
+
+/**
+ * Define a site location to be used in integration tests
+ */
+define( "SITEURL", "http://localhost/wiki/index.php" );
