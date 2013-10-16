@@ -20,7 +20,7 @@ install:
   - cd /home/travis/build/www
   - git clone https://gerrit.wikimedia.org/r/p/mediawiki/core.git wiki --depth 1
   - cd wiki
-  - php maintenance/install.php --dbtype sqlite --dbuser root --dbname its_a_mw --dbpath $(pwd) --pass nyan TravisWiki admin
+  - php maintenance/install.php --dbtype sqlite --dbuser root --dbname its_a_mw --dbpath $(pwd) --admin Test --pass integration
   - cd extensions
   # Install extensions...
   - cd -
