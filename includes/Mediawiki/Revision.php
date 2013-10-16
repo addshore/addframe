@@ -48,8 +48,8 @@ class Revision {
 		$request = new RevisionsRequest( );
 
 		//todo also use pageid for request
-		if( is_string( $this->page->getTitle() ) ){
-			$request->setParameter( 'titles', $this->page );
+		if( $this->page instanceof Page && is_string( $this->page->getTitle() ) ){
+			$request->setParameter( 'titles', $this->page->getTitle() );
 		}
 		if( is_int( $this->revid ) ){
 			$request->setParameter( 'revids', $this->revid );
@@ -93,6 +93,39 @@ class Revision {
 		return $this->revid;
 	}
 
+	public function setRevId( $revid ) {
+		$this->revid = $revid;
+	}
+
+	public function getContent() {
+		if( !is_string( $this->content ) ){
+			$this->load();
+		}
+		return $this->content;
+	}
+
+	public function getComment() {
+		if( !is_string( $this->comment ) ){
+			$this->load();
+		}
+		return $this->comment;
+	}
+
+	public function setContent( $content ){
+		$this->content = $content;
+	}
+
+	public function setComment( $comment ){
+		$this->comment = $comment;
+	}
+
+	public function isMissing(){
+		if( !is_bool( $this->missing ) ){
+			$this->load();
+		}
+		return $this->missing;
+	}
+
 	/**
 	 * @param Page $page
 	 * @return Revision
@@ -105,12 +138,24 @@ class Revision {
 
 	/**
 	 * @param int $revid
+	 * @param null|Page $page
 	 * @return Revision
 	 */
-	public static function newFromRevId( $revid ){
+	public static function newFromRevId( $revid, $page = null ){
 		$revision = new Revision();
 		$revision->revid = $revid;
+		if( !is_null( $page ) ){
+			$revision->page = $page ;
+		}
 		return $revision;
+	}
+
+	public static function newFromRevision( Revision $revision ){
+		$newRevision = new Revision();
+		$newRevision->page = $revision->page;
+		$newRevision->parentid = $revision->revid;
+		//todo set the other things that will be the same such as content
+		return $newRevision;
 	}
 
 }

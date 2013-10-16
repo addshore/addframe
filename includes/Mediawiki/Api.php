@@ -10,6 +10,7 @@ use Addframe\Logger;
 use Addframe\Mediawiki\Api\Request;
 use Addframe\Mediawiki\Api\TokensRequest;
 use Addframe\Mediawiki\Api\UsageException;
+use Exception;
 use UnexpectedValueException;
 
 /**
@@ -116,7 +117,9 @@ class Api {
 		if( !is_array( $result ) ){
 			throw new UnexpectedValueException( 'Api result should be an array, instead is ' . print_r( $result ) );
 		} else if( array_key_exists( 'error', $result ) ){
-			throw new UsageException( $result['error'] );
+			$exception = new UsageException( $result['error'] );
+			Logger::logWarn( 'UsageException' . $exception->__toString() );
+			throw $exception;
 		}
 
 		return $result;
@@ -124,13 +127,15 @@ class Api {
 
 	/**
 	 * Do a request with a token
+	 *
 	 * @param Request $request
 	 * @param string $tokenType
 	 * @param bool $getCache
+	 *
 	 * @throws UsageException
-	 * @return Array
+	 * @return array
 	 */
-	public function doRequestWithToken( Request &$request, $tokenType = 'edittoken', $getCache = true ) {
+	public function doRequestWithToken( Request &$request, $tokenType = 'edit', $getCache = true ) {
 		//todo the below hackery makes me think api and site should be the same class
 		//todo then we could use getToken('edit') instead...
 
@@ -138,19 +143,10 @@ class Api {
 		 * getting the tokens in this way should be okay as caching should mean that we
 		 * do not actually make a new request to the api for a token each time...
 		 */
-		try{
-			$tokenResult = $this->doRequest( new TokensRequest( array( 'type' => $tokenType ) ), $getCache );
-			$request->setParameter( 'token', $tokenResult['tokens'][$tokenType] );
-			return $this->doRequest( $request, false );
-		} catch( UsageException $e ){
-			$code = $e->getCodeString();
-			if( $code == 'badtoken' || $code == 'notoken' ){
-				Logger::logWarn( 'UsageException' . $e->__toString() );
-			} else {
-				throw $e;
-			}
-		}
-		return null;
+		$tokenResult = $this->doRequest( new TokensRequest( array( 'type' => $tokenType ) ), $getCache );
+		$request->setParameter( 'token', $tokenResult['tokens'][$tokenType.'token'] );
+		$result = $this->doRequest( $request, false );
+		return $result;
 	}
 
 }

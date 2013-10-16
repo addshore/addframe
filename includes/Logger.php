@@ -24,6 +24,7 @@ class Logger {
 	 * Error severity, from low to high. From BSD syslog RFC, secion 4.1.1
 	 * @link http://www.faqs.org/rfcs/rfc3164.html
 	 */
+	const ALL = 0;
 	const EMERG = 0; // Emergency: system is unusable
 	const ALERT = 1; // Alert: action must be taken immediately
 	const CRIT = 2; // Critical: critical conditions
