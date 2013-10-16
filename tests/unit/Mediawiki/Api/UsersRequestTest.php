@@ -10,14 +10,14 @@ use Addframe\Mediawiki\Api\UsersRequest;
  */
 class UsersRequestTest extends MediawikiTestCase {
 
-	function testCanConstruct( ){
+	public function testCanConstruct( ){
 		$class = '\Addframe\Mediawiki\Api\UsersRequest';
 		$object = new $class();
 		$this->assertInstanceOf( $class, $object );
 
 	}
 
-	function testUsersRequest(){
+	public function testUsersRequest(){
 		$query = new UsersRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'list', $params );

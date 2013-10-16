@@ -11,19 +11,19 @@ use Addframe\Mediawiki\TestApi;
  */
 class FamilyTest extends MediawikiTestCase{
 
-	function testConstruct(){
+	public function testConstruct(){
 		$family = new Family();
 		$this->assertInstanceOf( 'Addframe\Mediawiki\Family', $family );
 	}
 
-	function provideSitematrixData(){
+	public function provideSitematrixData(){
 		return array( array( 'sitematrix/wikimedia.json' ), array( 'sitematrix/empty.json' ) ) ;
 	}
 
 	/**
 	 * @dataProvider provideSitematrixData
 	 */
-	function testGetSiteMatrix( $dataLocation ){
+	public function testGetSiteMatrix( $dataLocation ){
 		$expectedJson = $this->getTestApiData( $dataLocation );
 		$expectedArray = json_decode( $expectedJson, true );
 		$family = new Family();
@@ -35,7 +35,7 @@ class FamilyTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideSitematrixData
 	 */
-	function testGetSiteListReturnsSiteList( $dataLocation ){
+	public function testGetSiteListReturnsSiteList( $dataLocation ){
 		$expectedJson = $this->getTestApiData( $dataLocation );
 		$expectedArray = json_decode( $expectedJson, true );
 		$family = new Family();
@@ -45,7 +45,7 @@ class FamilyTest extends MediawikiTestCase{
 		$this->assertEquals( $expectedArray['sitematrix']['count'], $sitelist->count() ); //as defined in the json
 	}
 
-	function testFamilyHasSite(){
+	public function testFamilyHasSite(){
 		$expectedJson = $this->getTestApiData( 'sitematrix/wikimedia.json' );
 		$family = new Family();
 		$family->setApi( new TestApi( $expectedJson ) );
@@ -55,7 +55,7 @@ class FamilyTest extends MediawikiTestCase{
 		$this->assertTrue( $family->hasSite( 'en.wikipedia.org' ) );
 	}
 
-	function provideSiteListFilter(){
+	public function provideSiteListFilter(){
 		/*
 		 * In the site matrix we are testing we can use the following sites to test
 		 * active = en.wikipedia.org
@@ -92,7 +92,7 @@ class FamilyTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideSiteListFilter
 	 */
-	function testGetSiteListFilters( $filter, $has, $hasnt ){
+	public function testGetSiteListFilters( $filter, $has, $hasnt ){
 		$expectedJson = $this->getTestApiData( 'sitematrix/wikimedia.json' );
 		$family = new Family();
 		$family->setApi( new TestApi( $expectedJson ) );
@@ -106,7 +106,7 @@ class FamilyTest extends MediawikiTestCase{
 		}
 	}
 
-	function provideFilterTypes(){
+	public function provideFilterTypes(){
 		return array(
 			array( 'closed' ),
 			array( 'private' ),
@@ -119,7 +119,7 @@ class FamilyTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideFilterTypes
 	 */
-	function testGetSiteListFiltersWhenEmpty( $type ){
+	public function testGetSiteListFiltersWhenEmpty( $type ){
 		$expectedJson = $this->getTestApiData( 'sitematrix/empty.json' );
 		$family = new Family();
 		$family->setApi( new TestApi( $expectedJson ) );
@@ -129,7 +129,7 @@ class FamilyTest extends MediawikiTestCase{
 		$this->assertEquals( 0, $partialSiteList->count() );
 	}
 
-	function testGetSiteListWithBadFilter( ){
+	public function testGetSiteListWithBadFilter( ){
 		$this->setExpectedException( '\UnexpectedValueException' );
 		$expectedJson = $this->getTestApiData( 'sitematrix/empty.json' );
 		$family = new Family();

@@ -10,14 +10,14 @@ use Addframe\Mediawiki\Api\LoginRequest;
  */
 class LoginRequestTest extends MediawikiTestCase {
 
-	function testCanConstruct( ){
+	public function testCanConstruct( ){
 		$class = '\Addframe\Mediawiki\Api\LoginRequest';
 		$object = new $class();
 		$this->assertInstanceOf( $class, $object );
 
 	}
 
-	function testLoginRequest(){
+	public function testLoginRequest(){
 		$query = new LoginRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'action', $params );

@@ -14,7 +14,7 @@ use Addframe\TestHttp;
 
 class ApiTest extends MediawikiTestCase{
 
-	function testCanConstruct( ){
+	public function testCanConstruct( ){
 		$api = new Api( );
 		$this->assertInstanceOf( 'Addframe\Mediawiki\Api', $api );
 	}
@@ -22,7 +22,7 @@ class ApiTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideUrls
 	 */
-	function testCanGetNewFromUrl( $url ){
+	public function testCanGetNewFromUrl( $url ){
 		$api = Api::newFromUrl( $url );
 		$api->setUrl( $url );
 		$this->assertEquals( $url, $api->getUrl() );
@@ -31,13 +31,13 @@ class ApiTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideUrls
 	 */
-	function testCanSetUrl( $url ){
+	public function testCanSetUrl( $url ){
 		$api = new Api();
 		$api->setUrl( $url );
 		$this->assertEquals( $url, $api->getUrl() );
 	}
 
-	function provideUrls(){
+	public function provideUrls(){
 		return array(
 			array( 'localhost/mediawiki/api.php' ),
 			array( '127.0.0.1/api.php' ),
@@ -48,7 +48,7 @@ class ApiTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideApiRequests
 	 */
-	function testCanDoRequest( $request, $expected = '[]' ){
+	public function testCanDoRequest( $request, $expected = '[]' ){
 		$http = new TestHttp( $expected );
 		$api = new Api( $http );
 		$result = $api->doRequest( $request, false );
@@ -58,7 +58,7 @@ class ApiTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideApiRequests
 	 */
-	function testCanDoRequestWithToken( Request $request, $expected = '[]' ){
+	public function testCanDoRequestWithToken( Request $request, $expected = '[]' ){
 		$http = new TestHttp( array( $this->getTestApiData( 'tokens/anonedittoken.json' ) , $expected ) );
 		$api = new Api( $http );
 
@@ -73,7 +73,7 @@ class ApiTest extends MediawikiTestCase{
 	 * @dataProvider provideApiRequests
 	 * NOTE: We don't actually receive an exception, just null (the exception is handled before the result is passed back)
 	 */
-	function testDoRequestWithTokenHandlesBadToken( Request $request ){
+	public function testDoRequestWithTokenHandlesBadToken( Request $request ){
 		$http = new TestHttp( array( $this->getTestApiData( 'tokens/anonedittoken.json' ) , $this->getTestApiData( 'errors/badtoken.json' ) ) );
 		$api = new Api( $http );
 
@@ -85,7 +85,7 @@ class ApiTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideApiRequests
 	 */
-	function testDoRequestWithTokenPassesOtherExceptions( Request $request ){
+	public function testDoRequestWithTokenPassesOtherExceptions( Request $request ){
 		$this->setExpectedException( '\Addframe\Mediawiki\Api\UsageException' );
 		$http = new TestHttp( array( $this->getTestApiData( 'errors/missingparam.json' ) ) );
 		$api = new Api( $http );
@@ -98,7 +98,7 @@ class ApiTest extends MediawikiTestCase{
 	 * Generally if the first few succeed so will the rest..
 	 * todo we could have a list of possible api requests somewhere and iterate over them all with their default values
 	 **/
-	function provideApiRequests(){
+	public function provideApiRequests(){
 		return array(
 			array( new Request() ),
 			array( new Request( array( 'param' => 'value' ) ) ),
@@ -109,7 +109,7 @@ class ApiTest extends MediawikiTestCase{
 		);
 	}
 
-	function provideErrorCodeFiles(){
+	public function provideErrorCodeFiles(){
 		$return = array();
 		foreach( scandir( __DIR__ . '/data/errors' ) as $file ){
 			if( substr( $file, -5 ) === '.json' )
@@ -121,14 +121,14 @@ class ApiTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideErrorCodeFiles
 	 */
-	function testApiExceptions( $file ){
+	public function testApiExceptions( $file ){
 		$this->setExpectedException( '\Addframe\Mediawiki\Api\UsageException' );
 		$http = new TestHttp( $this->getTestApiData( "errors/{$file}" ) );
 		$api = new Api( $http );
 		$api->doRequest( new Request() );
 	}
 
-	function testCachedResultCanBeIgnored(){
+	public function testCachedResultCanBeIgnored(){
 		$request = new Request( array( 'test' => 'testGettingCachedResultWorks' ), false, 100 );
 		Cache::remove( $request ); //remove if it is already there
 
@@ -151,7 +151,7 @@ class ApiTest extends MediawikiTestCase{
 		$this->assertEquals( array( 'NEW RESULT' ) , $request->getResult() );
 	}
 
-	function testCachedResultExpires(){
+	public function testCachedResultExpires(){
 		$request = new Request( array( 'test' => 'testCachedResultExpires' ), false, 2 );
 		Cache::remove( $request ); //remove if it is already there
 

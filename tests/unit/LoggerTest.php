@@ -81,7 +81,7 @@ class LoggerTest extends DefaultTestCase{
 	/**
 	 * Test that each level of logging logs correctly when the log is set to DEBUG
 	 */
-	function testAllLogMethodsInDebug(){
+	public function testAllLogMethodsInDebug(){
 		$this->assertFileNotExists( self::getExpectedPath( self::$logLabel ) );
 
 		Logger::setupLog( self::$logLabel, Logger::DEBUG );
@@ -130,7 +130,7 @@ class LoggerTest extends DefaultTestCase{
 	/**
 	 * Test that when logging is turned off we do not log anything
 	 */
-	function testAllLogMethodsInOff(){
+	public function testAllLogMethodsInOff(){
 		if( file_exists( self::getExpectedPath( self::$logLabel ) ) ){
 			unlink( self::getExpectedPath( self::$logLabel ) );
 		}
@@ -159,7 +159,7 @@ class LoggerTest extends DefaultTestCase{
 	 * Make sure we don't get file errors if we try to setup to identical logs
 	 * (these errors would eb caused as the files are kept open bu the logger)
 	 */
-	function testCanOnlySetupOnce(){
+	public function testCanOnlySetupOnce(){
 		Logger::setupLog( self::$logLabel, Logger::OFF );
 		Logger::setupLog( self::$logLabel, Logger::OFF );
 		$this->assertTrue( true );

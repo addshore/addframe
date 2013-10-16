@@ -34,7 +34,7 @@ class SiteListTest extends MediawikiTestCase{
 		$sites->append( $data );
 	}
 
-	function provideUnstorableValues(){
+	public function provideUnstorableValues(){
 		return array(
 			array( array() ),
 			array( 'imastring' ),

@@ -15,7 +15,7 @@ use Addframe\Cache;
 
 class CacheTest extends DefaultTestCase{
 
-	function testCacheTrip(){
+	public function testCacheTrip(){
 		// setup 2 requests
 		$request1 = $this->getRandomRequest();
 		$request2 = $this->getRandomRequest();
@@ -64,7 +64,7 @@ class CacheTest extends DefaultTestCase{
 	 * This means the request should have a vaguely unique hash compared to others used in this test
 	 * @return Request
 	 */
-	function getRandomRequest(){
+	public function getRandomRequest(){
 		$request = new Request( array( 'test' => rand( 0, 99999999 ) ) );
 		$request->setResult( array( 'Note' => 'This cached result was generated in a test' ) );
 		return $request;

@@ -13,7 +13,7 @@ use Addframe\TestHttp;
 
 class SiteTest extends MediawikiTestCase{
 
-	function testCanConstruct(){
+	public function testCanConstruct(){
 		$site = new Site();
 		$this->assertInstanceOf( 'Addframe\Mediawiki\Site', $site );
 	}
@@ -21,7 +21,7 @@ class SiteTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideUrls
 	 */
-	function testCanGetNewFromUrl( $url, $expect ){
+	public function testCanGetNewFromUrl( $url, $expect ){
 		$site = Site::newFromUrl( $url );
 		$site->setUrl( $url );
 		$this->assertEquals( $expect, $site->getUrl() );
@@ -30,13 +30,13 @@ class SiteTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideUrls
 	 */
-	function testCanSetUrl( $url, $expect ){
+	public function testCanSetUrl( $url, $expect ){
 		$site = new Site();
 		$site->setUrl( $url );
 		$this->assertEquals( $expect, $site->getUrl() );
 	}
 
-	function provideUrls(){
+	public function provideUrls(){
 		return array(
 			array( 'localhost/mediawiki', 'localhost/mediawiki' ),
 			array( '//127.0.0.1/', '127.0.0.1' ),
@@ -50,7 +50,7 @@ class SiteTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideGetApiUrl
 	 */
-	function testGetApi( $apiUrl, $mockHtml ){
+	public function testGetApi( $apiUrl, $mockHtml ){
 		$http = new TestHttp( $mockHtml );
 
 		$site = new Site( $http );
@@ -60,7 +60,7 @@ class SiteTest extends MediawikiTestCase{
 		$this->assertEquals( $apiUrl, $site->getApi()->getUrl() );
 	}
 
-	function provideGetApiUrl(){
+	public function provideGetApiUrl(){
 		//a section of html from below and after the api url..
 		$before = '<link rel="search" type="application/opensearchdescription+xml" href="/mediawiki/opensearch_desc.php"'.
 			' title="Local Test Wiki (en-gb)" />'."\n".'<link rel="EditURI" type="application/rsd+xml" href="';
@@ -83,7 +83,7 @@ class SiteTest extends MediawikiTestCase{
 		return $toReturn;
 	}
 
-	function testGetApiFromHomeReturnsFalseOnNoUrl(){
+	public function testGetApiFromHomeReturnsFalseOnNoUrl(){
 		$site = new Site();
 		$this->assertFalse( $site->getApiFromHomePage() );
 	}
@@ -91,7 +91,7 @@ class SiteTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideGetToken
 	 */
-	function testGetToken( $type = 'edit', $json, $expected){
+	public function testGetToken( $type = 'edit', $json, $expected){
 		$site = Site::newFromUrl( 'foobar' );
 		$api = new TestApi( $json );
 		$site->setApi( $api );
@@ -104,7 +104,7 @@ class SiteTest extends MediawikiTestCase{
 		$this->assertEquals( $type, $params['type'] );
 	}
 
-	function provideGetToken(){
+	public function provideGetToken(){
 		return array(
 			array( 'edit', $this->getTestApiData( 'tokens/anonedittoken.json' ), '+\\'),
 			array( 'protect', $this->getTestApiData( 'tokens/protecttoken.json' ), '863bb60669575ac8619662ddad5fc2ac+\\'),
@@ -116,7 +116,7 @@ class SiteTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideGetTokenList
 	 */
-	function testGetTokenList( $json, $expected){
+	public function testGetTokenList( $json, $expected){
 		$site = Site::newFromUrl( 'foobar' );
 		$api = new TestApi( $json );
 		$site->setApi( $api );
@@ -129,7 +129,7 @@ class SiteTest extends MediawikiTestCase{
 		$this->assertEquals( 'block|delete|edit|email|import|move|options|patrol|protect|unblock|watch', $params['type'] );
 	}
 
-	function provideGetTokenList(){
+	public function provideGetTokenList(){
 		return array(
 			array( $this->getTestApiData( 'tokens/anonedittoken.json' ), array( 'edittoken' => '+\\' ) ),
 			array( $this->getTestApiData( 'tokens/protecttoken.json' ), array( 'protecttoken' => '863bb60669575ac8619662ddad5fc2ac+\\' ) ),
@@ -141,7 +141,7 @@ class SiteTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideLogin
 	 */
-	function testLogin( $injectedResult, $expected ){
+	public function testLogin( $injectedResult, $expected ){
 		$site = Site::newFromUrl( 'foobar' );
 		$api = new TestApi( $injectedResult );
 		$site->setApi( $api );
@@ -158,7 +158,7 @@ class SiteTest extends MediawikiTestCase{
 		}
 	}
 
-	function provideLogin(){
+	public function provideLogin(){
 		return array(
 			array(
 				array( $this->getTestApiData( 'login/part1.json' ), $this->getTestApiData( 'login/part2.json' ) ),
@@ -172,7 +172,7 @@ class SiteTest extends MediawikiTestCase{
 		);
 	}
 
-	function testLogout(){
+	public function testLogout(){
 		$site = Site::newFromUrl( 'foobar' );
 		$api = new TestApi( '[]' );
 		$site->setApi( $api );
@@ -182,7 +182,7 @@ class SiteTest extends MediawikiTestCase{
 		$this->assertEquals( 1, count( $api->completeRequests ) );
 	}
 
-	function testGetUser(){
+	public function testGetUser(){
 		$site = new Site();
 		$user = $site->getUser( 'Foo' );
 		$this->assertInstanceOf( '\Addframe\Mediawiki\User', $user );

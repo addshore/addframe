@@ -11,7 +11,7 @@ use Addframe\Mediawiki\TestApi;
  */
 class TestApiTest extends DefaultTestCase{
 
-	function testTestApiWithArray(){
+	public function testTestApiWithArray(){
 		$expected1 = array( 'testTestApi array1' );
 		$expected2 = array( 'testTestApi array2' );
 		$testApi = new TestApi( array( json_encode( $expected1 ), json_encode( $expected2 ) ) );
@@ -26,7 +26,7 @@ class TestApiTest extends DefaultTestCase{
 		$this->assertEquals( $expected2, $request->getResult() );
 	}
 
-	function testTestApiWithString(){
+	public function testTestApiWithString(){
 		$expected = array( 'testTestApi string' );
 		$testApi = new TestApi( json_encode( $expected ) );
 
@@ -40,7 +40,7 @@ class TestApiTest extends DefaultTestCase{
 		$this->assertEquals( $expected, $request->getResult() );
 	}
 
-	function testTestApiHoldsResults(){
+	public function testTestApiHoldsResults(){
 		$testApi = new TestApi( '[]' );
 
 		$request1 = new Request( array( 'label' => 'unique1' ) );

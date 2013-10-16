@@ -10,14 +10,14 @@ use Addframe\Mediawiki\Api\TokensRequest;
  */
 class TokensRequestTest extends MediawikiTestCase {
 
-	function testCanConstruct( ){
+	public function testCanConstruct( ){
 		$class = '\Addframe\Mediawiki\Api\TokensRequest';
 		$object = new $class();
 		$this->assertInstanceOf( $class, $object );
 
 	}
 
-	function testTokensRequest(){
+	public function testTokensRequest(){
 		$query = new TokensRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'action', $params );

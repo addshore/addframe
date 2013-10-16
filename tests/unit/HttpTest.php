@@ -13,7 +13,7 @@ use Addframe\TestHttp;
 
 class HttpTest extends DefaultTestCase {
 
-	function testCanGetDefaultInstance(){
+	public function testCanGetDefaultInstance(){
 		$http = Http::getDefaultInstance();
 		$http2 = Http::getDefaultInstance();
 
@@ -23,7 +23,7 @@ class HttpTest extends DefaultTestCase {
 		$this->assertEquals( $http->getUid(), $http2->getUid() );
 	}
 
-	function testCanConstruct(){
+	public function testCanConstruct(){
 		$http = new Http();
 		$http2 = new Http();
 
@@ -36,13 +36,13 @@ class HttpTest extends DefaultTestCase {
 	/**
 	 * @dataProvider provideDataToEncode
 	 */
-	function testEncodeData( $data, $expected ){
+	public function testEncodeData( $data, $expected ){
 		$http = new TestHttp();
 		$encodedData = $http->encodeData( $data );
 		$this->assertEquals( $expected, $encodedData );
 	}
 
-	function provideDataToEncode(){
+	public function provideDataToEncode(){
 		return array(
 			//to encode, //encoded
 			array( array( 'key' => 'value' ), 'key=value' ),
@@ -51,13 +51,13 @@ class HttpTest extends DefaultTestCase {
 		);
 	}
 
-	function testGettingInvalidUrlReturnsFalse(){
+	public function testGettingInvalidUrlReturnsFalse(){
 		$this->setExpectedException( '\Addframe\HttpException' );
 		$http = new Http();
 		$http->get( '2387ry389t32u89tu*(&$HE98rh98' );
 	}
 
-	function testPostingInvalidUrlReturnsFalse(){
+	public function testPostingInvalidUrlReturnsFalse(){
 		$this->setExpectedException( '\Addframe\HttpException' );
 		$http = new Http();
 		$http->post( '2387ry389t32u89tu*(&$HE98rh98', array() );

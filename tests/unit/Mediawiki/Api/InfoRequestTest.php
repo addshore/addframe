@@ -10,14 +10,14 @@ use Addframe\Mediawiki\Api\InfoRequest;
  */
 class InfoRequestTest extends MediawikiTestCase {
 
-	function testCanConstruct( ){
+	public function testCanConstruct( ){
 		$class = '\Addframe\Mediawiki\Api\InfoRequest';
 		$object = new $class();
 		$this->assertInstanceOf( $class, $object );
 
 	}
 
-	function testInfoRequest(){
+	public function testInfoRequest(){
 		$query = new InfoRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'prop', $params );

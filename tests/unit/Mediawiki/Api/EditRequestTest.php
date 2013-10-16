@@ -10,14 +10,14 @@ use Addframe\Mediawiki\Api\EditRequest;
  */
 class EditRequestTest extends MediawikiTestCase {
 
-	function testCanConstruct( ){
+	public function testCanConstruct( ){
 		$class = '\Addframe\Mediawiki\Api\EditRequest';
 		$object = new $class();
 		$this->assertInstanceOf( $class, $object );
 
 	}
 
-	function testEditRequest(){
+	public function testEditRequest(){
 		$query = new EditRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'action', $params );

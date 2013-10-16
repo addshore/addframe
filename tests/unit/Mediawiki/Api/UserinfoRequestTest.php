@@ -10,14 +10,14 @@ use Addframe\Mediawiki\Api\UserinfoRequest;
  */
 class UserinfoRequestTest extends MediawikiTestCase {
 
-	function testCanConstruct( ){
+	public function testCanConstruct( ){
 		$class = '\Addframe\Mediawiki\Api\UserinfoRequest';
 		$object = new $class();
 		$this->assertInstanceOf( $class, $object );
 
 	}
 
-	function testSitematrixRequest(){
+	public function testSitematrixRequest(){
 		$query = new UserinfoRequest();
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'meta', $params );

@@ -12,13 +12,13 @@ use Addframe\Mediawiki\User;
  */
 class UserTest extends MediawikiTestCase {
 
-	function testNewFromName(){
+	public function testNewFromName(){
 		$user = User::newFromUsername( 'Foo' );
 		$this->assertInstanceOf( 'Addframe\Mediawiki\User', $user );
 		$this->assertEquals( $user->getName(), 'Foo' );
 	}
 
-	function testNewFromNameWithSite(){
+	public function testNewFromNameWithSite(){
 		$site = new Site();
 		$site->setUrl( 'foourl' );
 		$user = User::newFromUsername( 'Foo', $site );
@@ -27,17 +27,17 @@ class UserTest extends MediawikiTestCase {
 		$this->assertEquals( $user->getSite(), $site );
 	}
 
-	function testLoadWithNoSite(){
+	public function testLoadWithNoSite(){
 		$user = User::newFromUsername( 'Admin' );
 		$this->assertFalse( $user->load() );
 	}
 
-	function testLoadWithBadSite(){
+	public function testLoadWithBadSite(){
 		$this->setExpectedException( '\UnexpectedValueException' );
 		User::newFromUsername( 'Admin', 'foo' );
 	}
 
-	function provideAdminUserWithSite(){
+	public function provideAdminUserWithSite(){
 		$site = new Site();
 		$api = new TestApi( $this->getTestApiData( 'users/Admin.json' ) );
 		$site->setApi( $api );
@@ -45,7 +45,7 @@ class UserTest extends MediawikiTestCase {
 		return $user;
 	}
 
-	function testLoadWithSite(){
+	public function testLoadWithSite(){
 		$user = $this->provideAdminUserWithSite();
 
 		$this->assertTrue( $user->load() );
@@ -61,54 +61,54 @@ class UserTest extends MediawikiTestCase {
 
 	}
 
-	function testGetName(){
+	public function testGetName(){
 		$user = $this->provideAdminUserWithSite();
 		$this->assertEquals( 'Admin', $user->getName() );
 	}
 
-	function testGetGender(){
+	public function testGetGender(){
 		$user = $this->provideAdminUserWithSite();
 		$this->assertEquals( 'unknown', $user->getGender() );
 	}
 
-	function testGetEditcount(){
+	public function testGetEditcount(){
 		$user = $this->provideAdminUserWithSite();
 		$this->assertEquals( 39, $user->getEditcount() );
 	}
 
-	function testGetRegistration(){
+	public function testGetRegistration(){
 		$user = $this->provideAdminUserWithSite();
 		$this->assertEquals( '2013-08-23T09:49:00Z', $user->getRegistration() );
 	}
 
-	function testGetId(){
+	public function testGetId(){
 		$user = $this->provideAdminUserWithSite();
 		$this->assertEquals( 1, $user->getId() );
 	}
 
-	function testGetImplicitgroups(){
+	public function testGetImplicitgroups(){
 		$user = $this->provideAdminUserWithSite();
 		$this->assertTrue( is_array( $user->getImplicitgroups() ) );
 	}
 
-	function testGetGroups(){
+	public function testGetGroups(){
 		$user = $this->provideAdminUserWithSite();
 		$this->assertTrue( is_array( $user->getGroups() ) );
 	}
 
-	function testGetRights(){
+	public function testGetRights(){
 		$user = $this->provideAdminUserWithSite();
 		$this->assertTrue( is_array( $user->getRights() ) );
 	}
 
-	function testGetUserPage(){
+	public function testGetUserPage(){
 		$user = $this->provideAdminUserWithSite();
 		$page = $user->getUserPage();
 		$this->assertInstanceOf( 'Addframe\Mediawiki\Page', $page );
 		$this->assertEquals( 'User:Admin', $page->getTitle() );
 	}
 
-	function testGetUserTalkPage(){
+	public function testGetUserTalkPage(){
 		$user = $this->provideAdminUserWithSite();
 		$page = $user->getUserTalkPage();
 		$this->assertInstanceOf( 'Addframe\Mediawiki\Page', $page );

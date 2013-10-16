@@ -10,19 +10,19 @@ use Addframe\ConfigParser;
  */
 class ConfigParserTest extends DefaultTestCase {
 
-	function testCanParseDefaultConfig(){
+	public function testCanParseDefaultConfig(){
 		$configParser = new ConfigParser();
 		$this->assertEquals( 'AddFrame', $configParser->get( 'FrameworkName' ) );
 	}
 
-	function testCanParseEnvironment(){
+	public function testCanParseEnvironment(){
 		$configParser = new ConfigParser( 'addframephpunittest1' );
 		$this->assertEquals( 'AddFrame', $configParser->get( 'FrameworkName' ) );
 		$this->assertEquals( 'foo', $configParser->get( 'testvar1' ) );
 
 	}
 
-	function testCanParseEnvironmentExtended(){
+	public function testCanParseEnvironmentExtended(){
 		$configParser = new ConfigParser( 'addframephpunittest2' );
 		$this->assertEquals( 'AddFrame', $configParser->get( 'FrameworkName' ) );
 		$this->assertEquals( 'foo', $configParser->get( 'testvar1' ) );
@@ -30,7 +30,7 @@ class ConfigParserTest extends DefaultTestCase {
 
 	}
 
-	function testExceptionOnBadEnvironment(){
+	public function testExceptionOnBadEnvironment(){
 		$this->setExpectedException( 'Exception' );
 		new ConfigParser( 'qwertyuiopasdfghje' );
 	}
