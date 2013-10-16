@@ -1,7 +1,10 @@
 inherit: true
 
 tools:
-    php_code_coverage: true
+    php_code_coverage:
+        config_path: tests/unit.xml
+        filter:
+            excluded_paths: ['vendor/*', 'app/*', 'web/*']
     php_code_sniffer: true
     php_cpd: true
     php_cs_fixer: true
