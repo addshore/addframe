@@ -33,7 +33,8 @@ before_script:
 
 script:
   - phpunit --configuration tests/unit.xml
-  - phpunit --configuration tests/integration.xml
+  # Only run integration tests on 5.4 ( apache seems to fail on 5.3 see https://travis-ci.org/addwiki/addframe/jobs/12631703 )
+  - if php --version | grep -q 5.4; then phpunit --configuration tests/integration.xml; fi
 
 after_failure:
   - cat /home/travis/build/log/error.log
