@@ -4,6 +4,7 @@ namespace Addframe\Mediawiki;
 
 use Addframe\Logger;
 use Addframe\Mediawiki\Api\RevisionsRequest;
+use LogicException;
 
 /**
  * Representation of a page version.
@@ -43,6 +44,14 @@ class Revision {
 	protected $contentformat;
 	/** @var string */
 	protected $content;
+
+	public function undo(){
+		throw new LogicException( __METHOD__ . ' Not yet implemented' );
+	}
+
+	public function restore(){
+		throw new LogicException( __METHOD__ . ' Not yet implemented' );
+	}
 
 	public function load() {
 		$request = new RevisionsRequest( );
