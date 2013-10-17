@@ -10,11 +10,8 @@ use UnexpectedValueException;
  */
 class Family extends Site {
 
-	/**
-	 * @var SiteList sites in the family
-	 */
+	/** @var SiteList sites in the family */
 	protected $siteList;
-
 	protected $siteIndex;
 
 	/**

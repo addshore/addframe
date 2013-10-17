@@ -8,41 +8,23 @@ use UnexpectedValueException;
 
 class User {
 
-	/**
-	 * @var array of implicit groups
-	 */
+	/** @var array of implicit groups */
 	protected $implicitgroups;
-	/**
-	 * @var array of user rights
-	 */
+	/** @var array of user rights */
 	protected $rights;
-	/**
-	 * @var string gender (male|female|unknown)
-	 */
+	/**  @var string gender (male|female|unknown)  */
 	protected $gender;
-	/**
-	 * @var int userid
-	 */
+	/** @var int userid */
 	protected $id;
-	/**
-	 * @var string username
-	 */
+	/** @var string username */
 	protected $name;
-	/**
-	 * @var string MediawikiTimestamp of the registration date
-	 */
+	/** @var string MediawikiTimestamp of the registration date */
 	protected $registration;
-	/**
-	 * @var int edit count
-	 */
+	/** @var int edit count */
 	protected $editcount;
-	/**
-	 * @var array of groups
-	 */
+	/** @var array of groups */
 	protected $groups;
-	/**
-	 * @var Site of the user
-	 */
+	/** @var Site of the user */
 	protected $site;
 
 	/**
@@ -133,7 +115,7 @@ class User {
 	}
 
 	/**
-	 * @throws \Exception
+	 * @throws UnexpectedValueException
 	 * @return Site
 	 */
 	public function getSite(){
@@ -151,7 +133,7 @@ class User {
 			$request = new UsersRequest( array ( 'ususers' => $this->getName() ) );
 			$result = $this->getSite()->getApi()->doRequest( $request );
 			$result = $result['query']['users'][0];
-			//todo factor the below out into setFromArray()??
+			//todo factor the below out into newFromArray()??
 			$this->id = $result['userid'];
 			$this->name = $result['name'];
 			$this->editcount = $result['editcount'];

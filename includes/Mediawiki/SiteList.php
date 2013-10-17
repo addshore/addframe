@@ -15,7 +15,6 @@ class SiteList extends \ArrayObject {
 
 	/**
 	 * Site urls pointing to their sites offset value.
-	 *
 	 * @var array of integer
 	 */
 	protected $byUrl = array();

@@ -15,10 +15,9 @@ use UnexpectedValueException;
  */
 class Api {
 
+	/** @var string */
 	private $url;
-	/**
-	 * @var Http $http
-	 */
+	/** @var Http $http */
 	private $http;
 
 	/**

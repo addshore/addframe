@@ -135,6 +135,13 @@ class Revision {
 		return $this->missing;
 	}
 
+	public function isMinor(){
+		if( !is_bool( $this->minor ) ){
+			$this->load();
+		}
+		return $this->minor;
+	}
+
 	/**
 	 * @param Page $page
 	 * @return Revision

@@ -18,17 +18,11 @@ use UnexpectedValueException;
 
 class Site {
 
-	/**
-	 * @var string the url to the root of the site
-	 */
+	/** @var string the url to the root of the site */
 	protected $url = null;
-	/**
-	 * @var Http object to use for connecting to the site
-	 */
+	/** @var Http object to use for connecting to the site */
 	protected $http;
-	/**
-	 * @var Api object to use for connecting to the site api
-	 */
+	/** @var Api object to use for connecting to the site api */
 	protected $api = null;
 
 	/**

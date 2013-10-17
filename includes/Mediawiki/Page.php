@@ -122,12 +122,11 @@ class Page {
 	}
 
 	/**
-	 * @param bool $ignoreCached
+	 * @param bool $getLatest do we want to get the latest from the api
 	 * @return int
-	 * @todo instead of ignoreCached we should use a different way to get the newest revision...
 	 */
-	public function getLastrevid( $ignoreCached = false ) {
-		if( !isset( $this->lastrevid ) || $ignoreCached ){
+	public function getLastrevid( $getLatest = false ) {
+		if( !isset( $this->lastrevid ) || $getLatest ){
 			$this->loadInfo();
 		}
 		return $this->lastrevid;
@@ -213,12 +212,6 @@ class Page {
 			$this->pagelanguage = $result['pagelanguage'];
 			$this->protection = $result['protection'];
 			$this->displaytitle = $result['displaytitle'];
-			//todo work out if the below commented out values are needed for anything...
-//			$this->notificationtimestamp = $result['notificationtimestamp'];
-//			$this->fullurl = $result['fullurl'];
-//			$this->editurl = $result['editurl'];
-//			$this->readable = $result['readable'];
-//			$this->preload = $result['preload'];
 
 			return true;
 		} catch ( UnexpectedValueException $e ){
@@ -231,16 +224,24 @@ class Page {
 	//todo test
 	public function saveNewRevision( Revision $revision ){
 		$request = new EditRequest();
-		//todo try to set pageid if title is not availible
-		$request->setParameter( 'title', $this->getTitle() );
+		if( $this->getTitle() !== null ){
+			$request->setParameter( 'title', $this->getTitle() );
+		} else if( $this->getId() !== null ){
+			$request->setParameter( 'pageid', $this->getTitle() );
+		} else {
+			throw new Exception( 'Unable to save a revision with no page title or pageid' );
+		}
+
 		$request->setParameter( 'text', $revision->getContent() );
 		$request->setParameter( 'summary', $revision->getComment() );
+		if( $revision->isMinor() ){
+			$request->setParameter( 'minor', 1 );
+		}
 
-		//todo minor
 		//todo bot? does this below in revision?
 		//todo basetimestamp , use baserevision?
 
-		$result = $this->getSite()->getApi()->doRequestWithToken( $request, 'edit' );//TODO false is needed here.. caching edit tokens needs to be fixed...
+		$result = $this->getSite()->getApi()->doRequestWithToken( $request, 'edit' );
 		$result = array_shift( $result );
 		if( $result['result'] === 'Success' ){
 			$revision->setRevId( $result['newrevid'] );
