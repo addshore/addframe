@@ -13,9 +13,8 @@ class SiteTest extends MediawikiTestCase {
 	public function testUrls() {
 		$site = $this->newSite();
 
-		//TODO FIXME siteurl has protocol, apiurl does not..
 		$this->assertEquals( str_replace( 'http://', '', SITEURL ) , $site->getUrl(), 'Unexpected Site url' );
-		$this->assertEquals( 'http://localhost/wiki/api.php', $site->getApi()->getUrl(), 'Unexpected API url' );
+		$this->assertEquals( 'localhost/wiki/api.php', $site->getApi()->getUrl(), 'Unexpected API url' );
 	}
 
 	public function testLoginLogout() {

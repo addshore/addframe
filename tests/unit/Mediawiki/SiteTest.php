@@ -57,6 +57,7 @@ class SiteTest extends MediawikiTestCase{
 		$site->setUrl( 'localhost' );
 
 		$this->assertInstanceOf( 'Addframe\Mediawiki\Api', $site->getApi() );
+		$apiUrl = trim( str_replace( array('http://','https://','//'), '', $apiUrl ), '/');
 		$this->assertEquals( $apiUrl, $site->getApi()->getUrl() );
 	}
 

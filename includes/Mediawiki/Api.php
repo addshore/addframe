@@ -40,6 +40,7 @@ class Api {
 	 * @param $url string
 	 */
 	public function setUrl( $url ) {
+		$url = trim( str_replace( array('http://','https://','//'), '', $url ), '/');
 		$this->url = $url;
 	}
 
