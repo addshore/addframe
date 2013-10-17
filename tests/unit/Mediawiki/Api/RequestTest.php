@@ -14,8 +14,8 @@ class ApiRequestTest extends MediawikiTestCase{
 	/**
 	 * @dataProvider provideConstructionData
 	 */
-	public function testCanConstruct( $params = array(), $shouldBePosted = false, $cache = 0, $allowedParams = array() ){
-		$request = new Request( $params, $shouldBePosted , $cache, $allowedParams);
+	public function testCanConstruct( $params = array(), $shouldBePosted = false, $allowedParams = array() ){
+		$request = new Request( $params, $shouldBePosted, $allowedParams );
 		$this->assertInstanceOf( 'Addframe\Mediawiki\Api\Request', $request );
 
 		//Sort out our expected params
@@ -31,14 +31,13 @@ class ApiRequestTest extends MediawikiTestCase{
 		//check the params
 		$this->assertEquals( $params, $request->getParameters() );
 		//check the defaults
-		$this->assertEquals( $cache, $request->maxCacheAge() );
 		$this->assertEquals( $shouldBePosted,  $request->shouldPost() );
 		$this->assertEquals( null, $request->getResult() );
 	}
 
 	public function provideConstructionData(){
 		return array(
-			//data, //post, //cacheable
+			//data, //post
 			array( array() ),
 			array( array( 'param' => 'provideConstructionData' ) ),
 			array( array( 'param' => 'provideConstructionData' ), true ),
@@ -49,36 +48,35 @@ class ApiRequestTest extends MediawikiTestCase{
 			array( array( 'param' => array( 'val1', 'val2' ), 'another' => array( 'aa1', 'aa2' ) ) ),
 			array( array( 'param' => 'val', 'another' => null ) ),
 			array( array( 'param' => null, 'another' => 'val' ) ),
-			array( array(), true, 5, array() ),
+			array( array(), true, array() ),
 		);
 	}
 
 	/**
 	 * @dataProvider provideBadConstructionData
 	 */
-	public function testConstructionWithBadData( $params , $shouldBePosted , $cache, $allowedParams ){
+	public function testConstructionWithBadData( $params , $shouldBePosted , $allowedParams ){
 		$this->setExpectedException( 'UnexpectedValueException' );
-		new Request( $params, $shouldBePosted , $cache, $allowedParams);
+		new Request( $params, $shouldBePosted, $allowedParams );
 	}
 
 	public function provideBadConstructionData(){
 		return array(
-			//data, //post, //cacheable, //allowedParams
-			array( null, null, null, null ),
-			array( array(), array(), array(), array() ),
-			array( 'str', 'str', 'str', 'str' ),
-			array( false, false, false, false ),
-			array( 5, 5, 5, 5 ),
-			array( 'fail' , true, 5, array() ),
-			array( array(), 'fail', 5, array() ),
-			array( array(), true, 'fail', array() ),
-			array( array(), true, 5, 'fail' ),
+			//data, //post, //allowedParams
+			array( null, null, null ),
+			array( array(), array(), array() ),
+			array( 'str', 'str', 'str' ),
+			array( false, false, false ),
+			array( 5, 5, 5 ),
+			array( 'fail' , true, array() ),
+			array( array(), 'fail', array() ),
+			array( array(), true, 'fail' ),
 		);
 	}
 
 	public function testSetParameter(){
 		$expected = array();
-		$request = new Request( $expected, false , 0 );
+		$request = new Request( $expected, false );
 		$expected = array_merge( $expected, array( 'format' => 'json' ) );
 		$this->assertEquals( $expected, $request->getParameters() );
 
@@ -94,25 +92,6 @@ class ApiRequestTest extends MediawikiTestCase{
 		$this->assertEquals( $expected, $request->getResult() );
 	}
 
-	public function testGetCacheData(){
-		$expected = array( 'testGetCacheData' );
-		$request = new Request();
-		$request->setResult( $expected );
-		$this->assertEquals( $expected, $request->getCacheData() );
-	}
-
-	public function testHash(){
-		$request1 = new Request( array() );
-		$request2 = new Request( array() );
-		$this->assertEquals( $request1->getHash(), $request2->getHash() );
-		$request1 = new Request( array( 'key' => 'value' ) );
-		$request2 = new Request( array() );
-		$this->assertNotEquals( $request1->getHash(), $request2->getHash() );
-		$request1 = new Request( array( 'key' => 'SomeLongValues?afg?2rq' ) );
-		$request2 = new Request( array() );
-		$this->assertNotEquals( $request1->getHash(), $request2->getHash() );
-	}
-
 	public function testApiRequestOnlyStripsBadParamsWhenRequested(){
 		$request = new Request();
 		$request->setParameter( 'blub', 'bloo' );
@@ -120,7 +99,7 @@ class ApiRequestTest extends MediawikiTestCase{
 		$this->assertArrayHasKey( 'blub', $params );
 		$this->assertEquals( 'bloo', $params['blub'] );
 
-		$request = new Request( array(), false, 0, array( 'blub' ) );
+		$request = new Request( array (), false, array ( 'blub' ) );
 		$request->setParameter( 'blub', 'bloo' );
 		$request->setParameter( 'fail', 'foo' );
 		$params = $request->getParameters();

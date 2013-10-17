@@ -25,7 +25,7 @@ class TokensRequestTest extends MediawikiTestCase {
 		$this->assertArrayHasKey( 'type', $params );
 		$this->assertEquals( 'edit', $params['type'] );
 
-		$query = new TokensRequest( array( 'type' => 'protect' ) );
+		$query = new TokensRequest( array ( 'type' => 'protect' ) );
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'action', $params );
 		$this->assertEquals( 'tokens', $params['action'] );

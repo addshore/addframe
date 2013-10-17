@@ -4,7 +4,7 @@ namespace Addframe\Test\Unit;
 
 use Addframe\TestHttp;
 
-class TestHttpTest extends DefaultTestCase{
+class TestHttpTest extends \PHPUnit_Framework_TestCase{
 
 	public function testTestHttpWithArray(){
 		$testData = '{}';

@@ -8,8 +8,6 @@ return call_user_func( function() {
 
 		//base stuff
 		'Addframe\Http' => 'Http.php',
-		'Addframe\Cache' => 'Cache.php',
-		'Addframe\Cacheable' => 'Cacheable.php',
 		'Addframe\Logger' => 'Logger.php',
 		'Addframe\GitInfo' => 'GitInfo.php',
 		'Addframe\ConfigParser' => 'ConfigParser.php',

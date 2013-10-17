@@ -7,7 +7,7 @@ use Addframe\Mediawiki\Revisions;
 /**
  * @covers Addframe\Mediawiki\Revisions
  */
-class RevisionsTest extends DefaultTestCase {
+class RevisionsTest extends \PHPUnit_Framework_TestCase {
 
 	public function newMockRevision( $revid ){
 		$mock = $this->getMock( 'Addframe\Mediawiki\Revision' );

@@ -4,16 +4,15 @@ namespace Addframe\Mediawiki\Api;
 
 /**
  * Class UserinfoRequest
- * We will never want to cache these as they return information about the currently logged in user
  */
 class UserinfoRequest extends QueryRequest{
 
-	public function __construct( $params = array(), $shouldPost = false, $maxAge = CACHE_NONE ) {
+	public function __construct( $params = array (), $shouldPost = false ) {
 
 		$this->addAllowedParams( array( 'meta', 'uiprop' ) );
 		$this->addParams( array( 'meta' => 'userinfo' ) );
 
-		parent::__construct( $params, $shouldPost, $maxAge);
+		parent::__construct( $params, $shouldPost );
 	}
 
 }

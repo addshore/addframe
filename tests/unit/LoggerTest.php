@@ -12,7 +12,7 @@ use Addframe\Logger;
  * This is due to the fact that the Logger class holds the files open
  */
 
-class LoggerTest extends DefaultTestCase{
+class LoggerTest extends \PHPUnit_Framework_TestCase{
 
 	/**
 	 * @see PHPUnit_Framework_TestCase::setUp()

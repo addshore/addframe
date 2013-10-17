@@ -119,7 +119,7 @@ class Site {
 	 */
 	public function getTokenList(){
 		$availibeTokens = 'block|delete|edit|email|import|move|options|patrol|protect|unblock|watch';
-		$apiResult = $this->getApi()->doRequest( new TokensRequest( array( 'type' => $availibeTokens ) ) );
+		$apiResult = $this->getApi()->doRequest( new TokensRequest( array ( 'type' => $availibeTokens ) ) );
 		if( array_key_exists( 'tokens', $apiResult ) ){
 			return $apiResult['tokens'];
 		}
@@ -132,7 +132,7 @@ class Site {
 	 * @return null|string the token of type requested
 	 */
 	public function getToken( $type = 'edit' ){
-		$request = new TokensRequest( array( 'type' => $type ) );
+		$request = new TokensRequest( array ( 'type' => $type ) );
 		$apiResult = $this->getApi()->doRequest( $request );
 		if( array_key_exists( 'tokens', $apiResult ) && array_key_exists( $type.'token', $apiResult['tokens'] )){
 			return $apiResult['tokens'][$type.'token'];
@@ -181,7 +181,7 @@ class Site {
 	 * @todo unittest
 	 */
 	public function isLoggedIn(){
-		$result = $this->getApi()->doRequest( new UserinfoRequest( array(), false, 0 ) );
+		$result = $this->getApi()->doRequest( new UserinfoRequest( array (), false ) );
 		if( array_key_exists( 'anon', $result['query']['userinfo'] ) || $result['query']['userinfo']['id'] = 0 ){
 			return false;
 		} else if( array_key_exists( 'name', $result['query']['userinfo'] ) ){

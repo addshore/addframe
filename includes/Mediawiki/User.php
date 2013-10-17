@@ -148,7 +148,7 @@ class User {
 	 */
 	public function load(){
 		try{
-			$request = new UsersRequest( array( 'ususers' => $this->getName() ) );
+			$request = new UsersRequest( array ( 'ususers' => $this->getName() ) );
 			$result = $this->getSite()->getApi()->doRequest( $request );
 			$result = $result['query']['users'][0];
 			//todo factor the below out into setFromArray()??

@@ -7,7 +7,7 @@ namespace Addframe\Mediawiki\Api;
  */
 class QueryRequest extends Request{
 
-	public function __construct( $params = array(), $shouldPost = false, $maxAge = CACHE_NONE ){
+	public function __construct( $params = array (), $shouldPost = false ){
 
 		$this->addAllowedParams(
 			array( 'action', 'prop', 'list', 'meta', 'indexpageids', 'export', 'exportnowrap', 'iwurl', 'continue',
@@ -15,6 +15,6 @@ class QueryRequest extends Request{
 
 		$this->addParams( array( 'action' => 'query' ) );
 
-		parent::__construct( $params, $shouldPost, $maxAge );
+		parent::__construct( $params, $shouldPost );
 	}
 }

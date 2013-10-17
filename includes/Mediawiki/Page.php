@@ -193,7 +193,7 @@ class Page {
 	 */
 	public function loadInfo() {
 		try{
-			$request = new InfoRequest( array( 'titles' => $this->getTitle() ) );
+			$request = new InfoRequest( array ( 'titles' => $this->getTitle() ) );
 			$result = $this->getSite()->getApi()->doRequest( $request );
 			$result = array_shift( $result['query']['pages'] );
 
@@ -240,7 +240,7 @@ class Page {
 		//todo bot? does this below in revision?
 		//todo basetimestamp , use baserevision?
 
-		$result = $this->getSite()->getApi()->doRequestWithToken( $request, 'edit', false );//TODO false is needed here.. caching edit tokens needs to be fixed...
+		$result = $this->getSite()->getApi()->doRequestWithToken( $request, 'edit' );//TODO false is needed here.. caching edit tokens needs to be fixed...
 		$result = array_shift( $result );
 		if( $result['result'] === 'Success' ){
 			$revision->setRevId( $result['newrevid'] );

@@ -23,7 +23,7 @@ class EditRequestTest extends MediawikiTestCase {
 		$this->assertArrayHasKey( 'action', $params );
 		$this->assertEquals( 'edit', $params['action'] );
 
-		$query = new EditRequest( array( 'text' => 'FooBar' ) );
+		$query = new EditRequest( array ( 'text' => 'FooBar' ) );
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'action', $params );
 		$this->assertEquals( 'edit', $params['action'] );
@@ -32,7 +32,7 @@ class EditRequestTest extends MediawikiTestCase {
 		$this->assertArrayHasKey( 'md5', $params );
 		$this->assertEquals( md5( 'FooBar' ), $params['md5'] );
 
-		$query = new EditRequest( array( 'prependtext' => 'AtTheStart', 'appendtext' => 'AtTheEnd' ) );
+		$query = new EditRequest( array ( 'prependtext' => 'AtTheStart', 'appendtext' => 'AtTheEnd' ) );
 		$params = $query->getParameters();
 		$this->assertArrayHasKey( 'action', $params );
 		$this->assertEquals( 'edit', $params['action'] );

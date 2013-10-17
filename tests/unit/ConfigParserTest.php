@@ -8,7 +8,7 @@ use Addframe\ConfigParser;
  * Class ConfigParserTest
  * @covers \Addframe\ConfigParser
  */
-class ConfigParserTest extends DefaultTestCase {
+class ConfigParserTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCanParseDefaultConfig(){
 		$configParser = new ConfigParser();

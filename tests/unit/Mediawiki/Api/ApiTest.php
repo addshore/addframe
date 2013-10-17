@@ -2,7 +2,6 @@
 
 namespace Addframe\Test\Unit;
 
-use Addframe\Cache;
 use Addframe\Mediawiki\Api;
 use Addframe\Mediawiki\Api\Request;
 use Addframe\TestHttp;
@@ -51,7 +50,7 @@ class ApiTest extends MediawikiTestCase{
 	public function testCanDoRequest( $request, $expected = '[]' ){
 		$http = new TestHttp( $expected );
 		$api = new Api( $http );
-		$result = $api->doRequest( $request, false );
+		$result = $api->doRequest( $request );
 		$this->assertEquals( json_decode( $expected, true ), $result );
 	}
 
@@ -64,7 +63,7 @@ class ApiTest extends MediawikiTestCase{
 
 		$this->assertArrayNotHasKey( 'token', $request->getParameters() );
 
-		$result = $api->doRequestWithToken( $request, 'edit' , false );
+		$result = $api->doRequestWithToken( $request, 'edit' );
 		$this->assertArrayHasKey( 'token', $request->getParameters() );
 		$this->assertEquals( json_decode( $expected, true ), $result );
 	}
@@ -79,7 +78,7 @@ class ApiTest extends MediawikiTestCase{
 		$api = new Api( $http );
 
 		$this->assertArrayNotHasKey( 'token', $request->getParameters() );
-		$api->doRequestWithToken( $request, 'edit' , false );
+		$api->doRequestWithToken( $request, 'edit' );
 	}
 
 	/**
@@ -90,7 +89,7 @@ class ApiTest extends MediawikiTestCase{
 		$http = new TestHttp( array( $this->getTestApiData( 'errors/missingparam.json' ) ) );
 		$api = new Api( $http );
 		$this->assertArrayNotHasKey( 'token', $request->getParameters() );
-		$api->doRequestWithToken( $request, 'edit' , false );
+		$api->doRequestWithToken( $request, 'edit' );
 	}
 
 	/**
@@ -101,9 +100,9 @@ class ApiTest extends MediawikiTestCase{
 	public function provideApiRequests(){
 		return array(
 			array( new Request() ),
-			array( new Request( array( 'param' => 'value' ) ) ),
-			array( new Request( array( 'param' => 'value', 'format' => 'php' ) ) ),
-			array( new Request( array( 'param' => 'value', 'param2' => 'value2' ), true ) ),
+			array( new Request( array ( 'param' => 'value' ) ) ),
+			array( new Request( array ( 'param' => 'value', 'format' => 'php' ) ) ),
+			array( new Request( array ( 'param' => 'value', 'param2' => 'value2' ), true ) ),
 			array( new Request(), '[]' ),
 			array( new Request(), $this->getTestApiData( 'tokens/watchtoken.json' ) ),
 		);
@@ -126,53 +125,6 @@ class ApiTest extends MediawikiTestCase{
 		$http = new TestHttp( $this->getTestApiData( "errors/{$file}" ) );
 		$api = new Api( $http );
 		$api->doRequest( new Request() );
-	}
-
-	public function testCachedResultCanBeIgnored(){
-		$request = new Request( array( 'test' => 'testGettingCachedResultWorks' ), false, 100 );
-		Cache::remove( $request ); //remove if it is already there
-
-		//do our first request to get some data and cache it
-		$api = new Api( new TestHttp( json_encode( array( 'RESULT 1' ) ) ) );
-		$api->doRequest( $request );
-		$this->assertEquals( array( 'RESULT 1' ) , $request->getResult() );
-
-		//change the result the api would provide, we will still get the cached data
-		$api = new Api( new TestHttp( json_encode( array( 'NEW RESULT' ) ) ) );
-		$api->doRequest( $request );
-		$this->assertEquals( array( 'RESULT 1' ) , $request->getResult() );
-
-		//force to ignore any cache and make sure we get the cached data
-		$api->doRequest( $request, false );
-		$this->assertEquals( array( 'NEW RESULT' ) , $request->getResult() );
-
-		//make sure the cache now holds the new data
-		$api->doRequest( $request );
-		$this->assertEquals( array( 'NEW RESULT' ) , $request->getResult() );
-	}
-
-	public function testCachedResultExpires(){
-		$request = new Request( array( 'test' => 'testCachedResultExpires' ), false, 2 );
-		Cache::remove( $request ); //remove if it is already there
-
-		//do our first request to get some data and cache it
-		$api = new Api( new TestHttp( json_encode( array( 'RESULT 1' ) ) ) );
-		$api->doRequest( $request );
-		$this->assertEquals( array( 'RESULT 1' ) , $request->getResult() );
-
-		//change the result the api would provide, we will still get the cached data
-		$api = new Api( new TestHttp( json_encode( array( 'NEW RESULT' ) ) ) );
-		$api->doRequest( $request );
-		$this->assertEquals( array( 'RESULT 1' ) , $request->getResult() );
-
-		//sleep until the cache expires
-		while( Cache::age( $request ) < $request->maxCacheAge() ){
-			sleep(1);
-		}
-
-		//we should now get the new data!
-		$api->doRequest( $request );
-		$this->assertEquals( array( 'NEW RESULT' ) , $request->getResult() );
 	}
 
 }

@@ -54,7 +54,7 @@ class Revision {
 	}
 
 	public function load() {
-		$request = new RevisionsRequest( );
+		$request = new RevisionsRequest();
 
 		//todo also use pageid for request
 		if( $this->page instanceof Page && is_string( $this->page->getTitle() ) ){

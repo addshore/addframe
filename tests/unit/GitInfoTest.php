@@ -9,7 +9,7 @@ use Addframe\GitInfo;
  * @covers \Addframe\GitInfo
  */
 
-class GitInfoTest extends DefaultTestCase {
+class GitInfoTest extends \PHPUnit_Framework_TestCase {
 
 	public function testSinglton(){
 		$this->assertInstanceOf( '\Addframe\GitInfo',GitInfo::repo() );

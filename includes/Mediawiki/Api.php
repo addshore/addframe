@@ -2,15 +2,12 @@
 
 namespace Addframe\Mediawiki;
 
-use Addframe\Cache;
-use Addframe\CacheException;
 use Addframe\Http;
 use Addframe\HttpException;
 use Addframe\Logger;
 use Addframe\Mediawiki\Api\Request;
 use Addframe\Mediawiki\Api\TokensRequest;
 use Addframe\Mediawiki\Api\UsageException;
-use Exception;
 use UnexpectedValueException;
 
 /**
@@ -62,29 +59,16 @@ class Api {
 	}
 
 	/**
-	 * Gets a result for the given API request either by requesting it or using cached data
+	 * Gets a result for the given API request
+	 *
 	 * @param Request $request
-	 * @param bool $getCache do we want to check in the cache for a result?
-	 * @throws UsageException
+	 *
 	 * @throws UnexpectedValueException
-	 * @return Array of the unserialized result data
+	 * @throws UsageException
+	 * @return Array of the unsterilized result data
 	 */
-	public function doRequest( Request &$request, $getCache = true ) {
+	public function doRequest( Request &$request ) {
 		$result = null;
-
-		//try to get a cached value if we should
-		if( $getCache === true && $request->maxCacheAge() > 0 ){
-			try{
-				if( Cache::has( $request ) ){
-					if( Cache::age( $request ) < $request->maxCacheAge() ){
-						$result = Cache::get( $request );
-						$request->setResult( $result );
-					}
-				}
-			} catch( CacheException $e ){
-				Logger::logError( $e->getMessage() );
-			}
-		}
 
 		//otherwise do a real request
 		if( is_null( $result ) ){
@@ -104,14 +88,6 @@ class Api {
 				Logger::logError( $e->getMessage() );
 			}
 
-			//try to cache the new request if we want to
-			if( $request->maxCacheAge() > 0 ){
-				try{
-					Cache::add( $request );
-				} catch( CacheException $e ){
-					Logger::logError( $e->getMessage() );
-				}
-			}
 		}
 
 		if( !is_array( $result ) ){
@@ -130,22 +106,17 @@ class Api {
 	 *
 	 * @param Request $request
 	 * @param string $tokenType
-	 * @param bool $getCache
 	 *
-	 * @throws UsageException
 	 * @return array
 	 */
-	public function doRequestWithToken( Request &$request, $tokenType = 'edit', $getCache = true ) {
+	public function doRequestWithToken( Request &$request, $tokenType = 'edit' ) {
 		//todo the below hackery makes me think api and site should be the same class
 		//todo then we could use getToken('edit') instead...
 
-		/**
-		 * getting the tokens in this way should be okay as caching should mean that we
-		 * do not actually make a new request to the api for a token each time...
-		 */
-		$tokenResult = $this->doRequest( new TokensRequest( array( 'type' => $tokenType ) ), $getCache );
+		//TODO FIXME dont request a new token each time!!!
+		$tokenResult = $this->doRequest( new TokensRequest( array ( 'type' => $tokenType ) ) );
 		$request->setParameter( 'token', $tokenResult['tokens'][$tokenType.'token'] );
-		$result = $this->doRequest( $request, false );
+		$result = $this->doRequest( $request );
 		return $result;
 	}
 
@@ -174,8 +145,10 @@ class TestApi extends Api{
 
 	/**
 	 * Returns the data defined in the constructor
-	 */
-	public function doRequest( Request &$request, $getCache = null) {
+	 * @param Api\Request $request
+	 * @return Array|mixed|null
+*/
+	public function doRequest( Request &$request) {
 		$this->completeRequests[] = $request;
 		if( is_array( $this->returnData ) ){
 			$testResult = array_shift( $this->returnData );

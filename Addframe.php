@@ -26,10 +26,3 @@ include_once __DIR__ . '/modules/Diff/Diff.php';
 //todo it would be good to also echo the date of the current revision
 echo "Running Addframe, branch '" . GitInfo::currentBranch() . "', commit '" . GitInfo::headSHA1() . "'\n";
 GitInfo::destruct();
-
-// Some default cache lengths in seconds
-define( 'CACHE_WEEK', 604800 );
-define( 'CACHE_DAY', 86400 );
-define( 'CACHE_HOUR', 3600 );
-define( 'CACHE_MINUTE', 60 );
-define( 'CACHE_NONE', 0 );

@@ -2,15 +2,13 @@
 
 namespace Addframe\Mediawiki\Api;
 
-use Addframe\Cacheable;
 use Addframe\Http;
 use UnexpectedValueException;
 
 /**
  * Class Request representing a single api request
  */
-
-class Request implements Cacheable{
+class Request {
 
 	/**
 	 * @var null|mixed the result of the request
@@ -20,10 +18,6 @@ class Request implements Cacheable{
 	 * @var array the parameters of the request
 	 */
 	protected $params = array();
-	/**
-	 * @var int maximum number of seconds to cache a result of this request for
-	 */
-	protected $maxCacheAge = CACHE_NONE;
 	/**
 	 * @var bool should this api request be POSTed?
 	 */
@@ -36,13 +30,12 @@ class Request implements Cacheable{
 	 *
 	 * @param array $params Parameters for the api request
 	 * @param bool $shouldPost Should be we a HTTP POST?
-	 * @param bool|int $maxAge should be cache / how long to cache for in seconds
 	 * @param array $allowedParams optional set of parameters to limit the request to
+	 *
 	 * @throws UnexpectedValueException
 	 */
-	public function __construct( $params = array(), $shouldPost = false, $maxAge = CACHE_NONE, $allowedParams = array() ) {
-		//make sure our construction params are correct
-		if( !is_array( $params ) || !is_bool( $shouldPost ) || !is_int( $maxAge ) || !is_array( $allowedParams ) ){
+	public function __construct( $params = array (), $shouldPost = false, $allowedParams = array () ) {
+		if( !is_array( $params ) || !is_bool( $shouldPost ) || !is_array( $allowedParams ) ){
 			throw new UnexpectedValueException( 'Request construction params are not of the correct types' );
 		}
 
@@ -66,8 +59,7 @@ class Request implements Cacheable{
 		return $this
 			->addParams( array( 'format' => 'json' ) ) // always use json
 			->addParams( $params )
-			->setShouldPost( $shouldPost )
-			->setCacheAge( $maxAge ) ;
+			->setShouldPost( $shouldPost );
 	}
 
 	/**
@@ -91,15 +83,6 @@ class Request implements Cacheable{
 	 */
 	public function setShouldPost( $bool ){
 		$this->shouldBePosted = $bool;
-		return $this;
-	}
-
-	/**
-	 * @param $age int should be cache / how long to cache for in seconds
-	 * @return $this
-	 */
-	public function setCacheAge( $age ){
-		$this->maxCacheAge = $age;
 		return $this;
 	}
 
@@ -160,28 +143,6 @@ class Request implements Cacheable{
 	 */
 	public function setResult( $result ){
 		$this->result = $result;
-	}
-
-	/**
-	 * @see Cacheable::getHash()
-	 */
-	public function getHash(){
-		$hash = sha1( json_encode( $this->params ) );
-		return 'ApiRequest_'.$hash;
-	}
-
-	/**
-	 * @see Cacheable::getCacheData()
-	 */
-	public function getCacheData(){
-		return $this->result;
-	}
-
-	/**
-	 * @see Cacheable::maxCacheAge()
-	 */
-	public function maxCacheAge(){
-		return $this->maxCacheAge;
 	}
 
 }

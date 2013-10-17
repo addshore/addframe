@@ -11,7 +11,7 @@ use Addframe\TestHttp;
  * @covers Addframe\TestHttp
  */
 
-class HttpTest extends DefaultTestCase {
+class HttpTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCanGetDefaultInstance(){
 		$http = Http::getDefaultInstance();

@@ -8,7 +8,7 @@ use UnexpectedValueException;
 /**
  * Class MediawikiTestCase adding some extra functions
  */
-class MediawikiTestCase extends DefaultTestCase {
+class MediawikiTestCase extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * @param $path string of data to get
