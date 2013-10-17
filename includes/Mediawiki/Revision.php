@@ -44,6 +44,8 @@ class Revision {
 	protected $contentformat;
 	/** @var string */
 	protected $content;
+	/** @var bool */
+	protected $isNew;
 
 	public function undo(){
 		throw new LogicException( __METHOD__ . ' Not yet implemented' );
@@ -60,7 +62,7 @@ class Revision {
 		if( $this->page instanceof Page && is_string( $this->page->getTitle() ) ){
 			$request->setParameter( 'titles', $this->page->getTitle() );
 		}
-		if( is_int( $this->revid ) ){
+		if( $this->revid !== null ){
 			$request->setParameter( 'revids', $this->revid );
 		}
 
@@ -70,6 +72,7 @@ class Revision {
 		if( array_key_exists( 'missing', $result ) ){
 			$this->missing = true;
 		} else {
+			$result = array_shift( $result['revisions'] );
 			$this->missing = false;
 			$this->revid = $result['revid'];
 			$this->parentid = $result['parentid'];
@@ -129,14 +132,14 @@ class Revision {
 	}
 
 	public function isMissing(){
-		if( !is_bool( $this->missing ) ){
+		if( !is_bool( $this->missing ) && !$this->isNew  ){
 			$this->load();
 		}
 		return $this->missing;
 	}
 
 	public function isMinor(){
-		if( !is_bool( $this->minor ) ){
+		if( $this->minor === null && !$this->isNew ){
 			$this->load();
 		}
 		return $this->minor;
@@ -149,6 +152,7 @@ class Revision {
 	public static function newFromPage( Page $page ){
 		$revision = new Revision();
 		$revision->page = $page;
+		$revision->isNew = true;
 		return $revision;
 	}
 
@@ -170,6 +174,7 @@ class Revision {
 		$newRevision = new Revision();
 		$newRevision->page = $revision->page;
 		$newRevision->parentid = $revision->revid;
+		$newRevision->isNew = true;
 		//todo set the other things that will be the same such as content
 		return $newRevision;
 	}
