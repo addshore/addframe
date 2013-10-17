@@ -13,7 +13,6 @@ use UnexpectedValueException;
 /**
  * Class Api representing a Mediawiki API
  */
-
 class Api {
 
 	private $url;
@@ -21,6 +20,11 @@ class Api {
 	 * @var Http $http
 	 */
 	private $http;
+
+	/**
+	 * @var array of tokens for this api
+	 */
+	private $tokens = array();
 
 	/**
 	 * This should generally not be used, use Api::new* instead
@@ -110,12 +114,12 @@ class Api {
 	 * @return array
 	 */
 	public function doRequestWithToken( Request &$request, $tokenType = 'edit' ) {
-		//todo the below hackery makes me think api and site should be the same class
-		//todo then we could use getToken('edit') instead...
-
-		//TODO FIXME dont request a new token each time!!!
-		$tokenResult = $this->doRequest( new TokensRequest( array ( 'type' => $tokenType ) ) );
-		$request->setParameter( 'token', $tokenResult['tokens'][$tokenType.'token'] );
+		if( !array_key_exists( $tokenType, $this->tokens ) ){
+			$tokenResult = $this->doRequest( new TokensRequest( array ( 'type' => $tokenType ) ) );
+			$this->tokens[ $tokenType ] = $tokenResult['tokens'][$tokenType.'token'];
+		}
+		$token = $this->tokens[ $tokenType ];
+		$request->setParameter( 'token', $token );
 		$result = $this->doRequest( $request );
 		return $result;
 	}
@@ -145,9 +149,9 @@ class TestApi extends Api{
 
 	/**
 	 * Returns the data defined in the constructor
-	 * @param Api\Request $request
+	 * @param Request $request
 	 * @return Array|mixed|null
-*/
+	 */
 	public function doRequest( Request &$request) {
 		$this->completeRequests[] = $request;
 		if( is_array( $this->returnData ) ){
