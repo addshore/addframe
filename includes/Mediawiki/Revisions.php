@@ -59,7 +59,6 @@ class Revisions {
 	}
 
 	public function add( Revision $revision ){
-		//todo throw exception is no revid is set..
 		$this->revisions[ $revision->getRevId() ] = $revision;
 	}
 

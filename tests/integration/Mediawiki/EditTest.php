@@ -23,25 +23,27 @@ class EditTest extends MediawikiTestCase {
 		$this->assertInstanceOf( 'Addframe\Mediawiki\Revision', $revision );
 		$this->assertTrue( $revision->isMissing() );
 
-		$revision = Revision::newFromRevision( $revision );
-		$this->assertInstanceOf( 'Addframe\Mediawiki\Revision', $revision );
+		$revision = Revision::newBasedOnRevision( $revision );
+		$this->assertInstanceOf( 'Addframe\Mediawiki\NewRevision', $revision );
 
-		$revision->setContent( 'some new content' );
-		$revision->setComment( 'A new page' );
+		$revision->content = 'some new content';
+		$revision->comment = 'A new page';
 		$page->saveNewRevision( $revision );
 		$this->assertEquals( 'some new content', $page->getCurrentRevision()->getContent() );
 		$this->assertEquals( $revision, $page->getCurrentRevision() );
 
-		$revision = Revision::newFromRevision( $revision );
-		$revision->setContent( 'some even newer content!' );
-		$revision->setComment( 'A new revision' );
+		$revision = Revision::newBasedOnRevision( $revision );
+		$this->assertInstanceOf( 'Addframe\Mediawiki\NewRevision', $revision );
+		$revision->content = 'some even newer content!';
+		$revision->comment = 'A new revision' ;
 		$page->saveNewRevision( $revision );
 		$this->assertEquals( 'some even newer content!', $page->getCurrentRevision()->getContent() );
 		$this->assertEquals( $revision, $page->getCurrentRevision() );
 
-		$revision = Revision::newFromRevision( $revision );
-		$revision->setContent( '' );
-		$revision->setComment( 'Blank!' );
+		$revision = Revision::newBasedOnRevision( $revision );
+		$this->assertInstanceOf( 'Addframe\Mediawiki\NewRevision', $revision );
+		$revision->content = '' ;
+		$revision->comment = 'Blank!' ;
 		$page->saveNewRevision( $revision );
 		$this->assertEquals( '', $page->getCurrentRevision()->getContent() );
 		$this->assertEquals( $revision, $page->getCurrentRevision() );

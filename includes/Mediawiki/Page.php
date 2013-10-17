@@ -220,9 +220,14 @@ class Page {
 		}
 	}
 
-	//todo potentially use a newRevision class here?
-	//todo test
-	public function saveNewRevision( Revision $revision ){
+	/**
+	 * @param NewRevision $revision After the save this becomes a SavedRevision
+	 *
+	 * @return bool
+	 * @throws Exception
+	 * @todo test
+	 */
+	public function saveNewRevision( NewRevision &$revision ){
 		$request = new EditRequest();
 		if( $this->getTitle() !== null ){
 			$request->setParameter( 'title', $this->getTitle() );
@@ -244,8 +249,8 @@ class Page {
 		$result = $this->getSite()->getApi()->doRequestWithToken( $request, 'edit' );
 		$result = array_shift( $result );
 		if( $result['result'] === 'Success' ){
-			$revision->setRevId( $result['newrevid'] );
-			//todo also set new timestamp, contentmodel,oldrevid?
+			$revision = Revision::newFromRevId( $result['newrevid'], $this );
+			//todo also set new timestamp, contentmodel, oldrevid?
 			$this->revisions->add( $revision );
 			return true;
 		}
