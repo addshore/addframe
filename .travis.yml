@@ -30,7 +30,7 @@ install:
 
 before_script:
   - chmod -R 777 /home/travis/build/www
-  - cd /home/travis/build/addwiki/addframe
+  - cd /home/travis/build/addshore/addframe
 
 script:
   - phpunit --configuration tests/unit.xml
