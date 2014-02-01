@@ -7,7 +7,6 @@ namespace Addframe;
  * @author Cobi
  * @author Addshore
  **/
-
 class Http {
 
 	protected $ch;

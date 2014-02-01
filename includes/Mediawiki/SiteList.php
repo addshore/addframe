@@ -10,7 +10,6 @@ use InvalidArgumentException;
  * @author Jeroen De Dauw < jeroendedauw@gmail.com >
  * @author Addshore
  */
-
 class SiteList extends \ArrayObject {
 
 	/**

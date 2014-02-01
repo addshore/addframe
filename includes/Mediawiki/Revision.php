@@ -2,8 +2,6 @@
 
 namespace Addframe\Mediawiki;
 
-use Addframe\Logger;
-
 /**
  * Representation of a page version.
  */

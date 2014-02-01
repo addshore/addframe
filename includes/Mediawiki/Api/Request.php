@@ -2,7 +2,6 @@
 
 namespace Addframe\Mediawiki\Api;
 
-use Addframe\Http;
 use UnexpectedValueException;
 
 /**

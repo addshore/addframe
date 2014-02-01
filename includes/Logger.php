@@ -17,7 +17,6 @@ use UnexpectedValueException;
  * @author Addshore ( Modified for use with Addframe )
  *
  */
-
 class Logger {
 
 	/**

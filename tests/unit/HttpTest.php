@@ -10,7 +10,6 @@ use Addframe\TestHttp;
  * @covers Addframe\Http
  * @covers Addframe\TestHttp
  */
-
 class HttpTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCanGetDefaultInstance(){

@@ -8,7 +8,6 @@ use Addframe\Mediawiki\Api\Request;
  * Class ApiRequestTest
  * @covers Addframe\Mediawiki\Api\Request
  */
-
 class ApiRequestTest extends MediawikiTestCase{
 
 	/**

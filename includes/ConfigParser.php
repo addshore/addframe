@@ -17,7 +17,6 @@ use Exception;
  *
  * @original https://github.com/ejhayes/php-config/blob/master/config.php
  * @author https://github.com/ejhayes
- *
  */
 class ConfigParser {
 

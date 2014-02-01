@@ -8,7 +8,6 @@ use Addframe\GitInfo;
  * Class GitInfoTest
  * @covers \Addframe\GitInfo
  */
-
 class GitInfoTest extends \PHPUnit_Framework_TestCase {
 
 	public function testSinglton(){

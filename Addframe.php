@@ -2,6 +2,12 @@
 
 namespace Addframe;
 
+if ( defined( 'ADDFRAME_VERSION' ) ) {
+	die( 'Should only include entry point once!' );
+}
+
+define( 'ADDFRAME_VERSION', '0.1.0' );
+
 if( function_exists( 'mb_internal_encoding' ) ) {
 	mb_internal_encoding( "UTF-8" );
 }
@@ -18,11 +24,6 @@ spl_autoload_register( function ( $className ) {
 	}
 } );
 
-//todo recursively load entry files for modules rather than defining them here
-include_once __DIR__ . '/modules/WikibaseDataModel/WikibaseDataModel.php';
-include_once __DIR__ . '/modules/DataValues/DataValues.php';
-include_once __DIR__ . '/modules/Diff/Diff.php';
-
 //todo it would be good to also echo the date of the current revision
-echo "Running Addframe, branch '" . GitInfo::currentBranch() . "', commit '" . GitInfo::headSHA1() . "'\n";
+echo "Running Addframe " . ADDFRAME_VERSION . ", branch '" . GitInfo::currentBranch() . "', commit '" . GitInfo::headSHA1() . "'\n";
 GitInfo::destruct();

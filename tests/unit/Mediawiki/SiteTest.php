@@ -10,7 +10,6 @@ use Addframe\TestHttp;
  * Class SiteTest
  * @covers Addframe\Mediawiki\Site
  */
-
 class SiteTest extends MediawikiTestCase{
 
 	public function testCanConstruct(){

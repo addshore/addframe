@@ -11,7 +11,6 @@ use Addframe\Logger;
  * This set of tests can not be run along side another set oo logger tests
  * This is due to the fact that the Logger class holds the files open
  */
-
 class LoggerTest extends \PHPUnit_Framework_TestCase{
 
 	/**

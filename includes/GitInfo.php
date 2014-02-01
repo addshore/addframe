@@ -22,7 +22,6 @@ namespace Addframe;
  *
  * @source mediawiki/includes/GitInfo.php
  */
-
 class GitInfo {
 
 	/**

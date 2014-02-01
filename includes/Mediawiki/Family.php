@@ -1,7 +1,7 @@
 <?php
 
 namespace Addframe\Mediawiki;
-use Addframe\Http;
+
 use Addframe\Mediawiki\Api\SitematrixRequest;
 use UnexpectedValueException;
 
